@@ -58,7 +58,7 @@ QNode::QNode()
 		}
 		catch(...)
 		{
-			cout<<"eorr by feifei";
+			cout<<"eorr by feifeifei";
 		}
 	}
 	int QNode:: GetChildSize()
