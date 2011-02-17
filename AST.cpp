@@ -3,6 +3,7 @@
 
 using namespace std;
 
+//QianKun
 AST::AST(){}
 
 void AST::addChild(Node* d, Node* childNode)
