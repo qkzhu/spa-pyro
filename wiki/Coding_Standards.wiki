@@ -7,21 +7,21 @@
 
  * Use comments on every class and method. Even if there is any trick inside your method, comment that part, like a while loop, or a small piece of code, to explain your idea. _*Please Write Comments as You  Code*_
  * Include files should protect against multiple inclusion through the use of macros that "guard" the files. 
-   # When Not Using Namespces
+ When Not Using Namespces
 {{{
 #ifndef filename_h
 #define filename_h
 <--some code -->
 #endif 
 }}}
-   # When Using Namespaces, If namespaces are used then to be completely safe:
+ When Using Namespaces, If namespaces are used then to be completely safe:
 {{{
 #ifndef namespace_filename_h
 #define namespace_filename_h
 <--some code -->
 #endif
 }}}
-   # When you still have question on how to use this , check the below website:http://www.eventhelix.com/RealtimeMantra/HeaderFileIncludePatterns.htm Any other contribution on this topic is welcomed.
+ If you still have question on how to use this , check the below website:http://www.eventhelix.com/RealtimeMantra/HeaderFileIncludePatterns.htm Any other contribution on this topic is welcomed.
 
  * Brace placement policy: Place brace under and inline with keywords,
 {{{
@@ -92,5 +92,3 @@ enum PinStateType
    	   PIN_ON
   	 };
 }}}
-
-
