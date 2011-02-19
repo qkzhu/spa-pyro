@@ -3,6 +3,10 @@
 =Coding Standards=
  * We divide our project into two parts, PKB and PQL. Every one puts their code inside corresponding part. 
 
+ * In the .h file, prefix std:: for every complex data type you use. 
+ E.g. std::string, std::vector, std::list
+
+
  * We put all includes in side .h files.
 
  * Use comments on every class and method. Even if there is any trick inside your method, comment that part, like a while loop, or a small piece of code, to explain your idea. _*Please Write Comments as You  Code*_
