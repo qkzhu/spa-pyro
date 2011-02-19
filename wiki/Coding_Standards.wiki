@@ -30,7 +30,7 @@ if (condition)        while (condition)
       ...                   ...
    }                     }
 }}}
-  Also, add Comments to Closing Braces. Adding a comment to closing    braces can help when you are reading code because you don't have to find the begin brace to know what is going on.  E.g. 
+Also, add Comments to Closing Braces. Adding a comment to closing    braces can help when you are reading code because you don't have to find the begin brace to know what is going on.  E.g. 
 {{{
 while(1)
 {
@@ -92,8 +92,6 @@ enum PinStateType
    	   PIN_ON
   	 };
 }}}
-
-
 
 
 
