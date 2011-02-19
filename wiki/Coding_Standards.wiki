@@ -1,0 +1,102 @@
+*Please follow this coding convention closely, as to make our code more uniform and readable
+
+=Coding Standards=
+ * We divide our project into two parts, PKB and PQL. Every one puts their code inside corresponding part. 
+
+ * We put all includes in side .h files.
+
+ * Use comments on every class and method. Even if there is any trick inside your method, comment that part, like a while loop, or a small piece of code, to explain your idea. _*Please Write Comments as You  Code*_
+ * Include files should protect against multiple inclusion through the use of macros that "guard" the files. 
+   # When Not Using Namespces
+{{{
+#ifndef filename_h
+#define filename_h
+<--some code -->
+#endif 
+}}}
+   # When Using Namespaces, If namespaces are used then to be completely safe:
+{{{
+#ifndef namespace_filename_h
+#define namespace_filename_h
+<--some code -->
+#endif
+}}}
+   # When you still have question on how to use this , check the below website:http://www.eventhelix.com/RealtimeMantra/HeaderFileIncludePatterns.htm Any other contribution on this topic is welcomed.
+
+ * Brace placement policy: Place brace under and inline with keywords,
+{{{
+if (condition)        while (condition)
+   {                     {
+      ...                   ...
+   }                     }
+}}}
+  Also, add Comments to Closing Braces. Adding a comment to closing    braces can help when you are reading code because you don't have to find the begin brace to know what is going on.  E.g. 
+{{{
+while(1)
+{
+   	if (valid)
+  	 {
+ 	 } // if valid
+  	 else
+  	 {
+  	 } // not valid
+} // end forever
+
+}}}
+
+
+
+=Naming Convention=
+
+ * For class name, start with captial letter, and use Capital letter for the 1st letter of  each following new word. Don’t use underscore “_” for it. E.g.: class ClassName{} or class NewClassName{}
+
+ * For method and variable, use small letter for the 1st word, and use Captital letter for the 1st letter of each following new word. Don’t use underscore “_” for it. E.g.: string getProName(); or int whoAreTheStatmentsFollowedMe();
+
+ * For constant variable, defined variable or global variable, use CAPTIAL LETTER ONLY, and use "_" to connect words. E.g: PI, CONSTANT_VALUE
+
+ * Class Attribute Names. Attribute names should be prepended with the character 'm'. 'm' always precedes other name modifiers like 'p' for pointer. This is to prevent any conflict with method names. e.g.
+{{{
+class NameOneTwo
+   { public:
+      int                   VarAbc();
+      int                   ErrorNumber();
+   private:
+      int                   mVarAbc;                   // This is a example of class attribute name
+      int                   mErrorNumber;
+      String*            mpName;                // This is a attribute name which is a pointer
+   }
+}}}
+
+ * Other variable names , use all lower case letters,  use '_' as the word separator. e.g.
+{{{
+int    NameOneTwo::HandleError(int errorNumber)
+   {
+      int            error= OsErr();
+      Time           time_of_error;
+      ErrorProcessor error_processor;
+      Time*          p_out_of_time= 0;
+   }
+}}}
+
+ * New type defined. When possible for types based on native types make a typedef. Typedef names should use the same naming policy as for a class with the word Type appended. E.g.
+{{{
+typedef uint16  ModuleType;
+         typedef uint32  SystemType;
+}}}
+
+ * Enum names. Labels All Upper Case with '_' Word Separators. E.g.	
+{{{ 
+enum PinStateType
+  	 {
+  	   PIN_OFF,
+   	   PIN_ON
+  	 };
+}}}
+
+
+
+
+
+
+
+
