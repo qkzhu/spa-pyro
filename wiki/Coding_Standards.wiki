@@ -52,9 +52,11 @@ while(1)
 
 =Naming Convention=
 
- * For class name, start with captial letter, and use Capital letter for the 1st letter of  each following new word. Don’t use underscore “_” for it. E.g.: class ClassName{} or class NewClassName{}
+ * For class name, start with captial letter, and use Capital letter for the 1st letter of  each following new word. *Don’t use underscore “_” for it.*
+ E.g.: class ClassName{} or class NewClassName{}
 
- * For method and variable, use small letter for the 1st word, and use Captital letter for the 1st letter of each following new word. Don’t use underscore “_” for it. E.g.: string getProName(); or int whoAreTheStatmentsFollowedMe();
+ * For method and variable, use small letter for the 1st word, and use Captital letter for the 1st letter of each following new word. *Don’t use underscore “_” for it.*
+ E.g.: string getProName(); or int nextStmt();
 
  * For constant variable, defined variable or global variable, use CAPTIAL LETTER ONLY, and use "_" to connect words. E.g: PI, CONSTANT_VALUE
 
