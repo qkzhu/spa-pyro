@@ -22,7 +22,7 @@
 {{{
 #ifndef namespace_filename_h
 #define namespace_filename_h
-<--some code -->
+//some code
 #endif
 }}}
  If you still have question on how to use this , check the below website:http://www.eventhelix.com/RealtimeMantra/HeaderFileIncludePatterns.htm Any other contribution on this topic is welcomed.
@@ -58,7 +58,8 @@ while(1)
  * For method and variable, use small letter for the 1st word, and use Captital letter for the 1st letter of each following new word. *Don’t use underscore _ for it.*
  E.g.: `string getProName();` or `int nextStmt();`
 
- * For constant variable, defined variable or global variable, use CAPTIAL LETTER ONLY, and use _ to connect words. E.g: `#define PI 3.14`, `#define CONSTANT_VALUE 20`.
+ * For constant variable, defined variable or global variable, use CAPTIAL LETTER ONLY, and use _ to connect words.
+ E.g: `#define PI 3.14`, `#define CONSTANT_VALUE 20`.
 
  * Class Attribute Names. Attribute names should be prepended with the character 'm'. 'm' always precedes other name modifiers like 'p' for pointer. This is to prevent any conflict with method names. e.g.
 {{{
@@ -73,7 +74,7 @@ class NameOneTwo
    }
 }}}
 
- * Other variable names , use all lower case letters,  use '_' as the word separator. e.g.
+ * Other variable names , use all lower case letters,  use _ as the word separator. e.g.
 {{{
 int    NameOneTwo::HandleError(int errorNumber)
    {
@@ -90,7 +91,7 @@ typedef uint16  ModuleType;
          typedef uint32  SystemType;
 }}}
 
- * Enum names. Labels All Upper Case with '_' Word Separators. E.g.	
+ * Enum names. Labels All Upper Case with _ Word Separators. E.g.	
 {{{ 
 enum PinStateType
   	 {
