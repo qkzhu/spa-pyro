@@ -13,11 +13,12 @@ public:
 	 * PKB Part
 	 */
 	//init vTable, cTable, mTable, uTable, pTable
-	PKB(): varTable(new VarTable()) {}
+	PKB(): varTable(new VarTable()),
+		   procTable(new ProcTable()),
+		   constantTable(new ConstantTable()){}
 	//PKB():varTable(new VarTable()){}
 	void pkb_AddToASTList(AST* ast, int procIndex);
 	AST* getASTByProcdureIndex(int procIndex);
-	int getProcedureIndexByAST(AST* ast);
 	/**
 	 * AST Part
 	 */
@@ -34,20 +35,20 @@ public:
 	/**
 	 * VarTable Part
 	 */
-	void		vTable_InsertVar(string);
-	string		vTable_GetVarName(int);
-	int			vTable_GetVarIndex(string);
+	void		vTable_InsertVar(string var);
+	string		vTable_GetVarName(int index);
+	int			vTable_GetVarIndex(string var);
 	int			vTable_GetVarTableSize(); 
-	bool		vTable_ContainsVar(string);
+	bool		vTable_ContainsVar(string var);
 	set<string> vTable_GetAllVar();
 	/**
 	 * ProcTable Part
 	 */
-	void		pTable_InsertProc(string);
-	string		pTable_GetProcName(int);
-	int			pTable_GetProcIndex(string);
+	void		pTable_InsertProc(string procName);
+	string		pTable_GetProcName(int index);
+	int			pTable_GetProcIndex(string procName);
 	int			pTable_GetProcTableSize();
-	bool		pTable_ContainsProc(string);
+	bool		pTable_ContainsProc(string procName);
 	set<string> pTable_GetAllProc();
 	/**
 	 * ConstantTable Part
@@ -62,9 +63,9 @@ private:
 	map<int, AST*>	astList;
 	VarTable*		varTable;
 	ProcTable*		procTable;
+	ConstantTable*	constantTable;
 	/*
 	ModifyTable*	modifyTable;
 	UseTable*		useTable;
-	ConstantTable*	constantTable;
 	*/
 };

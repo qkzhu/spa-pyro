@@ -2,9 +2,9 @@
 using namespace std;
 
 
-void ProcTable::insertProc(string s)
+void ProcTable::insertProc(string procName)
 {
-	this->insertSymbol(s);
+	this->insertSymbol(procName);
 }// end InsertProc
 
 string ProcTable::getProcName(int index)
@@ -12,9 +12,9 @@ string ProcTable::getProcName(int index)
 	return this->getSymbolName(index);
 }// end GetProcName
 
-int ProcTable::getProcIndex(string s)
+int ProcTable::getProcIndex(string procName)
 {
-	return this->getSymbolIndex(s);
+	return this->getSymbolIndex(procName);
 }// end GetProcIndex
 
 int ProcTable::getSize()
@@ -22,9 +22,9 @@ int ProcTable::getSize()
 	return this->getSymbolMapSize();
 }// end getProcTableSize
 
-bool ProcTable::containsProc(string s)
+bool ProcTable::containsProc(string procName)
 {
-	return this->containsSymbol(s);
+	return this->containsSymbol(procName);
 }// end ContainsProc
 
 set<string> ProcTable::getAllProc()
