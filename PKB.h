@@ -9,6 +9,7 @@
 class PKB
 {
 public:
+	PKB(): varTable(new VarTable()) {}
 	/**
 	 * PKB Part
 	 */
