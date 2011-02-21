@@ -11,12 +11,12 @@ typedef map<string,int> MapType; //for implementation use
 class SymbolTable
 {
 public:
-	void InsertSymbol(string);
-	string GetSymbolName(int);
-	int GetSymbolIndex(string);
-	int GetSymbolMapSize();
-	bool ContainsSymbol(string);
-	set<string> GetAllSymbol();
+	void insertSymbol(string);
+	string getSymbolName(int);
+	int getSymbolIndex(string);
+	int getSymbolMapSize();
+	bool containsSymbol(string);
+	set<string> getAllSymbol();
 private:
 	map<string, int> mSymbolMap;
 };

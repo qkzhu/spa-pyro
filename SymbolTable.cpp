@@ -2,15 +2,15 @@
 using namespace std;
 
 
-void SymbolTable::InsertSymbol(string s)
+void SymbolTable::insertSymbol(string s)
 {
 	if(mSymbolMap.find(s) == mSymbolMap.end())
 	{
-		mSymbolMap.insert(make_pair(s, SymbolTable::GetSymbolMapSize()));
+		mSymbolMap.insert(make_pair(s, SymbolTable::getSymbolMapSize()));
 	}	
 }// end InsertSymbol
 
-string SymbolTable::GetSymbolName(int sIndex)
+string SymbolTable::getSymbolName(int sIndex)
 {
 	if(sIndex >= mSymbolMap.size())
 	{
@@ -31,7 +31,7 @@ string SymbolTable::GetSymbolName(int sIndex)
 	return "Program should not reach here";	
 }
 
-int SymbolTable::GetSymbolIndex(string s)
+int SymbolTable::getSymbolIndex(string s)
 {
 	MapType::const_iterator iter = mSymbolMap.begin();
 	iter = mSymbolMap.find(s);
@@ -42,12 +42,12 @@ int SymbolTable::GetSymbolIndex(string s)
 	return -1; // return an invalid index
 }
 
-int SymbolTable::GetSymbolMapSize()
+int SymbolTable::getSymbolMapSize()
 {
 	return mSymbolMap.size();
 }
 
-bool SymbolTable::ContainsSymbol(string s)
+bool SymbolTable::containsSymbol(string s)
 {
 	MapType::const_iterator iter = mSymbolMap.begin();
 	iter = mSymbolMap.find(s);
@@ -58,7 +58,7 @@ bool SymbolTable::ContainsSymbol(string s)
 	return false;
 }
 
-set<string> SymbolTable::GetAllSymbol()
+set<string> SymbolTable::getAllSymbol()
 {
 	set<string> symbols;
 	MapType::const_iterator end = mSymbolMap.end();
