@@ -11,7 +11,7 @@ using namespace std;
 class Node
 {
 public:
-	enum NodeType{PROC, ASSIGN, STMT_LIST, VAR, CONST, OP, CALL, WHILE, IF};
+	enum NodeType{PROC, ASSIGN, STMT_LIST, VAR, CONST, PLUS, MINUS, TIMES, CALL, WHILE, IF};
 
 	int stmtNum;	// statement number
 	NodeType type;	// note type, it can be procedure, assignment, statment list, variable or constant value

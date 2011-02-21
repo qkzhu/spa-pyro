@@ -9,10 +9,12 @@
 class PKB
 {
 public:
-	PKB(): varTable(new VarTable()) {}
 	/**
 	 * PKB Part
 	 */
+	//init vTable, cTable, mTable, uTable, pTable
+	PKB(): varTable(new VarTable()) {}
+	//PKB():varTable(new VarTable()){}
 	void pkb_AddToASTList(AST* ast, int procIndex);
 	AST* getASTByProcdureIndex(int procIndex);
 	int getProcedureIndexByAST(AST* ast);

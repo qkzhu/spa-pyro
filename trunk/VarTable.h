@@ -11,5 +11,3 @@ public:
 	bool containsVar(string);
 	set<string> getAllVar();
 };
-
-
