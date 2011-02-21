@@ -1,259 +1,307 @@
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <regex>
-#include <sstream>
 #include "Parser.h"
 
 using namespace std;
 
-const string Parser::keywords[] = { "procedure", "while", "if", "then", "else" };
+const string Parser::mKeyWords[] = { "procedure", "while", "if", "then", "else", "call" };
 
-void Parser::load_file(string name)
+//loads the file from the given filename
+void Parser::loadFile(string name)
 {
-	if (file != NULL)
+	//close and delete the reference if another file is open
+	if (mpFile != NULL)
 	{
-		file->close();
-		delete file;
-		file = NULL;
+		mpFile->close();
+		delete mpFile;
+		mpFile = NULL;
 	}
 
-	filename = name;
+	//records the new filename
+	mFilename = name;
 
-	file = new ifstream(filename);
-	check_valid_file();
+	//opens the new file and check whether it is valid
+	mpFile = new ifstream(mFilename);
+	checkValidFile();
 }
 
- Parser::Parser(VarTable &varTable, AST &ast, string filename) : 
-	varTable(varTable), ast(ast), line_num(0),
-	 filename(filename), file(new ifstream()), 
-	 string_buf(new stringstream(stringstream::in | stringstream::out))
+//constructor for Parser takes a VarTable, AST, and the source code filename
+ Parser::Parser(VarTable &mVarTable, AST &mAst, string filename) : 
+	mVarTable(mVarTable), mAst(mAst), mLineNum(0), mStatNum(0),
+	 mFilename(filename), mpFile(new ifstream()), 
+	 mStringBuf(new stringstream(stringstream::in | stringstream::out))
  {
-	 file->open(filename, ios::in);
+	 mpFile->open(filename, ios::in);
  }
 
+//Destructor closes the file if it is open.
  Parser::~Parser()
  {
-	 if (file)
-		 file->close();
+	 if (mpFile)
+		 mpFile->close();
 
-	 delete file;
-	 delete string_buf;
+	 delete mpFile;
+	 delete mStringBuf;
  }
 
- string Parser::peek_token() 
+ //peeks next token, empty string if none found
+ string Parser::peekToken() 
  {
-	 check_valid_file();
+	 checkValidFile();
 
-	 string output = get_token();
+	 string output = getToken();
 	 int size = output.size();
 	 size;
 
-	 string_buf->seekg(-size, ios_base::cur);
+	 mStringBuf->seekg(-size, ios_base::cur);
 
 	 return output;
  }
 
- string Parser::get_token()
+ //extracts next token, returns empty string if none found.
+ string Parser::getToken()
  {
-	 check_valid_file();
+	 //checks whether opened file is valid
+	 checkValidFile();
 
 	 stringstream output;	 
-	 if (has_token())
+	 if (hasToken())
 	 {
 		char c = '\0';
 
-		if (is_delimiter((char)string_buf->peek()))
+		//if the next character is a delimiter, return the delimiter
+		if (isDelimiter((char)mStringBuf->peek()))
 		{
-			string_buf->read(&c, sizeof(c));
+			mStringBuf->read(&c, sizeof(c));
 			char output[2] = { c, '\0' };
 			return string(output);
 		}
 
-		while (!isspace(string_buf->peek()) && 
-			!is_delimiter((char)string_buf->peek()) &&
-			!string_buf->eof())
+		//obtains characters from the file until a space/delimiter/EOF is encountered
+		while (!isspace(mStringBuf->peek()) && 
+			!isDelimiter((char)mStringBuf->peek()) &&
+			!mStringBuf->eof())
 		{
-			string_buf->read(&c, sizeof(c));
+			mStringBuf->read(&c, sizeof(c));
 			output << (char)c;
 		}
 	 }
 
+	 //returns the token found.
 	 return output.str();
  }
 
- bool Parser::has_token()
+ bool Parser::hasToken()
  {
-	 check_valid_file();
+	 checkValidFile();
 
-	 skip_spaces();
+	 skipSpaces();
 
-	 if (!string_buf->eof())
+	 if (!mStringBuf->eof())
 		 return true;
 
 	 //keeps reading until a non-space is found.
 	 string s;
-	 while (string_buf->eof() && getline(*file, s))
+	 while (mStringBuf->eof() && getline(*mpFile, s))
 	 {
-		 delete string_buf;
-		 string_buf = new stringstream(stringstream::in | stringstream::out);
+		 delete mStringBuf;
+		 mStringBuf = new stringstream(stringstream::in | stringstream::out);
 
-		 line_num++;
+		 mLineNum++;
 
-		 *string_buf << s;
-		 skip_spaces();
+		 *mStringBuf << s;
+		 skipSpaces();
 	 }
 	 
-	 return !string_buf->eof() || *file;
+	 //if EOF encountered, return false, else return true
+	 return !mStringBuf->eof() || *mpFile;
  }
 
- void Parser::skip_spaces()
+ //skips over all spaces in the source program
+ void Parser::skipSpaces()
  {
 	 //eats all the spaces in the stream
 	 char dummy = '\0';
-	 while (isspace(string_buf->peek()))
-		 string_buf->read(&dummy, sizeof(dummy));
+	 while (isspace(mStringBuf->peek()))
+		 mStringBuf->read(&dummy, sizeof(dummy));
  }
 
- void Parser::check_valid_file()
+ //check whether source file is still opened.
+ void Parser::checkValidFile()
  {
-	 if (!file->is_open())
+	 if (!mpFile->is_open())
 	 {
-		 cout << "Error opening file: " << filename << endl;
+		 cout << "Error opening file: " << mFilename << endl;
 		 exit(1);
 	 }
  }
 
+//prints an error msg and quits the program
 void Parser::error(string expected, string received) 
 {
-	cout << "Error at line " << line_num << ": expected - \"" << 
+	cout << "Error at line " << mLineNum << ": expected - \"" << 
 		expected << "\" received - \"" << received << "\"" << endl;
 	exit(1);
 }
 
+//makes sure that the next token matches the specified token.
 void Parser::match(string token) 
 {
-	string received = get_token();
+	string received = getToken();
 
 	if (token != received)
 		error(token, received);
 }
 
-void Parser::parse_program() 
+//parses the source program
+void Parser::parseProgram() 
 {
-	while(has_token())
+	while(hasToken())
 	{
-		Node *node = parse_procedure();
-		ast.addProcedure(node);
+		Node *node = parseProcedure();
+		mAst.addProcedure(node);
 	}
 }
 
-Node *Parser::parse_procedure() 
+Node *Parser::parseProcedure() 
 {
 	match("procedure");
 	
-	string proc_name = get_token();
-	check_valid_name(proc_name);
-	Node *node = ast.createNode(Node::PROC, line_num, proc_name);
+	string proc_name = getToken();
+	checkValidName(proc_name);
+	Node *node = mAst.createNode(Node::PROC, mLineNum, proc_name);
 	
 	match("{");
 	
-	ast.addDown(node, parse_stmt_list());
+	mAst.addDown(node, parseStmtList());
 	
 	match("}");
 
 	return node;
 }
 
-Node *Parser::parse_stmt_list() 
+Node *Parser::parseStmtList() 
 {
-	string tok =peek_token();
-	Node *stmt_list = ast.createNode(Node::STMT_LIST, line_num, "");
+	string tok =peekToken();
+	Node *stmt_list = mAst.createNode(Node::STMT_LIST, mLineNum, "");
 	Node *prev_node = NULL; 
 	
 	if (tok != "" && tok != ";" && tok != "}")
 	{
-		prev_node = parse_assignment();
-		ast.addDown(stmt_list, prev_node);
+		prev_node = parseAssignment();
+		mAst.addDown(stmt_list, prev_node);
 	}
 
 	//continue parsing more statements while
 	//1. there are more tokens
 	//2. closing brace is not encountered
-	while (strcmp(peek_token().c_str(), "") != 0 && 
-		strcmp(peek_token().c_str(), "}") != 0) 
+	while (strcmp(peekToken().c_str(), "") != 0 && 
+		strcmp(peekToken().c_str(), "}") != 0) 
 	{
-		Node *new_node = parse_assignment();
-		ast.addFollow(prev_node, new_node);
+		Node *new_node = parseStmt();
+		mAst.addFollow(prev_node, new_node);
 		prev_node = new_node;
 	}
 	
 	return stmt_list;
 }
 
-Node *Parser::parse_assignment() 
+Node *Parser::parseStmt()
 {
-	string var_name = get_token();
-	check_valid_name(var_name);
+	string next_tok = peekToken();
+
+	if (next_tok == "while")
+		return parseWhile();
+
+	else if (next_tok == "if")
+		return parseIf();
+
+	else if (next_tok == "call")
+		return parseCall();
+
+	else
+		return parseAssignment();
+}
+
+//TO-DO: implement parseWhile
+Node *Parser::parseWhile()
+{
+	return NULL;
+}
+
+//TO-DO: implement parseIf
+Node *Parser::parseIf()
+{
+	return NULL;
+}
+
+//TO-DO: implement parseCall
+Node *Parser::parseCall()
+{
+	return NULL;
+}
+
+Node *Parser::parseAssignment() 
+{
+	string var_name = getToken();
+	checkValidName(var_name);
 	
-	Node *assign = ast.createNode(Node::ASSIGN, line_num, "");
-	Node *lhs = ast.createNode(Node::VAR, line_num, var_name);
+	Node *assign = mAst.createNode(Node::ASSIGN, mStatNum, "");
+	Node *lhs = mAst.createNode(Node::VAR, mStatNum, var_name);
 	
-	ast.addDown(assign, lhs);
+	mAst.addDown(assign, lhs);
 	
 	match("=");
 	
 	Node *rhs = NULL;
-	string rhs_token = get_token();
+	string rhs_token = getToken();
 
 	//catch the closing semi-colon
-	string closing = get_token();
+	string closing = getToken();
 	
 	if (strcmp(closing.c_str(), ";") != 0)
 		error(";", closing);
 		
-	if (is_constant(rhs_token))	
-		rhs = ast.createNode(Node::CONST, line_num, rhs_token);
+	if (isConstant(rhs_token))	
+		rhs = mAst.createNode(Node::CONST, mStatNum, rhs_token);
 		
-	else if(check_variable_exists(var_name))
-		rhs = ast.createNode(Node::VAR, line_num, rhs_token);
+	else if(checkVariableExists(var_name))
+		rhs = mAst.createNode(Node::VAR, mStatNum, rhs_token);
 	
 	else
 		error("existing variable or constant", rhs_token);
 	
-	ast.addDown(assign, rhs);
+	mAst.addDown(assign, rhs);
 	
-	varTable.insertVar(var_name, line_num);
+	mVarTable.insertVar(var_name, mStatNum);
 	
 	return assign;
 }
 
-bool Parser::is_constant(string tok) 
+bool Parser::isConstant(string tok) 
 {
 	static regex exp("-?\\d+");
 	return regex_match(tok.begin(), tok.end(), exp);
 }
 
-bool Parser::is_delimiter(char c)
+bool Parser::isDelimiter(char c)
 {
-	static regex exp("[{};]");
+	static regex exp("[{};()+-*]");
 	string tok(&c);
 	return regex_match(tok.begin(), tok.end(), exp);
 }
 
-bool Parser::check_variable_exists(string var_name) 
+bool Parser::checkVariableExists(string var_name) 
 {
-	return varTable.containsVar(var_name);
+	return mVarTable.containsVar(var_name);
 }
 
-void Parser::check_valid_name(string var_name)
+void Parser::checkValidName(string var_name)
 {
 	static regex exp("[A-Za-z][A-Za-z0-9]*");
-	static int keywords_len = sizeof(keywords) / sizeof(keywords[0]);
+	static int keywords_len = sizeof(mKeyWords) / sizeof(mKeyWords[0]);
 	
 	if (!regex_match(var_name.begin(), var_name.end(), exp))
 	{
-		cout << "Error at line " << line_num << ": Invalid variable name \"" << 
+		cout << "Error at line " << mLineNum << ": Invalid variable name \"" << 
 			var_name << "\"" << endl;
 		exit(1);
 	}
@@ -262,13 +310,12 @@ void Parser::check_valid_name(string var_name)
 		//checks for matches with keywords
 		for (int i = 0; i < keywords_len; i++)
 		{
-			if (strcmp(var_name.c_str(), keywords[i].c_str()) == 0)
+			if (strcmp(var_name.c_str(), mKeyWords[i].c_str()) == 0)
 			{
 				cout << "Cannot use \"" << var_name << "\" as a variable. " <<
-					" (line " << line_num << ")" << endl;
+					" (line " << mLineNum << ")" << endl;
 				exit(1);
 			}
 		}
 	}
 }
-
