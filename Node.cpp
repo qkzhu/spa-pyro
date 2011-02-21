@@ -7,7 +7,7 @@ using namespace std;
  * Initialize parentNode, childNode, followNode, prevNode, downNode and upNode to NULL,
  * and also initialize the node type, statement number and name to the given value. 
  */
-Node::Node(NodeType type, int stmtNum, string name)
+Node::Node(NodeType type, int stmtNum, int name)
 	:parentNode(NULL),childNode(NULL), followNode(NULL),
 	 prevNode(NULL), downNode(NULL), upNode(NULL)
 {
