@@ -12,37 +12,43 @@ class Parser
 {
 public:
 	Parser(VarTable &varTable, AST &ast, std::string filename);
-	void parse_program();
-	void load_file(std::string filename); //loads a new source file
+	void parseProgram();
+	void loadFile(std::string filename); //loads a new source file
 	~Parser();
 
 private:
-	int line_num;
-	VarTable &varTable;
-	AST &ast;
+	int mLineNum;
+	int mStatNum;
+	VarTable &mVarTable;
+	AST &mAst;
 
-	string get_token(); //extracts next token, returns empty string if none found.	
-	string peek_token(); //peeks next token, empty string if none found
-	bool has_token();//checks whether there are more tokens to be read
-	void skip_spaces();
+	string getToken(); 	//extracts next token, returns empty string if none found.
+	string peekToken();	//peeks next token, empty string if none found
+	bool hasToken();	//checks whether there are more tokens to be read
+	void skipSpaces();	//Skips all spaces until the next non-space char is encountered
 
-	void error(std::string expected, std::string received);
-	void match(std::string token);
+	void error(std::string expected, std::string received);	//prints the error msg and exits
+	void match(std::string token);							//
 
-	Node *parse_procedure();
-	Node *parse_stmt_list();
-	Node *parse_assignment();
+	Node *parseProcedure();
+	Node *parseStmtList();
+	Node *parseStmt();
+	Node *parseAssignment();
+	Node *parseWhile();
+	Node *parseIf();
+	Node *parseCall();
 
-	bool is_constant(string tok);
-	bool is_delimiter(char tok);
+	bool isConstant(string tok);
+	bool isDelimiter(char tok);
 
-	bool check_variable_exists(std::string var_name);
-	void check_valid_name(std::string var_name);
-	void check_valid_file();
+	bool checkVariableExists(std::string var_name);
+	void checkValidName(std::string var_name);
+	bool isValidName(std::string var_name);
+	void checkValidFile();
 
-	string filename;
-	ifstream *file;
-	stringstream *string_buf;
+	string mFilename;
+	ifstream *mpFile;
+	stringstream *mStringBuf;
 
-	static const string keywords[];
+	static const string mKeyWords[];
 };
