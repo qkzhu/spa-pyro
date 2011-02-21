@@ -24,7 +24,7 @@ public:
 	 * into a vector called 'StatNumAndNodeList'. This vector stores the statment number of each assignment node, and it's used
 	 * for retrive the node by using statment number.
 	 */
-	Node* createNode(Node::NodeType nt, int statNum, string name);	
+	Node* createNode(Node::NodeType nt, int statNum, int name);	
 	Node* getChild(Node *d);										// get the child node of given node d.
 	Node* getPreviousStatement(Node* d);							// Get the previous node of given node d, with follow relation.
 	Node* getFollowingStatement(Node* d);							// Get the follow node of given node d, withe the follow relation.

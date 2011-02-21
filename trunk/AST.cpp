@@ -33,7 +33,7 @@ Node* AST::getChild(Node* d)
 	return d->childNode;
 }
 
-Node* AST::createNode(Node::NodeType nt, int statNum, string name)
+Node* AST::createNode(Node::NodeType nt, int statNum, int name)
 {
 	Node* newNode = new Node(nt, statNum, name);
 
