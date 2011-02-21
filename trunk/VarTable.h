@@ -4,12 +4,12 @@ using namespace std;
 class VarTable : public SymbolTable
 {
 public:
-	void InsertVar(string);
-	string GetVarName(int);
-	int GetVarIndex(string);
-	int GetSize(); 
-	bool ContainsVar(string);
-	set<string> GetAllVar();
+	void insertVar(string);
+	string getVarName(int);
+	int getVarIndex(string);
+	int getSize(); 
+	bool containsVar(string);
+	set<string> getAllVar();
 };
 
 

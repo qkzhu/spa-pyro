@@ -2,32 +2,32 @@
 using namespace std;
 
 
-void ProcTable::InsertProc(string s)
+void ProcTable::insertProc(string s)
 {
-	this->InsertSymbol(s);
+	this->insertSymbol(s);
 }// end InsertProc
 
-string ProcTable::GetProcName(int index)
+string ProcTable::getProcName(int index)
 {
-	return this->GetSymbolName(index);
+	return this->getSymbolName(index);
 }// end GetProcName
 
-int ProcTable::GetProcIndex(string s)
+int ProcTable::getProcIndex(string s)
 {
-	return this->GetSymbolIndex(s);
+	return this->getSymbolIndex(s);
 }// end GetProcIndex
 
-int ProcTable::GetSize()
+int ProcTable::getSize()
 {
-	return this->GetSymbolMapSize();
+	return this->getSymbolMapSize();
 }// end getProcTableSize
 
-bool ProcTable::ContainsProc(string s)
+bool ProcTable::containsProc(string s)
 {
-	return this->ContainsSymbol(s);
+	return this->containsSymbol(s);
 }// end ContainsProc
 
-set<string> ProcTable::GetAllProc()
+set<string> ProcTable::getAllProc()
 {
-	return this->GetAllSymbol();
+	return this->getAllSymbol();
 }// end GetAllProc

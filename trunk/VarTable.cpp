@@ -3,34 +3,34 @@
 using namespace std;
 
 
-void VarTable::InsertVar(string s)
+void VarTable::insertVar(string s)
 {
-	this->InsertSymbol(s);
+	this->insertSymbol(s);
 }// end InsertVar
 
-string VarTable::GetVarName(int index)
+string VarTable::getVarName(int index)
 {
-	return this->GetSymbolName(index);
+	return this->getSymbolName(index);
 }// end GetVarName
 
-int VarTable::GetVarIndex(string s)
+int VarTable::getVarIndex(string s)
 {
-	return this->GetSymbolIndex(s);
+	return this->getSymbolIndex(s);
 }// end GetVarIndex
 
-int VarTable::GetSize()
+int VarTable::getSize()
 {
-	return this->GetSymbolMapSize();
+	return this->getSymbolMapSize();
 } //end GetVarTableSize
 
-bool VarTable::ContainsVar(string s)
+bool VarTable::containsVar(string s)
 {
-	return this->ContainsSymbol(s);
+	return this->containsSymbol(s);
 }// end ContainsVar
 
-set<string> VarTable::GetAllVar()
+set<string> VarTable::getAllVar()
 {
-	return this->GetAllSymbol();
+	return this->getAllSymbol();
 }// end GetAllVar
 
 /**********Driver program************
