@@ -4,10 +4,10 @@ using namespace std;
 class VarTable : public SymbolTable
 {
 public:
-	void insertVar(string);
-	string getVarName(int);
-	int getVarIndex(string);
+	void insertVar(string var);
+	string getVarName(int index);
+	int getVarIndex(string var);
 	int getSize(); 
-	bool containsVar(string);
+	bool containsVar(string var);
 	set<string> getAllVar();
 };

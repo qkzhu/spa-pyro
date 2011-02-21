@@ -1,12 +1,17 @@
 #include "PKB.h"
-#include "VarTable.h"
 
 /**
  * PKB Part
  */
-void pkb_AddToASTList(AST* ast, int procIndex);
-AST* getASTByProcdureIndex(int procIndex);
-int getProcedureIndexByAST(AST* ast);
+void PKB::pkb_AddToASTList(AST* ast, int procIndex){
+	astList.insert(pair<int, AST*>(procIndex, ast));
+}
+
+AST* PKB::getASTByProcdureIndex(int procIndex)
+{
+	map<int, AST*>::iterator it = astList.find(procIndex);
+	return it->second;
+}
 /**
  * AST Part
  */
@@ -52,25 +57,70 @@ void ast_AddProcedure(AST* ast, Node *d){
 /**
  * VarTable Part
  */
-void vTable_InsertVar(string);
-string vTable_GetVarName(int);
-int vTable_GetVarIndex(string);
-int vTable_GetVarTableSize(); 
-bool vTable_ContainsVar(string);
-set<string> vTable_GetAllVar();
+void PKB::vTable_InsertVar(string var){
+	varTable->insertVar(var);
+}
+
+string PKB::vTable_GetVarName(int index){
+	return varTable->getVarName(index);
+}
+
+int PKB::vTable_GetVarIndex(string var){
+	return varTable->getVarIndex(var);
+}
+
+int PKB::vTable_GetVarTableSize(){
+	return varTable->getSize();
+}
+
+bool PKB::vTable_ContainsVar(string var){
+	return varTable->containsVar(var);
+}
+
+set<string> PKB::vTable_GetAllVar(){
+	return varTable->getAllVar();
+}
 /**
  * ProcTable Part
  */
-void pTable_InsertProc(string);
-string pTable_GetProcName(int);
-int pTable_GetProcIndex(string);
-int pTable_GetProcTableSize();
-bool pTable_ContainsProc(string);
-set<string> pTable_GetAllProc();
+void PKB::pTable_InsertProc(string procName){
+	procTable->insertProc(procName);
+}
+
+string PKB::pTable_GetProcName(int index){
+	return procTable->getProcName(index);
+}
+
+int PKB::pTable_GetProcIndex(string procName){
+	return procTable->getProcIndex(procName);
+}
+
+int PKB::pTable_GetProcTableSize(){
+	return procTable->getSize();
+}
+
+bool PKB::pTable_ContainsProc(string procName){
+	return procTable->containsProc(procName);
+}
+
+set<string> PKB::pTable_GetAllProc(){
+	return procTable->getAllProc();
+}
 /**
  * ConstantTable Part
  */
-void cTable_AddConstant(int c);
-set<int> cTable_GetAllConstants();
-bool cTable_IsConstantExist(int c);
-int cTable_GetNumOfConstant();
+void PKB::cTable_AddConstant(int c){
+	constantTable->addConstant(c);
+}
+
+set<int> PKB::cTable_GetAllConstants(){
+	return constantTable->getAllConstants();
+}
+
+bool PKB::cTable_IsConstantExist(int c){
+	return constantTable->isConstantExist(c);
+}
+
+int PKB::cTable_GetNumOfConstant(){
+	return constantTable->getNumOfConstant();
+}

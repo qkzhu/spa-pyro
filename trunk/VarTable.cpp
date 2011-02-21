@@ -3,9 +3,9 @@
 using namespace std;
 
 
-void VarTable::insertVar(string s)
+void VarTable::insertVar(string var)
 {
-	this->insertSymbol(s);
+	this->insertSymbol(var);
 }// end InsertVar
 
 string VarTable::getVarName(int index)
@@ -13,9 +13,9 @@ string VarTable::getVarName(int index)
 	return this->getSymbolName(index);
 }// end GetVarName
 
-int VarTable::getVarIndex(string s)
+int VarTable::getVarIndex(string var)
 {
-	return this->getSymbolIndex(s);
+	return this->getSymbolIndex(var);
 }// end GetVarIndex
 
 int VarTable::getSize()
@@ -23,9 +23,9 @@ int VarTable::getSize()
 	return this->getSymbolMapSize();
 } //end GetVarTableSize
 
-bool VarTable::containsVar(string s)
+bool VarTable::containsVar(string var)
 {
-	return this->containsSymbol(s);
+	return this->containsSymbol(var);
 }// end ContainsVar
 
 set<string> VarTable::getAllVar()
