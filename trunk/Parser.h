@@ -3,8 +3,8 @@
 #include <string>
 #include <regex>
 #include <sstream>
-#include "VarTable.h"
-#include "AST.h"
+#include <stack>
+#include "PKB.h"
 
 using namespace std;
 
@@ -31,7 +31,7 @@ private:
 	void match(std::string token);							//
 
 	Node *parseProcedure();
-	Node *parseStmtList();
+	Node *parseStmtList(Node* parentNode);
 	Node *parseStmt();
 	Node *parseAssignment();
 	Node *parseWhile();
@@ -40,6 +40,12 @@ private:
 
 	bool isConstant(string tok);
 	bool isDelimiter(char tok);
+
+	//for parsing trees.
+	bool isBracket(string s);
+	bool isOperator(string s);
+	int getPriority(string s);
+	void addOperator(vector<Node*> &tree, string op);
 
 	bool checkVariableExists(std::string var_name);
 	void checkValidName(std::string var_name);
