@@ -36,4 +36,4 @@ public:
 private:
 	vector<Node*> proList;											// procedure list, it stores the root of each procedure.
 	map<int, Node*> StatNumAndNodeList;								// StatNumAndNodeList stores the relation between statement number and node.
-};
+};	
