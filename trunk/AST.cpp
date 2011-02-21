@@ -28,9 +28,18 @@ void AST::addProcedure(Node* d)
 	proList.push_back(d);
 }
 
-Node* AST::getChild(Node* d)
+list<int> AST::getChild(int stmtNum)
 {
-	return d->childNode;
+	//TODO in case of stmtNum == 0;
+	Node* currNode = getNodeByStatementNum(stmtNum);
+	vector<Node*> children = currNode->childList;
+	list<int> result;
+
+	unsigned int i;
+	for(i = 0; i < children.size(); i++)
+		result.push_back(children[i]->stmtNum);
+
+	return result;
 }
 
 Node* AST::createNode(Node::NodeType nt, int statNum, int name)
@@ -59,4 +68,3 @@ Node* AST::getNodeByStatementNum(int index)
 
 	return AST::StatNumAndNodeList[index];
 }
-
