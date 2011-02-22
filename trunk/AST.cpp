@@ -23,9 +23,15 @@ void AST::addFollow(Node* d, Node* followNode)
 	followNode->prevNode = d;//add previousNode
 }
 
-void AST::addProcedure(Node* d)
+void AST::addProcedure(int index, Node* d)
 {
-	proList.push_back(d);
+	astList.insert(pair<int, Node*>(index,d));
+}
+
+Node* AST::getNodeByProcdureIndex(int procIndex){
+	if(astList.find(procIndex) != astList.end())
+		return astList[procIndex];
+	else return NULL;
 }
 
 list<int> AST::getChild(int stmtNum)

@@ -18,7 +18,8 @@ public:
 	 * In the AST, there is a table used to store all the root node of each procedure, this table is called proList, it's used
 	 * for retrive the root node of a procedure, and the procedure name can be obtanined from d.name.
 	 */
-	void addProcedure(Node *d);
+	void addProcedure(int index, Node *d);
+	Node* getNodeByProcdureIndex(int procIndex);
 
 	/**
 	 * Create a new node and return the pointer of the node. If the given type is assignment, the new node will also be stored
@@ -34,6 +35,6 @@ public:
 	AST();
 
 private:
-	vector<Node*> proList;											// procedure list, it stores the root of each procedure.
+	map<int, Node*>	astList;										// procedure list, it stores the root of each procedure.
 	map<int, Node*> StatNumAndNodeList;								// StatNumAndNodeList stores the relation between statement number and node.
 };	
