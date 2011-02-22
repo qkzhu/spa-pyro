@@ -1,17 +1,6 @@
 #include "PKB.h"
 
-/**
- * PKB Part
- */
-void PKB::pkb_AddToASTList(AST* ast, int procIndex){
-	astList.insert(pair<int, AST*>(procIndex, ast));
-}
 
-AST* PKB::getASTByProcdureIndex(int procIndex)
-{
-	map<int, AST*>::iterator it = astList.find(procIndex);
-	return it->second;
-}
 /**
  * AST Part
  */
@@ -51,8 +40,8 @@ void ast_AddFollow(AST* ast, Node *d, Node *followNode){
 	ast->addFollow(d, followNode);
 }
 
-void ast_AddProcedure(AST* ast, Node *d){
-	ast->addProcedure(d);
+void ast_AddProcedure(AST* ast, int procIndex, Node *d){
+	ast->addProcedure(procIndex, d);
 }
 /**
  * VarTable Part

@@ -15,9 +15,6 @@ public:
 	PKB(): varTable(new VarTable()),
 		   procTable(new ProcTable()),
 		   constantTable(new ConstantTable()){}
-	//PKB():varTable(new VarTable()){}
-	void pkb_AddToASTList(AST* ast, int procIndex);
-	AST* getASTByProcdureIndex(int procIndex);
 	/**
 	 * AST Part
 	 */
@@ -30,7 +27,7 @@ public:
 	void		ast_AddChild(AST* ast, Node *d, Node *childNode);
 	void		ast_AddDown(AST* ast, Node *upperNode, Node *bottomNode);
 	void		ast_AddFollow(AST* ast, Node *d, Node *followNode);
-	void		ast_AddProcedure(AST* ast, Node *d);
+	void		ast_AddProcedure(AST* ast, int procIndex, Node *d);
 	/**
 	 * VarTable Part
 	 */
@@ -59,7 +56,6 @@ public:
 
 private:
 	Node*			node;
-	map<int, AST*>	astList;
 	VarTable*		varTable;
 	ProcTable*		procTable;
 	ConstantTable*	constantTable;
