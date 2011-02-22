@@ -26,7 +26,7 @@ public:
 	 * for retrive the node by using statment number.
 	 */
 	Node* createNode(Node::NodeType nt, int statNum, int name);	
-	list<int> getChild(int stmtNum);										// get the child node of given node d.
+	list<int> getChild(int stmtNum);								// get the child node of given node d.
 	Node* getPreviousStatement(Node* d);							// Get the previous node of given node d, with follow relation.
 	Node* getFollowingStatement(Node* d);							// Get the follow node of given node d, withe the follow relation.
 	Node* getNodeByStatementNum(int index);							// Return a node corresponding given statement number.
