@@ -2,6 +2,8 @@
 #include <string>
 #include <utility>
 #include <set>
+#include <vector>
+
 using namespace std;
 
 
@@ -41,4 +43,16 @@ public:
 	int getSize(); 
 	bool containsProc(string);
 	set<string> getAllProc();
+
+	/* For call Tables */
+	void addCall(int procIndex1, int procIndex2);
+	void addCall(int procIndex1, vector<int> procList);
+	void addCalled(int procIndex1, int procIndex2);
+	void addCalled(int procIndex1, vector<int> procList);
+	vector<int> getCall(int procIndex);
+	vector<int> getCalled(int procIndex);
+
+private:
+	map<int, set<int>> callTable;		/* int calls set<int> */
+	map<int, set<int>> calledTable;		/* int was called by set<int> */
 };
