@@ -95,6 +95,9 @@ bool PKB::pTable_ContainsProc(string procName){
 set<string> PKB::pTable_GetAllProc(){
 	return procTable->getAllProc();
 }
+void PKB::addCall(int procIndex1, int procIndex2){
+	procTable->addCall(procIndex1, procIndex2);
+}
 /**
  * ConstantTable Part
  */
