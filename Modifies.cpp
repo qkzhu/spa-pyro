@@ -45,7 +45,7 @@ void Modifies::setModify(int stmtNum, int varIndex)
 	//update mStmtModMap. Mapping each stmt# to modified variable. 1 stmt can only modify 1 variable. Once set, cant overwrite
 	if(mStmtModMap[stmtNum].size() == 1)
 	{
-		cout << "Error: stmt" << stmtNum <<" has multiple variable modified";
+		//To terminate program
 	}
 	else
 	{
