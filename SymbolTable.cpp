@@ -12,7 +12,7 @@ void SymbolTable::insertSymbol(string s)
 
 string SymbolTable::getSymbolName(int sIndex)
 {
-	if(sIndex >= mSymbolMap.size())
+	if((int)sIndex >= (int)mSymbolMap.size())
 	{
 		return "There is no nothing stored at the given index";
 	}
