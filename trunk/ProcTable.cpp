@@ -53,6 +53,8 @@ void ProcTable::addCall(int procIndex1, int procIndex2) {
 		tmp.insert(procIndex2);
 		callTable.insert(pair<int, set<int>>(procIndex1, tmp));
 	}
+
+	addCalled(procIndex1, procIndex2);
 }//end addCall(int procIndex1, int procIndex2)
 
 
