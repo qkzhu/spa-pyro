@@ -34,19 +34,44 @@ Node* AST::getNodeByProcdureIndex(int procIndex){
 	else return NULL;
 }
 
-list<int> AST::getChild(int stmtNum)
+vector<int> AST::getChild(int stmtNum)
 {
-	//TODO in case of stmtNum == 0;
+	vector<int> result;
+	if(stmtNum <= 0){
+		result.push_back(-1);
+		return result;
+	}
+
 	Node* currNode = getNodeByStatementNum(stmtNum);
 	vector<Node*> children = currNode->childList;
-	list<int> result;
 
 	unsigned int i;
-	for(i = 0; i < children.size(); i++)
-		result.push_back(children[i]->stmtNum);
+
+	if(children.size() == 0) result.push_back(-1);
+	else{
+		for(i = 0; i < children.size(); i++)
+			result.push_back(children[i]->stmtNum);
+	}
 
 	return result;
 }
+
+
+int AST::getParent(int stmtNum)
+{
+	
+	if(stmtNum <= 0) return -1;
+	
+	int result;
+	Node* currNode = getNodeByStatementNum(stmtNum);
+	Node* parentNode = currNode->parentNode;
+
+	if(parentNode == NULL) result = -1;
+	else result = parentNode->stmtNum;
+
+	return result;
+}
+
 
 Node* AST::createNode(Node::NodeType nt, int statNum, int name)
 {
