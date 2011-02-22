@@ -1,6 +1,5 @@
 #include "AST.h"
-#include "VarTable.h"
-#include "ProcTable.h"
+#include "SymbolTable.h"
 #include "ConstantTable.h"
 //#include "ModifyTable.h"
 //#include "UseTable.h"
