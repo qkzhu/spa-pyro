@@ -46,7 +46,7 @@ public:
 	int			pTable_GetProcTableSize();
 	bool		pTable_ContainsProc(string procName);
 	set<string> pTable_GetAllProc();
-	void		addCall(int procIndex1, int procIndex2);
+	void		pTable_AddCall(int procIndex1, int procIndex2);
 	/**
 	 * ConstantTable Part
 	 */
