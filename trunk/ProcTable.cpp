@@ -1,10 +1,10 @@
-#include "ProcTable.h"
+#include "SymbolTable.h"
 using namespace std;
 
 
-void ProcTable::insertProc(string procName)
+void ProcTable::insertProc(string s)
 {
-	this->insertSymbol(procName);
+	this->insertSymbol(s);
 }// end InsertProc
 
 string ProcTable::getProcName(int index)
@@ -12,9 +12,9 @@ string ProcTable::getProcName(int index)
 	return this->getSymbolName(index);
 }// end GetProcName
 
-int ProcTable::getProcIndex(string procName)
+int ProcTable::getProcIndex(string s)
 {
-	return this->getSymbolIndex(procName);
+	return this->getSymbolIndex(s);
 }// end GetProcIndex
 
 int ProcTable::getSize()
@@ -22,9 +22,9 @@ int ProcTable::getSize()
 	return this->getSymbolMapSize();
 }// end getProcTableSize
 
-bool ProcTable::containsProc(string procName)
+bool ProcTable::containsProc(string s)
 {
-	return this->containsSymbol(procName);
+	return this->containsSymbol(s);
 }// end ContainsProc
 
 set<string> ProcTable::getAllProc()

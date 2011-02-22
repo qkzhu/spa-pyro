@@ -1,11 +1,11 @@
-#include "VarTable.h"
+#include "SymbolTable.h"
 //#include <iostream>
 using namespace std;
 
 
-void VarTable::insertVar(string var)
+void VarTable::insertVar(string s)
 {
-	this->insertSymbol(var);
+	this->insertSymbol(s);
 }// end InsertVar
 
 string VarTable::getVarName(int index)
@@ -13,9 +13,9 @@ string VarTable::getVarName(int index)
 	return this->getSymbolName(index);
 }// end GetVarName
 
-int VarTable::getVarIndex(string var)
+int VarTable::getVarIndex(string s)
 {
-	return this->getSymbolIndex(var);
+	return this->getSymbolIndex(s);
 }// end GetVarIndex
 
 int VarTable::getSize()
@@ -23,9 +23,9 @@ int VarTable::getSize()
 	return this->getSymbolMapSize();
 } //end GetVarTableSize
 
-bool VarTable::containsVar(string var)
+bool VarTable::containsVar(string s)
 {
-	return this->containsSymbol(var);
+	return this->containsSymbol(s);
 }// end ContainsVar
 
 set<string> VarTable::getAllVar()
