@@ -20,7 +20,7 @@ public:
 	 */
 	AST*		ast_CreateASTnode();
 	Node*		ast_CreateNode(AST* ast, Node::NodeType nt, int statNum, int name);
-	list<int>	ast_GetChild(AST* ast, int stmtNum);
+	vector<int>	ast_GetChild(AST* ast, int stmtNum);
 	Node*		ast_GetPreviousStatement(AST* ast, Node* d);
 	Node*		ast_GetFollowingStatement(AST* ast, Node* d);
 	Node*		ast_GetNodeByStatementNum(AST* ast, int index);

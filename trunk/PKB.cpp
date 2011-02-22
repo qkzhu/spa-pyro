@@ -12,7 +12,11 @@ Node* PKB::ast_CreateNode(AST* ast, Node::NodeType nt, int statNum, int name) {
 	return ast->createNode(nt, statNum, name);
 }
 
+<<<<<<< .mine
+vector<int> ast_GetChild(AST* ast, int stmtNum) {
+=======
 list<int> PKB::ast_GetChild(AST* ast, int stmtNum) {
+>>>>>>> .r44
 	return ast->getChild(stmtNum);
 }
 
