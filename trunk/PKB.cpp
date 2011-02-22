@@ -12,35 +12,35 @@ Node* PKB::ast_CreateNode(AST* ast, Node::NodeType nt, int statNum, int name) {
 	return ast->createNode(nt, statNum, name);
 }
 
-list<int> ast_GetChild(AST* ast, int stmtNum) {
+list<int> PKB::ast_GetChild(AST* ast, int stmtNum) {
 	return ast->getChild(stmtNum);
 }
 
-Node* ast_GetPreviousStatement(AST* ast, Node* d){
+Node* PKB::ast_GetPreviousStatement(AST* ast, Node* d){
 	return ast->getPreviousStatement(d);
 }
 
-Node* ast_GetFollowingStatement(AST* ast, Node* d){
+Node* PKB::ast_GetFollowingStatement(AST* ast, Node* d){
 	return ast->getFollowingStatement(d);
 }
 
-Node* ast_GetNodeByStatementNum(AST* ast, int index){
+Node* PKB::ast_GetNodeByStatementNum(AST* ast, int index){
 	return ast->getNodeByStatementNum(index);
 }
 
-void ast_AddChild(AST* ast, Node *d, Node *childNode){
+void PKB::ast_AddChild(AST* ast, Node *d, Node *childNode){
 	ast->addChild(d, childNode);
 }
 
-void ast_AddDown(AST* ast, Node *upperNode, Node *bottomNode){
+void PKB::ast_AddDown(AST* ast, Node *upperNode, Node *bottomNode){
 	ast->addDown(upperNode, bottomNode);
 }
 
-void ast_AddFollow(AST* ast, Node *d, Node *followNode){
+void PKB::ast_AddFollow(AST* ast, Node *d, Node *followNode){
 	ast->addFollow(d, followNode);
 }
 
-void ast_AddProcedure(AST* ast, int procIndex, Node *d){
+void PKB::ast_AddProcedure(AST* ast, int procIndex, Node *d){
 	ast->addProcedure(procIndex, d);
 }
 /**
