@@ -13,7 +13,6 @@ public:
 	void setModify(int, int); //stmtNum, varIndex
 	void setModifyPV(int, int); // procIndex, varIndex
 private:
-	
 	map<int, set<int>> mStmtModMap; // map each stmt# to a set of modified varIndex
 	map<int, set<int>> mProcModMap; // map each ProcIndex to a set of modified varIndex
 	map<int, set<int>> mVarStmtMap; // map each modified varIndex to a set of stmt#
