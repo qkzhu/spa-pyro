@@ -5,7 +5,7 @@
 
 
 #include "PQLParserAPIs.h"
-#include "PKB_APIs.h"
+#include "PKB.h"
 #include "QueryResult.h"
 #include "TupleOperations.h"
 
@@ -29,13 +29,19 @@ class QueryEvaluator{
 private:
 	PKB *mPKBObject;  //Connect to PKB side
 	QueryParser *mQueryTree;   //Connect to PQL parser side
-	QueryResult *mResult;  //The final result in QueryResult.
-	std::vector<int> *mgTupleIndexing; //The global indexing for tuple evaluation, corresponding to the current tuple result
+	QueryResult mResult;  //The final result in QueryResult.
+	std::vector<int> mgTupleIndexing; //The global indexing for tuple evaluation, corresponding to the current tuple result
+	
+
 	bool mgNullClause; //If any clause evaluate to erroe, just jump out and return NULL for this evaluation.
 
 	std::vector<std::vector<int> > *getRel(int type1, int type2, int para1, int para2, int relType);
 
-	std::vector<std::vector<int> > *getRelStar(int type1, int type2, int para1, int para2, int relType); 
+	//std::vector<std::vector<int> > *getRelStar(int type1, int type2, int para1, int para2, int relType); 
+
+	std::vector<int> *getChildStar(int stmtN);
+	std::vector<int> *getFollowsStar(int stmtN);
+	std::vector<int> *getCallsStar(int procN);
 
 public:
 	QueryEvaluator(PKB *, QueryParser *);  //Constructor
