@@ -15,19 +15,42 @@ QueryEvaluator::QueryEvaluator(PKB *p, QueryParser *q)
 //For relational linking, it's to be implemented after the basic one.
 void QueryEvaluator::evaluate()
 {
-	vector<vector<int> > *eva_tuple;  //evalation tuple
-	map<int, int> *var_value_table; //maps the variable to the value assigned in With clause, attr 1 is the variable string in its code
+	vector<vector<int> > eva_tuple;  //evalation tuple
+	vector<int> equal_vars;  //for use when in with clause, there is sth like v.varName = p.varName
+	map<int, vector<int> > var_value_table; //maps the variable to the value assigned in With clause, attr 1 is the variable string in its code
+
+	int var_code_ending = 501; //I need to use it when I meet _ in relation to create new variable
+
 
 	//No tupled selection yet
 	int select_element = mQueryTree->selectAt(0);  //Elements to be selected
 
-	//Start evaluating With clauses
+
+	//Start evaluating With clauses                                  
 	int with_size = mQueryTree->withSize();
 	for(int i = 0; i<with_size; i++){
-		vector<int> clause = mQueryTree->withAt(i);
+		vector<int> clause = *(mQueryTree->withAt(i));
 		int clause_size = clause.size();
 		int ref = clause.back();
-		if(clause_size == 6)  //Variable 
+
+		//Read the with clause and divide it
+		vector<int> part1;
+		vector<int> part2;
+		int k = 0;
+		for(; k<clause_size; k++)
+		{
+			if(clause.at(k) != 155)
+				part1.push_back(clause.at(k));
+			break;
+		}
+		for(; k<clause_size; k++){
+			part2.push_back(clause.at(k));
+		}
+		//clause dividing END
+
+		int part2_size = part2.size();
+
+		if(part2_size = 2)  //Variable 
 		{
 			int type = clause.at(0);
 			int syn = clause.at(1);
@@ -37,57 +60,17 @@ void QueryEvaluator::evaluate()
 			if(type != 203) throw "With clause bad formed"; //Check whether the first token is query var
 			if(dot != 156 || eq != 155) throw "With clause bad formed";
 			else {
-				var_value_table->insert(syn, ref);	
+				var_value_table.insert(syn, part2);	
 			}
 		}//if: normal case END
-		else if(clause_size == 5) //variable is synonmy, just check whether this stmt hold
+		//For the case when a.stmt# = b.stmt#
+		else if(part1.size() == part2_size)
 		{
-			int syn = clause.at(0);
-			int dot = clause.at(1);
-			int attr_name = clause.at(2);
-			int eq = clause.at(3);
-			if(syn != 157) throw "With clause bad formed"; //Check whether the first token is _
-			if(dot != 156 || eq != 155) throw "With clause bad formed";
-			else{
-				if(attr_name = 101)  //value attr
-				{
-					if(mPKBObject->hasStmt(ref) || mPKBObject->hasCons(ref)) break;
-					else 
-					{
-						mgNullClause = true;
-						return;
-					}
-				}
-				else if(attr_name = 102) //varName attr
-				{
-					if(mPKBObject->hasVar(mPKBObject->varCode(mQueryTree->varDecode(ref)))) break;
-					else
-					{
-						mgNullClause = true;
-						return;
-					}
-				}
-				else if(attr_name = 103) //procName attr
-				{
-					if(mPKBObject->hasProc(mPKBObject->procCode(mQueryTree->procDecode(ref)))) break;
-					else
-					{
-						mgNullClause = true;
-						return;
-					}
-				}
-				else if(attr_name = 104) //stmt# attr
-				{
-					if(mPKBObject->hasStmt(ref)) break;
-					else
-					{
-						mgNullClause = true;
-						return;
-					}
-				}
-				else throw "With clause bad formed";
-			}//if: check attr END
-		}//if: synonmy END
+			int p1_name = part1.at(1);
+			int p2_name = part2.at(1);
+			equal_vars.push_back(p1_name);
+			equal_vars.push_back(p2_name);
+		}
 		else throw "With clause bad formed";
 	}//while: With clause evaluation End
 
@@ -95,75 +78,163 @@ void QueryEvaluator::evaluate()
 	int suchThatSize = mQueryTree->suchThatSize();
 	for(int i= 0; i<suchThatSize; i++)
 	{
-		int *clause = mQueryTree->suchThatAt(i);
+		vector<int> clause = *(mQueryTree->suchThatAt(i));
 		int rel = clause[0];
-		int para1Type = clause[1];
-		int para1 = clause[2];
-		int para2Type = clause[3];
-		int para2 = clause[4];
+		int para1Type;
+		int para1;
+		int para2Type;
+		int para2;
+
+		int next_indx = 0;
+		if(clause[1] = 157)// if the first para is _
+		{ 
+			para1 = clause[1];
+			next_indx = 2;
+		}
+		else 
+		{
+			para1Type = clause[1];
+			para1 = clause[2];
+			next_indx = 3;
+		}
+		if(clause[next_indx] = 157)// if the second para is _
+		{ 
+			para2 = clause[next_indx];
+		}
+		else 
+		{
+			para2Type = clause[next_indx];
+			para2 = clause[next_indx+1];
+		}
+
+		
+		if(rel == 5 || rel == 6 || rel == 7 || rel == 8) //relation is parent, parent*, follows, follows*
+		{
+			if(para1 == 157)
+			{
+				para1Type = 201;
+				para1 = var_code_ending++;
+			}
+			if(para2 == 157)
+			{
+				para2Type = 201;
+				para2 = var_code_ending++;
+			}
+		}
+		else if(rel == 9 || rel == 10)
+		{
+			if(para2 == 157)
+			{
+				para2Type = 202;
+				para2 = var_code_ending++;
+			}
+		}
+		else if(rel == 11 || rel == 12) //relation is calls, calls*
+		{
+			if(para1 == 157)
+			{
+				para1Type = 203;
+				para1 = var_code_ending++;
+			}
+			if(para2 == 157)
+			{
+				para2Type = 203;
+				para2 = var_code_ending++;
+			}
+		}else;  //do nothing 
+
 
 		//Manipulation of indexing issue, adjust the mgTupleIndexing and find common index to pass
 		vector<int>::iterator it;
-		it = find(mgTupleIndexing->begin(), mgTupleIndexing->end(), para1);
-		vector<vector<int> >::iterator same1Tuple1;
-		vector<vector<int> >::iterator same2Tuple1;
-		vector<vector<int> >::iterator same1Tuple2;
-		vector<vector<int> >::iterator same2Tuple2;  // Need to be assigned when the new result tuple is found
+		it = find(mgTupleIndexing.begin(), mgTupleIndexing.end(), para1);
+		int same1Tuple1 = 0;
+		int same2Tuple1 = 0;
 		int numOfCommonElement = 0;
-		if(it == mgTupleIndexing->end()) 
-			mgTupleIndexing->push_back(para1);
-		else 
+		//When no common attr for new tuple with older old one, just do nothing, cause no relation inside
+		//But this requires the query passed to me 
+		//NEWEST: this way turned out to be unmature, it has error when there is no relation has attr of select element. I come up with a way of adding a new relation to add select element evaluation, but this is not so workable for multiple select.
+		if(it == mgTupleIndexing.end())
+			mgTupleIndexing.push_back(para1);
+		else
 		{
-			same1Tuple1 = eva_tuple->begin();
-			for(vector<int>::iterator i = mgTupleIndexing->begin(); i<=it; i++){
+			for(vector<int>::iterator i = mgTupleIndexing.begin(); i<=it; i++){
 				same1Tuple1++;
 			}
 			numOfCommonElement = 2;
 		}
-		it = find(mgTupleIndexing->begin(), mgTupleIndexing->end(), para2);
-		if(it == mgTupleIndexing->end())
-			mgTupleIndexing->push_back(para2);
+		it = find(mgTupleIndexing.begin(), mgTupleIndexing.end(), para2);
+		if(it == mgTupleIndexing.end()); //Do nothing
 		else
 		{
-			same1Tuple1 = eva_tuple->begin();
-			for(vector<int>::iterator i = mgTupleIndexing->begin(); i<=it; i++){
-				same1Tuple1++;
+			for(vector<int>::iterator i = mgTupleIndexing.begin(); i<=it; i++){
+				same2Tuple1++;
 			}
 			numOfCommonElement = 4;
 		}
 
+		
+
 
 		//Evaluating Relation
-		vector<vector<int> > *relResult;
-		if(rel == 5 || rel==7 || rel==9 || rel==10 || rel==11)
-			relResult = getRel(para1Type, para2Type, para1, para2, rel);
-		else if (rel == 6 || rel == 8 || rel == 12)
-			relResult = getRelStar(para1Type, para2Type, para1, para2, rel);
-		else 
-			throw "No Such Relation: " + rel + "\n";
-		same1Tuple2 = relResult->begin();
-		same2Tuple2 = relResult->end();
+		vector<vector<int> > relResult;
+		map<int,vector<int> >::iterator it1 = var_value_table.find(para1);
+		map<int,vector<int> >::iterator it2 = var_value_table.find(para2);
+		if(it1 != var_value_table.end())
+		{
+			para1Type = it1->first;
+			para1 = it1->second;
+		}
+		if(it2 != var_value_table.end())
+		{
+			para2Type = it1->first;
+			para2 = it2->second;
+		}
 
+		if(rel == 5 || rel==7 || rel==9 || rel==10 || rel==11)
+			relResult = *getRel(para1Type, para2Type, para1, para2, rel);
+		else 
+			throw "Relation no exists";
+
+		
 		if(numOfCommonElement == 2)
-			eva_tuple = TupleOperations.tupleJoinOneC(same1Tuple1, same2Tuple1, eva_tuple, relResult);
+			eva_tuple = *TupleOperations.tupleJoinOneC(same1Tuple1, &eva_tuple, &relResult);
 		else if(numOfCommonElement == 4)
-			eva_tuple = TupleOperations.tupleJoinTwoC(same1Tuple1, same2Tuple1, same2Tuple1, same2Tuple2, eva_tuple, relResult);
+			eva_tuple = *TupleOperations.tupleJoinTwoC(same1Tuple1, same1Tuple2, &eva_tuple, &relResult);
 	}//while: such that evaluation END
+
+
+	//This is to deal with when the with clause have v.varName = p.procName
+	int equal_ele_size = equal_vars.size();
+	for(int i = 0; i<equal_ele_size; i++){
+		int same1 = equal_vars.at(i);
+		int same2 = equal_vars.at(i++);
+		int found1 = -1;
+		int found2 = -1;
+		for(int k = 0; k<eva_tuple.at(0).size(); k++){
+			if(mgTupleIndexing.at(k) == same1) found1 = k;
+			if(mgTupleIndexing.at(k) == same2) found2 = k;
+		}
+		if(found1 == -1 || found2 == -1) break;
+		for(int k = 0; k<eva_tuple.size(); k++){
+			if(eva_tuple.at(k).at(found1) != eva_tuple.at(k).at(found2)) 
+				eva_tuple.erase(eva_tuple.begin() + k);
+		}
+	}
 
 
 	if(select_element == 60) //If the select is boolean
 	{
-		if(mgTupleIndexing->empty()) mResult->setBoolValue(false);
-		else mResult->setBoolValue(true);
+		if(mgTupleIndexing.empty()) mResult.setBoolValue(false);
+		else mResult.setBoolValue(true);
 		return;
 	}
 
 	int indx = 0;
-	for(; indx< mgTupleIndexing->size(); indx++)
+	for(; indx< mgTupleIndexing.size(); indx++)
 	{
-		if(select_element == mgTupleIndexing->at(indx)) break;
+		if(select_element == mgTupleIndexing.at(indx)) break;
 	}
-	mResult->addInTuple(&eva_tuple->at(indx));
+	mResult.addInTuple(&eva_tuple.at(indx));
 	//Store result inside mResult
 
 
@@ -171,388 +242,177 @@ void QueryEvaluator::evaluate()
 
 QueryResult *QueryEvaluator::getResult()
 {
-	return mResult;
+	return &mResult;
 }
+
 
 
 vector<vector<int> > *QueryEvaluator::getRel(int type1, int type2, int para1, int para2, int relType)
 {
-	vector<vector<int> > *evalResult;	
+	vector<vector<int> > evalResult;	
 	switch(relType)
 	{
-	case 5: //Relation is parent
+		case 5: case 6: //Relation is parent or parent*
 		{
-			if(type1 == 201) //the first parameter is a constant stmt#
-			{
-				int result = mPKBObject->getChild(para1);
-				if(result == -1) break;
-				vector<int> tmp;
-				int t[] = {201,para1, 201,result};
-				tmp.insert(tmp.begin(), t, t+4);
-				evalResult->push_back(tmp);
-			}
-			else if(type1 == 51 || type1 == 52)// first para is a stmt var
-			{
-				vector<int> para1List = mPKBObject->getAllStmts();
-				for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
-					int result = mPKBObject->getChild(*i);
-					if(result == -1) continue;    //continue this loop without eva this iteration
-					if(type2 == 201 && para2 != result) continue;
+			vector<int> para1List;
+			if(type1 = 201) para1List.push_back(para1);
+			else if(type1 == 51 || type1 == 52)
+				para1List = *(mPKBObject->getAllStmts());
+			else if(type1 == 54 || type1 == 55)
+				para1List = *mPKBObject->getAllWhile();
+			else throw "Parent parameter type mismatch!";
+			for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
+				vector<int> result;
+				if(relType == 5)
+					 result = *mPKBObject->getChild(*i);
+				else if(relType == 6)
+					result = *getChildStar(*i);
+				if(*(result.begin()) == -1) continue;    //continue this loop if this candidate has no child
+				for(vector<int>::iterator k=result.begin(); k<result.end(); k++){
+					vector<int> para2List;
+					if(type2 == 201) para2List.push_back(para2);
+					else if(type2 == 53) 
+						para2List = *mPKBObject->getAllAssign();
+					else if(type2 == 54)
+						para2List = *mPKBObject->getAllWhile();
+					else if(type2 == 55)
+						para2List = *mPKBObject->getAllIf();
+					else if(type2 == 59)
+						para2List = *mPKBObject->getAllCall();
+					else throw "Your follows relation has unpaired second parameters";
+					vector<int>::iterator it = find(para2List.begin(), para2List.end(), *k);
+					if(it == para2List.end()) continue; 
 					vector<int> tmp;
-					int t[] = {201,para1,201, result};
-					tmp.insert(tmp.begin(), t, t+4);
-					evalResult->push_back(tmp);
+					int t[] = {201,para1,201, *k};
+					tmp.insert(tmp.end(), t, t+4);
+					evalResult.push_back(tmp);
 				}
-			}
-			else if(type1 == 54)//while var
-			{
-				vector<int> para1List = mPKBObject->getAllWhile();
-				for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
-					int result = mPKBObject->getChild(*i);
-					if(result == -1) continue;    //continue this loop without eva this iteration
-					if(type2 == 201 && para2 != result) continue;
-					vector<int> tmp;
-					int t[] = {201,para1, 201,result};
-					tmp.insert(tmp.begin(), t, t+4);
-					evalResult->push_back(tmp);
-				}
-			}
-			else if(type1 == 55)//if var
-			{
-				vector<int> para1List = mPKBObject->getAllIf();
-				for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
-					int result = mPKBObject->getChild(*i);
-					if(result == -1) continue;    //continue this loop without eva this iteration
-					if(type2 == 201 && para2 != result) continue;
-					vector<int> tmp;
-					int t[] = {201, para1, 201,result};
-					tmp.insert(tmp.begin(), t, t+4);
-					evalResult->push_back(tmp);
-				}
-			}
-			else//Error Case
-			{
-				throw "Your parent relation has unpaired parameters, para1 type = "+ type1 +"\n";
 			}
 			break;
 		}//Parent END
-	case 7: //relation is follows
+		case 7: case 8://relation is follows or follows*
 		{
-			if(type1 == 201) //the first parameter is a constant stmt#
-			{
-				int result = mPKBObject->getFollowingStatement(para1);
-				if(result == -1) break;
-				if(type2 == 201 && para2 != result) continue;
-				vector<int> tmp;
-				int t[] = {201,para1,201, result};
-				tmp.insert(tmp.begin(), t, t+4);
-				evalResult->push_back(tmp);
-			}
-			else if(type1 == 51 || type1 == 52)// first para is a stmt var
-			{
-				vector<int> para1List = mPKBObject->getAllStmts();
-				for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
-					int result = mPKBObject->getFollowingStatement(*i);
-					if(result == -1) continue;    //continue this loop without eva this iteration
-					if(type2 == 201 && para2 != result) continue;
+			vector<int> para1List; 
+			if(type1 = 201) para1List.push_back(para1);
+			else if(type1 = 51 || type1 == 52)
+				para1List = *mPKBObject->getAllStmts();
+			else if(type1 == 53)
+				para1List = *mPKBObject->getAllAssign();
+			else if(type1 == 54)
+				para1List = *mPKBObject->getAllWhile();
+			else if(type1 == 55)
+				para1List = *mPKBObject->getAllIf();
+			else if(type1 == 59)
+				para1List = *mPKBObject->getAllCall();
+			else throw "Your follows relation has unpaired parameters";
+			for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
+				vector<int> result;
+				if(relType == 7) 
+					result.push_back(mPKBObject->getFollowingStatement(*i));
+				else result = *getFollowsStar(*i);
+				if(result.at(0) == -1) continue;    //continue this loop without eva this iteration
+				for(vector<int>::iterator k = result.begin(); k<result.end(); k++){
+					vector<int> para2List;
+					if(type2 == 201) para2List.push_back(para2);
+					else if(type2 == 53) para2List = *mPKBObject->getAllAssign();
+					else if(type2 == 54)
+					para2List = *mPKBObject->getAllWhile();
+					else if(type2 == 55)
+					para2List = *mPKBObject->getAllIf();
+					else if(type2 == 59)
+					para2List = *mPKBObject->getAllCall();
+					else throw "Your follows relation has unpaired second parameters";
+					vector<int>::iterator it = find(para2List.begin(), para2List.end(), *k);
+					if(it == para2List.end()) continue; 
 					vector<int> tmp;
-					int t[] = {201,para1, 201,result};
-					tmp.insert(tmp.begin(), t, t+4);
-					evalResult->push_back(tmp);
+					int t[] = {201,para1, 201,*k};
+					tmp.insert(tmp.end(), t, t+4);
+					evalResult.push_back(tmp);
 				}
-			}
-			else if(type1 == 53)//assign var
-			{
-				vector<int> para1List = mPKBObject->getAllAssign();
-				for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
-					int result = mPKBObject->getFollowingStatement(*i);
-					if(result == -1) continue;    //continue this loop without eva this iteration
-					if(type2 == 201 && para2 != result) continue;
-					vector<int> tmp;
-					int t[] = {201,para1, 201,result};
-					tmp.insert(tmp.begin(), t, t+4);
-					evalResult->push_back(tmp);
-				}
-			}
-			else if(type1 == 54)//while var
-			{
-				vector<int> para1List = mPKBObject->getAllWhile();
-				for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
-					int result = mPKBObject->getFollowingStatement(*i);
-					if(result == -1) continue;    //continue this loop without eva this iteration
-					if(type2 == 201 && para2 != result) continue;
-					vector<int> tmp;
-					int t[] = {201,para1, 201,result};
-					tmp.insert(tmp.begin(), t, t+4);
-					evalResult->push_back(tmp);
-				}
-			}
-			else if(type1 == 55)//if var
-			{
-				vector<int> para1List = mPKBObject->getAllIf();
-				for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
-					int result = mPKBObject->getFollowingStatement(*i);
-					if(result == -1) continue;    //continue this loop without eva this iteration
-					if(type2 == 201 && para2 != result) continue;
-					vector<int> tmp;
-					int t[] = {201,para1, 201,result};
-					tmp.insert(tmp.begin(), t, t+4);
-					evalResult->push_back(tmp);
-				}
-			}
-			else if(type1 == 59)//call var
-			{
-				vector<int> para1List = mPKBObject->getAllCall();
-				for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
-					int result = mPKBObject->getFollowingStatement(*i);
-					if(result == -1) continue;    //continue this loop without eva this iteration
-					if(type2 == 201 && para2 != result) continue;
-					vector<int> tmp;
-					int t[] = {201,para1,201, result};
-					tmp.insert(tmp.begin(), t, t+4);
-					evalResult->push_back(tmp);
-				}
-			}else//Error Case
-			{
-				throw "Your follows relation has unpaired parameters";
 			}
 			break;
 		}//Follows END
-	case 9: //relation is uses
+	case 9: case 10: //relation is uses or modifies
 		{
-			if(type1 == 201) //the first parameter is a constant stmt#
+			if(type1 == 201 || type1 == 51 || type1 == 52 || type1 == 53 || type1 == 54 || type1 == 55 || type1 == 59) //the first parameter is a constant stmt#
 			{
-				int result = mPKBObject->getUsedVar(para1);
-				if(result == -1) continue;
-				if(type2 == 202 && para2 != result) continue;
-				vector<int> tmp;
-				int t[] = {201,para1, 202, result};
-				tmp.insert(tmp.begin(), t, t+4);
-				evalResult->push_back(tmp);
-			}
-			else if(type1 == 203) //the first parameter is a constant procName
-			{
-				int result = mPKBObject->getUsedVarPI(para1);
-				if(result == -1) continue;
-				if(type2 == 202 && para2 != result) continue;
-				vector<int> tmp;
-				int t[] = {203, para1,202, result};
-				tmp.insert(tmp.begin(), t, t+4);
-				evalResult->push_back(tmp);
-			}
-			else if(type1 == 51 || type1 == 52)// first para is a stmt var
-			{
-				vector<int> para1List = mPKBObject->getAllStmts();
+				vector<int> para1List;
+				if(type1 == 201)
+					para1List.push_back(para1);
+				else if(type1 == 51 || type1 == 52)
+					para1List = *mPKBObject->getAllStmts();
+				else if(type1 == 53) //assign var
+					para1List = *mPKBObject->getAllAssign();
+				else if(type1 == 54) //while var
+					para1List = *mPKBObject->getAllWhile();
+				else if(type1 == 55) //if var
+					para1List = *mPKBObject->getAllIf();
+				else if(type1 == 59) //
+					para1List = *mPKBObject->getAllCall();
+				else break; //cannot happen
 				for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
-					int result = mPKBObject->getUsedVar(*i);
-					if(result == -1) continue;    //continue this loop without eva this iteration
-					if(type2 == 202 && para2 != result) continue;
-					vector<int> tmp;
-					int t[] = {201,para1, 202, result};
-					tmp.insert(tmp.begin(), t, t+4);
-					evalResult->push_back(tmp);
+					vector<int> result;
+					if(relType == 9)
+						vector<int> result = *mPKBObject->getUsedVar(*i);
+					else  result = *mPKBObject->getModifiedVar(*i);
+					if(*(result.begin()) == -1) continue;    //continue this loop without eva this iteration
+					for(vector<int>::iterator k=result.begin(); k<result.end(); k++){
+						if(type2 == 202 && para2 != *k) continue;
+						vector<int> tmp;
+						int t[] = {201,para1, 202, *k};
+						tmp.insert(tmp.begin(), t, t+4);
+						evalResult.push_back(tmp);
+					}
 				}
 			}
-			else if(type1 == 53)//assign var
+			else if(type1 == 203 || type1 == 58) //the first parameter is a constant procName or proc var
 			{
-				vector<int> para1List = mPKBObject->getAllAssign();
+				vector<int> para1List;
+				if(type1 == 203)
+					para1List.push_back(para1);
+				else para1List = *mPKBObject->getAllProc();
 				for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
-					int result = mPKBObject->getUsedVar(*i);
-					if(result == -1) continue;    //continue this loop without eva this iteration
-					if(type2 == 202 && para2 != result) continue;
-					vector<int> tmp;
-					int t[] = {201,para1, 202, result};
-					tmp.insert(tmp.begin(), t, t+4);
-					evalResult->push_back(tmp);
-				}
-			}
-			else if(type1 == 54)//while var
-			{
-				vector<int> para1List = mPKBObject->getAllWhile();
-				for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
-					int result = mPKBObject->getUsedVar(*i);
-					if(result == -1) continue;    //continue this loop without eva this iteration
-					if(type2 == 202 && para2 != result) continue;
-					vector<int> tmp;
-					int t[] = {201,para1, 202, result};
-					tmp.insert(tmp.begin(), t, t+4);
-					evalResult->push_back(tmp);
-				}
-			}
-			else if(type1 == 55)//if var
-			{
-				vector<int> para1List = mPKBObject->getAllIf();
-				for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
-					int result = mPKBObject->getUsedVar(*i);
-					if(result == -1) continue;    //continue this loop without eva this iteration
-					if(type2 == 202 && para2 != result) continue;
-					vector<int> tmp;
-					int t[] = {201,para1, 202, result};
-					tmp.insert(tmp.begin(), t, t+4);
-					evalResult->push_back(tmp);
-				}
-			}
-			else if(type1 == 59)//call var
-			{
-				vector<int> para1List = mPKBObject->getAllCall();
-				for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
-					int result = mPKBObject->getUsedVar(*i);
-					if(result == -1) continue;    //continue this loop without eva this iteration
-					if(type2 == 202 && para2 != result) continue;
-					vector<int> tmp;
-					int t[] = {201,para1, 202, result};
-					tmp.insert(tmp.begin(), t, t+4);
-					evalResult->push_back(tmp);
-				}
-			}
-			else if(type1 == 58) //proc var
-			{
-				vector<int> para1List = mPKBObject->getAllProc();
-				for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
-					int result = mPKBObject->getUsedVarPI(*i);
-					if(result == -1) continue;    //continue this loop without eva this iteration
-					if(type2 == 202 && para2 != result) continue;
-					vector<int> tmp;
-					int t[] = {203, para1, 202, result};
-					tmp.insert(tmp.begin(), t, t+4);
-					evalResult->push_back(tmp);
+					vector<int> result;
+					if(relType == 9)
+						vector<int> result = *mPKBObject->getUsedVarPI(*i);
+					else  result = *mPKBObject->getModifiedVarPI(*i);
+					if(*(result.begin()) == -1) continue;    //continue this loop without eva this iteration
+					for(vector<int>::iterator k=result.begin(); k<result.end(); k++){
+						if(type2 == 202 && para2 != *k) continue;
+						vector<int> tmp;
+						int t[] = {203, para1, 202, *k};
+						tmp.insert(tmp.begin(), t, t+4);
+						evalResult.push_back(tmp);
+					}
 				}
 			}
 			else//Error Case
 			{
-				throw "Your uses relation has unpaired parameters" + "\n";
+				throw "Your uses relation has unpaired parameters";
 			}
 			break;
 		}//Uses END
-	case 10: //relation is modifies
+	case 11: case 12://relation is calls
 		{
-			if(type1 == 201) //the first parameter is a constant stmt#
+			if(type1 == 203 || type1 == 58) //proc var
 			{
-				int result = mPKBObject->getModifiedVar(para1);
-				if(result == -1) continue;
-				if(type2 == 202 && para2 != result) continue;
-				vector<int> tmp;
-				int t[] = {201,para1, 202, result};
-				tmp.insert(tmp.begin(), t, t+4);
-				evalResult->push_back(tmp);
-			}
-			else if(type1 == 203) //the first parameter is a constant procName
-			{
-				int result = mPKBObject->getModifiedVarPI(para1);
-				if(result == -1) continue;
-				if(type2 == 202 && para2 != result) continue;
-				vector<int> tmp;
-				int t[] = {203, para1,202, result};
-				tmp.insert(tmp.begin(), t, t+4);
-				evalResult->push_back(tmp);
-			}
-			else if(type1 == 51 || type1 == 52)// first para is a stmt var
-			{
-				vector<int> para1List = mPKBObject->getAllStmts();
-				for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
-					int result = mPKBObject->getModifiedVar(*i);
-					if(result == -1) continue;    //continue this loop without eva this iteration
-					if(type2 == 202 && para2 != result) continue;
-					vector<int> tmp;
-					int t[] = {201,para1, 202, result};
-					tmp.insert(tmp.begin(), t, t+4);
-					evalResult->push_back(tmp);
-				}
-			}
-			else if(type1 == 53)//assign var
-			{
-				vector<int> para1List = mPKBObject->getAllAssign();
-				for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
-					int result = mPKBObject->getModifiedVar(*i);
-					if(result == -1) continue;    //continue this loop without eva this iteration
-					if(type2 == 202 && para2 != result) continue;
-					vector<int> tmp;
-					int t[] = {201,para1, 202, result};
-					tmp.insert(tmp.begin(), t, t+4);
-					evalResult->push_back(tmp);
-				}
-			}
-			else if(type1 == 54)//while var
-			{
-				vector<int> para1List = mPKBObject->getAllWhile();
-				for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
-					int result = mPKBObject->getModifiedVar(*i);
-					if(result == -1) continue;    //continue this loop without eva this iteration
-					if(type2 == 202 && para2 != result) continue;
-					vector<int> tmp;
-					int t[] = {201,para1, 202, result};
-					tmp.insert(tmp.begin(), t, t+4);
-					evalResult->push_back(tmp);
-				}
-			}
-			else if(type1 == 55)//if var
-			{
-				vector<int> para1List = mPKBObject->getAllIf();
-				for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
-					int result = mPKBObject->getModifiedVar(*i);
-					if(result == -1) continue;    //continue this loop without eva this iteration
-					if(type2 == 202 && para2 != result) continue;
-					vector<int> tmp;
-					int t[] = {201,para1, 202, result};
-					tmp.insert(tmp.begin(), t, t+4);
-					evalResult->push_back(tmp);
-				}
-			}
-			else if(type1 == 59)//call var
-			{
-				vector<int> para1List = mPKBObject->getAllCall();
-				for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
-					int result = mPKBObject->getModifiedVar(*i);
-					if(result == -1) continue;    //continue this loop without eva this iteration
-					if(type2 == 202 && para2 != result) continue;
-					vector<int> tmp;
-					int t[] = {201,para1, 202, result};
-					tmp.insert(tmp.begin(), t, t+4);
-					evalResult->push_back(tmp);
-				}
-			}
-			else if(type1 == 58) //proc var
-			{
-				vector<int> para1List = mPKBObject->getAllProc();
-				for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
-					int result = mPKBObject->getModifiedVarPI(*i);
-					if(result == -1) continue;    //continue this loop without eva this iteration
-					if(type2 == 202 && para2 != result) continue;
-					vector<int> tmp;
-					int t[] = {203, para1, 202, result};
-					tmp.insert(tmp.begin(), t, t+4);
-					evalResult->push_back(tmp);
-				}
-			}
-			else//Error Case
-			{
-				throw "Your modifies relation has unpaired parameters" + "\n";
-			}
-			break;
-		}//Modifies END
-	case 11: //relation is calls
-		{
-			if(type1 == 203) //the first parameter is a constant procName
-			{
-				int result = mPKBObject->getCalls(para1);
-				if(result == -1) continue;
-				if(type2 == 203 && para2 != result) continue;
-				vector<int> tmp;
-				int t[] = {203, para1,203, result};
-				tmp.insert(tmp.begin(), t, t+4);
-				evalResult->push_back(tmp);
-			}
-			else if(type1 == 58) //proc var
-			{
-				vector<int> para1List = mPKBObject->getAllProc();
-				for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
-					int result = mPKBObject->getCalls(*i);
-					if(result == -1) continue;    //continue this loop without eva this iteration
-					if(type2 == 203 && para2 != result) continue;
-					vector<int> tmp;
-					int t[] = {203, para1, 203, result};
-					tmp.insert(tmp.begin(), t, t+4);
-					evalResult->push_back(tmp);
+				vector<int> para1List;
+				if(type1 == 203) para1List.push_back(para1);
+				else para1List = *mPKBObject->getAllProc();
+				for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++)
+				{
+					vector<int> result;
+					if(relType == 11) result = *mPKBObject->getCalls(*i);
+					else result = *getCallsStar(*i);
+					if(*(result.begin()) == -1) continue;    //continue this loop without eva this iteration
+					for(vector<int>::iterator k = result.begin(); k<result.end(); k++)
+					{
+						if(type2 == 203 && para2 != *k) continue;
+						vector<int> tmp;
+						int t[] = {203, para1, 203, *k};
+						tmp.insert(tmp.begin(), t, t+4);
+						evalResult.push_back(tmp);
+					}
 				}
 			}
 			else//Error Case
@@ -563,111 +423,42 @@ vector<vector<int> > *QueryEvaluator::getRel(int type1, int type2, int para1, in
 		}//Calls END
 	default:
 		{
-			throw "No such relation implementation yet: "+relType+ "\n";
+			throw "No such relation implementation yet";
 		}//Error case END
 	}//getRel END
-
-	std::vector<std::vector<int> > *getRelStar(int type1, int type2, int para1, int para2, int relType)
-	{
-		switch(relType)
-		{
-		case 6: //parent*
-			{
-				if(type1 == 201) //the first parameter is a constant stmt#
-				{
-					throw "Your calls relation has parameter mismatch!";
-				}
-				else if(type1 == 51 || type1 == 52)// first para is a stmt var
-				{
-					throw "Your calls relation has parameter mismatch!";
-				}
-				else if(type1 == 53)//assign var
-				{
-					throw "Your calls relation has parameter mismatch!";
-				}
-				else if(type1 == 54)//while var
-				{
-					throw "Your calls relation has parameter mismatch!";
-				}
-				else if(type1 == 55)//if var
-				{
-					throw "Your calls relation has parameter mismatch!";
-				}
-				else//Error Case
-				{
-					throw "Your parent* relation has unpaired parameters";
-				}
-				break;
-			}//Parent* END
-		case 8: //follows*
-			{
-				if(type1 == 201) //the first parameter is a constant stmt#
-				{
-					throw "Your calls relation has parameter mismatch!";
-				}
-				else if(type1 == 51 || type1 == 52)// first para is a stmt var
-				{
-					throw "Your calls relation has parameter mismatch!";
-				}
-				else if(type1 == 53)//assign var
-				{
-					throw "Your calls relation has parameter mismatch!";
-				}
-				else if(type1 == 54)//while var
-				{
-					throw "Your calls relation has parameter mismatch!";
-				}
-				else if(type1 == 55)//if var
-				{
-					throw "Your calls relation has parameter mismatch!";
-				}
-				else//Error Case
-				{
-					throw "Your follows* relation has unpaired parameters";
-				}
-				break;
-			}//follows* END
-		case 12: //calls*
-			{
-				if(type1 == 203) //the first parameter is a constant procName
-				{
-					int result = mPKBObject->getCalls(para1);
-					if(result == -1) continue;
-					if(type2 == 203 && para2 != result) continue;
-					vector<int> tmp;
-					int t[] = {203, para1,203, result};
-					tmp.insert(tmp.begin(), t, t+4);
-					evalResult->push_back(tmp);
-				}
-				else if(type1 == 58) //proc var
-				{
-					vector<int> para1List = mPKBObject->getAllProc();
-					for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
-						int result = mPKBObject->getCalls(*i);
-						if(result == -1) continue;    //continue this loop without eva this iteration
-						if(type2 == 203 && para2 != result) continue;
-						vector<int> tmp;
-						int t[] = {203, para1, 203, result};
-						tmp.insert(tmp.begin(), t, t+4);
-						evalResult->push_back(tmp);
-					}
-				}
-				else//Error Case
-				{
-					throw "Your calls* relation has unpaired parameters";
-				}
-				break;
-			}
-		default:
-			throw "The rel* has wrong relation stated!";
-
-		}//switch END
-
-
-	}//getRelStar END
 }
-
 	
 
+vector<int> *QueryEvaluator::getChildStar(int stmtN){
+	vector<int> descendant = *(mPKBObject->getChild(stmtN));
+	if(descendant.at(0) != -1){
+		for(vector<int>::iterator i = descendant.begin(); i < descendant.end(); i++){
+			vector<int> k = *(mPKBObject->getChild(*i));
+			if(k.at(0) != -1)descendant.insert(descendant.end(), k.begin(), k.end());
+		}
+	}
+	return &descendant;
+}
+
+vector<int> *QueryEvaluator::getFollowsStar(int stmtN){
+	vector<int> following;
+	int follow = mPKBObject->getFollowingStatement(stmtN);
+	while(follow != -1){
+		following.push_back(follow);
+		follow = mPKBObject->getFollowingStatement(follow);	
+	}
+	return &following;
+}
+
+vector<int> *QueryEvaluator::getCallsStar(int procNameCode){
+	vector<int> descendant = *(mPKBObject->getCalls(procNameCode));
+	if(descendant.at(0) != -1){
+		for(vector<int>::iterator i = descendant.begin(); i < descendant.end(); i++){
+			vector<int> k = *(mPKBObject->getCalls(*i));
+			if(k.at(0) != -1)descendant.insert(descendant.end(), k.begin(), k.end());
+		}
+	}
+	return &descendant;
+}
 
 
