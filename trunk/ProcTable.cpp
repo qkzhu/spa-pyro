@@ -22,9 +22,14 @@ int ProcTable::getSize()
 	return this->getSymbolMapSize();
 }// end getProcTableSize
 
-bool ProcTable::containsProc(string s)
+bool ProcTable::isProcNameExist(string procName)
 {
-	return this->containsSymbol(s);
+	return this->isNameExist(procName);
+}// end ContainsProc
+
+bool ProcTable::isProcIndexExist(int procIndex)
+{
+	return this->isIndexExist(procIndex);
 }// end ContainsProc
 
 set<string> ProcTable::getAllProc()

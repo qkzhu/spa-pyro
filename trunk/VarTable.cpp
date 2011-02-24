@@ -23,9 +23,12 @@ int VarTable::getSize()
 	return this->getSymbolMapSize();
 } //end GetVarTableSize
 
-bool VarTable::containsVar(string s)
-{
-	return this->containsSymbol(s);
+bool VarTable::isVarNameExist(string varName) {
+	return this->isNameExist(varName);
+}// end ContainsVar
+
+bool VarTable::isVarIndexExist(int varIndex) {
+	return this->isIndexExist(varIndex);
 }// end ContainsVar
 
 set<string> VarTable::getAllVar()

@@ -16,8 +16,7 @@ string SymbolTable::getSymbolName(int sIndex)
 	{
 		return "There is no nothing stored at the given index";
 	}
-	else
-		//get symbol name
+	else //get symbol name
 	{
 		MapType::const_iterator end = mSymbolMap.end();
 		for(MapType::const_iterator it = mSymbolMap.begin(); it != end; it++)
@@ -35,10 +34,8 @@ int SymbolTable::getSymbolIndex(string s)
 {
 	MapType::const_iterator iter = mSymbolMap.begin();
 	iter = mSymbolMap.find(s);
-	if(iter != mSymbolMap.end())
-	{
-		return iter->second;
-	}
+
+	if(iter != mSymbolMap.end()) return iter->second;
 	return -1; // return an invalid index
 }
 
@@ -47,16 +44,25 @@ int SymbolTable::getSymbolMapSize()
 	return mSymbolMap.size();
 }
 
-bool SymbolTable::containsSymbol(string s)
+bool SymbolTable::isNameExist(string s)
 {
 	MapType::const_iterator iter = mSymbolMap.begin();
 	iter = mSymbolMap.find(s);
-	if(iter != mSymbolMap.end())
-	{
-		return true;
-	}
-	return false;
+
+	if(iter != mSymbolMap.end()) return true;
+	else return false;
 }
+
+bool SymbolTable::isIndexExist(int varIndex)
+{
+	string name = getSymbolName(varIndex);
+	MapType::const_iterator iter = mSymbolMap.begin();
+	iter = mSymbolMap.find(name);
+
+	if(iter != mSymbolMap.end()) return true;
+	else return false;
+}
+
 
 set<string> SymbolTable::getAllSymbol()
 {
