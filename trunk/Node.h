@@ -15,7 +15,7 @@ public:
 
 	int stmtNum;	// statement number
 	NodeType type;	// note type, it can be procedure, assignment, statment list, variable or constant value
-	int name;	// it stores the name of a procedure or variable, or the value of a constant value
+	int name;		// it stores the name of a procedure or variable, or the value of a constant value
 
 	Node *parentNode;				// parent node
 	Node *childNode;				// child node

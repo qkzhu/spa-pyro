@@ -7,7 +7,7 @@ int main(void)
 {
 
 	
-	VarTable var;
+	VarTable var;	
 	AST ast;
 	string s ;
 	cout << "Please enter the location of the simple file: " << endl;
