@@ -4,10 +4,6 @@
 /**
  * AST Part
  */
-AST* PKB::ast_CreateASTnode() {
-	return new AST();
-}
-
 Node* PKB::ast_CreateNode(Node::NodeType nt, int statNum, int name) {
 	return ast->createNode(nt, statNum, name);
 }
