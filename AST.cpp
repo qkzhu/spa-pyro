@@ -77,7 +77,10 @@ Node* AST::createNode(Node::NodeType nt, int statNum, int name)
 {
 	Node* newNode = new Node(nt, statNum, name);
 
-	if(nt == Node::ASSIGN) StatNumAndNodeList[statNum] = newNode;
+	if(nt == Node::ASSIGN) {
+		StatNumAndNodeList[statNum] = newNode;
+		NodeAndStatNumList[newNode] = statNum;
+	}
 
 	return newNode;
 }
@@ -98,4 +101,8 @@ Node* AST::getNodeByStatementNum(int index)
 		return NULL;
 
 	return AST::StatNumAndNodeList[index];
+}
+
+int AST::getStatementNumByNode(Node* d){
+	return NodeAndStatNumList[d];
 }

@@ -14,9 +14,6 @@ public:
 	//Didn't see QK'n API. In case of change, discuss together.
 	//bool hasCons(int c);  //whether the simple code has this constant 
 	bool hasStmt(int stmtNum);
-	//bool hasProc(int procIndex);
-	//bool hasVar(int varIndex);
-
 
 	vector<int> getAllStmts();
 	vector<int> getAllAssign(); //get all assignment stmts
@@ -24,33 +21,6 @@ public:
 	vector<int> getAllIf();
 	vector<int> getAllCall();
 	vector<int> getAllProc();
-
-	//int getVarIndex(string var); //return the code for a variable                //Need changes
-	//int getProcIndex(string proc); //return the code for a procedure
-	//string getVarName(int key);	//return the variable name given its code
-	//string getProcName(int key); //return the procedure name given its code
-
-	//vector<int> *getCalls(int proc_index);
-	//vector<int> *getCalled(int proc_index);
-
-	//vector<int> *getStmtModifies(int varIndex);  //take a variable code and return all stmts that modify it 
-	//vector<int> *getProcModifies(int varIndex);  //return all procs that modify it
-	//vector<int> *getModifiedVar(int stmtNum); //take a stmt# and return the varName code that it modifies
-	//vector<int> *getModifiedVarPI(int procIndex); //No need to return vector, but for convenience, use vector
-
-	//vector<int> *getUsedVar(int stmtNum);  //return all varName code that this stmt uses
-	//vector<int> *getUsedVarPI(int procIndex); //return all varName code that this proc uses
-	//vector<int> *getStmtUses(int varIndex); //return all stmt# that uses this var in its code
-	//vector<int> *getProcUses(int varIndex); //return all procName in code that uses this var in its code
-
-	int getFollowingStatement(int d);  //Get the follow node of given node d, with follow relation
-	int getPreviousStatement(int d); //Get the previous node of given node d, with the follow relation
-
-
-	//int getParent(int child);
-	//vector<int> *getChild(int parent);  
-
-
 	///////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -61,23 +31,23 @@ public:
 	PKB(): varTable(new VarTable()),
 		   procTable(new ProcTable()),
 		   constantTable(new ConstantTable()),
-		   useTable(new Uses()){}
+		   useTable(new Uses()),
+		   ast(new AST()){}
 	/**
 	 * AST Part
 	 */
-	AST*		ast_CreateASTnode();
-	Node*		ast_CreateNode(AST* ast, Node::NodeType nt, int statNum, int name);
-	vector<int> ast_GetChild(AST* ast, int stmtNum);
-	Node*		ast_GetPreviousStatement(AST* ast, Node* d);
-	int			ast_GetPreviousStatementNum(AST* ast, int stmtNum);
-	Node*		ast_GetFollowingStatement(AST* ast, Node* d);
-	int			ast_GetFollowingStatementNum(AST* ast, int stmtNum);
-	Node*		ast_GetNodeByStatementNum(AST* ast, int index);
-	void		ast_AddChild(AST* ast, Node *d, Node *childNode);
-	void		ast_AddDown(AST* ast, Node *upperNode, Node *bottomNode);
-	void		ast_AddFollow(AST* ast, Node *d, Node *followNode);
-	void		ast_AddProcedure(AST* ast, int procIndex, Node *d);
-	int			ast_getParent(AST* ast, int child);
+	Node*		ast_CreateNode(Node::NodeType nt, int statNum, int name);
+	vector<int> ast_GetChild(int stmtNum);
+	Node*		ast_GetPreviousStatement(Node* d);
+	int			ast_GetPreviousStatementNum(int stmtNum);
+	Node*		ast_GetFollowingStatement(Node* d);
+	int			ast_GetFollowingStatementNum(int stmtNum);
+	Node*		ast_GetNodeByStatementNum(int index);
+	void		ast_AddChild(Node *d, Node *childNode);
+	void		ast_AddDown(Node *upperNode, Node *bottomNode);
+	void		ast_AddFollow(Node *d, Node *followNode);
+	void		ast_AddProcedure(int procIndex, Node *d);
+	int			ast_getParent(int child);
 	/**
 	 * VarTable Part
 	 */
@@ -129,6 +99,7 @@ public:
 	void		 mTable_setModifyPV(int procIndex, int varIndex);
 
 private:
+	AST*			ast;
 	Node*			node;
 	VarTable*		varTable;
 	ProcTable*		procTable;

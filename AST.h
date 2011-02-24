@@ -26,16 +26,18 @@ public:
 	 * into a vector called 'StatNumAndNodeList'. This vector stores the statment number of each assignment node, and it's used
 	 * for retrive the node by using statment number.
 	 */
-	Node* createNode(Node::NodeType nt, int statNum, int name);	
-	vector<int> getChild(int stmtNum);								// get the child node of given node statement number stmtNum.
-	int getParent(int stmtNum);										// get the parent node of given node statement number stmtNum.
-	Node* getPreviousStatement(Node* d);							// Get the previous node of given node d, with follow relation.
-	Node* getFollowingStatement(Node* d);							// Get the follow node of given node d, withe the follow relation.
-	Node* getNodeByStatementNum(int index);							// Return a node corresponding given statement number.
+	Node*		createNode(Node::NodeType nt, int statNum, int name);	
+	vector<int> getChild(int stmtNum);				// get the child node of given node statement number stmtNum.
+	int			getParent(int stmtNum);				// get the parent node of given node statement number stmtNum.
+	Node*		getPreviousStatement(Node* d);		// Get the previous node of given node d, with follow relation.
+	Node*		getFollowingStatement(Node* d);		// Get the follow node of given node d, withe the follow relation.
+	Node*		getNodeByStatementNum(int index);	// Return a node corresponding to the given statement number.
+	int			getStatementNumByNode(Node* d);		// Return statement number corresponding to the given node.
 
 	AST();
 
 private:
-	map<int, Node*>	astList;										// procedure list, it stores the root of each procedure.
-	map<int, Node*> StatNumAndNodeList;								// StatNumAndNodeList stores the relation between statement number and node.
+	map<int, Node*>	astList;				// procedure list, it stores the root of each procedure.
+	map<int, Node*> StatNumAndNodeList;		// StatNumAndNodeList stores the relation between statement number and node.
+	map<Node*, int>	NodeAndStatNumList;		// StatNumAndNodeList stores the relation between node and statement number.
 };	
