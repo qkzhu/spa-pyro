@@ -35,18 +35,18 @@ private:
 
 	bool mgNullClause; //If any clause evaluate to erroe, just jump out and return NULL for this evaluation.
 
-	std::vector<std::vector<int> > *getRel(int type1, int type2, int para1, int para2, int relType);
+	std::vector<std::vector<int> > getRel(int type1, int type2, int para1, int para2, int relType);
 
 	//std::vector<std::vector<int> > *getRelStar(int type1, int type2, int para1, int para2, int relType); 
 
-	std::vector<int> *getChildStar(int stmtN);
-	std::vector<int> *getFollowsStar(int stmtN);
-	std::vector<int> *getCallsStar(int procN);
+	std::vector<int> getChildStar(int stmtN);
+	std::vector<int> getFollowsStar(int stmtN);
+	std::vector<int> getCallsStar(int procN);
 
 public:
 	QueryEvaluator(PKB *, QueryParser *);  //Constructor
 	void evaluate();//Preprocessor call evaluate to pass Query tree to Evaluator
 
-	QueryResult *getResult();//After calling evaluate, the result stored inside mResult and can be retrieved by this function.
+	QueryResult getResult();//After calling evaluate, the result stored inside mResult and can be retrieved by this function.
 };
 

@@ -9,9 +9,9 @@ public:
 	int selectSize(); //return the number of result variables
 	int selectAt(int indx); //take an index and return the result variable at index indx.
 	int suchThatSize(); //return the number of such that conditions in such that clause
-	std::vector<int> *suchThatAt(int indx); //take an indx and return the such that condition in index indx
+	std::vector<int> suchThatAt(int indx); //take an indx and return the such that condition in index indx
 	int withSize(); //return the number of with conditions in the with clause
-	std::vector<int> *withAt(int indx); //take an indx and return the with condition in index indx
+	std::vector<int> withAt(int indx); //take an indx and return the with condition in index indx
 
 	int varNum(); //return the number of all query variables
 	int varType(int var); //take an integer form of a query variable and return its type in integer

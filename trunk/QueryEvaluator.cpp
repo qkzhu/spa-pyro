@@ -19,7 +19,7 @@ void QueryEvaluator::evaluate()
 	vector<int> equal_vars;  //for use when in with clause, there is sth like v.varName = p.varName
 	map<int, vector<int> > var_value_table; //maps the variable to the value assigned in With clause, attr 1 is the variable string in its code
 
-	int var_code_ending = 501; //I need to use it when I meet _ in relation to create new variable
+	int var_code_ending = 501; //I need to use it when I meet '_' in relation to create new variable
 
 
 	//No tupled selection yet
@@ -29,22 +29,22 @@ void QueryEvaluator::evaluate()
 	//Start evaluating With clauses                                  
 	int with_size = mQueryTree->withSize();
 	for(int i = 0; i<with_size; i++){
-		vector<int> clause = *(mQueryTree->withAt(i));
+		vector<int> clause = mQueryTree->withAt(i);
 		int clause_size = clause.size();
 		int ref = clause.back();
 
 		//Read the with clause and divide it
 		vector<int> part1;
 		vector<int> part2;
-		int k = 0;
-		for(; k<clause_size; k++)
+		int withCount = 0;
+		for(; withCount<clause_size; withCount++)
 		{
-			if(clause.at(k) != 155)
-				part1.push_back(clause.at(k));
+			if(clause.at(withCount) != 155)
+				part1.push_back(clause.at(withCount));
 			break;
 		}
-		for(; k<clause_size; k++){
-			part2.push_back(clause.at(k));
+		for(; withCount<clause_size; withCount++){
+			part2.push_back(clause.at(withCount));
 		}
 		//clause dividing END
 
@@ -57,7 +57,7 @@ void QueryEvaluator::evaluate()
 			int dot = clause.at(2);
 			//int attr_name = clause.at(3); No need to check this
 			int eq = clause.at(4);
-			if(type != 203) throw "With clause bad formed"; //Check whether the first token is query var
+			
 			if(dot != 156 || eq != 155) throw "With clause bad formed";
 			else {
 				var_value_table.insert(syn, part2);	
@@ -78,7 +78,7 @@ void QueryEvaluator::evaluate()
 	int suchThatSize = mQueryTree->suchThatSize();
 	for(int i= 0; i<suchThatSize; i++)
 	{
-		vector<int> clause = *(mQueryTree->suchThatAt(i));
+		vector<int> clause = mQueryTree->suchThatAt(i);
 		int rel = clause[0];
 		int para1Type;
 		int para1;
@@ -88,7 +88,7 @@ void QueryEvaluator::evaluate()
 		int next_indx = 0;
 		if(clause[1] = 157)// if the first para is _
 		{ 
-			para1 = clause[1];
+			para1 = 157;
 			next_indx = 2;
 		}
 		else 
@@ -99,7 +99,7 @@ void QueryEvaluator::evaluate()
 		}
 		if(clause[next_indx] = 157)// if the second para is _
 		{ 
-			para2 = clause[next_indx];
+			para2 = 157;
 		}
 		else 
 		{
@@ -110,35 +110,35 @@ void QueryEvaluator::evaluate()
 		
 		if(rel == 5 || rel == 6 || rel == 7 || rel == 8) //relation is parent, parent*, follows, follows*
 		{
-			if(para1 == 157)
+			if(para1 == 157)  //If _ , then replace with (stmt newest)
 			{
-				para1Type = 201;
-				para1 = var_code_ending++;
+				para2Type = 51;
+				para2 = var_code_ending++;
 			}
 			if(para2 == 157)
 			{
-				para2Type = 201;
+				para2Type = 51;
 				para2 = var_code_ending++;
 			}
 		}
-		else if(rel == 9 || rel == 10)
+		else if(rel == 9 || rel == 10) // uses and modifies
 		{
-			if(para2 == 157)
+			if(para2 == 157) //replace with (variable newest)
 			{
-				para2Type = 202;
+				para2Type = 57;
 				para2 = var_code_ending++;
 			}
 		}
 		else if(rel == 11 || rel == 12) //relation is calls, calls*
 		{
-			if(para1 == 157)
+			if(para1 == 157) //replace with (proc newest)
 			{
-				para1Type = 203;
+				para1Type = 58;
 				para1 = var_code_ending++;
 			}
 			if(para2 == 157)
 			{
-				para2Type = 203;
+				para2Type = 58;
 				para2 = var_code_ending++;
 			}
 		}else;  //do nothing 
@@ -154,7 +154,9 @@ void QueryEvaluator::evaluate()
 		//But this requires the query passed to me 
 		//NEWEST: this way turned out to be unmature, it has error when there is no relation has attr of select element. I come up with a way of adding a new relation to add select element evaluation, but this is not so workable for multiple select.
 		if(it == mgTupleIndexing.end())
-			mgTupleIndexing.push_back(para1);
+			if(para1Type == 201 || para1Type == 202 || para1Type == 203)
+				mgTupleIndexing.push_back(var_code_ending++);
+			else mgTupleIndexing.push_back(para1);
 		else
 		{
 			for(vector<int>::iterator i = mgTupleIndexing.begin(); i<=it; i++){
@@ -163,7 +165,10 @@ void QueryEvaluator::evaluate()
 			numOfCommonElement = 2;
 		}
 		it = find(mgTupleIndexing.begin(), mgTupleIndexing.end(), para2);
-		if(it == mgTupleIndexing.end()); //Do nothing
+		if(it == mgTupleIndexing.end())
+			if(para2Type == 201 || para2Type == 202 || para2Type == 203)
+				mgTupleIndexing.push_back(var_code_ending++);
+			else mgTupleIndexing.push_back(para2);
 		else
 		{
 			for(vector<int>::iterator i = mgTupleIndexing.begin(); i<=it; i++){
@@ -172,34 +177,31 @@ void QueryEvaluator::evaluate()
 			numOfCommonElement = 4;
 		}
 
-		
-
-
 		//Evaluating Relation
 		vector<vector<int> > relResult;
 		map<int,vector<int> >::iterator it1 = var_value_table.find(para1);
 		map<int,vector<int> >::iterator it2 = var_value_table.find(para2);
 		if(it1 != var_value_table.end())
 		{
-			para1Type = it1->first;
-			para1 = it1->second;
+			para1Type = (it1->second).at(0);
+			para1 = (it1->second).at(1);
 		}
 		if(it2 != var_value_table.end())
 		{
-			para2Type = it1->first;
-			para2 = it2->second;
+			para2Type = (it2->second).at(0);
+			para2 = (it2->second).at(1);
 		}
 
-		if(rel == 5 || rel==7 || rel==9 || rel==10 || rel==11)
-			relResult = *getRel(para1Type, para2Type, para1, para2, rel);
+		if(rel == 5 ||rel==6|| rel==7 || rel==8 ||rel==9 || rel==10 || rel==11||rel==12)
+			relResult = getRel(para1Type, para2Type, para1, para2, rel);
 		else 
-			throw "Relation no exists";
+			throw "Relation not exists";
 
 		
 		if(numOfCommonElement == 2)
-			eva_tuple = *TupleOperations.tupleJoinOneC(same1Tuple1, &eva_tuple, &relResult);
+			eva_tuple = TupleOperations.tupleJoinOneC(same1Tuple1, eva_tuple, relResult);
 		else if(numOfCommonElement == 4)
-			eva_tuple = *TupleOperations.tupleJoinTwoC(same1Tuple1, same1Tuple2, &eva_tuple, &relResult);
+			eva_tuple = TupleOperations.tupleJoinTwoC(same1Tuple1, same2Tuple1, eva_tuple, relResult);
 	}//while: such that evaluation END
 
 
@@ -240,14 +242,14 @@ void QueryEvaluator::evaluate()
 
 }//End of evaluate
 
-QueryResult *QueryEvaluator::getResult()
+QueryResult QueryEvaluator::getResult()
 {
-	return &mResult;
+	return mResult;
 }
 
 
 
-vector<vector<int> > *QueryEvaluator::getRel(int type1, int type2, int para1, int para2, int relType)
+vector<vector<int> > QueryEvaluator::getRel(int type1, int type2, int para1, int para2, int relType)
 {
 	vector<vector<int> > evalResult;	
 	switch(relType)
@@ -257,28 +259,28 @@ vector<vector<int> > *QueryEvaluator::getRel(int type1, int type2, int para1, in
 			vector<int> para1List;
 			if(type1 = 201) para1List.push_back(para1);
 			else if(type1 == 51 || type1 == 52)
-				para1List = *(mPKBObject->getAllStmts());
+				para1List = mPKBObject->getAllStmts();
 			else if(type1 == 54 || type1 == 55)
-				para1List = *mPKBObject->getAllWhile();
+				para1List = mPKBObject->getAllWhile();
 			else throw "Parent parameter type mismatch!";
 			for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
 				vector<int> result;
 				if(relType == 5)
-					 result = *mPKBObject->getChild(*i);
+					 result = mPKBObject->getChild(*i);
 				else if(relType == 6)
-					result = *getChildStar(*i);
+					result = getChildStar(*i);
 				if(*(result.begin()) == -1) continue;    //continue this loop if this candidate has no child
 				for(vector<int>::iterator k=result.begin(); k<result.end(); k++){
 					vector<int> para2List;
 					if(type2 == 201) para2List.push_back(para2);
 					else if(type2 == 53) 
-						para2List = *mPKBObject->getAllAssign();
+						para2List = mPKBObject->getAllAssign();
 					else if(type2 == 54)
-						para2List = *mPKBObject->getAllWhile();
+						para2List = mPKBObject->getAllWhile();
 					else if(type2 == 55)
-						para2List = *mPKBObject->getAllIf();
+						para2List = mPKBObject->getAllIf();
 					else if(type2 == 59)
-						para2List = *mPKBObject->getAllCall();
+						para2List = mPKBObject->getAllCall();
 					else throw "Your follows relation has unpaired second parameters";
 					vector<int>::iterator it = find(para2List.begin(), para2List.end(), *k);
 					if(it == para2List.end()) continue; 
@@ -295,32 +297,32 @@ vector<vector<int> > *QueryEvaluator::getRel(int type1, int type2, int para1, in
 			vector<int> para1List; 
 			if(type1 = 201) para1List.push_back(para1);
 			else if(type1 = 51 || type1 == 52)
-				para1List = *mPKBObject->getAllStmts();
+				para1List = mPKBObject->getAllStmts();
 			else if(type1 == 53)
-				para1List = *mPKBObject->getAllAssign();
+				para1List = mPKBObject->getAllAssign();
 			else if(type1 == 54)
-				para1List = *mPKBObject->getAllWhile();
+				para1List = mPKBObject->getAllWhile();
 			else if(type1 == 55)
-				para1List = *mPKBObject->getAllIf();
+				para1List = mPKBObject->getAllIf();
 			else if(type1 == 59)
-				para1List = *mPKBObject->getAllCall();
+				para1List = mPKBObject->getAllCall();
 			else throw "Your follows relation has unpaired parameters";
 			for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
 				vector<int> result;
 				if(relType == 7) 
 					result.push_back(mPKBObject->getFollowingStatement(*i));
-				else result = *getFollowsStar(*i);
+				else result = getFollowsStar(*i);
 				if(result.at(0) == -1) continue;    //continue this loop without eva this iteration
 				for(vector<int>::iterator k = result.begin(); k<result.end(); k++){
 					vector<int> para2List;
 					if(type2 == 201) para2List.push_back(para2);
-					else if(type2 == 53) para2List = *mPKBObject->getAllAssign();
+					else if(type2 == 53) para2List = mPKBObject->getAllAssign();
 					else if(type2 == 54)
-					para2List = *mPKBObject->getAllWhile();
+					para2List = mPKBObject->getAllWhile();
 					else if(type2 == 55)
-					para2List = *mPKBObject->getAllIf();
+					para2List = mPKBObject->getAllIf();
 					else if(type2 == 59)
-					para2List = *mPKBObject->getAllCall();
+					para2List = mPKBObject->getAllCall();
 					else throw "Your follows relation has unpaired second parameters";
 					vector<int>::iterator it = find(para2List.begin(), para2List.end(), *k);
 					if(it == para2List.end()) continue; 
@@ -340,21 +342,21 @@ vector<vector<int> > *QueryEvaluator::getRel(int type1, int type2, int para1, in
 				if(type1 == 201)
 					para1List.push_back(para1);
 				else if(type1 == 51 || type1 == 52)
-					para1List = *mPKBObject->getAllStmts();
+					para1List = mPKBObject->getAllStmts();
 				else if(type1 == 53) //assign var
-					para1List = *mPKBObject->getAllAssign();
+					para1List = mPKBObject->getAllAssign();
 				else if(type1 == 54) //while var
-					para1List = *mPKBObject->getAllWhile();
+					para1List = mPKBObject->getAllWhile();
 				else if(type1 == 55) //if var
-					para1List = *mPKBObject->getAllIf();
+					para1List = mPKBObject->getAllIf();
 				else if(type1 == 59) //
-					para1List = *mPKBObject->getAllCall();
+					para1List = mPKBObject->getAllCall();
 				else break; //cannot happen
 				for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
 					vector<int> result;
 					if(relType == 9)
-						vector<int> result = *mPKBObject->getUsedVar(*i);
-					else  result = *mPKBObject->getModifiedVar(*i);
+						result = mPKBObject->uTable_getUsedVar(*i);
+					else  result = mPKBObject->mTable_getModifiedVar(*i);
 					if(*(result.begin()) == -1) continue;    //continue this loop without eva this iteration
 					for(vector<int>::iterator k=result.begin(); k<result.end(); k++){
 						if(type2 == 202 && para2 != *k) continue;
@@ -370,12 +372,12 @@ vector<vector<int> > *QueryEvaluator::getRel(int type1, int type2, int para1, in
 				vector<int> para1List;
 				if(type1 == 203)
 					para1List.push_back(para1);
-				else para1List = *mPKBObject->getAllProc();
+				else para1List = mPKBObject->getAllProc();
 				for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
 					vector<int> result;
 					if(relType == 9)
-						vector<int> result = *mPKBObject->getUsedVarPI(*i);
-					else  result = *mPKBObject->getModifiedVarPI(*i);
+						result = mPKBObject->uTable_getUsedVarPI(*i);
+					else  result = mPKBObject->mTable_getModifiedVarPI(*i);
 					if(*(result.begin()) == -1) continue;    //continue this loop without eva this iteration
 					for(vector<int>::iterator k=result.begin(); k<result.end(); k++){
 						if(type2 == 202 && para2 != *k) continue;
@@ -398,12 +400,12 @@ vector<vector<int> > *QueryEvaluator::getRel(int type1, int type2, int para1, in
 			{
 				vector<int> para1List;
 				if(type1 == 203) para1List.push_back(para1);
-				else para1List = *mPKBObject->getAllProc();
+				else para1List = mPKBObject->getAllProc();
 				for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++)
 				{
 					vector<int> result;
-					if(relType == 11) result = *mPKBObject->getCalls(*i);
-					else result = *getCallsStar(*i);
+					if(relType == 11) result = mPKBObject->pTable_getCall(*i);
+					else result = getCallsStar(*i);
 					if(*(result.begin()) == -1) continue;    //continue this loop without eva this iteration
 					for(vector<int>::iterator k = result.begin(); k<result.end(); k++)
 					{
@@ -426,39 +428,40 @@ vector<vector<int> > *QueryEvaluator::getRel(int type1, int type2, int para1, in
 			throw "No such relation implementation yet";
 		}//Error case END
 	}//getRel END
+	return evalResult;
 }
 	
 
-vector<int> *QueryEvaluator::getChildStar(int stmtN){
-	vector<int> descendant = *(mPKBObject->getChild(stmtN));
+vector<int> QueryEvaluator::getChildStar(int stmtN){
+	vector<int> descendant = mPKBObject->getChild(stmtN);
 	if(descendant.at(0) != -1){
 		for(vector<int>::iterator i = descendant.begin(); i < descendant.end(); i++){
-			vector<int> k = *(mPKBObject->getChild(*i));
+			vector<int> k = mPKBObject->getChild(*i);
 			if(k.at(0) != -1)descendant.insert(descendant.end(), k.begin(), k.end());
 		}
 	}
-	return &descendant;
+	return descendant;
 }
 
-vector<int> *QueryEvaluator::getFollowsStar(int stmtN){
+vector<int> QueryEvaluator::getFollowsStar(int stmtN){
 	vector<int> following;
 	int follow = mPKBObject->getFollowingStatement(stmtN);
 	while(follow != -1){
 		following.push_back(follow);
 		follow = mPKBObject->getFollowingStatement(follow);	
 	}
-	return &following;
+	return following;
 }
 
-vector<int> *QueryEvaluator::getCallsStar(int procNameCode){
-	vector<int> descendant = *(mPKBObject->getCalls(procNameCode));
+vector<int> QueryEvaluator::getCallsStar(int procNameCode){
+	vector<int> descendant = mPKBObject->pTable_getCall(procNameCode);
 	if(descendant.at(0) != -1){
 		for(vector<int>::iterator i = descendant.begin(); i < descendant.end(); i++){
-			vector<int> k = *(mPKBObject->getCalls(*i));
+			vector<int> k = mPKBObject->pTable_getCall(*i);
 			if(k.at(0) != -1)descendant.insert(descendant.end(), k.begin(), k.end());
 		}
 	}
-	return &descendant;
+	return descendant;
 }
 
 
