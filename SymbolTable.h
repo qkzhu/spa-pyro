@@ -14,10 +14,11 @@ class SymbolTable
 {
 public:
 	void insertSymbol(string);
-	string getSymbolName(int);
+	string getSymbolName(int index);
 	int getSymbolIndex(string);
 	int getSymbolMapSize();
-	bool containsSymbol(string);
+	bool isNameExist(string name);
+	bool isIndexExist(int index);
 	set<string> getAllSymbol();
 private:
 	map<string, int> mSymbolMap;
@@ -30,7 +31,8 @@ public:
 	string getVarName(int);
 	int getVarIndex(string);
 	int getSize(); 
-	bool containsVar(string);
+	bool isVarNameExist(string name);
+	bool isVarIndexExist(int index);
 	set<string> getAllVar();
 };
 
@@ -41,7 +43,8 @@ public:
 	string getProcName(int);
 	int getProcIndex(string);
 	int getSize(); 
-	bool containsProc(string);
+	bool isProcNameExist(string name);
+	bool isProcIndexExist(int index);
 	set<string> getAllProc();
 
 	/* For call Tables */

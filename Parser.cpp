@@ -499,7 +499,7 @@ bool Parser::isDelimiter(char c)
 
 bool Parser::checkVariableExists(string var_name) 
 {
-	return mPkb.vTable_ContainsVar(var_name);
+	return mPkb.vTable_IsVarNameExist(var_name);
 }
 
 bool Parser::isValidName(string var_name)
