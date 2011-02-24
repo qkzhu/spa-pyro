@@ -25,7 +25,7 @@ void Parser::loadFile(string name)
 
 //constructor for Parser takes a VarTable, AST, and the source code filename
  Parser::Parser(PKB &pkb, string filename) : 
-mPkb(pkb), mAst(pkb.ast_CreateASTnode()), mLineNum(0), mStatNum(0),
+mPkb(pkb), mLineNum(0), mStatNum(0),
 	 mCurrProcIndex(0), mFilename(filename), mpFile(new ifstream()), 
 	 mStringBuf(new stringstream(stringstream::in | stringstream::out))
  {
@@ -171,33 +171,33 @@ void Parser::parseProcedure()
 	//obtains procedure index
 	int proc_index = mPkb.pTable_GetProcIndex(proc_name);  
 	//creates procedure node
-	Node *node = mPkb.ast_CreateNode(mAst, Node::PROC, mLineNum, proc_index); 
+	Node *node = mPkb.ast_CreateNode(Node::PROC, mLineNum, proc_index); 
 	
 	match("{");
 	
-	mPkb.ast_AddDown(mAst, node, parseStmtList(NULL));
+	mPkb.ast_AddDown(node, parseStmtList(NULL));
 	
 	match("}");
 
 	mCurrProcIndex = proc_index;
 	//adds procedure to AST
-	mPkb.ast_AddProcedure(mAst, proc_index, node);
+	mPkb.ast_AddProcedure(proc_index, node);
 }
 
 Node *Parser::parseStmtList(Node* parentNode) 
 {
 	string tok =peekToken();
-	Node *stmt_list = mPkb.ast_CreateNode(mAst, Node::STMT_LIST, mLineNum, -1);
+	Node *stmt_list = mPkb.ast_CreateNode(Node::STMT_LIST, mLineNum, -1);
 	Node *prev_node = NULL; 
 	
 	if (tok != "" && tok != ";" && tok != "}")
 	{
 		prev_node = parseStmt();
-		mPkb.ast_AddDown(mAst, stmt_list, prev_node); 
+		mPkb.ast_AddDown(stmt_list, prev_node); 
 
 		//adds the current node as the child of the parent if there is a parent.
 		if (parentNode != NULL)
-			mPkb.ast_AddDown(mAst, parentNode, prev_node);
+			mPkb.ast_AddDown(parentNode, prev_node);
 	}
 
 	//continue parsing more statements while
@@ -206,12 +206,12 @@ Node *Parser::parseStmtList(Node* parentNode)
 	while (peekToken() != "" && peekToken() != "}") 
 	{
 		Node *new_node = parseStmt();
-		mPkb.ast_AddFollow(mAst, prev_node, new_node);
+		mPkb.ast_AddFollow(prev_node, new_node);
 		prev_node = new_node;
 
 		//adds the current node as the child of the parent if there is a parent.
 		if (parentNode != NULL)
-			mPkb.ast_AddChild(mAst, parentNode, prev_node);
+			mPkb.ast_AddChild(parentNode, prev_node);
 	}
 	
 	return stmt_list;
@@ -238,20 +238,20 @@ Node *Parser::parseStmt()
 Node *Parser::parseWhile()
 {
 	match("while");
-	Node *while_node = mPkb.ast_CreateNode(mAst, Node::WHILE, mStatNum, -1);
+	Node *while_node = mPkb.ast_CreateNode(Node::WHILE, mStatNum, -1);
 
 	//obtains variable token, creates var node and adds it under while node.
 	string var_name = getToken();
 	checkVariableExists(var_name);
 	mPkb.vTable_InsertVar(var_name);
-	Node *var_node = mPkb.ast_CreateNode(mAst, Node::VAR, mStatNum, mPkb.vTable_GetVarIndex(var_name));
-	mPkb.ast_AddDown(mAst, while_node, var_node);
+	Node *var_node = mPkb.ast_CreateNode(Node::VAR, mStatNum, mPkb.vTable_GetVarIndex(var_name));
+	mPkb.ast_AddDown(while_node, var_node);
 	mStatNum++;
 
 	//while body goes here
 	match("{");
 	Node* body_node = parseStmtList(while_node);
-	mPkb.ast_AddDown(mAst, while_node, body_node);
+	mPkb.ast_AddDown(while_node, body_node);
 	match("}");
 
 	return while_node;
@@ -262,28 +262,28 @@ Node *Parser::parseIf()
 {
 	//creates if node.
 	match("if");
-	Node *if_node = mPkb.ast_CreateNode(mAst, Node::IF, mStatNum, -1);
+	Node *if_node = mPkb.ast_CreateNode(Node::IF, mStatNum, -1);
 
 	//obtains variable token, creates var node and adds it under if node.
 	string var_name = getToken();
 	checkVariableExists(var_name);
 	mPkb.vTable_InsertVar(var_name);
-	Node *var_node = mPkb.ast_CreateNode(mAst, Node::VAR, mStatNum, mPkb.vTable_GetVarIndex(var_name));
-	mPkb.ast_AddDown(mAst, if_node, var_node);
+	Node *var_node = mPkb.ast_CreateNode(Node::VAR, mStatNum, mPkb.vTable_GetVarIndex(var_name));
+	mPkb.ast_AddDown(if_node, var_node);
 	mStatNum++;
 	
 	//creates a then node then adds it under the down link of if node
 	match("then");
 	match("{");
 	Node* then_node = parseStmtList(if_node);
-	mPkb.ast_AddDown(mAst, if_node, then_node);
+	mPkb.ast_AddDown(if_node, then_node);
 	match("}");
 	
 	//creates an else node then adds it under the down link of if node
 	match("else");
 	match("{");
 	Node* else_node = parseStmtList(if_node);
-	mPkb.ast_AddDown(mAst, if_node, else_node);
+	mPkb.ast_AddDown(if_node, else_node);
 	match("}");
 
 	return if_node;
@@ -303,7 +303,7 @@ Node *Parser::parseCall()
 	//records the proc call in the proc table
 	mPkb.pTable_AddCall(mCurrProcIndex, proc_index);
 
-	Node* curr = mPkb.ast_CreateNode(mAst, Node::CALL, mStatNum, proc_index);
+	Node* curr = mPkb.ast_CreateNode(Node::CALL, mStatNum, proc_index);
 	
 	match(";");
 
@@ -327,12 +327,12 @@ void Parser::addOperator(vector<Node*> &tree, string op)
 		type = Node::TIMES;
 
 	//create a tree for this operator
-	Node *curr = mPkb.ast_CreateNode(mAst, type, mStatNum, -1);
+	Node *curr = mPkb.ast_CreateNode(type, mStatNum, -1);
 	
 	//adds the top two trees in the results stack to the current tree's 
 	//left and right child
-	mPkb.ast_AddDown(mAst, curr, tree[tree.size() - 2]);
-	mPkb.ast_AddDown(mAst, curr, tree[tree.size() - 1]);
+	mPkb.ast_AddDown(curr, tree[tree.size() - 2]);
+	mPkb.ast_AddDown(curr, tree[tree.size() - 1]);
 
 	//pops the top two trees
 	tree.pop_back();
@@ -375,13 +375,16 @@ Node *Parser::parseAssignment()
 	string var_name = getToken();
 	checkValidName(var_name);
 	
-	Node *assign = mPkb.ast_CreateNode(mAst, Node::ASSIGN, mStatNum, -1);
+	Node *assign = mPkb.ast_CreateNode(Node::ASSIGN, mStatNum, -1);
 	mPkb.vTable_InsertVar(var_name);
-	Node *lhs = mPkb.ast_CreateNode(mAst, Node::VAR, mStatNum, mPkb.vTable_GetVarIndex(var_name));
+	int var_index = mPkb.vTable_GetVarIndex(var_name);
+	Node *lhs = mPkb.ast_CreateNode(Node::VAR, mStatNum, var_index);
 	
-	//TO-DO: update modify table using LHS var index.
+	//update modify tables
+	mPkb.mTable_setModify(mStatNum, var_index);
+	mPkb.mTable_setModifyPV(mCurrProcIndex, var_index);
 
-	mPkb.ast_AddDown(mAst, assign, lhs);
+	mPkb.ast_AddDown(assign, lhs);
 	
 	match("=");
 	
@@ -397,16 +400,21 @@ Node *Parser::parseAssignment()
 		if (isConstant(next))
 		{
 			mPkb.cTable_AddConstant(atoi(next.c_str()));
-			curr = mPkb.ast_CreateNode(mAst, Node::CONST, mStatNum, atoi(next.c_str()));
+			curr = mPkb.ast_CreateNode(Node::CONST, mStatNum, atoi(next.c_str()));
 			result.push_back(curr);
 		} //if constant
 
 		else if (isValidName(next))
 		{
 			checkVariableExists(next);
-			curr = mPkb.ast_CreateNode(mAst, Node::CONST, mStatNum, mPkb.vTable_GetVarIndex(next));
+			int var_index = mPkb.vTable_GetVarIndex(next);
+			curr = mPkb.ast_CreateNode(Node::CONST, mStatNum, var_index);
 			result.push_back(curr);
-			//TO-DO: update use table using varIndex for next.
+			
+			//Update use tables.
+			mPkb.uTable_setUses(mStatNum, var_index);
+			mPkb.uTable_setUsesPV(mCurrProcIndex, var_index);
+
 		} //else if valid name
 
 		else if (isOperator(next))
@@ -477,7 +485,7 @@ Node *Parser::parseAssignment()
 		exit(1);
 	}
 	
-	mPkb.ast_AddDown(mAst, assign, result[0]);
+	mPkb.ast_AddDown(assign, result[0]);
 
 	mStatNum++;
 

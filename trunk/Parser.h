@@ -23,7 +23,6 @@ private:
 
 	//functions to hold pkb instances
 	PKB &mPkb;
-	AST *mAst;
 
 	//functions for tokenizing
 	string getToken();		//extracts next token, returns empty string if none found.
