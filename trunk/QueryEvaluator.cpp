@@ -23,7 +23,7 @@ void QueryEvaluator::evaluate()
 
 
 	//No tupled selection yet
-	int select_element = mQueryTree->selectAt(0);  //Elements to be selected
+	int select_element = (mQueryTree->selectAt(0)).at(1);  //Elements to be selected
 
 
 	//Start evaluating With clauses                                  
@@ -266,7 +266,7 @@ vector<vector<int> > QueryEvaluator::getRel(int type1, int type2, int para1, int
 			for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
 				vector<int> result;
 				if(relType == 5)
-					 result = mPKBObject->getChild(*i);
+					 result = mPKBObject->ast_GetChild(*i);
 				else if(relType == 6)
 					result = getChildStar(*i);
 				if(*(result.begin()) == -1) continue;    //continue this loop if this candidate has no child
@@ -310,7 +310,7 @@ vector<vector<int> > QueryEvaluator::getRel(int type1, int type2, int para1, int
 			for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
 				vector<int> result;
 				if(relType == 7) 
-					result.push_back(mPKBObject->getFollowingStatement(*i));
+					result.push_back(mPKBObject->ast_GetFollowingStatementNum(*i));
 				else result = getFollowsStar(*i);
 				if(result.at(0) == -1) continue;    //continue this loop without eva this iteration
 				for(vector<int>::iterator k = result.begin(); k<result.end(); k++){
@@ -433,10 +433,10 @@ vector<vector<int> > QueryEvaluator::getRel(int type1, int type2, int para1, int
 	
 
 vector<int> QueryEvaluator::getChildStar(int stmtN){
-	vector<int> descendant = mPKBObject->getChild(stmtN);
+	vector<int> descendant = mPKBObject->ast_GetChild(stmtN);
 	if(descendant.at(0) != -1){
 		for(vector<int>::iterator i = descendant.begin(); i < descendant.end(); i++){
-			vector<int> k = mPKBObject->getChild(*i);
+			vector<int> k = mPKBObject->ast_GetChild(*i);
 			if(k.at(0) != -1)descendant.insert(descendant.end(), k.begin(), k.end());
 		}
 	}
@@ -445,10 +445,10 @@ vector<int> QueryEvaluator::getChildStar(int stmtN){
 
 vector<int> QueryEvaluator::getFollowsStar(int stmtN){
 	vector<int> following;
-	int follow = mPKBObject->getFollowingStatement(stmtN);
+	int follow = mPKBObject->ast_GetFollowingStatementNum(stmtN);
 	while(follow != -1){
 		following.push_back(follow);
-		follow = mPKBObject->getFollowingStatement(follow);	
+		follow = mPKBObject->ast_GetFollowingStatementNum(follow);	
 	}
 	return following;
 }

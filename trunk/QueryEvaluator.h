@@ -5,7 +5,7 @@
 
 
 #include "PQLParserAPIs.h"
-#include "PKB.h"
+#include "PKB_APIs.h"
 #include "QueryResult.h"
 #include "TupleOperations.h"
 
