@@ -1,4 +1,4 @@
-#include "ConstantTable.h";
+#include "ConstantTable.h"
 
 void ConstantTable::addConstant(int c)
 {

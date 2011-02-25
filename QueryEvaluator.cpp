@@ -4,7 +4,7 @@ using namespace std;
 
 
 //Controller passes the PKB and Query Parser to evaluator, and trigger evaluator to start.
-QueryEvaluator::QueryEvaluator(PKB *p, QueryParser *q)
+QueryEvaluator::QueryEvaluator(PKB *p, QueryTable *q)
 {
 	mPKBObject = p;
 	mQueryTree = q;
@@ -30,7 +30,7 @@ void QueryEvaluator::evaluate()
 	int with_size = mQueryTree->withSize();
 	for(int i = 0; i<with_size; i++){
 		vector<int> clause = mQueryTree->withAt(i);
-		int clause_size = clause.size();
+		int clause_size = (int)clause.size();
 		int ref = clause.back();
 
 		//Read the with clause and divide it
@@ -48,7 +48,7 @@ void QueryEvaluator::evaluate()
 		}
 		//clause dividing END
 
-		int part2_size = part2.size();
+		int part2_size = (int)part2.size();
 
 		if(part2_size = 2)  //Variable 
 		{
@@ -60,11 +60,11 @@ void QueryEvaluator::evaluate()
 			
 			if(dot != 156 || eq != 155) throw "With clause bad formed";
 			else {
-				var_value_table.insert(syn, part2);	
+				var_value_table.insert(pair<int, vector<int> >(syn, part2));	
 			}
 		}//if: normal case END
 		//For the case when a.stmt# = b.stmt#
-		else if(part1.size() == part2_size)
+		else if((int)part1.size() == part2_size)
 		{
 			int p1_name = part1.at(1);
 			int p2_name = part2.at(1);
@@ -199,25 +199,26 @@ void QueryEvaluator::evaluate()
 
 		
 		if(numOfCommonElement == 2)
-			eva_tuple = TupleOperations.tupleJoinOneC(same1Tuple1, eva_tuple, relResult);
+			eva_tuple = TupleOperations::tupleJoinOneC(same1Tuple1, eva_tuple, relResult);
 		else if(numOfCommonElement == 4)
-			eva_tuple = TupleOperations.tupleJoinTwoC(same1Tuple1, same2Tuple1, eva_tuple, relResult);
+			eva_tuple = TupleOperations::tupleJoinTwoC(same1Tuple1, same2Tuple1, eva_tuple, relResult);
+		else ;// No need to join if no common element exists
 	}//while: such that evaluation END
 
 
 	//This is to deal with when the with clause have v.varName = p.procName
-	int equal_ele_size = equal_vars.size();
+	int equal_ele_size = (int) equal_vars.size();
 	for(int i = 0; i<equal_ele_size; i++){
 		int same1 = equal_vars.at(i);
 		int same2 = equal_vars.at(i++);
 		int found1 = -1;
 		int found2 = -1;
-		for(int k = 0; k<eva_tuple.at(0).size(); k++){
+		for(int k = 0; k< (int)(eva_tuple.at(0).size()); k++){
 			if(mgTupleIndexing.at(k) == same1) found1 = k;
 			if(mgTupleIndexing.at(k) == same2) found2 = k;
 		}
 		if(found1 == -1 || found2 == -1) break;
-		for(int k = 0; k<eva_tuple.size(); k++){
+		for(int k = 0; k<(int)eva_tuple.size(); k++){
 			if(eva_tuple.at(k).at(found1) != eva_tuple.at(k).at(found2)) 
 				eva_tuple.erase(eva_tuple.begin() + k);
 		}
@@ -232,11 +233,11 @@ void QueryEvaluator::evaluate()
 	}
 
 	int indx = 0;
-	for(; indx< mgTupleIndexing.size(); indx++)
+	for(; indx< (int)mgTupleIndexing.size(); indx++)
 	{
 		if(select_element == mgTupleIndexing.at(indx)) break;
 	}
-	mResult.addInTuple(&eva_tuple.at(indx));
+	mResult.addInTuple(eva_tuple.at(indx));
 	//Store result inside mResult
 
 
