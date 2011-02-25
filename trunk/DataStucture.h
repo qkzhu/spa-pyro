@@ -12,7 +12,7 @@ struct SuchThat{
 };
 
 struct With{
-	int length;
+	bool argumentNoCorrect;
 	vector <int> attrCond; 
 };
 
