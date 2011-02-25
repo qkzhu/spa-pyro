@@ -54,6 +54,39 @@ int PKB::ast_getParent(int child){
 	return ast->getParent(child);
 }
 
+bool PKB::ast_hasStmt(int stmtNum){
+	if(stmtNum <= 0) return false;
+
+	int maxStmt = ast->getMaxStmtNum();
+
+	if(maxStmt >= stmtNum) return true;
+	else return false;
+}
+
+int PKB::ast_getMaxStmtNum(){
+	return ast->getMaxStmtNum();
+}
+
+vector<int> PKB::ast_GetAllAssign(){
+	return ast->getAllAssign();
+}
+
+vector<int> PKB::ast_GetAllWhile(){
+	return ast->getAllWhile();
+}
+
+vector<int> PKB::ast_GetAllIf(){
+	return ast->getAllIf();
+}
+
+vector<int> PKB::ast_GetAllProc(){
+	return ast->getAllProc();
+}
+
+vector<int>	PKB::ast_GetAllCall(){
+	return ast->getAllCall();
+}
+
 /**
  * VarTable Part
  */
