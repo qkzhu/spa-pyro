@@ -26,9 +26,9 @@ bool QueryResult::getBoolValue()
 	return mBoolResult;	
 }
 
-vector<int>* QueryResult::getTuple()
+vector<int> QueryResult::getTuple()
 {
-	return &mTupleResult;
+	return mTupleResult;
 }
 
 void QueryResult::setBoolValue(bool b)
@@ -42,12 +42,12 @@ void QueryResult::addInTuple(int value)
 	mTupleResult.push_back(value);
 }
 
-void QueryResult::addInTuple(vector<int> *concat)
+void QueryResult::addInTuple(vector<int> concat)
 {
-	int s = (*concat).size();
+	int s = (concat).size();
 	int i =0;
 	while(i < s){
-		mTupleResult.push_back((*concat).at(i));
+		mTupleResult.push_back((concat).at(i));
 	}
 }
 
