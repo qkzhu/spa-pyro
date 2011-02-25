@@ -106,3 +106,43 @@ Node* AST::getNodeByStatementNum(int index)
 int AST::getStatementNumByNode(Node* d){
 	return NodeAndStatNumList[d];
 }
+
+int AST::getMaxStmtNum(){
+	return this->StatNumAndNodeList.max_size();
+}
+
+vector<int> AST::getAllAssign(){
+	return this->getAllType(Node::ASSIGN);
+}
+
+vector<int> AST::getAllWhile(){
+	return this->getAllType(Node::WHILE);
+}
+
+vector<int> AST::getAllIf(){
+	return this->getAllType(Node::IF);
+}
+
+vector<int> AST::getAllProc(){
+	return this->getAllType(Node::PROC);
+}
+
+vector<int>	AST::getAllCall(){
+	return this->getAllType(Node::CALL);
+}
+
+vector<int> AST::getAllType(Node::NodeType nt){
+	int index, maxStmtNum = this->getMaxStmtNum();
+	vector<int> result;
+
+	for(index = 1; index <= maxStmtNum; index++){
+		Node* currNode = this->getNodeByStatementNum(index);
+		if(currNode->type == nt)
+			result.push_back(index);
+	}
+
+	/* If no result found, return a vector with only one element: -1. */
+	if(result.size() == 0) result.push_back(-1);
+
+	return result;
+}

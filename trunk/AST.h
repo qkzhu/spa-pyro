@@ -10,9 +10,9 @@ using namespace std;
 class AST
 {
 public:
-	void addChild(Node *d, Node *childNode);						// assign the child node to the child of given node d.
-	void addDown(Node *upperNode, Node *bottomNode);				// establish a bottom relation to upperNode, and the same time, establish a up realtion to upperNode.
-	void addFollow(Node *d, Node *followNode);						// establish follow relation to the given node d, and also establish a followed by relation to followNode internally.
+	void addChild(Node *d, Node *childNode);			// assign the child node to the child of given node d.
+	void addDown(Node *upperNode, Node *bottomNode);	// establish a bottom relation to upperNode, and the same time, establish a up realtion to upperNode.
+	void addFollow(Node *d, Node *followNode);			// establish follow relation to the given node d, and also establish a followed by relation to followNode internally.
 
 	/**
 	 * In the AST, there is a table used to store all the root node of each procedure, this table is called proList, it's used
@@ -33,11 +33,20 @@ public:
 	Node*		getFollowingStatement(Node* d);		// Get the follow node of given node d, withe the follow relation.
 	Node*		getNodeByStatementNum(int index);	// Return a node corresponding to the given statement number.
 	int			getStatementNumByNode(Node* d);		// Return statement number corresponding to the given node.
+	int			getMaxStmtNum();
+
+	vector<int> getAllAssign();
+	vector<int> getAllWhile();
+	vector<int> getAllIf();
+	vector<int> getAllProc();
+	vector<int>	getAllCall();
 
 	AST();
 
 private:
-	map<int, Node*>	astList;				// procedure list, it stores the root of each procedure.
-	map<int, Node*> StatNumAndNodeList;		// StatNumAndNodeList stores the relation between statement number and node.
-	map<Node*, int>	NodeAndStatNumList;		// StatNumAndNodeList stores the relation between node and statement number.
+	map<int, Node*>	astList;					// procedure list, it stores the root of each procedure.
+	map<int, Node*> StatNumAndNodeList;			// StatNumAndNodeList stores the relation between statement number and node.
+	map<Node*, int>	NodeAndStatNumList;			// StatNumAndNodeList stores the relation between node and statement number.
+
+	vector<int> getAllType(Node::NodeType nt);	// Return all statement number with the given node type.
 };	

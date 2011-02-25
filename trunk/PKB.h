@@ -9,21 +9,6 @@ class PKB
 {
 public:
 
-	///////////////////////////////////////REQUIRED BY HQ///////////////////////////////////////////
-	//Newly added, not discussed yet
-	//Didn't see QK'n API. In case of change, discuss together.
-	//bool hasCons(int c);  //whether the simple code has this constant 
-	bool hasStmt(int stmtNum);
-
-	vector<int> getAllStmts();
-	vector<int> getAllAssign(); //get all assignment stmts
-	vector<int> getAllWhile();
-	vector<int> getAllIf();
-	vector<int> getAllCall();
-	vector<int> getAllProc();
-	///////////////////////////////////////////////////////////////////////////////////////////////
-
-
 	/**
 	 * PKB Part
 	 */
@@ -48,6 +33,13 @@ public:
 	void		ast_AddFollow(Node *d, Node *followNode);
 	void		ast_AddProcedure(int procIndex, Node *d);
 	int			ast_getParent(int child);
+	bool		ast_hasStmt(int stmtNum);
+	int			ast_getMaxStmtNum();
+	vector<int> ast_GetAllAssign();
+	vector<int> ast_GetAllWhile();
+	vector<int> ast_GetAllIf();
+	vector<int> ast_GetAllProc();
+	vector<int>	ast_GetAllCall();
 	/**
 	 * VarTable Part
 	 */
