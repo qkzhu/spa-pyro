@@ -104,7 +104,14 @@ void QueryTable::addClause(int type, vector<int> content){
 	else if(type == 3) // with
 	{
 		With withTemp;
-		withTemp.length = content.size();
+		if(content.size() == 7 || content.size() == 9)
+		{
+			withTemp.argumentNoCorrect = true;
+		}
+		else
+		{
+			withTemp.argumentNoCorrect = false;
+		}
 		withTemp.attrCond = content;
 		withClause.push_back(withTemp);
 		

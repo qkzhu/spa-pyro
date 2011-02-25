@@ -13,6 +13,7 @@ public:
 	void displayTable(vector<vector<int>> table);  // display table for debug
 	vector<int> getIndex(vector<vector<int>> table,int name); // get a vector of index if name = nameInsideTable
 	bool checkSuchThat(QueryTable table); // check such that clause
+	bool checkWith(QueryTable table); // check with clause
 	vector<vector<int>>  getsuchThatTable();
 	vector<vector<int>>  getwithTable();
 

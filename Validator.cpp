@@ -61,7 +61,43 @@ void Validator::populateTable(){
 		}
 		withFile.close();
 	}
+	
 }
+/*
+void Validator::fillTable(vector <vector<int>> table, string fileName){
+	
+	Tokenizer str;
+
+	//pupulate suchThatTable
+	ifstream suchThatFile;
+	suchThatFile.open(fileName);
+	string line;
+	string token;
+
+    if (suchThatFile.is_open())
+    {
+		while (!suchThatFile.eof())
+		{
+			getline(suchThatFile,line);
+			str.set(line);
+			int tempHolder;
+			vector<int> rows;
+			while((token = str.next()) != "")
+			{	
+
+				tempHolder = atoi(token.c_str());
+				rows.push_back(tempHolder);
+				
+			}
+			if(!rows.empty())
+				table.push_back(rows);
+
+		}
+		suchThatFile.close();
+	}
+
+}
+*/
 
 void Validator::displayTable(vector<vector<int>> table){
 	/* //////////////////testing getIndex()/////////////////
@@ -96,9 +132,9 @@ vector<int> Validator::getIndex(vector<vector<int>> table, int name){
 
 	vector<int> index;
 	//cout<<suchThatTable[77][0]<<" getIndex"<<endl;
-	for(int i=0;i<suchThatTable.size();i++)
+	for(int i=0;i<table.size();i++)
 	{
-		if(suchThatTable[i][0] == name)
+		if(table[i][0] == name)
 		{
 			index.push_back(i);
 		}
@@ -113,8 +149,8 @@ bool Validator::checkSuchThat(QueryTable table){
 	
 	bool noError = false;
 	int size = table.suchThatSize();
-	vector<int> suchThat;
-	vector<int> index;
+	
+	
 
 	//suchThat =table.suchThatAt(0);
 	//cout<<suchThat[0];
@@ -123,6 +159,14 @@ bool Validator::checkSuchThat(QueryTable table){
 	
 	for(int i=0; i<size; i++)
 	{
+		// to check with the argument is correct of not
+		if(table.getSuchThatClause().at(i).argumentNoCorrect == false)
+		{
+			break;
+		}
+
+		vector<int> suchThat;
+		vector<int> index;
 		suchThat =table.suchThatAt(i);	
 		index = getIndex(suchThatTable, suchThat[0]);
 		
@@ -154,11 +198,62 @@ bool Validator::checkSuchThat(QueryTable table){
 		}
 		
 	}
-	cout<<size<<endl;;
+	//cout<<size<<endl;;
 
 	return noError;
+}
+
+bool Validator::checkWith(QueryTable table){
+	bool noError = false;
+	int size = table.withSize();
+
+	//cout<<"with size is " <<size<<endl;
 
 
+	for(int i=0; i<size;i++)
+	{
+		//cout<<"argumentNoCorrect "<<table.getWithClause().at(i).argumentNoCorrect<<endl;
+		// to check with the argument is correct of not
+		if(!table.getWithClause().at(i).argumentNoCorrect)
+		{
+			break;
+		}
+		
+		vector<int> with;
+		vector<int> index;
+	
+
+		with =  table.withAt(i);
+		//cout<<"with[0] is "<<with[0]<<endl;
+		index = getIndex(withTable, with[0]);
+
+		//cout<<"index size is "<<index.size()<<endl; 
+		for(int it = 0;it<index.size();it++)
+		{
+			//cout<<"with size is 1 "<<with.size()<<endl;
+			if(with.size() == 7)
+			{
+				//cout<<"with size is "<<with.size()<<endl;
+				if((with[0] == withTable[index[it]][0]) && (with[3] == withTable[index[it]][1]) && (with[5] == withTable[index[it]][2]))
+				{
+					noError = true;
+				}
+			
+			}
+			if(with.size() == 9)
+			{
+				if((with[0] == withTable[index[it]][0]) && (with[3] == withTable[index[it]][1]) && (with[5] == withTable[index[it]][2]) && (with[8] == withTable[index[it]][3]))
+				{
+					noError = true;
+				}
+							
+			
+			}
+
+		}
+		
+	}
+	return noError;
 }
 
 vector<vector<int>> Validator::getsuchThatTable(){
