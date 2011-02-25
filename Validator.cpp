@@ -61,15 +61,12 @@ void Validator::populateTable(){
 		}
 		withFile.close();
 	}
-
-
-
 }
 
-void Validator::displayTable(){
+void Validator::displayTable(vector<vector<int>> table){
 	/* //////////////////testing getIndex()/////////////////
 	vector<int> index;
-	index = getIndex(suchThatTable, 10);
+	index = getIndex(table, 10);
 
 	for(int j = 0;j<index.size();j++)
 	{
@@ -78,20 +75,20 @@ void Validator::displayTable(){
 	}
 	cout<<endl;
 	*/
-	for(int i=0;i<(suchThatTable.size());i++)
+	for(int i=0;i<(table.size());i++)
 	{
-		for(int j=0;j<suchThatTable[i].size();j++)
+		for(int j=0;j<table[i].size();j++)
 		{
-			cout<<suchThatTable[i][j]<<" ";
+			cout<<table[i][j]<<" ";
 		}
 		
-		//cout<<suchThatTable[i][0];
+		//cout<<table[i][0];
 		cout<<endl;
 	}
 
 	
-	//cout<<suchThatTable.size()<<endl;
-	//cout<<suchThatTable[0].size()<<endl;
+	//cout<<table.size()<<endl;
+	//cout<<table[0].size()<<endl;
 
 }
 
@@ -110,6 +107,8 @@ vector<int> Validator::getIndex(vector<vector<int>> table, int name){
 
 	return index;
 }
+
+
 bool Validator::checkSuchThat(QueryTable table){
 	
 	bool noError = false;
@@ -155,11 +154,19 @@ bool Validator::checkSuchThat(QueryTable table){
 		}
 		
 	}
-	
-
 	cout<<size<<endl;;
 
 	return noError;
 
 
+}
+
+vector<vector<int>> Validator::getsuchThatTable(){
+
+	return suchThatTable;
+
+}
+vector<vector<int>>  Validator::getwithTable(){
+
+	return withTable;
 }
