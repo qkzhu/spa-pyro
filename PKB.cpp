@@ -242,7 +242,7 @@ void PKB::mTable_setModifyPV(int procIndex, int varIndex){
 /**
  * PKB Part
  */
-vector<int> convertSetToVector(set<int> setInt){
+vector<int> PKB::convertSetToVector(set<int> setInt){
 	vector<int> result;
 
 	for(set<int>::iterator it = setInt.begin(); it != setInt.end(); it++)
@@ -251,7 +251,7 @@ vector<int> convertSetToVector(set<int> setInt){
 	return result;
 }
 
-vector<string> convertSetToVector(set<string> setString){
+vector<string> PKB::convertSetToVector(set<string> setString){
 	vector<string> result;
 
 	for(set<string>::iterator it = setString.begin(); it != setString.end(); it++)
