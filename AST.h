@@ -41,6 +41,8 @@ public:
 	vector<int> getAllProc();
 	vector<int>	getAllCall();
 
+	void		printTree();
+
 	AST();
 
 private:
