@@ -54,7 +54,7 @@ private:
 	void addOperator(vector<Node*> &tree, string op);
 
 	//functions to check validity
-	bool checkVariableExists(std::string var_name);
+	void checkVariableExists(std::string var_name);
 	void checkValidName(std::string var_name);
 	bool isValidName(std::string var_name);
 	void checkValidFile();
