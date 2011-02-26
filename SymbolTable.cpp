@@ -46,11 +46,12 @@ int SymbolTable::getSymbolMapSize()
 
 bool SymbolTable::isNameExist(string s)
 {
-	MapType::const_iterator iter = mSymbolMap.begin();
-	iter = mSymbolMap.find(s);
+	return mSymbolMap.find(s) != mSymbolMap.end();
+	//MapType::const_iterator iter = mSymbolMap.begin();
+	//iter = mSymbolMap.find(s);
 
-	if(iter != mSymbolMap.end()) return true;
-	else return false;
+	//if(iter != mSymbolMap.end()) return true;
+	//else return false;
 }
 
 bool SymbolTable::isIndexExist(int varIndex)

@@ -47,12 +47,25 @@ mPkb(pkb), mLineNum(0), mStatNum(1),
  {
 	 checkValidFile();
 
-	 string output = getToken();
-	 int size = output.size();
+	 if (hasToken())
+	 {
+		string s = mStringBuf->str();
 
-	 mStringBuf->seekg(-size, ios_base::cur);
+		unsigned int start  = (unsigned int)mStringBuf->tellg();
+		unsigned int pos = start;
 
-	 return output;
+		if (isDelimiter(s[pos]))
+			return s.substr(pos, 1);
+		
+		//obtains characters from the file until a space/delimiter/EOF is encountered
+		while (pos < s.size() && !isspace(s[pos]) && 
+			!isDelimiter(s[pos]))
+			pos++;
+
+		return s.substr(start, pos-start);
+	 }
+
+	 return "";
  }
 
  //extracts next token, returns empty string if none found.
@@ -73,7 +86,7 @@ mPkb(pkb), mLineNum(0), mStatNum(1),
 			char output[2] = { c, '\0' };
 			return string(output);
 		}
-
+		
 		//obtains characters from the file until a space/delimiter/EOF is encountered
 		while (!isspace(mStringBuf->peek()) && 
 			!isDelimiter((char)mStringBuf->peek()) &&
@@ -187,6 +200,7 @@ void Parser::parseProcedure()
 Node *Parser::parseStmtList(Node* parentNode) 
 {
 	string tok =peekToken();
+	string tok1 = peekToken();
 	Node *stmt_list = mPkb.ast_CreateNode(Node::STMT_LIST, mStatNum, -1);
 	Node *prev_node = NULL; 
 	
@@ -392,8 +406,10 @@ Node *Parser::parseAssignment()
 	stack<string> ops;
 
 	string next;
+	string next0;
 	while (peekToken() != "" && peekToken() != ";")
 	{
+		next0 = peekToken();
 		next = getToken();
 		Node *curr;
 
@@ -500,14 +516,15 @@ bool Parser::isConstant(string tok)
 
 bool Parser::isDelimiter(char c)
 {
-	static regex exp("[{};\\-+*()]"); //dash must be escaped
+	static regex exp("[{};\\-+*()=]"); //dash must be escaped
 	string tok(&c);
 	return regex_match(tok.begin(), tok.end(), exp);
 }
 
-bool Parser::checkVariableExists(string var_name) 
+void Parser::checkVariableExists(string var_name) 
 {
-	return mPkb.vTable_IsVarNameExist(var_name);
+	if (!mPkb.vTable_IsVarNameExist(var_name))
+		error("Existing variable.", var_name);
 }
 
 bool Parser::isValidName(string var_name)
