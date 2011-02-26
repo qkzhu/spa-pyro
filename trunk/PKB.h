@@ -16,7 +16,7 @@ public:
 	PKB(): varTable(new VarTable()),
 		   procTable(new ProcTable()),
 		   constantTable(new ConstantTable()),
-		   useTable(new Uses()),
+		   useTable(new Uses()), modifyTable(new Modifies()), 
 		   ast(new AST()){}
 	/**
 	 * AST Part

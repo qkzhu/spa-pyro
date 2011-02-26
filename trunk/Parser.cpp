@@ -25,7 +25,7 @@ void Parser::loadFile(string name)
 
 //constructor for Parser takes a VarTable, AST, and the source code filename
  Parser::Parser(PKB &pkb, string filename) : 
-mPkb(pkb), mLineNum(0), mStatNum(0),
+mPkb(pkb), mLineNum(0), mStatNum(1),
 	 mCurrProcIndex(0), mFilename(filename), mpFile(new ifstream()), 
 	 mStringBuf(new stringstream(stringstream::in | stringstream::out))
  {
@@ -187,7 +187,7 @@ void Parser::parseProcedure()
 Node *Parser::parseStmtList(Node* parentNode) 
 {
 	string tok =peekToken();
-	Node *stmt_list = mPkb.ast_CreateNode(Node::STMT_LIST, mLineNum, -1);
+	Node *stmt_list = mPkb.ast_CreateNode(Node::STMT_LIST, mStatNum, -1);
 	Node *prev_node = NULL; 
 	
 	if (tok != "" && tok != ";" && tok != "}")
@@ -500,7 +500,7 @@ bool Parser::isConstant(string tok)
 
 bool Parser::isDelimiter(char c)
 {
-	static regex exp("[{};()+-*]");
+	static regex exp("[{};\\-+*()]"); //dash must be escaped
 	string tok(&c);
 	return regex_match(tok.begin(), tok.end(), exp);
 }
