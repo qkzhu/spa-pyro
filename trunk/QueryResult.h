@@ -6,7 +6,7 @@ private:
 	bool mBoolSet;
 	bool mBoolResult;
 	std::vector<int> mTupleResult;
-
+	std::vector<int> mTupleType;
 
 public:
 	QueryResult();
@@ -14,9 +14,12 @@ public:
 
 	bool isBoolSet();
 	bool getBoolValue();
-	std::vector<int> getTuple(); 
+	std::vector<int> getTuple();  //
+	std::vector<int> getTypes();
 
 	void setBoolValue(bool);   //set bool value
+
+	void addInType(int);
 	void addInTuple(int);  //add a value at index indx in tuple
 	void addInTuple(std::vector<int>);
 	int getValAtTuple(int);  //get the value at index indx in tuple

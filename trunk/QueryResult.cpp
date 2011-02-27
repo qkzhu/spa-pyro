@@ -30,6 +30,9 @@ vector<int> QueryResult::getTuple()
 {
 	return mTupleResult;
 }
+vector<int> QueryResult::getTypes(){
+	return mTupleType;
+}
 
 void QueryResult::setBoolValue(bool b)
 {
@@ -42,12 +45,15 @@ void QueryResult::addInTuple(int value)
 	mTupleResult.push_back(value);
 }
 
+void QueryResult::addInType(int type){
+	mTupleType.push_back(type);
+}
 void QueryResult::addInTuple(vector<int> concat)
 {
 	int s = (concat).size();
 	int i =0;
 	while(i < s){
-		mTupleResult.push_back((concat).at(i));
+		mTupleResult.push_back((concat).at(i++));
 	}
 }
 
