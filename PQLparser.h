@@ -1,4 +1,7 @@
 //this class will read pqlqueryfile line by line and parse it 
+#ifndef PQLPARSER_H
+#define PQLPARSER_H
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -17,3 +20,4 @@ public:
   static int prefix(string token);
   static QueryTable parser();
 };
+#endif

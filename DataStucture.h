@@ -1,3 +1,6 @@
+#ifndef DATA_STRUCTURE_H
+#define DATA_STRUCTURE_H
+
 #include <vector>
 
 using namespace std;
@@ -19,3 +22,5 @@ struct With{
 struct Declaration{
 	vector<int> declaration;
 };
+
+#endif
