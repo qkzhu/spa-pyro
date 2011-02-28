@@ -1,3 +1,5 @@
+#ifndef TUPLE_OPERATIONS_H
+#define TUPLE_OPERATIONS_H
 #include <iostream>
 #include <vector>
 
@@ -12,3 +14,5 @@ public:
 	static std::vector<std::vector<int> >  tupleJoinTwoC(int,int,std::vector<std::vector<int> >, std::vector<std::vector<int> >);
 
 };
+
+#endif

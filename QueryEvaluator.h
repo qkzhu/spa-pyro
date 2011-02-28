@@ -1,9 +1,12 @@
+#ifndef QUERY_EVALUATOR_H
+#define QUERY_EVALUATOR_H
+
 #include <map>
 #include <algorithm>
 
 
-#include "PQLParserAPIs.h"
-#include "PKB_APIs.h"
+#include "PQLParser.h"
+#include "Parser.h"
 #include "QueryResult.h"
 #include "TupleOperations.h"
 
@@ -45,3 +48,4 @@ public:
 	void printResult();
 };
 
+#endif

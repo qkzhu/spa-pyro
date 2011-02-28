@@ -75,27 +75,27 @@ void QueryEvaluator::evaluate()
 		}	
 		vector<vector<int> > with_result;
 		vector<int> tmp;
-		if(p1_type == 51)  tmp = mPKBObject->getAllStmts();
-		else if(p1_type == 53) tmp = mPKBObject->getAllAssign();
-		else if(p1_type == 54) tmp = mPKBObject->getAllWhile();
-		else if(p1_type == 55) tmp = mPKBObject->getAllIf();
-		else if(p1_type == 56) tmp = mPKBObject->getAllCons();
-		else if(p1_type == 57) tmp = mPKBObject->getAllVars();
-		else if(p1_type == 58) tmp = mPKBObject->getAllProc();
-		else if(p1_type == 59) tmp = mPKBObject->getAllCall();
+		if(p1_type == 51)  tmp = getAllStmts();
+		else if(p1_type == 53) tmp = mPKBObject->ast_GetAllAssign();
+		else if(p1_type == 54) tmp = mPKBObject->ast_GetAllWhile();
+		else if(p1_type == 55) tmp = mPKBObject->ast_GetAllIf();
+		else if(p1_type == 56) tmp = mPKBObject->cTable_GetAllConstants();
+		else if(p1_type == 57) tmp = mPKBObject->vTable_GetAllVar();
+		else if(p1_type == 58) tmp = mPKBObject->ast_GetAllProc();
+		else if(p1_type == 59) tmp = mPKBObject->ast_GetAllCall();
 		
 		vector<int> tmp2;
 		if(p2_type == 201) tmp2.push_back(part2.at(1));
 		else if(p2_type == 202) tmp2.push_back(PKB_varEncode(PQL_varDecode(part2.at(1))));
 		else if(p2_type == 203) tmp2.push_back(PKB_procEncode(PQL_procDecode(part2.at(1))));
-		else if(p2_type == 51)  tmp2 = mPKBObject->getAllStmts();
-		else if(p2_type == 53) tmp2 = mPKBObject->getAllAssign();
-		else if(p2_type == 54) tmp2 = mPKBObject->getAllWhile();
-		else if(p2_type == 55) tmp2 = mPKBObject->getAllIf();
-		else if(p2_type == 56) tmp2 = mPKBObject->getAllCons();
-		else if(p2_type == 57) tmp2 = mPKBObject->getAllVars();
-		else if(p2_type == 58) tmp2 = mPKBObject->getAllProc();
-		else if(p2_type == 59) tmp2 = mPKBObject->getAllCall();
+		else if(p2_type == 51)  tmp2 = getAllStmts();
+		else if(p2_type == 53) tmp2 = mPKBObject->ast_GetAllAssign();
+		else if(p2_type == 54) tmp2 = mPKBObject->ast_GetAllWhile();
+		else if(p2_type == 55) tmp2 = mPKBObject->ast_GetAllIf();
+		else if(p2_type == 56) tmp2 = mPKBObject->cTable_GetAllConstants();
+		else if(p2_type == 57) tmp2 = mPKBObject->vTable_GetAllVar();
+		else if(p2_type == 58) tmp2 = mPKBObject->ast_GetAllProc();
+		else if(p2_type == 59) tmp2 = mPKBObject->ast_GetAllCall();
 		
 		int entry_type;
 		if(p1_type == 51|| p1_type==53|| p1_type==54|| p1_type==55||p1_type==59 ||p1_type==56)
@@ -395,14 +395,14 @@ void QueryEvaluator::evaluate()
 	if(with_size == 0 && suchThatSize == 0){
 		int select_type = (mQueryTree->selectAt(0)).at(0);
 		vector<int> tmp;
-		if(select_type == 51)  tmp = mPKBObject->getAllStmts();
-		else if(select_type == 53) tmp = mPKBObject->getAllAssign();
-		else if(select_type == 54) tmp = mPKBObject->getAllWhile();
-		else if(select_type == 55) tmp = mPKBObject->getAllIf();
-		else if(select_type == 56) tmp = mPKBObject->getAllCons();
-		else if(select_type == 57) tmp = mPKBObject->getAllVars();
-		else if(select_type == 58) tmp = mPKBObject->getAllProc();
-		else if(select_type == 59) tmp = mPKBObject->getAllCall();
+		if(select_type == 51)  tmp = getAllStmts();
+		else if(select_type == 53) tmp = mPKBObject->ast_GetAllAssign();
+		else if(select_type == 54) tmp = mPKBObject->ast_GetAllWhile();
+		else if(select_type == 55) tmp = mPKBObject->ast_GetAllIf();
+		else if(select_type == 56) tmp = mPKBObject->cTable_GetAllConstants();
+		else if(select_type == 57) tmp = mPKBObject->vTable_GetAllVar();
+		else if(select_type == 58) tmp = mPKBObject->ast_GetAllProc();
+		else if(select_type == 59) tmp = mPKBObject->ast_GetAllCall();
 		for(vector<int>::iterator i=tmp.begin(); i<tmp.end(); i++){
 			mResult.addInType(201);
 			mResult.addInTuple(*i);
@@ -459,20 +459,20 @@ vector<vector<int> > QueryEvaluator::getRel(int type1, int type2, int para1, int
 		{
 			vector<int> para1List;
 			if(type1 == 201) para1List.push_back(para1);
-			else if(type1 == 51) para1List = mPKBObject->getAllStmts();
-			else if(type1 == 53) para1List = mPKBObject->getAllAssign();
-			else if(type1 == 54) para1List = mPKBObject->getAllWhile();
-			else if(type1 == 55) para1List = mPKBObject->getAllIf();
-			else if(type1 == 59) para1List = mPKBObject->getAllCall();
+			else if(type1 == 51) para1List = getAllStmts();
+			else if(type1 == 53) para1List = mPKBObject->ast_GetAllAssign();
+			else if(type1 == 54) para1List = mPKBObject->ast_GetAllWhile();
+			else if(type1 == 55) para1List = mPKBObject->ast_GetAllIf();
+			else if(type1 == 59) para1List = mPKBObject->ast_GetAllCall();
 			else throw "Parent parameter type mismatch!";
 
 			vector<int> para2List;
 			if(type2 == 201) para2List.push_back(para2);
-			else if(type2 == 51) para2List = mPKBObject->getAllStmts();
-			else if(type2 == 53) para2List = mPKBObject->getAllAssign();
-			else if(type2 == 54) para2List = mPKBObject->getAllWhile();
-			else if(type2 == 55) para2List = mPKBObject->getAllIf();
-			else if(type2 == 59) para2List = mPKBObject->getAllCall();
+			else if(type2 == 51) para2List = getAllStmts();
+			else if(type2 == 53) para2List = mPKBObject->ast_GetAllAssign();
+			else if(type2 == 54) para2List = mPKBObject->ast_GetAllWhile();
+			else if(type2 == 55) para2List = mPKBObject->ast_GetAllIf();
+			else if(type2 == 59) para2List = mPKBObject->ast_GetAllCall();
 			else throw "Your follows relation has unpaired second parameters";
 
 			for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
@@ -497,20 +497,20 @@ vector<vector<int> > QueryEvaluator::getRel(int type1, int type2, int para1, int
 		{
 			vector<int> para1List; 
 			if(type1 == 201) para1List.push_back(para1);
-			else if(type1 == 51) para1List = mPKBObject->getAllStmts();
-			else if(type1 == 53) para1List = mPKBObject->getAllAssign();
-			else if(type1 == 54) para1List = mPKBObject->getAllWhile();
-			else if(type1 == 55) para1List = mPKBObject->getAllIf();
-			else if(type1 == 59) para1List = mPKBObject->getAllCall();
+			else if(type1 == 51) para1List = getAllStmts();
+			else if(type1 == 53) para1List = mPKBObject->ast_GetAllAssign();
+			else if(type1 == 54) para1List = mPKBObject->ast_GetAllWhile();
+			else if(type1 == 55) para1List = mPKBObject->ast_GetAllIf();
+			else if(type1 == 59) para1List = mPKBObject->ast_GetAllCall();
 			else throw "Your follows relation has unpaired parameters";
 
 			vector<int> para2List;
 			if(type2 == 201) para2List.push_back(para2);
-			else if(type2 == 51) para2List = mPKBObject->getAllStmts();
-			else if(type2 == 53) para2List = mPKBObject->getAllAssign();
-			else if(type2 == 54) para2List = mPKBObject->getAllWhile();
-			else if(type2 == 55) para2List = mPKBObject->getAllIf();
-			else if(type2 == 59) para2List = mPKBObject->getAllCall();
+			else if(type2 == 51) para2List = getAllStmts();
+			else if(type2 == 53) para2List = mPKBObject->ast_GetAllAssign();
+			else if(type2 == 54) para2List = mPKBObject->ast_GetAllWhile();
+			else if(type2 == 55) para2List = mPKBObject->ast_GetAllIf();
+			else if(type2 == 59) para2List = mPKBObject->ast_GetAllCall();
 			else throw "Your follows relation has unpaired second parameters";
 			
 			for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
@@ -536,11 +536,11 @@ vector<vector<int> > QueryEvaluator::getRel(int type1, int type2, int para1, int
 			{
 				vector<int> para1List;
 				if(type1 == 201) para1List.push_back(para1);
-				else if(type1 == 51) para1List = mPKBObject->getAllStmts();
-				else if(type1 == 53) para1List = mPKBObject->getAllAssign();
-				else if(type1 == 54) para1List = mPKBObject->getAllWhile();
-				else if(type1 == 55) para1List = mPKBObject->getAllIf();
-				else if(type1 == 59) para1List = mPKBObject->getAllCall();
+				else if(type1 == 51) para1List = getAllStmts();
+				else if(type1 == 53) para1List = mPKBObject->ast_GetAllAssign();
+				else if(type1 == 54) para1List = mPKBObject->ast_GetAllWhile();
+				else if(type1 == 55) para1List = mPKBObject->ast_GetAllIf();
+				else if(type1 == 59) para1List = mPKBObject->ast_GetAllCall();
 				else break; //cannot happen
 				for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
 					vector<int> result;
@@ -561,7 +561,7 @@ vector<vector<int> > QueryEvaluator::getRel(int type1, int type2, int para1, int
 			{
 				vector<int> para1List;
 				if(type1 == 203) para1List.push_back(para1);
-				else para1List = mPKBObject->getAllProc();
+				else para1List = mPKBObject->ast_GetAllProc();
 				for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
 					vector<int> result;
 					if(relType == 9)
@@ -589,7 +589,7 @@ vector<vector<int> > QueryEvaluator::getRel(int type1, int type2, int para1, int
 			{
 				vector<int> para1List;
 				if(type1 == 203) para1List.push_back(para1);
-				else para1List = mPKBObject->getAllProc();
+				else para1List = mPKBObject->ast_GetAllProc();
 				for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++)
 				{
 					vector<int> result;
@@ -653,6 +653,15 @@ vector<int> QueryEvaluator::getCallsStar(int procNameCode){
 	return descendant;
 }
 
+
+vector<int> QueryEvaluator::getAllStmts(){
+	int max = mPKBObject->ast_getMaxStmtNum();
+	vector<int> tmp;
+	for(int i = 0; i< max; i++){
+		tmp.push_back(i);
+	}
+	return tmp;
+}
 
 
 string QueryEvaluator::PQL_procDecode(int i){
