@@ -1,3 +1,6 @@
+#ifndef AST_H
+#define AST_H
+
 #include <map>
 #include <list>
 #include "Node.h"
@@ -52,3 +55,5 @@ private:
 
 	vector<int> getAllType(Node::NodeType nt);	// Return all statement number with the given node type.
 };	
+
+#endif

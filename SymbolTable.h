@@ -1,3 +1,6 @@
+#ifndef SYMBOLTABLE_H
+#define SYMBOLTABLE_H
+
 #include <map>
 #include <string>
 #include <utility>
@@ -59,3 +62,5 @@ private:
 	map<int, set<int>> callTable;		/* int calls set<int> */
 	map<int, set<int>> calledTable;		/* int was called by set<int> */
 };
+
+#endif

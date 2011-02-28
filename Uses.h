@@ -1,3 +1,6 @@
+#ifndef USES_H
+#define USES_H
+
 #include <set>
 #include <map>
 using namespace std;
@@ -17,3 +20,5 @@ private:
 	map<int, set<int>> mVarStmtMap; // map each used varIndex to a set of stmt#
 	map<int, set<int>> mVarProcMap; // map each used varIndex to a set of procIndex
 };
+
+#endif

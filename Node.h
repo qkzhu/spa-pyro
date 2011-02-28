@@ -1,3 +1,6 @@
+#ifndef NODE_H
+#define NODE_H
+
 #include <vector>
 #include <string>
 
@@ -28,3 +31,5 @@ public:
 
 	Node(NodeType type, int stmtNum, int name);
 };
+
+#endif

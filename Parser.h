@@ -1,3 +1,6 @@
+#ifndef PARSER_H
+#define PARSER_H
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -67,3 +70,5 @@ private:
 
 	static const string mKeyWords[];
 };
+
+#endif

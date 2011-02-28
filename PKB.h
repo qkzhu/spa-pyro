@@ -1,3 +1,6 @@
+#ifndef PKB_H
+#define PKB_H
+
 #include "AST.h"
 #include "SymbolTable.h"
 #include "ConstantTable.h"
@@ -105,3 +108,5 @@ private:
 	vector<int>		convertSetToVector(set<int>);
 	vector<string>	convertSetToVector(set<string>);
 };
+
+#endif
