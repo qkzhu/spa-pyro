@@ -149,7 +149,7 @@ vector<int> AST::getAllType(Node::NodeType nt){
 
 void AST::printTree()
 {
-	for (int i = 0; i < astList.size(); i++)
+	for (int i = 1; i <= getMaxStmtNum(); i++)
 	{
 		Node* n = astList[i];
 		cout << "Proc: " << n->name << endl;
