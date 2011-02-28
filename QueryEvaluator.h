@@ -5,8 +5,8 @@
 #include <algorithm>
 
 
-#include "PQLParserAPIs.h"
-#include "PKB_APIs.h"
+#include "PQLParser.h"
+#include "PKB.h"
 #include "QueryResult.h"
 #include "TupleOperations.h"
 
@@ -14,7 +14,7 @@ class QueryEvaluator{
 	
 private:
 	PKB *mPKBObject;  //Connect to PKB side
-	QueryParser *mQueryTree;   //Connect to PQL parser side
+	PqlParser *mQueryTree;   //Connect to PQL parser side
 	QueryResult mResult;  //The final result in QueryResult.
 	std::vector<int> mgTupleIndexing; //The global indexing for tuple evaluation, corresponding to the current tuple result
 	
@@ -42,7 +42,7 @@ private:
 	string PKB_varDecode(int);
 
 public:
-	QueryEvaluator(PKB *, QueryParser *);  //Constructor
+	QueryEvaluator(PKB *, PqlParser *);  //Constructor
 	void evaluate();//Preprocessor call evaluate to pass Query tree to Evaluator
 	std::vector<std::vector<int> > getRel(int type1, int type2, int para1, int para2, int relType);
 	QueryResult getResult();//After calling evaluate, the result stored inside mResult and can be retrieved by this function.
