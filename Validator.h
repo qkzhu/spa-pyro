@@ -16,6 +16,7 @@ public:
 	bool checkWith(QueryTable table); // check with clause
 	vector<vector<int>>  getsuchThatTable();
 	vector<vector<int>>  getwithTable();
+	QueryTable preValidate(QueryTable table); // used to preprocess the table to make table driven more efficient
 
 private:
 	vector< vector<int> > suchThatTable;
