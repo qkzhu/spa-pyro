@@ -1,0 +1,48 @@
+    and 0;
+    select   1;
+    such      2;
+    with         3;
+    pattern          4;
+    parent            5;
+    parent*           6;
+    follows             7;
+    follows*         8;
+    uses                9;
+    uses*            10;
+    modifies            11;
+ modifies*            12;
+ calls              13;
+ calls*             14;
+stmt#     104;
+stmt 51;
+assign 53;
+
+
+prog_line  52;
+
+
+while    54;   
+
+if         55;
+
+constant    56;
+
+variable    57;
+
+procedure   58;
+
+call        59;
+
+boolean     60;
+
+=          155;
+
+.           156;
+
+_           157;
+
+value     101;
+
+varName   102;
+
+procName    103;
