@@ -53,7 +53,7 @@ public:
 	int				vTable_GetVarTableSize(); 
 	bool			vTable_IsVarNameExist(string var);
 	bool			vTable_IsVarIndexExist(int varIndex);
-	set<string>		vTable_GetAllVar();
+	vector<string>	vTable_GetAllVar();
 	/**
 	 * ProcTable Part
 	 */
@@ -71,7 +71,7 @@ public:
 	 * ConstantTable Part
 	 */
 	void		cTable_AddConstant(int c);
-	set<int>	cTable_GetAllConstants();
+	vector<int>	cTable_GetAllConstants();
 	bool		cTable_IsConstantExist(int c);
 	int			cTable_GetNumOfConstant();
 	bool		cTable_hasCons(int c);

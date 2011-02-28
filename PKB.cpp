@@ -114,8 +114,8 @@ bool PKB::vTable_IsVarIndexExist(int varIndex){
 	return varTable->isVarIndexExist(varIndex);
 }
 
-set<string> PKB::vTable_GetAllVar(){
-	return varTable->getAllVar();
+vector<string> PKB::vTable_GetAllVar(){
+	return convertSetToVector(varTable->getAllVar());
 }
 /**
  * ProcTable Part
@@ -167,8 +167,8 @@ void PKB::cTable_AddConstant(int c){
 	constantTable->addConstant(c);
 }
 
-set<int> PKB::cTable_GetAllConstants(){
-	return constantTable->getAllConstants();
+vector<int> PKB::cTable_GetAllConstants(){
+	return convertSetToVector(constantTable->getAllConstants());
 }
 
 bool PKB::cTable_IsConstantExist(int c){
