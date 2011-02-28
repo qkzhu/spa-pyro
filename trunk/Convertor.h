@@ -1,3 +1,7 @@
+#ifndef CONVERTOR_H
+#define CONVERTOR_H
+
+
 //this class will mainly validate the pqlquery and index it; 
 #include<fstream>
 #include<iostream>
@@ -29,3 +33,4 @@ public:
 	//if not in the table,then return string "NULL";
 
 };
+#endif;

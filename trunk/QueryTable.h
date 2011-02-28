@@ -1,3 +1,5 @@
+#ifndef QUERYTABLE_H
+#define QUERYTABLE_H
 #include <iostream>
 #include <utility>
 #include "DataStucture.h"
@@ -54,3 +56,4 @@ private:
 	*/
 	
 };
+#endif
