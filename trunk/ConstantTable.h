@@ -1,3 +1,6 @@
+#ifndef CONSTANTTABLE_H
+#define CONSTANTTABLE_H
+
 #include <set>
 
 using namespace std;
@@ -12,3 +15,5 @@ public:
 private:
 	set<int> cSet;
 };
+
+#endif

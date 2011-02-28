@@ -1,3 +1,6 @@
+#ifndef MODIFIES_H
+#define MODIFIES_H
+
 #include <set>
 #include <map>
 using namespace std;
@@ -18,3 +21,5 @@ private:
 	map<int, set<int>> mVarStmtMap; // map each modified varIndex to a set of stmt#
 	map<int, set<int>> mVarProcMap; // map each modified varIndex to a set of procIndex
 };
+
+#endif

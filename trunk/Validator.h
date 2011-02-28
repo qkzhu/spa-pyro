@@ -1,5 +1,6 @@
 #ifndef VALIDATOR_H
 #define VALIDATOR_H
+
 #include <iostream>
 #include <fstream>
 #include <string>
