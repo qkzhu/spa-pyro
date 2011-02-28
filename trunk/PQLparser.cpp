@@ -1,6 +1,7 @@
 #include"PqlParser.h"
  
  //int prefix(string token);
+/*
 void main()
 {
 	QueryTable table=PqlParser::parser();
@@ -10,7 +11,8 @@ void main()
 	cout<<"with "<<validate.checkWith(table)<<endl;
 	table.showTable();
 }
-QueryTable PqlParser::parser() {
+*/
+QueryTable PqlParser::parser(string query) {
   QueryTable table;
   string line;
   string pch;//token elements
@@ -36,15 +38,15 @@ QueryTable PqlParser::parser() {
   Convertor::update();
   int type;
   vector<int> content;
-  string query;
-  ifstream myfile ("query.txt");
-  if (myfile.is_open())
-  {
-    while ( myfile.good() )
-    {
-      getline (myfile,line);
-	  query=query.append(line);
-	}
+  string query=query;
+  //ifstream myfile ("query.txt");
+  //if (myfile.is_open())
+  //{
+   // while ( myfile.good() )
+    //{
+     // getline (myfile,line);
+	  //query=query.append(line);
+//	}
 	  token.set(query," ,;()");
 	  pch=token.next();
 	  while (pch !="")
@@ -248,10 +250,10 @@ QueryTable PqlParser::parser() {
 
 	}
 	//table.showTable();
-    myfile.close();
+  //  myfile.close();
   
-}
-  else cout << "Unable to open file"; 
+//}
+ // else cout << "Unable to open file"; 
 
   return table;
 }
