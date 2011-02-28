@@ -63,6 +63,7 @@ void Validator::populateTable(){
 	}
 	
 }
+
 /*
 void Validator::fillTable(vector <vector<int>> table, string fileName){
 	
@@ -98,6 +99,7 @@ void Validator::fillTable(vector <vector<int>> table, string fileName){
 
 }
 */
+
 
 void Validator::displayTable(vector<vector<int>> table){
 	/* //////////////////testing getIndex()/////////////////
@@ -144,11 +146,10 @@ vector<int> Validator::getIndex(vector<vector<int>> table, int name){
 	return index;
 }
 
-
 bool Validator::checkSuchThat(QueryTable table){
 	
-	bool noError = false;
-	int size = table.suchThatSize();
+	bool noError = true;
+	int size = table.getSuchThatClauseV().size();
 	
 	
 
@@ -159,15 +160,17 @@ bool Validator::checkSuchThat(QueryTable table){
 	
 	for(int i=0; i<size; i++)
 	{
+		bool tempNoError = false;
 		// to check with the argument is correct of not
-		if(table.getSuchThatClause().at(i).argumentNoCorrect == false)
+		if(table.getSuchThatClauseV().at(i).argumentNoCorrect == false)
 		{
+			noError = tempNoError && noError;
 			break;
 		}
 
 		vector<int> suchThat;
 		vector<int> index;
-		suchThat =table.suchThatAt(i);	
+		suchThat =table.getSuchThatClauseV().at(i).relCond;	
 		index = getIndex(suchThatTable, suchThat[0]);
 		
 		vector<int>::iterator it;
@@ -177,26 +180,27 @@ bool Validator::checkSuchThat(QueryTable table){
 			{
 				if((suchThat.at(1) == suchThatTable[*it][1]) && (suchThat.at(3) == suchThatTable[*it][2]))
 				{
-					noError = true;
+					tempNoError = true;
 				}
 			}
 			else if(suchThat.size() == 4)
 			{
 				if((suchThat.at(1) == suchThatTable[*it][1] && (suchThat.at(2) == suchThatTable[*it][2])) || (suchThat.at(1) == suchThatTable[*it][1]) && (suchThat.at(3) == suchThatTable[*it][2]))
 				{
-					noError = true;
+					tempNoError = true;
 				}
 			}
 			else if(suchThat.size() == 3)
 			{
 				if((suchThat.at(1) == 157) && (suchThat.at(2) == 157))
 				{
-					noError = true;
+					tempNoError = true;
 				}
 			}
 		
 		}
-		
+		//cout<<tempNoError<<" inside checkSuchThat "<<endl;
+		noError = tempNoError && noError;
 	}
 	//cout<<size<<endl;;
 
@@ -204,18 +208,20 @@ bool Validator::checkSuchThat(QueryTable table){
 }
 
 bool Validator::checkWith(QueryTable table){
-	bool noError = false;
-	int size = table.withSize();
+	bool noError = true;
+	int size = table.getWithClauseV().size();
 
 	//cout<<"with size is " <<size<<endl;
 
 
 	for(int i=0; i<size;i++)
 	{
+		bool tempNoError = false;
 		//cout<<"argumentNoCorrect "<<table.getWithClause().at(i).argumentNoCorrect<<endl;
 		// to check with the argument is correct of not
-		if(!table.getWithClause().at(i).argumentNoCorrect)
+		if(!table.getWithClauseV().at(i).argumentNoCorrect)
 		{
+			noError = tempNoError && noError;
 			break;
 		}
 		
@@ -223,7 +229,7 @@ bool Validator::checkWith(QueryTable table){
 		vector<int> index;
 	
 
-		with =  table.withAt(i);
+		with =  table.getWithClauseV().at(i).attrCond;
 		//cout<<"with[0] is "<<with[0]<<endl;
 		index = getIndex(withTable, with[0]);
 
@@ -236,7 +242,7 @@ bool Validator::checkWith(QueryTable table){
 				//cout<<"with size is "<<with.size()<<endl;
 				if((with[0] == withTable[index[it]][0]) && (with[3] == withTable[index[it]][1]) && (with[5] == withTable[index[it]][2]))
 				{
-					noError = true;
+					tempNoError = true;
 				}
 			
 			}
@@ -244,14 +250,14 @@ bool Validator::checkWith(QueryTable table){
 			{
 				if((with[0] == withTable[index[it]][0]) && (with[3] == withTable[index[it]][1]) && (with[5] == withTable[index[it]][2]) && (with[8] == withTable[index[it]][3]))
 				{
-					noError = true;
+					tempNoError = true;
 				}
 							
-			
 			}
 
 		}
-		
+		//cout<<tempNoError<<" inside checkWith "<<endl;
+		noError = tempNoError && noError;
 	}
 	return noError;
 }

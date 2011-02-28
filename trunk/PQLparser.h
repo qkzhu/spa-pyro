@@ -1,45 +1,19 @@
+//this class will read pqlqueryfile line by line and parse it 
 #include <iostream>
-#include <string>
 #include <fstream>
-#include <sstream>
-#include <vector>
-#include <map>
-#include "tree.h"
+#include <string>
+#include <stdio.h>
+#include "Validator.h"
+#include"Convertor.h"
+//#include"QueryTable.h"
 using namespace std;
 
-
-class PQLpreparser
-{
-private:
-	static string qu;
-	static bool flag;
-public:
-	static string QueryReader();
-	//static string GetQuery();
-};
-class syntaxValidator
+class PqlParser
 {
 public:
-
-static void Parse(string str,QueryTree* tree);
-static int getStmtNValue();  //By HQ
-static string getStmtNVar();  // By HQ
-
-private:
-
-//The fields for declaration and statement number information
-static map<string, string> DeclarationMap;	//The map between variable and its type, first string is variable, By HQ
-
-static int stmtNumber; //The statement numbers , By HQ
-static string stmtNumberVariable; //Keep the variable for statement number, By HQ
-
-
-static void SelectG(string query,QueryTree* tree);
-static void SuchthatG(string query,QueryTree* tree);
-
-
-private:
-	static string TypeDecider(string s);
-
+  static int const NORMAL=0;
+  static int const GRAMMERDEFINED=101;
+  static int const USERDEFINED=301; 
+  static int prefix(string token);
+  static QueryTable parser();
 };
-
