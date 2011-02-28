@@ -5,7 +5,7 @@ using namespace std;
 
 
 //Controller passes the PKB and Query Parser to evaluator, and trigger evaluator to start.
-QueryEvaluator::QueryEvaluator(PKB *p, QueryParser *q)
+QueryEvaluator::QueryEvaluator(PKB *p, PqlParser *q)
 {
 	mPKBObject = p;
 	mQueryTree = q;
