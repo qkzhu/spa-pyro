@@ -1,3 +1,6 @@
+#ifndef QUERY_RESULT_H
+#define QUERY_RESULT_H
+
 #include <iostream>
 #include <vector>
 
@@ -27,3 +30,4 @@ public:
 
 };
 
+#endif
