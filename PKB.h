@@ -56,7 +56,7 @@ public:
 	int				vTable_GetVarTableSize(); 
 	bool			vTable_IsVarNameExist(string var);
 	bool			vTable_IsVarIndexExist(int varIndex);
-	vector<string>	vTable_GetAllVar();
+	vector<int>		vTable_GetAllVar();                             //modified by HQ
 	/**
 	 * ProcTable Part
 	 */
@@ -66,7 +66,7 @@ public:
 	int				pTable_GetProcTableSize();
 	bool			pTable_isProcNameExist(string procName);
 	bool			pTable_isProcIndexExist(int procIndex);
-	set<string>		pTable_GetAllProc();
+	vector<int>		pTable_GetAllProc();                               //modified by HQ
 	void			pTable_AddCall(int procIndex1, int procIndex2);
 	vector<int> 	pTable_getCall(int procIndex);
 	vector<int> 	pTable_getCalled(int procIndex);

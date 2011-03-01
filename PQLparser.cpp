@@ -38,7 +38,6 @@ QueryTable PqlParser::parser(string query) {
   Convertor::update();
   int type;
   vector<int> content;
-  string query=query;
   //ifstream myfile ("query.txt");
   //if (myfile.is_open())
   //{
