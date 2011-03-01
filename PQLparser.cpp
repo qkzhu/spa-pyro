@@ -20,15 +20,7 @@
 	UNDERSCORE=157,
   };
 //int prefix(string token);
-void main()
-{
-	QueryTable table=PqlParser::parser();
-	Validator validate;
-	validate.populateTable();
-	cout<<"suchthat "<<validate.checkSuchThat(table)<<endl;
-	cout<<"with "<<validate.checkWith(table)<<endl;
-	table.showTable();
-}
+
 QueryTable PqlParser::parser() {
   QueryTable table;
   string line;
