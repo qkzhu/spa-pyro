@@ -114,8 +114,13 @@ bool PKB::vTable_IsVarIndexExist(int varIndex){
 	return varTable->isVarIndexExist(varIndex);
 }
 
-vector<string> PKB::vTable_GetAllVar(){
-	return convertSetToVector(varTable->getAllVar());
+vector<int> PKB::vTable_GetAllVar(){
+	vector<string> tmp = convertSetToVector(varTable->getAllVar());
+	vector<int> result;
+	int index;
+	for(index = 0; index < tmp.size(); index++)
+		result.push_back(vTable_GetVarIndex(tmp[index]));
+	return result;
 }
 /**
  * ProcTable Part
@@ -144,8 +149,13 @@ bool PKB::pTable_isProcIndexExist(int procIndex){
 	return procTable->isProcIndexExist(procIndex);
 }
 
-set<string> PKB::pTable_GetAllProc(){
-	return procTable->getAllProc();
+vector<int> PKB::pTable_GetAllProc(){
+	vector<string> tmp = convertSetToVector(procTable->getAllProc());
+	vector<int> result;
+	int index;
+	for(index = 0; index < tmp.size(); index++)
+		result.push_back(pTable_GetProcIndex(tmp[index]));
+	return result;
 }
 
 void PKB::pTable_AddCall(int procIndex1, int procIndex2){
