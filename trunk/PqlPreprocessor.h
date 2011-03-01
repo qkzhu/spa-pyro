@@ -11,14 +11,14 @@ private:
 
 public:
 
-	PqlPreprocessor(string query);
+	PqlPreprocessor(std::string query);
 
 	int selectSize(); //return the number of result variables
-	vector<int> selectAt(int indx); //take an index and return the result variable at index indx.
+	std::vector<int> selectAt(int indx); //take an index and return the result variable at index indx.
 	int suchThatSize(); //return the number of such that conditions in such that clause
-	vector<int> suchThatAt(int indx); //take an indx and return the such that condition in 				index indx
+	std::vector<int> suchThatAt(int indx); //take an indx and return the such that condition in 				index indx
 	int withSize(); //return the number of with conditions in the with clause
-	vector<int> withAt(int indx); //take an indx and return the with condition in index indx
+	std::vector<int> withAt(int indx); //take an indx and return the with condition in index indx
 
 	//int varNum(); //return the number of all query variables
 	//int varType(int var); //take an integer form of a query variable and return its type in integer
@@ -32,5 +32,5 @@ public:
 	//std::string keywordDecode(int i); //take a integer of 0~300 and return its coding string
 
 
-}
+};
 #endif
