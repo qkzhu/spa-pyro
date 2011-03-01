@@ -118,7 +118,7 @@ vector<int> PKB::vTable_GetAllVar(){
 	vector<string> tmp = convertSetToVector(varTable->getAllVar());
 	vector<int> result;
 	int index;
-	for(index = 0; index < tmp.size(); index++)
+	for(index = 0; index < (int)tmp.size(); index++)
 		result.push_back(vTable_GetVarIndex(tmp[index]));
 	return result;
 }
@@ -153,7 +153,7 @@ vector<int> PKB::pTable_GetAllProc(){
 	vector<string> tmp = convertSetToVector(procTable->getAllProc());
 	vector<int> result;
 	int index;
-	for(index = 0; index < tmp.size(); index++)
+	for(index = 0; index < (int)tmp.size(); index++)
 		result.push_back(pTable_GetProcIndex(tmp[index]));
 	return result;
 }
