@@ -6,6 +6,7 @@
  
  map<string, string> Convertor::shortcutToContent;//s->stmt;
  Tokenizer keywordToken;
+ int u=Convertor::QUATEDSTRING;
 int Convertor::update()
 {
   string line;
@@ -58,18 +59,38 @@ int Convertor::update()
  }
 
 
+ bool Convertor::isQuated(string s)
+ {      
+     string a="\"";
+	
+    if((s.substr(0,1)==a )&& (s.substr(s.size()-1,1)==a) )
+		 return true;
+	    else
+		 return false;
+
+ }
+
 int Convertor::getIndex(string token)//given a token, looking up for the coressponding index, and return it, 
 	                                   //if not in the maptable and the declarkeywordtable return -1;
 		{
 			int index;
 			int num;
+
 			num=atoi(token.c_str());
+		
 			if (keywordToIndex.count(token)==1)
 				index=keywordToIndex.find(token)->second;
+            else if(isQuated(token))
+			{
+				insertIndex(++u ,token);
+				index=keywordToIndex.find(token)->second;
+			}
 			else if(num!=0)
 				index=num;
 			else
+			{
 				index=-1;
+			}
 			return index;
 		}
 string Convertor:: getKeyword(int index)//given a index, looking for the coressponding keyword, and return it,

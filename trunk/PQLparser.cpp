@@ -1,7 +1,25 @@
 #include"PqlParser.h"
  
- //int prefix(string token);
-/*
+ 
+
+  enum KEYWORD
+  {
+	AND=0,
+	SELECT=1,
+	SUCH_THAT=2,
+	WITH=3,
+	PATTERN=4,
+	USES=9,
+	USES_T=10,
+    MODIFIES=11,
+	MODIFIES_T=12,
+	CALLS=13,
+	CALLS_T=14,
+	//VALUE=101,
+	CONST=56,
+	UNDERSCORE=157,
+  };
+//int prefix(string token);
 void main()
 {
 	QueryTable table=PqlParser::parser();
@@ -11,8 +29,7 @@ void main()
 	cout<<"with "<<validate.checkWith(table)<<endl;
 	table.showTable();
 }
-*/
-QueryTable PqlParser::parser(string query) {
+QueryTable PqlParser::parser() {
   QueryTable table;
   string line;
   string pch;//token elements
@@ -26,26 +43,19 @@ QueryTable PqlParser::parser(string query) {
   int suchthatclause;
   int u=PqlParser::USERDEFINED;
   int g=PqlParser::GRAMMERDEFINED;
-  enum KEYWORD
-  {
-	AND=0,
-	SELECT=1,
-	SUCH_THAT=2,
-	WITH=3,
-	PATTERN=4,
-	VALUE=101,
-  };
+ 
   Convertor::update();
   int type;
   vector<int> content;
-  //ifstream myfile ("query.txt");
-  //if (myfile.is_open())
-  //{
-   // while ( myfile.good() )
-    //{
-     // getline (myfile,line);
-	  //query=query.append(line);
-//	}
+  string query;
+  ifstream myfile ("query.txt");
+  if (myfile.is_open())
+  {
+    while ( myfile.good() )
+    {
+      getline (myfile,line);
+	  query=query.append(line);
+	}
 	  token.set(query," ,;()");
 	  pch=token.next();
 	  while (pch !="")
@@ -80,7 +90,7 @@ QueryTable PqlParser::parser(string query) {
 					temp=Convertor::getIndex(pch);
 					prefix=PqlParser::prefix(pch);
 				
-					if (temp>=USERDEFINED||prefix==VALUE)
+					if (temp>=USERDEFINED||prefix==CONST)
 					{   
 						//prefix=PqlParser::prefix(pch);
 						//cout<<"prefix"<<PqlParser::prefix(pch);
@@ -119,29 +129,65 @@ QueryTable PqlParser::parser(string query) {
 
 				pch=token.next();
 				suchthatclause=Convertor::getIndex(pch);
-					   //cout<<"---------"<<suchthatclause;
+			
 						 content.push_back(suchthatclause);
+					
+						 
 						 pch=token.next();
-						 //cout<<pch;
+
 						 temp=Convertor::getIndex(pch);
-						 prefix=PqlParser::prefix(pch);
-						 cout<<"temp:"<<temp<<"prefix"<<prefix;
-						  
-						  while (temp>=USERDEFINED||prefix==VALUE||temp==157)
-                        {   
+						 if (temp>Convertor::QUATEDSTRING)
+							{
+								switch(suchthatclause)
+								{
+				                case CALLS: case CALLS_T:
+								Convertor::insertShortcut(pch,"procOfSimiple"); break;
+								default:
+									//if (paraPosition==0)
+                                 Convertor::insertShortcut(pch,"varOfSimple");
+								//	else
+								 //Convertor::insertShortcut(pch,"varName"); break;
+								}	
 					     //cout<<"temp:"<<temp<<"prefix"<<prefix;
+						    }
+							 prefix=PqlParser::prefix(pch);
+						 //cout<<"temp:"<<temp<<"prefix"<<prefix;
+						// int paraPosition=0;//identify the position of the parameters; 
+						 while (temp>=USERDEFINED||prefix==CONST||temp==UNDERSCORE)
+                        {   
+
 							 if(prefix!=0)
 							 content.push_back(prefix);
 						   	 content.push_back(temp);
 							 pch=token.next();
 							 //cout<<pch;
 							 temp=Convertor::getIndex(pch);
-							 prefix=PqlParser::prefix(pch);
-							
-						}
+							 
+						
 
-						table.addClause(type,content);
-						content.clear();
+
+				       if (temp>Convertor::QUATEDSTRING)
+							{
+								switch(suchthatclause)
+								{
+				                case CALLS: case CALLS_T:
+								Convertor::insertShortcut(pch,"procOfSimiple"); break;
+								default:
+									//if (paraPosition==0)
+                                 //Convertor::insertShortcut(pch,"procName");
+									//else
+								 Convertor::insertShortcut(pch,"varOfSimple"); break;
+						        
+					     //cout<<"temp:"<<temp<<"prefix"<<prefix;
+						        }
+					       }
+					   
+					   prefix=PqlParser::prefix(pch);
+
+//					   paraPosition++;	
+				   }
+				table.addClause(type,content);
+				content.clear();
 					//	table.showQuery();
 				}while(temp==0);
 				        break;
@@ -237,7 +283,7 @@ QueryTable PqlParser::parser(string query) {
 
 
 
-			default:
+        	default:
 		     pch=token.next();
 				break;
 	  }
@@ -249,10 +295,10 @@ QueryTable PqlParser::parser(string query) {
 
 	}
 	//table.showTable();
-  //  myfile.close();
+    myfile.close();
   
-//}
- // else cout << "Unable to open file"; 
+}
+  else cout << "Unable to open file"; 
 
   return table;
 }
@@ -263,7 +309,8 @@ int PqlParser:: prefix(string token)
 	//vector<int> content;
 	index=Convertor::getIndex(token);
 	//cout<<"========================="<<index;
-	if(index>=PqlParser::USERDEFINED&&atoi(token.c_str())==0)
+	
+	if(index>=PqlParser::USERDEFINED)
 		{
 			prefix=Convertor::getIndex(Convertor::getContent(token));
 			//content.push_back(prefix);
@@ -272,11 +319,11 @@ int PqlParser:: prefix(string token)
 	else 
 	   {
 		   if(atoi(token.c_str())!=0)
-              prefix=101;
+              prefix=CONST;
 		   else
 			   prefix=0;
 		   //content.push_back(index);
 	   }
-
+	
 	return prefix;
 }

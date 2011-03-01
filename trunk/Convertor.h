@@ -16,11 +16,13 @@ using namespace std;
 class Convertor
 {
 private:
-
+	
 	static map<int,string> indexToKeyword;//map the index with the keyword; index->keyword
 	static map<string, int> keywordToIndex;//map the keyword with the index; keyword->index
 	static map<string, string> shortcutToContent;//s->stmt;
 public:
+	static const int QUATEDSTRING=400;
+	static bool isQuated(string s);
 	static bool isDeclar(string token);
 	static int update();//everytime try to update before using it;
 	static int getIndex(string token);//given a token, looking up for the coressponding index, and return it, 
