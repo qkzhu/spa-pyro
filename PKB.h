@@ -11,11 +11,6 @@
 class PKB
 {
 public:
-	//PQL USING APIs
-
-
-
-
 	/**
 	 * PKB Part
 	 */
@@ -56,7 +51,7 @@ public:
 	int				vTable_GetVarTableSize(); 
 	bool			vTable_IsVarNameExist(string var);
 	bool			vTable_IsVarIndexExist(int varIndex);
-	vector<int>		vTable_GetAllVar();                             //modified by HQ
+	vector<int>		vTable_GetAllVar();
 	/**
 	 * ProcTable Part
 	 */
@@ -66,7 +61,7 @@ public:
 	int				pTable_GetProcTableSize();
 	bool			pTable_isProcNameExist(string procName);
 	bool			pTable_isProcIndexExist(int procIndex);
-	vector<int>		pTable_GetAllProc();                               //modified by HQ
+	vector<int>		pTable_GetAllProc();
 	void			pTable_AddCall(int procIndex1, int procIndex2);
 	vector<int> 	pTable_getCall(int procIndex);
 	vector<int> 	pTable_getCalled(int procIndex);
