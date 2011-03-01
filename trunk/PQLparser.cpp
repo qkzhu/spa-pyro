@@ -20,8 +20,7 @@
 	UNDERSCORE=157,
   };
 //int prefix(string token);
-
-QueryTable PqlParser::parser() {
+QueryTable PqlParser::parser(string qu) {
   QueryTable table;
   string line;
   string pch;//token elements
@@ -39,15 +38,16 @@ QueryTable PqlParser::parser() {
   Convertor::update();
   int type;
   vector<int> content;
-  string query;
-  ifstream myfile ("query.txt");
-  if (myfile.is_open())
-  {
+  string query=qu;
+  /*//ifstream myfile ("query.txt");
+  //if (myfile.is_open())
+  //{
     while ( myfile.good() )
     {
       getline (myfile,line);
 	  query=query.append(line);
 	}
+	*/
 	  token.set(query," ,;()");
 	  pch=token.next();
 	  while (pch !="")
@@ -287,10 +287,10 @@ QueryTable PqlParser::parser() {
 
 	}
 	//table.showTable();
-    myfile.close();
+  //  myfile.close();
   
-}
-  else cout << "Unable to open file"; 
+//}
+//  else cout << "Unable to open file"; 
 
   return table;
 }
