@@ -1,4 +1,6 @@
 #include "QueryEvaluator.h"
+#include "PKB.h"
+#include "Parser.h"
 #include <string>
 using namespace std;
 
@@ -16,15 +18,19 @@ int main(int argc, char* argv[]){
 	   string query_file;
 	   cout << "Please enter the query file location: " << endl;
 	   cin >> query_file;
-	   ifstream *qrFile = new ifstream(query_file, ifstream::in);
+	   ifstream qrFile (query_file, ifstream::in);
 
 	   string query;
-	   while (qrFile->good())
-		   query.append(qrFile->getline());
+	   while (!qrFile.eof()){
+		   string tmp;
+		   getline(qrFile, tmp);
+		   query.append(tmp);
+	   }
 
-	   PQLParser q(query);
 
-	   QueryEvaluator bqe (&pkb, &q);
+	   PqlPreprocessor pql (query);
+
+	   QueryEvaluator bqe (&pkb, &pql);
 	   bqe.evaluate();
 	   bqe.printResult();
 

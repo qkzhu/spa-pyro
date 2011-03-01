@@ -19,5 +19,7 @@ public:
   static int const USERDEFINED=301; 
   static int prefix(string token);
   static QueryTable parser(string qu);
+
+
 };
 #endif
