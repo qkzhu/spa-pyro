@@ -223,6 +223,7 @@ vector<int> QueryTable::getQuery(){
 //////////////////////// getSize  --- Start ///////////////////////////////
 int QueryTable::getSize()
 {
+	cout<< "QueryTable::getSize(): " << selectClause.size() << endl;
 	return selectClause.size();
 }
 //////////////////////// getSize  --- End ///////////////////////////////
