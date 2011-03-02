@@ -16,8 +16,9 @@
 	CALLS=13,
 	CALLS_T=14,
 	//VALUE=101,
-	CONST=56,
+	INT=201,
 	UNDERSCORE=157,
+	BOOLEAN	=60,
   };
 //int prefix(string token);
 QueryTable PqlParser::parser(string qu) {
@@ -82,7 +83,7 @@ QueryTable PqlParser::parser(string qu) {
 					temp=Convertor::getIndex(pch);
 					prefix=PqlParser::prefix(pch);
 				
-					if (temp>=USERDEFINED||prefix==CONST)
+					if (temp>=USERDEFINED||prefix==BOOLEAN)
 					{   
 						//prefix=PqlParser::prefix(pch);
 						//cout<<"prefix"<<PqlParser::prefix(pch);
@@ -96,7 +97,7 @@ QueryTable PqlParser::parser(string qu) {
 					}
 					else if(temp=-1)
 					{
-						
+						throw "select format error!";
 						break;
 					}
 					else
@@ -145,7 +146,7 @@ QueryTable PqlParser::parser(string qu) {
 							 prefix=PqlParser::prefix(pch);
 						 //cout<<"temp:"<<temp<<"prefix"<<prefix;
 						// int paraPosition=0;//identify the position of the parameters; 
-						 while (temp>=USERDEFINED||prefix==CONST||temp==UNDERSCORE)
+						 while (temp>=USERDEFINED||prefix==INT||temp==UNDERSCORE)
                         {   
 
 							 if(prefix!=0)
@@ -311,7 +312,7 @@ int PqlParser:: prefix(string token)
 	else 
 	   {
 		   if(atoi(token.c_str())!=0)
-              prefix=CONST;
+              prefix=INT;
 		   else
 			   prefix=0;
 		   //content.push_back(index);
