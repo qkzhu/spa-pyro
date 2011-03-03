@@ -108,7 +108,10 @@ int AST::getStatementNumByNode(Node* d){
 }
 
 int AST::getMaxStmtNum(){
-	return this->StatNumAndNodeList.max_size();
+	map<int, Node*>::iterator it = this->StatNumAndNodeList.end();
+
+	if(it == this->StatNumAndNodeList.begin()) return 0;
+	else return (int)(--it)->first;
 }
 
 vector<int> AST::getAllAssign(){
