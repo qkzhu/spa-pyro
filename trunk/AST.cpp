@@ -124,7 +124,14 @@ vector<int> AST::getAllIf(){
 }
 
 vector<int> AST::getAllProc(){
-	return this->getAllType(Node::PROC);
+	vector<int> result;
+
+	for(map<int, Node*>::iterator it = astList.begin(); it != astList.end(); it++)
+	{
+		result.push_back(it->first);
+	}
+
+	return result;
 }
 
 vector<int>	AST::getAllCall(){
