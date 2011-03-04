@@ -17,8 +17,13 @@ Node* PKB::ast_GetPreviousStatement(Node* d){
 }
 
 int PKB::ast_GetPreviousStatementNum(int stmtNum){
-	Node* tmpNode = ast->getNodeByStatementNum(stmtNum);
-	return ast_GetPreviousStatement(tmpNode)->stmtNum;
+	Node* currNode = ast->getNodeByStatementNum(stmtNum);
+	if(currNode == NULL) return -1;
+	else{
+		Node* previousNode = ast->getPreviousStatement(currNode);
+		if(previousNode == NULL) return -1;
+		else return previousNode->stmtNum;
+	}
 }
 
 Node* PKB::ast_GetFollowingStatement(Node* d){
@@ -26,9 +31,13 @@ Node* PKB::ast_GetFollowingStatement(Node* d){
 }
 
 int PKB::ast_GetFollowingStatementNum(int stmtNum){
-	Node * tmpNode = ast->getNodeByStatementNum(stmtNum);
-	if(tmpNode == NULL) return -1;
-	else return ast->getFollowingStatement(tmpNode)->stmtNum;
+	Node * currNode = ast->getNodeByStatementNum(stmtNum);
+	if(currNode == NULL) return -1;
+	else {
+		Node* followNode = ast->getFollowingStatement(currNode);
+		if(followNode == NULL) return -1;
+		else return followNode->stmtNum;
+	}
 }
 
 Node* PKB::ast_GetNodeByStatementNum(int index){

@@ -516,7 +516,9 @@ vector<vector<int> > QueryEvaluator::getRel(int type1, int type2, int para1, int
 			
 			cout << "break;" << endl;
 			for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
+				cout << *i << endl;
 				vector<int> result;
+				cout <<"following = " << mPKBObject->ast_GetFollowingStatementNum(*i)<< endl;
 				if(relType == 7) 
 					result.push_back(mPKBObject->ast_GetFollowingStatementNum(*i));
 				else result = getFollowsStar(*i);

@@ -9,7 +9,7 @@ int main(int argc, char* argv[]){
    {
 	   string simple;
 	   cout << "Please enter the simple file location: " << endl;
-	   simple = "d:\\simple.txt";
+	   simple = "C:\\simple.txt";
 	   //cin >> simple;
 	   PKB pkb;
 	   Parser p (pkb, simple);
@@ -18,7 +18,7 @@ int main(int argc, char* argv[]){
 
 	   string query_file;
 	   cout << "Please enter the query file location: " << endl;
-	   query_file = "d:\\query.txt";
+	   query_file = "C:\\query.txt";
 	   //cin >> query_file;
 	   ifstream qrFile (query_file, ifstream::in);
 
