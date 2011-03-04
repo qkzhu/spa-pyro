@@ -514,8 +514,8 @@ vector<vector<int> > QueryEvaluator::getRel(int type1, int type2, int para1, int
 			else if(type2 == 59) para2List = mPKBObject->ast_GetAllCall();
 			else throw "Your follows relation has unpaired second parameters";
 			
+			cout << "break;" << endl;
 			for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
-				cout << *i << endl;
 				vector<int> result;
 				if(relType == 7) 
 					result.push_back(mPKBObject->ast_GetFollowingStatementNum(*i));
@@ -526,6 +526,8 @@ vector<vector<int> > QueryEvaluator::getRel(int type1, int type2, int para1, int
 					if(it == para2List.end()) continue; 
 					vector<int> tmp;
 					int t[] = {201,*i, 201,*k};
+					cout <<"*i = " <<*i << endl;
+					cout <<"*k = " <<*k << endl;
 					tmp.insert(tmp.end(), t, t+4);
 					evalResult.push_back(tmp);
 				}
@@ -658,6 +660,7 @@ vector<int> QueryEvaluator::getCallsStar(int procNameCode){
 
 vector<int> QueryEvaluator::getAllStmts(){
 	int max = mPKBObject->ast_getMaxStmtNum();
+	cout << "max=" << max << endl;
 	vector<int> tmp;
 	for(int i = 1; i< max+1; i++){
 		tmp.push_back(i);
