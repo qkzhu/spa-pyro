@@ -298,6 +298,7 @@ void QueryEvaluator::evaluate()
 		else 
 			throw "Relation not exists";
 
+
 		/*
 		///////////////////////////////////////////////////////////////////////////////////////////////////////DEBUGGING
 		cout << "para1Type="<<para1Type;
@@ -514,6 +515,7 @@ vector<vector<int> > QueryEvaluator::getRel(int type1, int type2, int para1, int
 			else throw "Your follows relation has unpaired second parameters";
 			
 			for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
+				cout << *i << endl;
 				vector<int> result;
 				if(relType == 7) 
 					result.push_back(mPKBObject->ast_GetFollowingStatementNum(*i));
@@ -657,7 +659,7 @@ vector<int> QueryEvaluator::getCallsStar(int procNameCode){
 vector<int> QueryEvaluator::getAllStmts(){
 	int max = mPKBObject->ast_getMaxStmtNum();
 	vector<int> tmp;
-	for(int i = 0; i< max; i++){
+	for(int i = 1; i< max+1; i++){
 		tmp.push_back(i);
 	}
 	return tmp;
