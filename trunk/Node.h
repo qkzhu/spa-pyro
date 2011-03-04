@@ -9,8 +9,7 @@ using namespace std;
 /**
  * This is a double linked list node, with this node, AST tree can be easily contructed.
  */
-// HHAHA ZHU QIAN KUN ~~
-//jjjjj
+
 class Node
 {
 public:
