@@ -27,7 +27,8 @@ Node* PKB::ast_GetFollowingStatement(Node* d){
 
 int PKB::ast_GetFollowingStatementNum(int stmtNum){
 	Node * tmpNode = ast->getNodeByStatementNum(stmtNum);
-	return ast->getFollowingStatement(tmpNode)->stmtNum;
+	if(tmpNode == NULL) return -1;
+	else return ast->getFollowingStatement(tmpNode)->stmtNum;
 }
 
 Node* PKB::ast_GetNodeByStatementNum(int index){
