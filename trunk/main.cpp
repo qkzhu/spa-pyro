@@ -29,7 +29,6 @@ int main(int argc, char* argv[]){
 		   query.append(tmp);
 	   }
 
-	   cout << "Run to here"<< endl;
 	   PqlPreprocessor pql (query);
 
 	   QueryEvaluator bqe (&pkb, &pql);
