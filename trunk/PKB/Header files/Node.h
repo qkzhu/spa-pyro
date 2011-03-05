@@ -20,7 +20,7 @@ public:
 	int id;		// it stores the name of a procedure or variable, or the value of a constant value
 
 	Node *parentNode;				// parent node
-	Node *childNode;				// child node
+	//Node *childNode;				// child node
 	vector<Node*> childList;		// a collection of child node
 	vector<Node*> bottomNodeList;	// a collection of bottom nodes
 	Node *followNode;				// node with follow relation

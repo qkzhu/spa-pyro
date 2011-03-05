@@ -8,7 +8,7 @@ using namespace std;
  * and also initialize the node type, statement number and name to the given value. 
  */
 Node::Node(NodeType type, int stmtNum, int id)
-	:parentNode(NULL),childNode(NULL), followNode(NULL),
+	:parentNode(NULL), followNode(NULL),
 	 prevNode(NULL), upNode(NULL)
 {
 	this->type = type;

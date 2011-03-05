@@ -8,7 +8,8 @@ AST::AST(){}
 
 void AST::addChild(Node* d, Node* childNode)
 {
-	d->childNode = childNode;
+	d->childList.push_back(childNode);
+	childNode->parentNode = d;
 }
 
 void AST::addDown(Node* upperNode, Node* bottomNode)
