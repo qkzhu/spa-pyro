@@ -37,6 +37,7 @@ private:
 	//functions that print error msgs
 	void error(std::string expected, std::string received);	//prints the error msg and exits
 	void match(std::string token);							//
+	string intToString(int n);
 
 	//functions to parse the source program
 	void parseProcedure();

@@ -140,18 +140,15 @@ mPkb(pkb), mLineNum(0), mStatNum(1),
  void Parser::checkValidFile()
  {
 	 if (!mpFile->is_open())
-	 {
-		 cout << "Error opening file: " << mFilename << endl;
-		 exit(1);
-	 }
+		 throw new string("Error opening file: " + mFilename);
  }
 
 //prints an error msg and quits the program
 void Parser::error(string expected, string received) 
 {
-	cout << "Error at line " << mLineNum << ": expected - \"" << 
-		expected << "\" received - \"" << received << "\"" << endl;
-	exit(1);
+	throw new string("Error at line " + intToString(mLineNum) +  ": expected - \"" + 
+		expected + "\" received - \"" + received + "\"");
+	//exit(1);
 }
 
 //makes sure that the next token matches the specified token.
@@ -179,10 +176,8 @@ void Parser::parseProgram()
 	
 		//stores into call buffer, check whether the procedure exists when program ends.
 		if (proc_index == -1)
-		{
-			cout << "Attempt to call non-existing procedure " << it->first << " at line " << it->second.second << endl;
-			exit(1);
-		}
+			 throw new string("Attempt to call non-existing procedure " + it->first + " at line " + intToString(it->second.second));
+
 		//records the proc call in the proc table
 		else
 			mPkb.pTable_AddCall(it->second.first, proc_index);
@@ -346,10 +341,8 @@ Node *Parser::parseCall()
 void Parser::addOperator(vector<Node*> &tree, string op)
 {
 	if (tree.size() < 2)
-	{
-		cout << "Error in expression at line " << mLineNum  << endl;
-		exit(1);
-	}
+		throw new string("Error in expression at line " + intToString(mLineNum));
+
 	Node::NodeType type;
 
 	if (op == "+")
@@ -458,11 +451,7 @@ Node *Parser::parseAssignment()
 			while (ops.size() > 0  && curr_priority < getPriority(ops.top()))
 			{
 				if (result.size() < 2)
-				{
-					cout << "Error in expression." << endl;
-					system("pause");
-					exit(1);
-				}
+					throw new string("Error in expression.");
 				
 				//adds the operator to the result tree
 				addOperator(result, ops.top());
@@ -490,11 +479,7 @@ Node *Parser::parseAssignment()
 				}
 
 				if (ops.size() == 0 || ops.top() != "(")
-				{
-					cout << "No corresponding '(' for ')'" << endl;
-					system("pause");
-					exit(1);
-				}
+					throw string("No corresponding '(' for ')'");
 
 				ops.pop();
 			} //end else
@@ -515,10 +500,7 @@ Node *Parser::parseAssignment()
 	}
 
 	if (result.size() != 1)
-	{
-		cout << "Error in expression at line " << mLineNum << endl;
-		exit(1);
-	}
+		throw new string("Error in expression at line " + intToString(mLineNum));
 	
 	mPkb.ast_AddDown(assign, result[0]);
 
@@ -571,9 +553,10 @@ void Parser::checkValidName(string var_name)
 	
 	if (!regex_match(var_name.begin(), var_name.end(), exp))
 	{
-		cout << "Error at line " << mLineNum << ": Invalid variable name \"" << 
-			var_name << "\"" << endl;
-		exit(1);
+		throw new string("Error at line " + intToString(mLineNum) + ": Invalid variable name \"" + 
+			var_name + "\"");
+		//cout << "Error at line " << mLineNum << ": Invalid variable name \"" << 
+		//	var_name << "\"" << endl;
 	}
 	else
 	{
@@ -582,10 +565,20 @@ void Parser::checkValidName(string var_name)
 		{
 			if (strcmp(var_name.c_str(), mKeyWords[i].c_str()) == 0)
 			{
-				cout << "Cannot use \"" << var_name << "\" as a variable. " <<
-					" (line " << mLineNum << ")" << endl;
-				exit(1);
+				throw new string("Cannot use \"" + var_name + "\" as a variable. " +
+					" (line " + intToString(mLineNum) + ")");
+
+				//cout << "Cannot use \"" << var_name << "\" as a variable. " <<
+				//	" (line " << mLineNum << ")" << endl;
+				//exit(1);
 			}
 		}
 	}
+}
+
+string Parser::intToString(int n)
+{
+	char buf[256];
+	itoa(n, buf, 10);
+	return string(buf);
 }
