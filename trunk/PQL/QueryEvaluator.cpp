@@ -104,7 +104,7 @@ void QueryEvaluator::evaluate()
 			entry_type = 202;
 		else if(p1_type==58)
 			entry_type = 203;
-		else throw "with clause error type";
+		else throw new string("with clause error type");
 		for(vector<int>::iterator i=tmp.begin(); i< tmp.end(); i++)
 			for(vector<int>::iterator k = tmp2.begin(); k<tmp2.end(); k++){
 				if(*i == *k) {
@@ -296,7 +296,7 @@ void QueryEvaluator::evaluate()
 		if(rel == 5 ||rel==6|| rel==7 || rel==8 ||rel==9 || rel==10 || rel==11||rel==12)
 			relResult = getRel(para1Type, para2Type, para1, para2, rel);
 		else 
-			throw "Relation not exists";
+			throw new string("Relation not exists");
 
 
 		/*
@@ -404,8 +404,13 @@ void QueryEvaluator::evaluate()
 		else if(select_type == 57) tmp = mPKBObject->vTable_GetAllVar();
 		else if(select_type == 58) tmp = mPKBObject->ast_GetAllProc();
 		else if(select_type == 59) tmp = mPKBObject->ast_GetAllCall();
+		else throw new string("Select type error!");
 		for(vector<int>::iterator i=tmp.begin(); i<tmp.end(); i++){
-			mResult.addInType(201);
+			if(select_type == 57)
+				mResult.addInType(202);
+			else if (select_type == 58)
+				mResult.addInType(203);
+			else mResult.addInType(201);
 			mResult.addInTuple(*i);
 		}
 	}else{
@@ -440,10 +445,15 @@ void QueryEvaluator::printResult(){
 		cout << "query result size: " << (int)resultTuple.size() << endl ;
 		int count = 0;
 		for(vector<int>::iterator i=resultTuple.begin(); i<resultTuple.end(); i++){
-			if(resultTupleType.at(count++) == 201) cout << *i << " ";
-			else if(resultTupleType.at(count++) == 202) cout << PKB_varDecode(*i);	
-			else if(resultTupleType.at(count++) == 203) cout << PKB_procDecode(*i);
-			else throw "No type match when decode result";
+			int type = resultTupleType.at(count++);
+			if(type == 201)
+				cout << *i << " ";
+			else if(type == 202) 
+				cout << PKB_varDecode(*i) << " ";	
+			else if(type == 203) 
+				cout << PKB_procDecode(*i) << " ";
+			else 
+				throw new string("No type match when decode result");
 		}
 		cout << endl;
 	}
@@ -465,7 +475,7 @@ vector<vector<int> > QueryEvaluator::getRel(int type1, int type2, int para1, int
 			else if(type1 == 54) para1List = mPKBObject->ast_GetAllWhile();
 			else if(type1 == 55) para1List = mPKBObject->ast_GetAllIf();
 			else if(type1 == 59) para1List = mPKBObject->ast_GetAllCall();
-			else throw "Parent parameter type mismatch!";
+			else throw new string("Parent parameter type mismatch!");
 
 			vector<int> para2List;
 			if(type2 == 201) para2List.push_back(para2);
@@ -474,7 +484,7 @@ vector<vector<int> > QueryEvaluator::getRel(int type1, int type2, int para1, int
 			else if(type2 == 54) para2List = mPKBObject->ast_GetAllWhile();
 			else if(type2 == 55) para2List = mPKBObject->ast_GetAllIf();
 			else if(type2 == 59) para2List = mPKBObject->ast_GetAllCall();
-			else throw "Your follows relation has unpaired second parameters";
+			else throw new string("Your follows relation has unpaired second parameters");
 
 			for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
 				vector<int> result;
@@ -503,7 +513,7 @@ vector<vector<int> > QueryEvaluator::getRel(int type1, int type2, int para1, int
 			else if(type1 == 54) para1List = mPKBObject->ast_GetAllWhile();
 			else if(type1 == 55) para1List = mPKBObject->ast_GetAllIf();
 			else if(type1 == 59) para1List = mPKBObject->ast_GetAllCall();
-			else throw "Your follows relation has unpaired parameters";
+			else throw new string("Your follows relation has unpaired parameters");
 
 			vector<int> para2List;
 			if(type2 == 201) para2List.push_back(para2);
@@ -512,9 +522,9 @@ vector<vector<int> > QueryEvaluator::getRel(int type1, int type2, int para1, int
 			else if(type2 == 54) para2List = mPKBObject->ast_GetAllWhile();
 			else if(type2 == 55) para2List = mPKBObject->ast_GetAllIf();
 			else if(type2 == 59) para2List = mPKBObject->ast_GetAllCall();
-			else throw "Your follows relation has unpaired second parameters";
+			else throw new string("Your follows relation has unpaired second parameters");
 			
-			cout << "break;" << endl;
+			//cout << "break;" << endl;
 			for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
 				cout << *i << endl;
 				vector<int> result;
@@ -589,7 +599,7 @@ vector<vector<int> > QueryEvaluator::getRel(int type1, int type2, int para1, int
 			}
 			else//Error Case
 			{
-				throw "Your uses relation has unpaired parameters";
+				throw new string("Your uses relation has unpaired parameters");
 			}
 			break;
 		}//Uses END
@@ -618,13 +628,13 @@ vector<vector<int> > QueryEvaluator::getRel(int type1, int type2, int para1, int
 			}
 			else//Error Case
 			{
-				throw "Your calls relation has unpaired parameters";
+				throw new string("Your calls relation has unpaired parameters");
 			}
 			break;
 		}//Calls END
 	default:
 		{
-			throw "No such relation implementation yet";
+			throw new string("No such relation implementation yet");
 		}//Error case END
 	}//getRel END
 	return evalResult;

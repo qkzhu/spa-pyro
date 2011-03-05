@@ -97,7 +97,7 @@ QueryTable PqlParser::parser(string qu) {
 					}
 					else if(temp=-1)
 					{
-						throw "select format error!";
+						throw new string("select format error!");
 						break;
 					}
 					else

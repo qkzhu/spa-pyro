@@ -35,9 +35,9 @@ int main(int argc, char* argv[]){
 	   bqe.evaluate();
 	   bqe.printResult();
 
-	}catch(string s){
+	}catch(string *s){
 		cout << "Exception message: ";
-		cout << s << endl;
+		cout << *s << endl;
 	}
 
 

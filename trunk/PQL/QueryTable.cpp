@@ -251,7 +251,7 @@ vector<int> QueryTable::selectAt(int index){
 	//check whether index is out of range (need to throw exception, make it as function)
 	if(index > selectClause.size())
 	{
-		cout<<"index out of range!"<<endl;
+		throw new string("select index out of range!");
 	}
 	else
 	{
