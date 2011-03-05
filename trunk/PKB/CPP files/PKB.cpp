@@ -279,3 +279,8 @@ vector<string> PKB::convertSetToVector(set<string> setString){
 
 	return result;
 }
+
+void PKB::printTree()
+{
+	ast->printTree(*procTable, *varTable);
+}
