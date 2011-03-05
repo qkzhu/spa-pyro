@@ -157,7 +157,7 @@ vector<int> AST::getAllType(Node::NodeType nt){
 	return result;
 }
 
-void AST::printNode(Node* n, int level)
+void AST::printNode(Node* n, int level, ProcTable &procTable, VarTable &varTable)
 {
 	for (int i = 0; i < level; i++)
 		cout << "\t";
@@ -165,22 +165,65 @@ void AST::printNode(Node* n, int level)
 	switch (n->type)
 	{
 	case Node::STMT_LIST:
-		cout << "STMT_LIST" << endl;
+		cout << "=STMT_LIST=" << endl;
 		break;
 
 	case Node::ASSIGN:
-		cout << "ASSIGN" << endl;
+		cout << "=ASSIGN=" << endl;
+		break;
+
+	case Node::PROC:
+		cout << "Procedure: " << procTable.getProcName(n->id) << endl;
+		break;
+
+	case Node::CALL:
+		cout << "Call: " << procTable.getProcName(n->id) << endl;
+		break;
+
+	case Node::CONST:
+		cout << n->id << endl;
+		break;
+
+	case Node::IF:
+		cout << "==IF==" << endl;
+		break;
+
+	case Node::MINUS:
+		cout << "==MINUS==" << endl;
+		break;
+
+	case Node::PLUS:
+		cout << "==PLUS==" << endl;
+		break;
+
+	case Node::TIMES:
+		cout << "==TIMES==" << endl;
+		break;
+
+	case Node::VAR:
+		cout << varTable.getVarName(n->id) << endl;
+		break;
+
+	case Node::WHILE:
+		cout << "==WHILE==" << endl;
+		break;
+
+	default:
+		cout << "Unidentified node type." << endl;
 		break;
 	}
+
+	//print children
+	for  (int i = 0; i < n->bottomNodeList.size(); i++)
+		printNode(n->bottomNodeList[i], level + 1, procTable, varTable);
+
+	//print following node if it exists
+	if (n->followNode != NULL)
+		printNode(n->followNode, level, procTable, varTable);
 }
 
 void AST::printTree(ProcTable &procTable, VarTable &varTable)
 {
 	for (int i = 0; i < astList.size(); i++)
-	{
-		Node* n = astList[i];
-		cout << "Proc: " << procTable.getProcName(astList[i]->id) << endl;
-
-		printNode(n, 1);
-	}
+		printNode(astList[i], 0, procTable, varTable);
 }
