@@ -228,7 +228,7 @@ Node *Parser::parseStmtList(Node* parentNode)
 
 		//adds the current node as the child of the parent if there is a parent.
 		if (parentNode != NULL)
-			mPkb.ast_AddDown(parentNode, prev_node);
+			mPkb.ast_AddChild(parentNode, prev_node);
 	}
 
 	//continue parsing more statements while
@@ -443,7 +443,7 @@ Node *Parser::parseAssignment()
 		{
 			checkVariableExists(next);
 			int var_index = mPkb.vTable_GetVarIndex(next);
-			curr = mPkb.ast_CreateNode(Node::CONST, mStatNum, var_index);
+			curr = mPkb.ast_CreateNode(Node::VAR, mStatNum, var_index);
 			result.push_back(curr);
 			
 			//Update use tables.
