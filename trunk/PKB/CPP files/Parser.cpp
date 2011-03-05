@@ -170,6 +170,22 @@ void Parser::parseProgram()
 	{
 		parseProcedure();
 	}
+
+	//checks all calls to procedures undefined at the time of parsing.
+	for (map<string, int>::iterator it = mProcCallsBuf.begin(); it != mProcCallsBuf.end(); it++)
+	{
+		int proc_index = mPkb.pTable_GetProcIndex(it->first); 
+	
+		//stores into call buffer, check whether the procedure exists when program ends.
+		if (proc_index == -1)
+		{
+			cout << "Attempt to call non-existing procedure " << it->first << " at line " << it->second << endl;
+			exit(1);
+		}
+		//records the proc call in the proc table
+		else
+			mPkb.pTable_AddCall(mCurrProcIndex, proc_index);
+	}
 }
 
 void Parser::parseProcedure() 
@@ -311,11 +327,13 @@ Node *Parser::parseCall()
 	string proc_name = getToken();
 
 	int proc_index = mPkb.pTable_GetProcIndex(proc_name); 
+	
+	//stores into call buffer, check whether the procedure exists when program ends.
 	if (proc_index == -1)
-		error("Existing procedure.", proc_name);
-
+		mProcCallsBuf[proc_name] = mLineNum;
 	//records the proc call in the proc table
-	mPkb.pTable_AddCall(mCurrProcIndex, proc_index);
+	else
+		mPkb.pTable_AddCall(mCurrProcIndex, proc_index);
 
 	Node* curr = mPkb.ast_CreateNode(Node::CALL, mStatNum, proc_index);
 	
