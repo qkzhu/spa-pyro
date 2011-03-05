@@ -157,20 +157,30 @@ vector<int> AST::getAllType(Node::NodeType nt){
 	return result;
 }
 
-void AST::printTree()
+void AST::printNode(Node* n, int level)
 {
-	for (int i = 1; i <= getMaxStmtNum(); i++)
+	for (int i = 0; i < level; i++)
+		cout << "\t";
+
+	switch (n->type)
+	{
+	case Node::STMT_LIST:
+		cout << "STMT_LIST" << endl;
+		break;
+
+	case Node::ASSIGN:
+		cout << "ASSIGN" << endl;
+		break;
+	}
+}
+
+void AST::printTree(ProcTable &procTable, VarTable &varTable)
+{
+	for (int i = 0; i < astList.size(); i++)
 	{
 		Node* n = astList[i];
-		cout << "Proc: " << n->name << endl;
+		cout << "Proc: " << procTable.getProcName(astList[i]->id) << endl;
 
-		if (n->bottomNodeList.size() != 0)
-			n = n->bottomNodeList[0]->bottomNodeList[0];
-
-		for (; n != NULL; n = n->followNode)
-		{
-			cout << n->bottomNodeList[0]->name << " = " << 
-				n->bottomNodeList[1]->name << endl;
-		}		
+		printNode(n, 1);
 	}
 }
