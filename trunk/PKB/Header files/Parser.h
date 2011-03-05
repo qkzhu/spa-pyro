@@ -69,6 +69,8 @@ private:
 	stringstream *mStringBuf;
 
 	static const string mKeyWords[];
+
+	map<string, int> mProcCallsBuf; //buffer to store calls to procedure not yet declared.
 };
 
 #endif
