@@ -9,7 +9,7 @@ using namespace std;
  */
 Node::Node(NodeType type, int stmtNum, int id)
 	:parentNode(NULL),childNode(NULL), followNode(NULL),
-	 prevNode(NULL), downNode(NULL), upNode(NULL)
+	 prevNode(NULL), upNode(NULL)
 {
 	this->type = type;
 	this->stmtNum = stmtNum;
