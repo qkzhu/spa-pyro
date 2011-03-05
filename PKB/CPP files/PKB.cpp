@@ -130,6 +130,8 @@ vector<int> PKB::vTable_GetAllVar(){
 	int index;
 	for(index = 0; index < (int)tmp.size(); index++)
 		result.push_back(vTable_GetVarIndex(tmp[index]));
+	if(result.size() == 0) result.push_back(-1);
+
 	return result;
 }
 /**
@@ -165,6 +167,8 @@ vector<int> PKB::pTable_GetAllProc(){
 	int index;
 	for(index = 0; index < (int)tmp.size(); index++)
 		result.push_back(pTable_GetProcIndex(tmp[index]));
+
+	if(result.size() == 0) result.push_back(-1);
 	return result;
 }
 
@@ -188,7 +192,10 @@ void PKB::cTable_AddConstant(int c){
 }
 
 vector<int> PKB::cTable_GetAllConstants(){
-	return convertSetToVector(constantTable->getAllConstants());
+	vector<int> result = convertSetToVector(constantTable->getAllConstants());
+
+	if(result.size() == 0) result.push_back(-1);
+	return result;
 }
 
 bool PKB::cTable_IsConstantExist(int c){

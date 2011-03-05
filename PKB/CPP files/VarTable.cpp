@@ -9,12 +9,14 @@ void VarTable::insertVar(string s)
 
 string VarTable::getVarName(int index)
 {
-	return this->getSymbolName(index);
+	if(isVarIndexExist(index)) return this->getSymbolName(index);
+	else return "";
 }// end GetVarName
 
 int VarTable::getVarIndex(string s)
 {
-	return this->getSymbolIndex(s);
+	if(isVarNameExist(s)) return this->getSymbolIndex(s);
+	else return -1;
 }// end GetVarIndex
 
 int VarTable::getSize()

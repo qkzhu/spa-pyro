@@ -9,12 +9,14 @@ void ProcTable::insertProc(string s)
 
 string ProcTable::getProcName(int index)
 {
-	return this->getSymbolName(index);
+	if(isProcIndexExist(index)) return this->getSymbolName(index);
+	else return "";
 }// end GetProcName
 
 int ProcTable::getProcIndex(string s)
 {
-	return this->getSymbolIndex(s);
+	if(isProcNameExist(s)) return this->getSymbolIndex(s);
+	else return -1;
 }// end GetProcIndex
 
 int ProcTable::getSize()
@@ -133,7 +135,7 @@ vector<int> ProcTable::getCall(int procIndex){
 	set<int>	tmpSet;
 
 	/* verify procIndex */
-	if(procIndex <= 0){
+	if(procIndex <= 0 || isProcIndexExist(procIndex)){
 		tmpVec.push_back(-1);
 		return tmpVec;
 	}
@@ -167,7 +169,7 @@ vector<int> ProcTable::getCalled(int procIndex){
 	set<int>	tmpSet;
 
 	/* verify procIndex */
-	if(procIndex <= 0){
+	if(procIndex <= 0 || isProcIndexExist(procIndex)){
 		tmpVec.push_back(-1);
 		return tmpVec;
 	}

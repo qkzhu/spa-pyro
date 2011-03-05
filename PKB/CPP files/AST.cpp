@@ -78,7 +78,7 @@ Node* AST::createNode(Node::NodeType nt, int statNum, int name)
 {
 	Node* newNode = new Node(nt, statNum, name);
 
-	if(nt == Node::ASSIGN) {
+	if(nt == Node::ASSIGN || nt == Node::CALL || nt == Node::WHILE || nt == Node::IF) {
 		StatNumAndNodeList[statNum] = newNode;
 		NodeAndStatNumList[newNode] = statNum;
 	}
@@ -128,14 +128,7 @@ vector<int> AST::getAllIf(){
 }
 
 vector<int> AST::getAllProc(){
-	vector<int> result;
-
-	for(map<int, Node*>::iterator it = astList.begin(); it != astList.end(); it++)
-	{
-		result.push_back(it->first);
-	}
-
-	return result;
+	return this->getAllType(Node::PROC);
 }
 
 vector<int>	AST::getAllCall(){
@@ -148,8 +141,9 @@ vector<int> AST::getAllType(Node::NodeType nt){
 
 	for(index = 1; index <= maxStmtNum; index++){
 		Node* currNode = this->getNodeByStatementNum(index);
-		if(currNode->type == nt)
+		if(currNode != NULL && currNode->type == nt)
 			result.push_back(index);
+		//else if(currNode == NULL) throw new string("No node found");
 	}
 
 	/* If no result found, return a vector with only one element: -1. */

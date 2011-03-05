@@ -97,12 +97,12 @@ string Convertor:: getKeyword(int index)//given a index, looking for the coressp
 	                                    //if not in the table,then return string "NULL";
 {
 	string keyword;
-	if(index<100&&indexToKeyword.count(index)==1)
+	if(indexToKeyword.count(index)==1)
 
 				keyword=indexToKeyword.find(index)->second;
 	else
 				keyword="NULL";
-			return keyword;
+	return keyword;
 }
 string Convertor::getShortCut(string content)
 {
