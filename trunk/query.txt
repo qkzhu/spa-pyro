@@ -1,1 +1,2 @@
-stmt s,l;  select s such    that modifies(300,.) and fl with s.if=89;
+stmt s ; 
+select s such that follows(s,3) ; 
