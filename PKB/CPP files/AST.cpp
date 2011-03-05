@@ -170,7 +170,7 @@ void AST::printNode(Node* n, int level, ProcTable &procTable, VarTable &varTable
 		break;
 
 	case Node::ASSIGN:
-		cout << "=ASSIGN=" << endl;
+		cout << "=ASSIGN=" << " (" << n->stmtNum << ") " << endl;
 		break;
 
 	case Node::PROC:
@@ -178,7 +178,7 @@ void AST::printNode(Node* n, int level, ProcTable &procTable, VarTable &varTable
 		break;
 
 	case Node::CALL:
-		cout << "Call: " << procTable.getProcName(n->id) << endl;
+		cout << "Call: " << procTable.getProcName(n->id) << " (" << n->stmtNum << ") " << endl;
 		break;
 
 	case Node::CONST:
@@ -186,7 +186,7 @@ void AST::printNode(Node* n, int level, ProcTable &procTable, VarTable &varTable
 		break;
 
 	case Node::IF:
-		cout << "==IF==" << endl;
+		cout << "==IF==" << " (" << n->stmtNum << ") " << endl;
 		break;
 
 	case Node::MINUS:
@@ -206,7 +206,7 @@ void AST::printNode(Node* n, int level, ProcTable &procTable, VarTable &varTable
 		break;
 
 	case Node::WHILE:
-		cout << "==WHILE==" << endl;
+		cout << "==WHILE==" << " (" << n->stmtNum << ") " << endl;
 		break;
 
 	default:
@@ -215,7 +215,7 @@ void AST::printNode(Node* n, int level, ProcTable &procTable, VarTable &varTable
 	}
 
 	//print children
-	for  (int i = 0; i < n->bottomNodeList.size(); i++)
+	for  (unsigned int i = 0; i < n->bottomNodeList.size(); i++)
 		printNode(n->bottomNodeList[i], level + 1, procTable, varTable);
 
 	//print following node if it exists
@@ -225,6 +225,6 @@ void AST::printNode(Node* n, int level, ProcTable &procTable, VarTable &varTable
 
 void AST::printTree(ProcTable &procTable, VarTable &varTable)
 {
-	for (int i = 0; i < astList.size(); i++)
+	for (unsigned int i = 0; i < astList.size(); i++)
 		printNode(astList[i], 0, procTable, varTable);
 }
