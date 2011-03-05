@@ -92,6 +92,11 @@ public:
 	void		 mTable_setModify(int stmtNum, int varIndex);
 	void		 mTable_setModifyPV(int procIndex, int varIndex);
 
+	/*
+		Debugging functions
+	*/
+	void printTree();
+
 private:
 	AST*			ast;
 	Node*			node;

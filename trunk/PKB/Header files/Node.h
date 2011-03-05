@@ -17,7 +17,7 @@ public:
 
 	int stmtNum;	// statement number
 	NodeType type;	// note type, it can be procedure, assignment, statment list, variable or constant value
-	int name;		// it stores the name of a procedure or variable, or the value of a constant value
+	int id;		// it stores the name of a procedure or variable, or the value of a constant value
 
 	Node *parentNode;				// parent node
 	Node *childNode;				// child node
@@ -28,7 +28,7 @@ public:
 	Node *downNode;					// donw node
 	Node *upNode;					// up node
 
-	Node(NodeType type, int stmtNum, int name);
+	Node(NodeType type, int stmtNum, int id);
 };
 
 #endif
