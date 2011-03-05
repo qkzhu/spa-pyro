@@ -26,11 +26,13 @@ void QueryEvaluator::evaluate()
 	//The value must have the type indicated
 	map<int, vector<int> > var_value_table; 
 
-	int var_code_ending = 501; //I need to use it when I meet '_' in relation to create new variable
+	int var_code_ending = ENCODE_ENDING+1; //I need to use it when I meet '_' in relation to create new variable
 
 
 	//No tupled selection yet
 	int select_element = (mQueryTree->selectAt(0)).at(1);  //Elements to be selected
+
+
 
 
 	//Start evaluating With clauses                                  
@@ -46,7 +48,7 @@ void QueryEvaluator::evaluate()
 		int withCount = 0;
 		for(; withCount<clause_size; withCount++)
 		{
-			if(clause.at(withCount) != 155)
+			if(clause.at(withCount) != mQueryTree->getIndex("="))
 				part1.push_back(clause.at(withCount));
 			else break;
 		}
@@ -75,35 +77,35 @@ void QueryEvaluator::evaluate()
 		}	
 		vector<vector<int> > with_result;
 		vector<int> tmp;
-		if(p1_type == 51)  tmp = getAllStmts();
-		else if(p1_type == 53) tmp = mPKBObject->ast_GetAllAssign();
-		else if(p1_type == 54) tmp = mPKBObject->ast_GetAllWhile();
-		else if(p1_type == 55) tmp = mPKBObject->ast_GetAllIf();
-		else if(p1_type == 56) tmp = mPKBObject->cTable_GetAllConstants();
-		else if(p1_type == 57) tmp = mPKBObject->vTable_GetAllVar();
-		else if(p1_type == 58) tmp = mPKBObject->ast_GetAllProc();
-		else if(p1_type == 59) tmp = mPKBObject->ast_GetAllCall();
+		if(p1_type == mQueryTree->getIndex("stmt"))  tmp = getAllStmts();
+		else if(p1_type == mQueryTree->getIndex("assign")) tmp = mPKBObject->ast_GetAllAssign();
+		else if(p1_type == mQueryTree->getIndex("while")) tmp = mPKBObject->ast_GetAllWhile();
+		else if(p1_type == mQueryTree->getIndex("if")) tmp = mPKBObject->ast_GetAllIf();
+		else if(p1_type == mQueryTree->getIndex("constant")) tmp = mPKBObject->cTable_GetAllConstants();
+		else if(p1_type == mQueryTree->getIndex("variable")) tmp = mPKBObject->vTable_GetAllVar();
+		else if(p1_type == mQueryTree->getIndex("procedure")) tmp = mPKBObject->ast_GetAllProc();
+		else if(p1_type == mQueryTree->getIndex("call")) tmp = mPKBObject->ast_GetAllCall();
 		
 		vector<int> tmp2;
-		if(p2_type == 201) tmp2.push_back(part2.at(1));
-		else if(p2_type == 202) tmp2.push_back(PKB_varEncode(PQL_varDecode(part2.at(1))));
-		else if(p2_type == 203) tmp2.push_back(PKB_procEncode(PQL_procDecode(part2.at(1))));
-		else if(p2_type == 51)  tmp2 = getAllStmts();
-		else if(p2_type == 53) tmp2 = mPKBObject->ast_GetAllAssign();
-		else if(p2_type == 54) tmp2 = mPKBObject->ast_GetAllWhile();
-		else if(p2_type == 55) tmp2 = mPKBObject->ast_GetAllIf();
-		else if(p2_type == 56) tmp2 = mPKBObject->cTable_GetAllConstants();
-		else if(p2_type == 57) tmp2 = mPKBObject->vTable_GetAllVar();
-		else if(p2_type == 58) tmp2 = mPKBObject->ast_GetAllProc();
-		else if(p2_type == 59) tmp2 = mPKBObject->ast_GetAllCall();
+		if(p2_type == mQueryTree->getIndex("integer")) tmp2.push_back(part2.at(1));
+		else if(p2_type == mQueryTree->getIndex("var_of_simpl")) tmp2.push_back(PKB_varEncode(PQL_varDecode(part2.at(1))));
+		else if(p2_type == mQueryTree->getIndex("proc_of_simpl")) tmp2.push_back(PKB_procEncode(PQL_procDecode(part2.at(1))));
+		else if(p2_type == mQueryTree->getIndex("stmt"))  tmp2 = getAllStmts();
+		else if(p2_type == mQueryTree->getIndex("assign")) tmp2 = mPKBObject->ast_GetAllAssign();
+		else if(p2_type == mQueryTree->getIndex("while")) tmp2 = mPKBObject->ast_GetAllWhile();
+		else if(p2_type == mQueryTree->getIndex("if")) tmp2 = mPKBObject->ast_GetAllIf();
+		else if(p2_type == mQueryTree->getIndex("constant")) tmp2 = mPKBObject->cTable_GetAllConstants();
+		else if(p2_type == mQueryTree->getIndex("variable")) tmp2 = mPKBObject->vTable_GetAllVar();
+		else if(p2_type == mQueryTree->getIndex("procedure")) tmp2 = mPKBObject->ast_GetAllProc();
+		else if(p2_type == mQueryTree->getIndex("call")) tmp2 = mPKBObject->ast_GetAllCall();
 		
 		int entry_type;
-		if(p1_type == 51|| p1_type==53|| p1_type==54|| p1_type==55||p1_type==59 ||p1_type==56)
-			entry_type = 201;
-		else if(p1_type==57)
-			entry_type = 202;
-		else if(p1_type==58)
-			entry_type = 203;
+		if(p1_type == mQueryTree->getIndex("stmt")|| p1_type==mQueryTree->getIndex("assign")|| p1_type==mQueryTree->getIndex("while")|| p1_type==mQueryTree->getIndex("if")||p1_type==mQueryTree->getIndex("call") ||p1_type==mQueryTree->getIndex("constant"))
+			entry_type = mQueryTree->getIndex("integer");
+		else if(p1_type==mQueryTree->getIndex("variable"))
+			entry_type = mQueryTree->getIndex("var_of_simpl");
+		else if(p1_type==mQueryTree->getIndex("procedure"))
+			entry_type = mQueryTree->getIndex("proc_of_simpl");
 		else throw new string("with clause error type");
 		for(vector<int>::iterator i=tmp.begin(); i< tmp.end(); i++)
 			for(vector<int>::iterator k = tmp2.begin(); k<tmp2.end(); k++){
@@ -131,7 +133,7 @@ void QueryEvaluator::evaluate()
 		}
 		it = find(mgTupleIndexing.begin(), mgTupleIndexing.end(), p2_name);
 		if(it == mgTupleIndexing.end())
-			if(p2_type == 201 || p2_type == 202 || p2_type == 203)
+			if(p2_type == mQueryTree->getIndex("integer") || p2_type == mQueryTree->getIndex("var_of_simpl") || p2_type == mQueryTree->getIndex("var_of_simpl"))
 				mgTupleIndexing.push_back(var_code_ending++);
 			else mgTupleIndexing.push_back(p2_name);
 		else
@@ -174,15 +176,10 @@ void QueryEvaluator::evaluate()
 		int para2Type;
 		int para2;
 
-		//for(vector<int>::iterator i= clause.begin(); i<clause.end(); i++){
-		//	cout << *i << " ";
-		//}
-		//cout << endl;
-		//system("pause");
 		int next_indx = 0;
-		if(clause[1] == 157)// if the first para is _
+		if(clause[1] == mQueryTree->getIndex("_"))// if the first para is _
 		{ 
-			para1 = 157;
+			para1 = clause[1];
 			next_indx = 2;
 		}
 		else 
@@ -191,9 +188,9 @@ void QueryEvaluator::evaluate()
 			para1 = clause[2];
 			next_indx = 3;
 		}
-		if(clause[next_indx] == 157)// if the second para is _
+		if(clause[next_indx] == mQueryTree->getIndex("_"))// if the second para is _
 		{ 
-			para2 = 157;
+			para2 = clause[next_indx];
 		}
 		else 
 		{
@@ -202,37 +199,37 @@ void QueryEvaluator::evaluate()
 		}
 
 		
-		if(rel == 5 || rel == 6 || rel == 7 || rel == 8) //relation is parent, parent*, follows, follows*
+		if(rel == mQueryTree->getIndex("parent") || rel == mQueryTree->getIndex("parent*") || rel == mQueryTree->getIndex("follows") || rel == mQueryTree->getIndex("follows*")) //relation is parent, parent*, follows, follows*
 		{
-			if(para1 == 157)  //If _ , then replace with (stmt newest)
+			if(para1 == mQueryTree->getIndex("_"))  //If _ , then replace with (stmt newest)
 			{
-				para1Type = 51;
+				para1Type = mQueryTree->getIndex("stmt");
 				para1 = var_code_ending++;
 			}
-			if(para2 == 157)
+			if(para2 == mQueryTree->getIndex("_"))
 			{
-				para2Type = 51;
+				para2Type = mQueryTree->getIndex("stmt");
 				para2 = var_code_ending++;
 			}
 		}
-		else if(rel == 9 || rel == 10) // uses and modifies
+		else if(rel == mQueryTree->getIndex("uses") || rel == mQueryTree->getIndex("modifies")) // uses and modifies
 		{
-			if(para2 == 157) //replace with (variable newest)
+			if(para2 == mQueryTree->getIndex("_")) //replace with (variable newest)
 			{
-				para2Type = 57;
+				para2Type = mQueryTree->getIndex("variable");
 				para2 = var_code_ending++;
 			}
 		}
-		else if(rel == 11 || rel == 12) //relation is calls, calls*
+		else if(rel == mQueryTree->getIndex("calls") || rel == mQueryTree->getIndex("calls*")) //relation is calls, calls*
 		{
-			if(para1 == 157) //replace with (proc newest)
+			if(para1 == mQueryTree->getIndex("_")) //replace with (proc newest)
 			{
-				para1Type = 58;
+				para1Type = mQueryTree->getIndex("procedure");
 				para1 = var_code_ending++;
 			}
-			if(para2 == 157)
+			if(para2 == mQueryTree->getIndex("_"))
 			{
-				para2Type = 58;
+				para2Type = mQueryTree->getIndex("procedure");
 				para2 = var_code_ending++;
 			}
 		}else;  //do nothing 
@@ -248,7 +245,7 @@ void QueryEvaluator::evaluate()
 		int same2Tuple1 = 0;
 		int numOfCommonElement = 0;
 		if(it == mgTupleIndexing.end())
-			if(para1Type == 201 || para1Type == 202 || para1Type == 203)
+			if(para1Type == mQueryTree->getIndex("integer") || para1Type == mQueryTree->getIndex("var_of_simpl") || para1Type == mQueryTree->getIndex("proc_of_simpl"))
 				mgTupleIndexing.push_back(var_code_ending++);
 			else mgTupleIndexing.push_back(para1);
 		else
@@ -260,7 +257,7 @@ void QueryEvaluator::evaluate()
 		}
 		it = find(mgTupleIndexing.begin(), mgTupleIndexing.end(), para2);
 		if(it == mgTupleIndexing.end())
-			if(para2Type == 201 || para2Type == 202 || para2Type == 203)
+			if(para2Type == mQueryTree->getIndex("integer") || para2Type == mQueryTree->getIndex("var_of_simpl") || para2Type == mQueryTree->getIndex("proc_of_simpl"))
 				mgTupleIndexing.push_back(var_code_ending++);
 			else mgTupleIndexing.push_back(para2);
 		else
@@ -285,49 +282,19 @@ void QueryEvaluator::evaluate()
 			para2Type = (it2->second).at(0);
 			para2 = (it2->second).at(1);
 		}
-
+	
 		//Convert all "a", "b", "c" 's code from PQL code to PKB code
-		if(para1Type == 202) para1 = PKB_varEncode(PQL_varDecode(para1));
-		else if(para1Type == 203) para1 = PKB_procEncode(PQL_procDecode(para1));
+		if(para1Type == mQueryTree->getIndex("var_of_simpl")) para1 = PKB_varEncode(PQL_varDecode(para1));
+		else if(para1Type == mQueryTree->getIndex("proc_of_simpl")) para1 = PKB_procEncode(PQL_procDecode(para1));
 
-		if(para2Type == 202) para2 = PKB_varEncode(PQL_varDecode(para2));
-		else if(para2Type == 203) para2 = PKB_procEncode(PQL_procDecode(para2));
-
-		if(rel == 5 ||rel==6|| rel==7 || rel==8 ||rel==9 || rel==10 || rel==11||rel==12)
+		if(para2Type == mQueryTree->getIndex("var_of_simpl")) para2 = PKB_varEncode(PQL_varDecode(para2));
+		else if(para2Type == mQueryTree->getIndex("proc_of_simpl")) para2 = PKB_procEncode(PQL_procDecode(para2));
+	
+		if(rel == mQueryTree->getIndex("parent") ||rel==mQueryTree->getIndex("parent*")|| rel==mQueryTree->getIndex("follows") || rel==mQueryTree->getIndex("follows*") ||rel==mQueryTree->getIndex("uses") || rel==mQueryTree->getIndex("modifies") || rel==mQueryTree->getIndex("calls")||rel==mQueryTree->getIndex("calls*"))
 			relResult = getRel(para1Type, para2Type, para1, para2, rel);
 		else 
 			throw new string("Relation not exists");
 
-
-		/*
-		///////////////////////////////////////////////////////////////////////////////////////////////////////DEBUGGING
-		cout << "para1Type="<<para1Type;
-		cout << " para2Type=" << para2Type;
-		cout << " para1= " << para1;
-		cout << " para2 = " << para2;
-		cout << " rel= "<<rel;
-		cout << endl;
-		cout << "Join pre-condition check: " << endl;
-		cout << "numOfCommonElement = " << numOfCommonElement << endl;
-		cout << "same1Tuple1 = " << same1Tuple1 << endl;
-		cout << "same2Tuple1 = " << same2Tuple1 << endl;
-
-			//////////////////////////////////////////////////////////////////////////////////////////////////////////////DEBUGGING
-	cout << "previous resulted tuple: " << endl;
-	for(vector<vector<int> >::iterator i = eva_tuple.begin(); i< eva_tuple.end(); i++){
-		for(vector<int>::iterator k = (*i).begin(); k<(*i).end(); k++){
-			cout << *k << " ";
-		}
-		cout << endl;
-	}
-	cout << "The relation evaluation result: " << endl;
-	for(vector<vector<int> >::iterator i = relResult.begin(); i< relResult.end(); i++){
-		for(vector<int>::iterator k = (*i).begin(); k<(*i).end(); k++){
-			cout << *k << " ";
-		}
-		cout << endl;
-	}
-	cout << "pre_Join result shown" << endl; */
 
 		if(numOfCommonElement == 2)
 				if(same1Tuple1 != 0)
@@ -348,82 +315,64 @@ void QueryEvaluator::evaluate()
 				}				
 			eva_tuple = tmp_store;
 		}
-/*
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////DEBUGGING
-	cout << "Show join result:" << endl;
-	for(vector<vector<int> >::iterator i = eva_tuple.begin(); i< eva_tuple.end(); i++){
-		for(vector<int>::iterator k = (*i).begin(); k<(*i).end(); k++){
-			cout << *k << " ";
-		}
-		cout << endl;
-	}
-	cout << "Join result shown" << endl;
-	*/
 
 	}//while: such that evaluation END
 
-	
-	/* Old way of working with a.stmt# = s.stmt#.
 
-	//This is to deal with when the with clause have v.varName = p.procName
-	int equal_ele_size = (int)equal_vars.size();
-	for(int i = 0; i<equal_ele_size; i++){
-		int same1 = equal_vars.at(i);
-		int same2 = equal_vars.at(i++);
-		int found1 = -1;
-		int found2 = -1;
-		for(int k = 0; k<(int) eva_tuple.at(0).size(); k++){
-			if(mgTupleIndexing.at(k) == same1) found1 = k;
-			if(mgTupleIndexing.at(k) == same2) found2 = k;
-		}
-		if(found1 == -1 || found2 == -1) break;
-		for(int k = 0; k<(int) eva_tuple.size(); k++){
-			if(eva_tuple.at(k).at(found1) != eva_tuple.at(k).at(found2)) 
-				eva_tuple.erase(eva_tuple.begin() + k);
-		}
-	}*/
-
-
-
-	if(select_element == 60) //If the select is boolean
+	if(select_element == mQueryTree->getIndex("boolean")) //If the select is boolean
 	{
 		if(mgTupleIndexing.empty()) mResult.setBoolValue(false);
 		else mResult.setBoolValue(true);
 		return;
 	}
 
+	//find whether the selected element is inside the evaluated result tuple
+	int indx = 0;
+	for(; indx< (int) mgTupleIndexing.size(); indx++)
+		if(select_element == (int)mgTupleIndexing.at(indx)) break;
 
-	if(with_size == 0 && suchThatSize == 0){
+	//if no with and such that clause, just return;
+	//Or if the selected element is not inside evaluated result tuple, depend on the tuple
+	if((with_size == 0 && suchThatSize == 0)|| (mgTupleIndexing.size()!=0 && indx == mgTupleIndexing.size())){
+		
+		//if the selected element is not inside evaluated result tuple and result tuple is null
+		if(mgTupleIndexing.size() != 0){
+			if(eva_tuple.empty()) {
+				mResult.addInTuple(-1);
+				return;
+			}
+		}
+
 		int select_type = (mQueryTree->selectAt(0)).at(0);
 		vector<int> tmp;
-		if(select_type == 51)  tmp = getAllStmts();
-		else if(select_type == 53) tmp = mPKBObject->ast_GetAllAssign();
-		else if(select_type == 54) tmp = mPKBObject->ast_GetAllWhile();
-		else if(select_type == 55) tmp = mPKBObject->ast_GetAllIf();
-		else if(select_type == 56) tmp = mPKBObject->cTable_GetAllConstants();
-		else if(select_type == 57) tmp = mPKBObject->vTable_GetAllVar();
-		else if(select_type == 58) tmp = mPKBObject->ast_GetAllProc();
-		else if(select_type == 59) tmp = mPKBObject->ast_GetAllCall();
+		if(select_type == mQueryTree->getIndex("stmt"))  tmp = getAllStmts();
+		else if(select_type == mQueryTree->getIndex("assign")) tmp = mPKBObject->ast_GetAllAssign();
+		else if(select_type == mQueryTree->getIndex("while")) tmp = mPKBObject->ast_GetAllWhile();
+		else if(select_type == mQueryTree->getIndex("if")) tmp = mPKBObject->ast_GetAllIf();
+		else if(select_type == mQueryTree->getIndex("constant")) tmp = mPKBObject->cTable_GetAllConstants();
+		else if(select_type == mQueryTree->getIndex("variable")) tmp = mPKBObject->vTable_GetAllVar();
+		else if(select_type == mQueryTree->getIndex("procedure")) tmp = mPKBObject->ast_GetAllProc();
+		else if(select_type == mQueryTree->getIndex("call")) tmp = mPKBObject->ast_GetAllCall();
 		else throw new string("Select type error!");
 		for(vector<int>::iterator i=tmp.begin(); i<tmp.end(); i++){
-			if(select_type == 57)
-				mResult.addInType(202);
-			else if (select_type == 58)
-				mResult.addInType(203);
-			else mResult.addInType(201);
+			if(select_type == mQueryTree->getIndex("variable"))
+				mResult.addInType(mQueryTree->getIndex("var_of_simpl"));
+			else if (select_type == mQueryTree->getIndex("procedure"))
+				mResult.addInType(mQueryTree->getIndex("proc_of_simpl"));
+			else mResult.addInType(mQueryTree->getIndex("integer"));
 			mResult.addInTuple(*i);
 		}
 	}else{
-		int indx = 0;
-		for(; indx< (int) mgTupleIndexing.size(); indx++)
-		{
-			if(select_element == mgTupleIndexing.at(indx)) break;
-		}
 		for(vector<vector<int> >::iterator i= eva_tuple.begin(); i< eva_tuple.end(); i++){
 			mResult.addInType((*i).at(indx*2));
 			mResult.addInTuple((*i).at(indx*2+1));
 		}
 	}
+
+	//In case the returned mResult is empty, then insert -1 inside.
+	vector<int> resultTuple = mResult.getTuple();
+	if(resultTuple.empty()) mResult.addInTuple(-1);
+
 	//Store result inside mResult
 	//cout << "eval finish!" << endl;
 
@@ -442,15 +391,20 @@ void QueryEvaluator::printResult(){
 		vector<int> resultTuple = mResult.getTuple();
 		vector<int> resultTupleType = mResult.getTypes();
 		cout << "Query evaluate: ";
-		cout << "query result size: " << (int)resultTuple.size() << endl ;
 		int count = 0;
+		if((int)resultTuple.at(0) == -1){
+			cout << "query result size: " << 0 << endl ;
+			cout << "Null" << endl;
+			return;
+		}
+		cout << "query result size: " << (int)resultTuple.size() << endl ;
 		for(vector<int>::iterator i=resultTuple.begin(); i<resultTuple.end(); i++){
 			int type = resultTupleType.at(count++);
-			if(type == 201)
+			if(type == mQueryTree->getIndex("integer"))
 				cout << *i << " ";
-			else if(type == 202) 
+			else if(type == mQueryTree->getIndex("var_of_simpl")) 
 				cout << PKB_varDecode(*i) << " ";	
-			else if(type == 203) 
+			else if(type == mQueryTree->getIndex("proc_of_simpl")) 
 				cout << PKB_procDecode(*i) << " ";
 			else 
 				throw new string("No type match when decode result");
@@ -463,41 +417,49 @@ void QueryEvaluator::printResult(){
 //The varName and procName code has been converted to PKB side code
 vector<vector<int> > QueryEvaluator::getRel(int type1, int type2, int para1, int para2, int relType)
 {
-	vector<vector<int> > evalResult;	
+	////////////////////////Crucial for debugging, don't delete //////////////////////////////////////////////////////
+	cout << "gerRel info: relType = " << relType << " ";
+	cout << "type1 = "<<type1 << " ";
+	cout << "type2 = " <<type2 << " ";
+	cout << "para1 = " <<para1 << " ";
+	cout << "para2 = "<<para2 << endl;
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	vector<vector<int> > evalResult;
 	switch(relType)
 	{
 		case 5: case 6: //Relation is parent or parent*
 		{
 			vector<int> para1List;
-			if(type1 == 201) para1List.push_back(para1);
-			else if(type1 == 51) para1List = getAllStmts();
-			else if(type1 == 53) para1List = mPKBObject->ast_GetAllAssign();
-			else if(type1 == 54) para1List = mPKBObject->ast_GetAllWhile();
-			else if(type1 == 55) para1List = mPKBObject->ast_GetAllIf();
-			else if(type1 == 59) para1List = mPKBObject->ast_GetAllCall();
+			if(type1 == mQueryTree->getIndex("integer")) para1List.push_back(para1);
+			else if(type1 == mQueryTree->getIndex("stmt")) para1List = getAllStmts();
+			else if(type1 == mQueryTree->getIndex("assign")) para1List = mPKBObject->ast_GetAllAssign();
+			else if(type1 == mQueryTree->getIndex("while")) para1List = mPKBObject->ast_GetAllWhile();
+			else if(type1 == mQueryTree->getIndex("if")) para1List = mPKBObject->ast_GetAllIf();
+			else if(type1 == mQueryTree->getIndex("call")) para1List = mPKBObject->ast_GetAllCall();
 			else throw new string("Parent parameter type mismatch!");
 
 			vector<int> para2List;
-			if(type2 == 201) para2List.push_back(para2);
-			else if(type2 == 51) para2List = getAllStmts();
-			else if(type2 == 53) para2List = mPKBObject->ast_GetAllAssign();
-			else if(type2 == 54) para2List = mPKBObject->ast_GetAllWhile();
-			else if(type2 == 55) para2List = mPKBObject->ast_GetAllIf();
-			else if(type2 == 59) para2List = mPKBObject->ast_GetAllCall();
+			if(type2 == mQueryTree->getIndex("integer")) para2List.push_back(para2);
+			else if(type2 == mQueryTree->getIndex("stmt")) para2List = getAllStmts();
+			else if(type2 == mQueryTree->getIndex("assign")) para2List = mPKBObject->ast_GetAllAssign();
+			else if(type2 == mQueryTree->getIndex("while")) para2List = mPKBObject->ast_GetAllWhile();
+			else if(type2 == mQueryTree->getIndex("if")) para2List = mPKBObject->ast_GetAllIf();
+			else if(type2 == mQueryTree->getIndex("call")) para2List = mPKBObject->ast_GetAllCall();
 			else throw new string("Your follows relation has unpaired second parameters");
 
 			for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
 				vector<int> result;
-				if(relType == 5)
+				if(relType == mQueryTree->getIndex("parent"))
 					 result = mPKBObject->ast_GetChild(*i);
-				else if(relType == 6)
+				else if(relType == mQueryTree->getIndex("parent*"))
 					result = getChildStar(*i);
 				if(*(result.begin()) == -1) continue;    //continue this loop if this candidate has no child
 				for(vector<int>::iterator k=result.begin(); k<result.end(); k++){
 					vector<int>::iterator it = find(para2List.begin(), para2List.end(), *k);
 					if(it == para2List.end()) continue; 
 					vector<int> tmp;
-					int t[] = {201,*i,201, *k};
+					int t[] = {mQueryTree->getIndex("integer"),*i,mQueryTree->getIndex("integer"), *k};
 					tmp.insert(tmp.end(), t, t+4);
 					evalResult.push_back(tmp);
 				}
@@ -507,43 +469,35 @@ vector<vector<int> > QueryEvaluator::getRel(int type1, int type2, int para1, int
 		case 7: case 8://relation is follows or follows*
 		{
 			vector<int> para1List; 
-			if(type1 == 201) para1List.push_back(para1);
-			else if(type1 == 51) para1List = getAllStmts();
-			else if(type1 == 53) para1List = mPKBObject->ast_GetAllAssign();
-			else if(type1 == 54) para1List = mPKBObject->ast_GetAllWhile();
-			else if(type1 == 55) para1List = mPKBObject->ast_GetAllIf();
-			else if(type1 == 59) para1List = mPKBObject->ast_GetAllCall();
-			else throw new string("Your follows relation has unpaired parameters");
 
+			if(type1 == mQueryTree->getIndex("integer")) para1List.push_back(para1);
+			else if(type1 == mQueryTree->getIndex("stmt")) para1List = getAllStmts();
+			else if(type1 == mQueryTree->getIndex("assign")) para1List = mPKBObject->ast_GetAllAssign();
+			else if(type1 == mQueryTree->getIndex("while")) para1List = mPKBObject->ast_GetAllWhile();
+			else if(type1 == mQueryTree->getIndex("if")) para1List = mPKBObject->ast_GetAllIf();
+			else if(type1 == mQueryTree->getIndex("call")) para1List = mPKBObject->ast_GetAllCall();
+			else throw new string("Your follows relation has unpaired parameters");
+			
 			vector<int> para2List;
-			if(type2 == 201) para2List.push_back(para2);
-			else if(type2 == 51) para2List = getAllStmts();
-			else if(type2 == 53) para2List = mPKBObject->ast_GetAllAssign();
-			else if(type2 == 54) para2List = mPKBObject->ast_GetAllWhile();
-			else if(type2 == 55) para2List = mPKBObject->ast_GetAllIf();
-			else if(type2 == 59) para2List = mPKBObject->ast_GetAllCall();
+			if(type2 == mQueryTree->getIndex("integer")) para2List.push_back(para2);
+			else if(type2 == mQueryTree->getIndex("stmt")) para2List = getAllStmts();
+			else if(type2 == mQueryTree->getIndex("assign")) para2List = mPKBObject->ast_GetAllAssign();
+			else if(type2 == mQueryTree->getIndex("while")) para2List = mPKBObject->ast_GetAllWhile();
+			else if(type2 == mQueryTree->getIndex("if")) para2List = mPKBObject->ast_GetAllIf();
+			else if(type2 == mQueryTree->getIndex("call")) para2List = mPKBObject->ast_GetAllCall();
 			else throw new string("Your follows relation has unpaired second parameters");
 			
-			//cout << "break;" << endl;
 			for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
-				cout << *i << endl;
 				vector<int> result;
-///<<<<<<< .mine
-//				cout <<"Following = " << mPKBObject->ast_GetFollowingStatementNum(*i) << endl;
-///=======
-//				cout <<"following = " << mPKBObject->ast_GetFollowingStatementNum(*i)<< endl;
-///>>>>>>> .r109
-				if(relType == 7) 
+				if(relType == mQueryTree->getIndex("follows")) 
 					result.push_back(mPKBObject->ast_GetFollowingStatementNum(*i));
 				else result = getFollowsStar(*i);
-				if(result.at(0) == -1) continue;    //continue this loop without eva this iteration
+				if( (int)(result.at(0))== -1) continue;    //continue this loop without eva this iteration
 				for(vector<int>::iterator k = result.begin(); k<result.end(); k++){
 					vector<int>::iterator it = find(para2List.begin(), para2List.end(), *k);
 					if(it == para2List.end()) continue; 
 					vector<int> tmp;
-					int t[] = {201,*i, 201,*k};
-					cout <<"*i = " <<*i << endl;
-					cout <<"*k = " <<*k << endl;
+					int t[] = {mQueryTree->getIndex("integer"),*i, mQueryTree->getIndex("integer"),*k};
 					tmp.insert(tmp.end(), t, t+4);
 					evalResult.push_back(tmp);
 				}
@@ -552,46 +506,48 @@ vector<vector<int> > QueryEvaluator::getRel(int type1, int type2, int para1, int
 		}//Follows END
 	case 9: case 10: //relation is uses or modifies
 		{
-			if(type1 == 201 || type1 == 51 || type1 == 53 || type1 == 54 || type1 == 55 ) //the first parameter is a constant stmt#
+			if(type1 == mQueryTree->getIndex("integer") || type1 == mQueryTree->getIndex("stmt") || type1 == mQueryTree->getIndex("assign") || type1 == mQueryTree->getIndex("while") || type1 == mQueryTree->getIndex("if") ) //the first parameter is a constant stmt#
 			{
 				vector<int> para1List;
-				if(type1 == 201) para1List.push_back(para1);
-				else if(type1 == 51) para1List = getAllStmts();
-				else if(type1 == 53) para1List = mPKBObject->ast_GetAllAssign();
-				else if(type1 == 54) para1List = mPKBObject->ast_GetAllWhile();
-				else if(type1 == 55) para1List = mPKBObject->ast_GetAllIf();
-				else if(type1 == 59) para1List = mPKBObject->ast_GetAllCall();
+				if(type1 == mQueryTree->getIndex("integer")) para1List.push_back(para1);
+				else if(type1 == mQueryTree->getIndex("stmt")) para1List = getAllStmts();
+				else if(type1 == mQueryTree->getIndex("assign")) para1List = mPKBObject->ast_GetAllAssign();
+				else if(type1 == mQueryTree->getIndex("while")) para1List = mPKBObject->ast_GetAllWhile();
+				else if(type1 == mQueryTree->getIndex("if")) para1List = mPKBObject->ast_GetAllIf();
+				else if(type1 == mQueryTree->getIndex("call")) para1List = mPKBObject->ast_GetAllCall();
 				else break; //cannot happen
+
 				for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
 					vector<int> result;
-					if(relType == 9)
+					if(relType == mQueryTree->getIndex("uses"))
 						result = mPKBObject->uTable_getUsedVar(*i);
 					else  result = mPKBObject->mTable_getModifiedVar(*i);
-					if(*(result.begin()) == -1) continue;    //continue this loop without eva this iteration
+					
+					if(result.at(0) == -1) continue;    //continue this loop without eva this iteration
 					for(vector<int>::iterator k=result.begin(); k<result.end(); k++){
-						if(type2 == 202 && para2 != *k) continue;
+						if(type2 == mQueryTree->getIndex("var_of_simpl") && para2 != *k) continue;
 						vector<int> tmp;
-						int t[] = {201,*i, 202, *k};
+						int t[] = {mQueryTree->getIndex("integer"),*i, mQueryTree->getIndex("var_of_simpl"), *k};
 						tmp.insert(tmp.begin(), t, t+4);
 						evalResult.push_back(tmp);
 					}
 				}
 			}
-			else if(type1 == 203 || type1 == 58) //the first parameter is a constant procName or proc var
+			else if(type1 == mQueryTree->getIndex("proc_of_simpl") || type1 == mQueryTree->getIndex("procedure")) //the first parameter is a constant procName or proc var
 			{
 				vector<int> para1List;
-				if(type1 == 203) para1List.push_back(para1);
+				if(type1 == mQueryTree->getIndex("proc_of_simpl")) para1List.push_back(para1);
 				else para1List = mPKBObject->ast_GetAllProc();
 				for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
 					vector<int> result;
-					if(relType == 9)
+					if(relType == mQueryTree->getIndex("uses"))
 						result = mPKBObject->uTable_getUsedVarPI(*i);
 					else  result = mPKBObject->mTable_getModifiedVarPI(*i);
 					if(*(result.begin()) == -1) continue;    //continue this loop without eva this iteration
 					for(vector<int>::iterator k=result.begin(); k<result.end(); k++){
-						if(type2 == 202 && para2 != *k) continue;
+						if(type2 == mQueryTree->getIndex("var_of_simpl") && para2 != *k) continue;
 						vector<int> tmp;
-						int t[] = {203, *i, 202, *k};
+						int t[] = {mQueryTree->getIndex("proc_of_simpl"), *i, mQueryTree->getIndex("var_of_simpl"), *k};
 						tmp.insert(tmp.begin(), t, t+4);
 						evalResult.push_back(tmp);
 					}
@@ -605,22 +561,22 @@ vector<vector<int> > QueryEvaluator::getRel(int type1, int type2, int para1, int
 		}//Uses END
 	case 11: case 12://relation is calls, calls*
 		{
-			if(type1 == 203 || type1 == 58) //proc var
+			if(type1 == mQueryTree->getIndex("proc_of_simpl") || type1 == mQueryTree->getIndex("procedure")) //proc var
 			{
 				vector<int> para1List;
-				if(type1 == 203) para1List.push_back(para1);
+				if(type1 == mQueryTree->getIndex("proc_of_simpl")) para1List.push_back(para1);
 				else para1List = mPKBObject->ast_GetAllProc();
 				for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++)
 				{
 					vector<int> result;
-					if(relType == 11) result = mPKBObject->pTable_getCall(*i);
+					if(relType == mQueryTree->getIndex("calls")) result = mPKBObject->pTable_getCall(*i);
 					else result = getCallsStar(*i);
 					if(*(result.begin()) == -1) continue;    //continue this loop without eva this iteration
 					for(vector<int>::iterator k = result.begin(); k<result.end(); k++)
 					{
-						if(type2 == 203 && para2 != *k) continue;
+						if(type2 == mQueryTree->getIndex("proc_of_simpl") && para2 != *k) continue;
 						vector<int> tmp;
-						int t[] = {203, *i, 203, *k};
+						int t[] = {mQueryTree->getIndex("proc_of_simpl"), *i, mQueryTree->getIndex("proc_of_simpl"), *k};
 						tmp.insert(tmp.begin(), t, t+4);
 						evalResult.push_back(tmp);
 					}
@@ -637,6 +593,18 @@ vector<vector<int> > QueryEvaluator::getRel(int type1, int type2, int para1, int
 			throw new string("No such relation implementation yet");
 		}//Error case END
 	}//getRel END
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////HQ DEBUGGING
+	cout << "FOR DEBUGGING" << endl;
+	for(vector<vector<int> >::iterator i=evalResult.begin(); i< evalResult.end(); i++){
+		for(vector<int>::iterator k = (*i).begin(); k< (*i).end(); k++){
+			cout << *k << " ";
+		}
+		cout << endl;
+	}
+	cout << "DEBUGGING FINISH" << endl;
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	return evalResult;
 }
 	
@@ -676,7 +644,6 @@ vector<int> QueryEvaluator::getCallsStar(int procNameCode){
 
 vector<int> QueryEvaluator::getAllStmts(){
 	int max = mPKBObject->ast_getMaxStmtNum();
-	cout << "max=" << max << endl;
 	vector<int> tmp;
 	for(int i = 1; i< max+1; i++){
 		tmp.push_back(i);

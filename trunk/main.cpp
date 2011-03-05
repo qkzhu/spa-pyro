@@ -1,4 +1,5 @@
 #include "QueryEvaluator.h"
+#include "PqlPreprocessor.h"
 #include "PKB.h"
 #include "Parser.h"
 #include <string>
@@ -28,7 +29,6 @@ int main(int argc, char* argv[]){
 		   getline(qrFile, tmp);
 		   query.append(tmp);
 	   }
-
 	   PqlPreprocessor pql (query);
 
 	   QueryEvaluator bqe (&pkb, &pql);

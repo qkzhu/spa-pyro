@@ -10,6 +10,9 @@
 #include "QueryResult.h"
 #include "TupleOperations.h"
 
+#define ENCODE_ENDING 500  //I need to use it when I meet '_' in relation to create new variable
+
+
 class QueryEvaluator{
 	
 private:
