@@ -8,11 +8,9 @@
     follows             7;
     follows*         8;
     uses                9;
-    uses*            10;
-    modifies            11;
- modifies*            12;
- calls              13;
- calls*             14;
+     modifies            10;
+ calls              11;
+ calls*             12;
 stmt#     104;
 stmt 51;
 assign 53;
@@ -46,3 +44,9 @@ value     101;
 varName   102;
 
 procName    103;
+
+integer 201;
+
+var_of_simpl 202;
+ 
+proc_of_simpl 203;

@@ -489,7 +489,7 @@ vector<vector<int> > QueryEvaluator::getRel(int type1, int type2, int para1, int
 		case 7: case 8://relation is follows or follows*
 		{
 			vector<int> para1List; 
-
+			
 			if(type1 == mQueryTree->getIndex("integer")) para1List.push_back(para1);
 			else if(type1 == mQueryTree->getIndex("stmt")) para1List = getAllStmts();
 			else if(type1 == mQueryTree->getIndex("assign")) para1List = mPKBObject->ast_GetAllAssign();
@@ -497,7 +497,7 @@ vector<vector<int> > QueryEvaluator::getRel(int type1, int type2, int para1, int
 			else if(type1 == mQueryTree->getIndex("if")) para1List = mPKBObject->ast_GetAllIf();
 			else if(type1 == mQueryTree->getIndex("call")) para1List = mPKBObject->ast_GetAllCall();
 			else throw new string("Your follows relation has unpaired parameters");
-			
+
 			vector<int> para2List;
 			if(type2 == mQueryTree->getIndex("integer")) para2List.push_back(para2);
 			else if(type2 == mQueryTree->getIndex("stmt")) para2List = getAllStmts();
@@ -506,7 +506,7 @@ vector<vector<int> > QueryEvaluator::getRel(int type1, int type2, int para1, int
 			else if(type2 == mQueryTree->getIndex("if")) para2List = mPKBObject->ast_GetAllIf();
 			else if(type2 == mQueryTree->getIndex("call")) para2List = mPKBObject->ast_GetAllCall();
 			else throw new string("Your follows relation has unpaired second parameters");
-			
+
 			for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
 				vector<int> result;
 				if(relType == mQueryTree->getIndex("follows")) 
