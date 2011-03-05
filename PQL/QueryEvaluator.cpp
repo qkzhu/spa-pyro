@@ -88,8 +88,22 @@ void QueryEvaluator::evaluate()
 		
 		vector<int> tmp2;
 		if(p2_type == mQueryTree->getIndex("integer")) tmp2.push_back(part2.at(1));
-		else if(p2_type == mQueryTree->getIndex("var_of_simpl")) tmp2.push_back(PKB_varEncode(PQL_varDecode(part2.at(1))));
-		else if(p2_type == mQueryTree->getIndex("proc_of_simpl")) tmp2.push_back(PKB_procEncode(PQL_procDecode(part2.at(1))));
+		else if(p2_type == mQueryTree->getIndex("var_of_simpl")) {
+			int tmp_code = PKB_varEncode(PQL_varDecode(part2.at(1)));
+			if(tmp_code == -1) {
+				mResult.addInTuple(-1);
+				return;
+			}
+			tmp2.push_back(tmp_code);
+		}
+		else if(p2_type == mQueryTree->getIndex("proc_of_simpl")) {
+			int tmp_code = PKB_procEncode(PQL_procDecode(part2.at(1)));
+			if(tmp_code == -1){
+				mResult.addInTuple(-1);
+				return;
+			}
+			tmp2.push_back(tmp_code);
+		}
 		else if(p2_type == mQueryTree->getIndex("stmt"))  tmp2 = getAllStmts();
 		else if(p2_type == mQueryTree->getIndex("assign")) tmp2 = mPKBObject->ast_GetAllAssign();
 		else if(p2_type == mQueryTree->getIndex("while")) tmp2 = mPKBObject->ast_GetAllWhile();
@@ -282,7 +296,7 @@ void QueryEvaluator::evaluate()
 			para2Type = (it2->second).at(0);
 			para2 = (it2->second).at(1);
 		}
-	
+
 		//Convert all "a", "b", "c" 's code from PQL code to PKB code
 		if(para1Type == mQueryTree->getIndex("var_of_simpl")) para1 = PKB_varEncode(PQL_varDecode(para1));
 		else if(para1Type == mQueryTree->getIndex("proc_of_simpl")) para1 = PKB_procEncode(PQL_procDecode(para1));
@@ -290,6 +304,12 @@ void QueryEvaluator::evaluate()
 		if(para2Type == mQueryTree->getIndex("var_of_simpl")) para2 = PKB_varEncode(PQL_varDecode(para2));
 		else if(para2Type == mQueryTree->getIndex("proc_of_simpl")) para2 = PKB_procEncode(PQL_procDecode(para2));
 	
+		//When the parameter of relation is not in simple, the query just evaluate to null
+		if(para1 == -1 || para2 == -1){
+			mResult.addInTuple(-1);
+			return;
+		}
+
 		if(rel == mQueryTree->getIndex("parent") ||rel==mQueryTree->getIndex("parent*")|| rel==mQueryTree->getIndex("follows") || rel==mQueryTree->getIndex("follows*") ||rel==mQueryTree->getIndex("uses") || rel==mQueryTree->getIndex("modifies") || rel==mQueryTree->getIndex("calls")||rel==mQueryTree->getIndex("calls*"))
 			relResult = getRel(para1Type, para2Type, para1, para2, rel);
 		else 
