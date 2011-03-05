@@ -1,0 +1,11 @@
+procedure p {
+    x = 1;
+    y = 5;
+    z = 10;
+    k = 100;
+}
+
+procedure q{
+    l = 2;
+    m = 3;
+}
