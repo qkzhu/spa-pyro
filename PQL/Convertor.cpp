@@ -12,7 +12,7 @@ int Convertor::update()
   string line;
   string pch;
   //int index;
-  ifstream grammerfile ("pqlgrammer.txt");
+  ifstream grammerfile ("pqlgrammer.txt", ifstream::in);
   if (grammerfile.is_open())
   {
     while ( grammerfile.good() )
@@ -39,7 +39,7 @@ int Convertor::update()
     grammerfile.close();
   }
 
-  else cout << "Unable to open file"; 
+  else throw "Unable to open file;PQLquery"; 
 
   return 0;
 }
