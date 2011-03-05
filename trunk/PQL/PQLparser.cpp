@@ -128,6 +128,7 @@ QueryTable PqlParser::parser(string qu) {
 						 pch=token.next();
 
 						 temp=Convertor::getIndex(pch);
+						
 						 if (temp>Convertor::QUATEDSTRING)
 							{
 								switch(suchthatclause)
@@ -143,7 +144,7 @@ QueryTable PqlParser::parser(string qu) {
 					     //cout<<"temp:"<<temp<<"prefix"<<prefix;
 						    }
 							 prefix=PqlParser::prefix(pch);
-						 //cout<<"temp:"<<temp<<"prefix"<<prefix;
+						
 						// int paraPosition=0;//identify the position of the parameters; 
 						 while (temp>=USERDEFINED||prefix==INT||temp==UNDERSCORE)
                         {   
@@ -156,26 +157,25 @@ QueryTable PqlParser::parser(string qu) {
 							 temp=Convertor::getIndex(pch);
 							 
 						
-
+						
 
 				       if (temp>Convertor::QUATEDSTRING)
 							{
 								switch(suchthatclause)
 								{
 				                case CALLS: case CALLS_T:
-								Convertor::insertShortcut(pch,"procOfSimiple"); break;
+								Convertor::insertShortcut(pch,"procOfSimpl"); break;
 								default:
 									//if (paraPosition==0)
                                  //Convertor::insertShortcut(pch,"procName");
 									//else
-								 Convertor::insertShortcut(pch,"varOfSimple"); break;
+								 Convertor::insertShortcut(pch,"varOfSimpl"); break;
 						        
-					     //cout<<"temp:"<<temp<<"prefix"<<prefix;
+					     
 						        }
 					       }
 					   
 					   prefix=PqlParser::prefix(pch);
-
 //					   paraPosition++;	
 				   }
 				table.addClause(type,content);
@@ -192,7 +192,7 @@ QueryTable PqlParser::parser(string qu) {
 					 {
 				     pch=token.next();
 					 i=Convertor::getIndex(pch);
-					 while(i!=AND&&i!=SELECT&&i!=SUCH_THAT&&i!=WITH&&i!=PATTERN&&pch!="")
+					 while(i!=AND&&i!=SELECT&&i!=SUCH_THAT&&i!=WITH&&i!=PATTERN&&pch!=""||(PqlParser::prefix(pch)!=0))
 					 {
 						 withclause=withclause.append(pch);
 						 pch=token.next();
@@ -216,7 +216,7 @@ QueryTable PqlParser::parser(string qu) {
 						 //content.push_back(PqlParser::prefix("."));
 						 content.push_back(Convertor::getIndex("."));
 						  prefix=PqlParser::prefix(operand12);
-						 if(prefix!=0)
+						 if(prefix!=0)	
 						 content.push_back(prefix);
 						 content.push_back(Convertor::getIndex(operand12));
 						 //content.push_back(PqlParser::prefix("="));
@@ -224,7 +224,7 @@ QueryTable PqlParser::parser(string qu) {
 					 }
 					 else
 					 {
-						 cout<<"error in with clause";
+						 throw new string("error in with clause in operand 1");
 					 }
 					  if (operand2!="")
                      {
@@ -257,7 +257,7 @@ QueryTable PqlParser::parser(string qu) {
 				     }
 					 else
 					 {
-						 cout<<"error in with clause";
+						 throw new string("error in with clause in operand 2");
 					 }
 	 
                  
