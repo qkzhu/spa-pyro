@@ -10,16 +10,15 @@
 	WITH=3,
 	PATTERN=4,
 	USES=9,
-	USES_T=10,
-    MODIFIES=11,
-	MODIFIES_T=12,
-	CALLS=13,
-	CALLS_T=14,
+    MODIFIES=10,
+	CALLS=11,
+	CALLS_T=12,
 	//VALUE=101,
 	INT=201,
 	UNDERSCORE=157,
 	BOOLEAN	=60,
   };
+  
 //int prefix(string token);
 QueryTable PqlParser::parser(string qu) {
   QueryTable table;

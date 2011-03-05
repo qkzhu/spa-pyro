@@ -29,18 +29,30 @@ vector<int> PqlPreprocessor::withAt(int i){
 	return qt.withAt(i);
 }
 
+int PqlPreprocessor::getIndex(std::string key){
+	return Convertor::getIndex(key);
+}
+
 int PqlPreprocessor::procCode(string key){
-	return 1;
+	string tmp = "\""+key+ "\"";
+	return Convertor::getIndex(tmp);
 }
 
 int PqlPreprocessor::varCode(string key){
-	return 2;
+	string tmp = "\""+key+ "\"";
+	return Convertor::getIndex(tmp);
 }
 
 string PqlPreprocessor::varDecode(int i){
-	return "a";
+	string indx = Convertor::getKeyword(i);
+	Tokenizer s;
+	s.set(indx, "\"");
+	return s.next();
 }
 
 string PqlPreprocessor::procDecode(int i){
-	return "b";
+	string indx = Convertor::getKeyword(i);
+	Tokenizer s;
+	s.set(indx, "\"");
+	return s.next();
 }

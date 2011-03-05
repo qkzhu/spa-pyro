@@ -24,6 +24,7 @@ public:
 	//int varType(int var); //take an integer form of a query variable and return its type in integer
 
 		//For keyword decoding
+	int getIndex(std::string key);
 	int procCode(std::string key);  //take a simple procedure name and return the PQL code
 	int varCode(std::string key);  //take a simple variable name and return the PQL code
 	std::string varDecode(int i);  //take a code of simple variable and return the variable string
