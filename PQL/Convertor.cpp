@@ -39,7 +39,7 @@ int Convertor::update()
     grammerfile.close();
   }
 
-  else throw "Unable to open file;PQLquery"; 
+  else throw new string("Unable to open file;PQLquery"); 
 
   return 0;
 }
