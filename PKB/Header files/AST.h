@@ -1,6 +1,7 @@
 #ifndef AST_H
 #define AST_H
 
+#include "SymbolTable.h"
 #include <map>
 #include <list>
 #include "Node.h"
@@ -44,7 +45,8 @@ public:
 	vector<int> getAllProc();
 	vector<int>	getAllCall();
 
-	void		printTree();
+	void printTree(ProcTable &procTable, VarTable &varTable);
+	void printNode(Node* n, int level);
 
 	AST();
 
