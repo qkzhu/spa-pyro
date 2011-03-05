@@ -616,7 +616,7 @@ vector<vector<int> > QueryEvaluator::getRel(int type1, int type2, int para1, int
 			{
 				vector<int> para1List;
 				if(type1 == mQueryTree->getIndex("procOfSimpl")) para1List.push_back(para1);
-				else para1List = mPKBObject->ast_GetAllProc();
+				else para1List = mPKBObject->pTable_GetAllProc();
 				for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++)
 				{
 					vector<int> result;
