@@ -518,11 +518,11 @@ vector<vector<int> > QueryEvaluator::getRel(int type1, int type2, int para1, int
 			for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
 				cout << *i << endl;
 				vector<int> result;
-<<<<<<< .mine
-				cout <<"Following = " << mPKBObject->ast_GetFollowingStatementNum(*i) << endl;
-=======
-				cout <<"following = " << mPKBObject->ast_GetFollowingStatementNum(*i)<< endl;
->>>>>>> .r109
+///<<<<<<< .mine
+//				cout <<"Following = " << mPKBObject->ast_GetFollowingStatementNum(*i) << endl;
+///=======
+//				cout <<"following = " << mPKBObject->ast_GetFollowingStatementNum(*i)<< endl;
+///>>>>>>> .r109
 				if(relType == 7) 
 					result.push_back(mPKBObject->ast_GetFollowingStatementNum(*i));
 				else result = getFollowsStar(*i);
