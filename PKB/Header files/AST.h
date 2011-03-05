@@ -46,7 +46,7 @@ public:
 	vector<int>	getAllCall();
 
 	void printTree(ProcTable &procTable, VarTable &varTable);
-	void printNode(Node* n, int level);
+	void printNode(Node* n, int level, ProcTable &procTable, VarTable &varTable);
 
 	AST();
 

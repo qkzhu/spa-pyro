@@ -22,10 +22,10 @@ public:
 	Node *parentNode;				// parent node
 	Node *childNode;				// child node
 	vector<Node*> childList;		// a collection of child node
-	vector<Node*> bottomNodeList;	// a collection of bottom node
+	vector<Node*> bottomNodeList;	// a collection of bottom nodes
 	Node *followNode;				// node with follow relation
 	Node *prevNode;					// node with followed relation
-	Node *downNode;					// donw node
+	//Node *downNode;					// down node deprecated - use bottomNodeList
 	Node *upNode;					// up node
 
 	Node(NodeType type, int stmtNum, int id);
