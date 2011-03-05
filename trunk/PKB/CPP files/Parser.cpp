@@ -169,18 +169,21 @@ void Parser::parseProgram()
 	}
 
 	//process all calls to procedures undefined at the time of parsing.
-	// map["procedure name"] = (mCurrProcIndex, mLineNum)
-	for (map<string, pair<int, int> >::iterator it = mProcCallsBuf.begin(); it != mProcCallsBuf.end(); it++)
+	// map["procedure name"] = (mCurrProcIndex, (mLineNum, Node)
+	for (map<string, pair<int, pair<int, Node*> > >::iterator it = mProcCallsBuf.begin(); it != mProcCallsBuf.end(); it++)
 	{
 		int proc_index = mPkb.pTable_GetProcIndex(it->first); 
 	
 		//stores into call buffer, check whether the procedure exists when program ends.
 		if (proc_index == -1)
-			 throw new string("Attempt to call non-existing procedure " + it->first + " at line " + intToString(it->second.second));
+			throw new string("Attempt to call non-existing procedure " + it->first + " at line " + intToString(it->second.second.first));
 
 		//records the proc call in the proc table
 		else
+		{
 			mPkb.pTable_AddCall(it->second.first, proc_index);
+			it->second.second.second->id = proc_index;
+		}
 	}
 }
 
@@ -268,8 +271,8 @@ Node *Parser::parseWhile()
 
 	//obtains variable token, creates var node and adds it under while node.
 	string var_name = getToken();
-	checkVariableExists(var_name);
-	mPkb.vTable_InsertVar(var_name);
+	if (!isExistingVariable(var_name))
+		mPkb.vTable_InsertVar(var_name);
 	Node *var_node = mPkb.ast_CreateNode(Node::VAR, mStatNum, mPkb.vTable_GetVarIndex(var_name));
 	mPkb.ast_AddDown(while_node, var_node);
 	mStatNum++;
@@ -292,8 +295,8 @@ Node *Parser::parseIf()
 
 	//obtains variable token, creates var node and adds it under if node.
 	string var_name = getToken();
-	checkVariableExists(var_name);
-	mPkb.vTable_InsertVar(var_name);
+	if (!isExistingVariable(var_name))
+		mPkb.vTable_InsertVar(var_name);
 	Node *var_node = mPkb.ast_CreateNode(Node::VAR, mStatNum, mPkb.vTable_GetVarIndex(var_name));
 	mPkb.ast_AddDown(if_node, var_node);
 	mStatNum++;
@@ -323,15 +326,15 @@ Node *Parser::parseCall()
 	string proc_name = getToken();
 
 	int proc_index = mPkb.pTable_GetProcIndex(proc_name); 
-	
+
+	Node* curr = mPkb.ast_CreateNode(Node::CALL, mStatNum++, proc_index);
+
 	//stores into call buffer, check whether the procedure exists when program ends.
 	if (proc_index == -1)
-		mProcCallsBuf[proc_name] = make_pair(mCurrProcIndex, mLineNum);
+		mProcCallsBuf[proc_name] = make_pair(mCurrProcIndex, make_pair(mLineNum, curr));
 	//records the proc call in the proc table
 	else
 		mPkb.pTable_AddCall(mCurrProcIndex, proc_index);
-
-	Node* curr = mPkb.ast_CreateNode(Node::CALL, mStatNum, proc_index);
 	
 	match(";");
 
@@ -434,7 +437,8 @@ Node *Parser::parseAssignment()
 
 		else if (isValidName(next))
 		{
-			checkVariableExists(next);
+			if (!isExistingVariable(next))
+				mPkb.vTable_InsertVar(next);
 			int var_index = mPkb.vTable_GetVarIndex(next);
 			curr = mPkb.ast_CreateNode(Node::VAR, mStatNum, var_index);
 			result.push_back(curr);
@@ -522,10 +526,9 @@ bool Parser::isDelimiter(char c)
 	return regex_match(tok.begin(), tok.end(), exp);
 }
 
-void Parser::checkVariableExists(string var_name) 
+bool Parser::isExistingVariable(string var_name) 
 {
-	if (!mPkb.vTable_IsVarNameExist(var_name))
-		error("Existing variable.", var_name);
+	return mPkb.vTable_IsVarNameExist(var_name);
 }
 
 bool Parser::isValidName(string var_name)

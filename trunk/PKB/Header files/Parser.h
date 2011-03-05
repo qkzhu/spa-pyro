@@ -59,7 +59,7 @@ private:
 	void addOperator(vector<Node*> &tree, string op);
 
 	//functions to check validity
-	void checkVariableExists(std::string var_name);
+	bool isExistingVariable(std::string var_name);
 	void checkValidName(std::string var_name);
 	bool isValidName(std::string var_name);
 	void checkValidFile();
@@ -72,7 +72,7 @@ private:
 
 	static const string mKeyWords[];
 
-	map<string, pair<int, int> > mProcCallsBuf; //buffer to store calls to procedure not yet declared.
+	map<string, pair<int, pair<int, Node*> > > mProcCallsBuf; //buffer to store calls to procedure not yet declared.
 };
 
 #endif
