@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include "QueryTable.h"
+#include "Tokenizer.h"
 
 using namespace std;
 class Validator{
