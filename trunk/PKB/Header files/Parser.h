@@ -7,6 +7,7 @@
 #include <regex>
 #include <sstream>
 #include <stack>
+#include <utility>
 #include "PKB.h"
 
 using namespace std;
@@ -70,7 +71,7 @@ private:
 
 	static const string mKeyWords[];
 
-	map<string, int> mProcCallsBuf; //buffer to store calls to procedure not yet declared.
+	map<string, pair<int, int> > mProcCallsBuf; //buffer to store calls to procedure not yet declared.
 };
 
 #endif
