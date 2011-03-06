@@ -200,6 +200,9 @@ void Parser::parseProcedure()
 	int proc_index = mPkb.pTable_GetProcIndex(proc_name);  
 	//creates procedure node
 	Node *node = mPkb.ast_CreateNode(Node::PROC, mLineNum, proc_index); 
+
+	//records current procedure
+	mCurrProcIndex = proc_index;
 	
 	match("{");
 	
@@ -207,7 +210,6 @@ void Parser::parseProcedure()
 	
 	match("}");
 
-	mCurrProcIndex = proc_index;
 	//adds procedure to AST
 	mPkb.ast_AddProcedure(proc_index, node);
 }
