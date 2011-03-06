@@ -8,7 +8,8 @@ set<int> Uses::getUsedVar(int stmtNum)
 	{
 		return mStmtUseMap[stmtNum];
 	}
-	return varIndexes;
+	varIndexes.insert(-1);
+	return varIndexes;  // return -1 if set does not contain any varIndex
 }// end getUsedVar
 
 set<int> Uses::getUsedVarPI(int procIndex)
@@ -18,32 +19,34 @@ set<int> Uses::getUsedVarPI(int procIndex)
 	{
 		return mProcUseMap[procIndex];
 	}
-	return varIndexes;
+	varIndexes.insert(-1);
+	return varIndexes;  // return -1 if set does not contain any varIndex
 }// end getUsedVarPI
 
 set<int> Uses::getStmtUses(int varIndex)
 {
-	set<int> stmts;
+	set<int> stmts; // empty set of stmts
 	if(mVarStmtMap.find(varIndex) != mVarStmtMap.end())
 	{
 		return mVarStmtMap[varIndex];
 	}
-	return stmts; 
+	stmts.insert(-1);
+	return stmts; //return -1 if set does not contain any stmt
 }// end getStmtUses
 
 set<int> Uses::getProcUses(int varIndex)
 {
-	set<int> procIndexes;
+	set<int> procIndexes; //empty set of procIndexes
 	if(mVarProcMap.find(varIndex) != mVarProcMap.end())
 	{
 		return mVarProcMap[varIndex];
 	}
-	return procIndexes;
+	procIndexes.insert(-1);
+	return procIndexes; //return -1 if set does not contain any procIndex
 }// end getProcUses
 
 void Uses::setUses(int stmtNum, int varIndex)
 {
-	//wrong!!
 	//update mStmtUseMap. Mapping each stmt# to used variable.
 	mStmtUseMap[stmtNum].insert(varIndex);
 
