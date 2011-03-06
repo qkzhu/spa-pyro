@@ -103,7 +103,7 @@ void QueryEvaluator::evaluate()
 		else if(p1_type == mQueryTree->getIndex("if")) tmp = mPKBObject->ast_GetAllIf();
 		else if(p1_type == mQueryTree->getIndex("constant")) tmp = mPKBObject->cTable_GetAllConstants();
 		else if(p1_type == mQueryTree->getIndex("variable")) tmp = mPKBObject->vTable_GetAllVar();
-		else if(p1_type == mQueryTree->getIndex("procedure")) tmp = mPKBObject->ast_GetAllProc();
+		else if(p1_type == mQueryTree->getIndex("procedure")) tmp = mPKBObject->pTable_GetAllProc();
 		else if(p1_type == mQueryTree->getIndex("call")) tmp = mPKBObject->ast_GetAllCall();
 		
 		vector<int> tmp2;
@@ -130,7 +130,7 @@ void QueryEvaluator::evaluate()
 		else if(p2_type == mQueryTree->getIndex("if")) tmp2 = mPKBObject->ast_GetAllIf();
 		else if(p2_type == mQueryTree->getIndex("constant")) tmp2 = mPKBObject->cTable_GetAllConstants();
 		else if(p2_type == mQueryTree->getIndex("variable")) tmp2 = mPKBObject->vTable_GetAllVar();
-		else if(p2_type == mQueryTree->getIndex("procedure")) tmp2 = mPKBObject->ast_GetAllProc();
+		else if(p2_type == mQueryTree->getIndex("procedure")) tmp2 = mPKBObject->pTable_GetAllProc();
 		else if(p2_type == mQueryTree->getIndex("call")) tmp2 = mPKBObject->ast_GetAllCall();
 		
 		int entry_type;
@@ -402,9 +402,10 @@ void QueryEvaluator::evaluate()
 		else if(select_type == mQueryTree->getIndex("if")) tmp = mPKBObject->ast_GetAllIf();
 		else if(select_type == mQueryTree->getIndex("constant")) tmp = mPKBObject->cTable_GetAllConstants();
 		else if(select_type == mQueryTree->getIndex("variable")) tmp = mPKBObject->vTable_GetAllVar();
-		else if(select_type == mQueryTree->getIndex("procedure")) tmp = mPKBObject->ast_GetAllProc();
+		else if(select_type == mQueryTree->getIndex("procedure")) tmp = mPKBObject->pTable_GetAllProc();
 		else if(select_type == mQueryTree->getIndex("call")) tmp = mPKBObject->ast_GetAllCall();
 		else throw new string("Select type error!");
+
 		for(vector<int>::iterator i=tmp.begin(); i<tmp.end(); i++){
 			if(select_type == mQueryTree->getIndex("variable"))
 				mResult.addInType(mQueryTree->getIndex("varOfSimpl"));
@@ -591,7 +592,7 @@ vector<vector<int> > QueryEvaluator::getRel(int type1, int type2, int para1, int
 			{
 				vector<int> para1List;
 				if(type1 == mQueryTree->getIndex("procOfSimpl")) para1List.push_back(para1);
-				else para1List = mPKBObject->ast_GetAllProc();
+				else para1List = mPKBObject->pTable_GetAllProc();
 				for(vector<int>::iterator i=para1List.begin(); i<para1List.end(); i++){
 					vector<int> result;
 					if(relType == mQueryTree->getIndex("uses"))
@@ -727,6 +728,7 @@ int QueryEvaluator::PKB_procEncode(string s){
 	return mPKBObject->pTable_GetProcIndex(s);
 }
 string QueryEvaluator::PKB_procDecode(int i){
+	//cout << mPKBObject->pTable_GetProcName(i) << endl;
 	return mPKBObject->pTable_GetProcName(i);
 }
 int QueryEvaluator::PKB_varEncode(string s){

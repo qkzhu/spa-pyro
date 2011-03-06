@@ -47,6 +47,6 @@ procName    103;
 
 integer 201;
 
-var_of_simpl 202;
+varOfSimpl 202;
  
-proc_of_simpl 203;
+procOfSimpl 203;
