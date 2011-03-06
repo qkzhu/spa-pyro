@@ -323,7 +323,7 @@ void QueryEvaluator::evaluate()
 			para2Type = (it2->second).at(0);
 			para2 = (it2->second).at(1);
 		}
-
+		
 		//Convert all "a", "b", "c" 's code from PQL code to PKB code
 		if(para1Type == mQueryTree->getIndex("varOfSimpl")) para1 = PKB_varEncode(PQL_varDecode(para1));
 		else if(para1Type == mQueryTree->getIndex("procOfSimpl")) para1 = PKB_procEncode(PQL_procDecode(para1));
@@ -616,7 +616,7 @@ vector<vector<int> > QueryEvaluator::getRel(int type1, int type2, int para1, int
 		}//Uses END
 	case 11: case 12://relation is calls, calls*
 		{
-			if(type1 == mQueryTree->getIndex("procOfSimpl") || type1 == mQueryTree->getIndex("procedure")) //proc var
+			if((type1 == mQueryTree->getIndex("procOfSimpl") || type1 == mQueryTree->getIndex("procedure"))&&(type2 == mQueryTree->getIndex("procOfSimpl") || type2 == mQueryTree->getIndex("procedure"))) //proc var
 			{
 				vector<int> para1List;
 				if(type1 == mQueryTree->getIndex("procOfSimpl")) para1List.push_back(para1);

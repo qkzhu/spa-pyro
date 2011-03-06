@@ -9,6 +9,17 @@ procedure Second {
 	i = 5;
 	while i {
 		x = x + 2 * y;
+		while x{
+		k = 0;
+		p = k+20+x;
+		if p then{
+			l = 3;
+			q = 20;
+		}else{
+			p = 20;
+		 }
+		 call Firth;
+		}
 	   	call Third;
 		i = i - 1;
 	}
@@ -23,4 +34,8 @@ procedure Second {
 procedure Third {
 	z = 5;
 	v = z;
+}
+
+procedure Firth {
+	p = p+100;
 }
