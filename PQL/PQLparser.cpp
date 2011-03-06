@@ -234,10 +234,10 @@ QueryTable PqlParser::parser(string s) {
 								{
 				                case CALLS: case CALLS_T:
 
-								Convertor::insertShortcut(pch,"procOfSimiple"); break;
+								Convertor::insertShortcut(pch,"procOfSimpl"); break;
 								default:
 
-                                 Convertor::insertShortcut(pch,"procOfSimiple");
+                                 Convertor::insertShortcut(pch,"procOfSimpl");
 								}	
 					     //cout<<"temp:"<<temp<<"prefix"<<prefix;
 						    }

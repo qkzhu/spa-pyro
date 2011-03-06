@@ -1,1 +1,2 @@
-stmt s,l; procName p; variable v; select s such   that calls(p,"s") and modifies (l, "s") and uses(4, v);
+stmt s ; assign a; variable v; constant c; if ifstat; while w; procedure p;
+select BOOLEAN such that calls(p, "Third") and follows*(s, 10) and modifies(a, v) with v.varName = "k";
