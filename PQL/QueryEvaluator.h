@@ -27,6 +27,8 @@ private:
 
 	vector<int> getAllStmts();
 
+	
+
 	string PQL_procDecode(int);
 	int PQL_procEncode(string);
 	string PQL_varDecode(int);
@@ -43,6 +45,8 @@ public:
 	std::vector<std::vector<int> > getRel(int type1, int type2, int para1, int para2, int relType);
 	QueryResult getResult();//After calling evaluate, the result stored inside mResult and can be retrieved by this function.
 
+
+	int PQL_getIndex(string);
 	void printResult();
 };
 
