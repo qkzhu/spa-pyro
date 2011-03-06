@@ -461,7 +461,7 @@ void QueryEvaluator::printResult(){
 			else if(type == mQueryTree->getIndex("procOfSimpl")) 
 				cout << PKB_procDecode(*i) << " ";
 			else 
-				throw new string("No type match when decode result");
+				throw new string("No type match when decode result for query result");
 		}
 		cout << endl;
 	}
