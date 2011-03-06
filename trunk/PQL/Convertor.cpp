@@ -5,41 +5,49 @@
  map<string,int> Convertor::keywordToIndex;
  
  map<string, string> Convertor::shortcutToContent;//s->stmt;
- Tokenizer keywordToken;
+ //Tokenizer keywordToken;
  int u=Convertor::QUATEDSTRING;
 int Convertor::update()
 {
   string line;
-  string pch;
-  //int index;
-  ifstream grammerfile ("pqlgrammer.txt", ifstream::in);
+   char * cstr, *p;
+
+  ifstream grammerfile ("pqlgrammer.txt");
   if (grammerfile.is_open())
   {
     while ( grammerfile.good() )
     {
       getline (grammerfile,line);
-	  keywordToken.set(line," ;");
-	  string pch=keywordToken.next();
-	  while (pch != "")
+	 
+	   
+  cstr = new char [line.size()+1];
+  strcpy (cstr, line.c_str());
+	  //cout<<line<<endl;
+	  p=strtok(cstr," ");
+	  
+        if(p !=NULL)
 		{
-		string keyword=pch;
-		string indexstring=keywordToken.next();
-		if (indexstring!="")
+		string keyword=p;
+		//cout<<p<<endl;
+		 p=strtok(NULL," ");
+		 
+		if (p!=NULL)
 		{
-		int index=atoi(indexstring.c_str());//be careful about the error;
-			//printf("%s-------------------%s\n",pch,keyword);
-		//cout<<index<<endl;	
+		int index=atoi(p);//be careful about the error;
+		//cout<<index<<"............"<<keyword<<endl;	
 		Convertor::indexToKeyword[index]=keyword;
 		Convertor::keywordToIndex[keyword]=index;
+		//cout<<indexToKeyword[index]<<"-----"<<keywordToIndex[keyword]<<endl;
 		//pch = strtok (NULL, " ;");
 		}
-		pch=keywordToken.next();
+		//pch=keywordToken.next();
 	  }
 	}
+	//cout<<"the line is" <<i<<endl;
     grammerfile.close();
   }
 
-  else throw new string("Unable to open file;PQLquery"); 
+  else cout << "Unable to open file"; 
 
   return 0;
 }
@@ -51,7 +59,7 @@ int Convertor::update()
 	 
 	 i=getIndex(token);
 	 //cout<<i<<"-------------"<<token<<"\n";
-	 if (i>50&&i<150)
+	 if (i>50&&i<150&&i!=60)
 		 flag=true;
 	 else
 		 flag=false;
@@ -73,12 +81,13 @@ int Convertor::update()
 int Convertor::getIndex(string token)//given a token, looking up for the coressponding index, and return it, 
 	                                   //if not in the maptable and the declarkeywordtable return -1;
 		{
-			int index;
+			int index=-1;
 			int num;
 
 			num=atoi(token.c_str());
-		
-			if (keywordToIndex.count(token)==1)
+		    int a=keywordToIndex.count(token);
+			//cout<<a;
+			if (a==1)
 				index=keywordToIndex.find(token)->second;
             else if(isQuated(token))
 			{
@@ -91,6 +100,7 @@ int Convertor::getIndex(string token)//given a token, looking up for the coressp
 			{
 				index=-1;
 			}
+			//cout<<index<<endl;
 			return index;
 		}
 string Convertor:: getKeyword(int index)//given a index, looking for the coressponding keyword, and return it,
@@ -102,7 +112,7 @@ string Convertor:: getKeyword(int index)//given a index, looking for the coressp
 				keyword=indexToKeyword.find(index)->second;
 	else
 				keyword="NULL";
-	return keyword;
+			return keyword;
 }
 string Convertor::getShortCut(string content)
 {
@@ -134,4 +144,9 @@ void Convertor::insertIndex(int i,string s)
 void Convertor::insertShortcut(string s,string content)
 {
 	shortcutToContent[s]=content;
+}
+void Convertor::showIndexTable()
+{
+
+	cout<<indexToKeyword.size()<<"compared with"<<indexToKeyword.max_size()<<endl;
 }

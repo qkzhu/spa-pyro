@@ -1,8 +1,70 @@
 #include"PqlParser.h"
- 
+
  
 
-  enum KEYWORD
+
+//int prefix(string token);
+  int main(void)
+  {
+	  string s;
+	  bool result1;
+	  string result2;
+	  QueryTable table;
+	  Validator check;
+	 
+	 ifstream test("testcase 2.txt");
+	 if(test.is_open())
+	 {
+	 while(test.good())
+	 {
+		getline(test,s);
+		cout<<"+"<<s<<"+"<<endl;
+		if(s!="")
+		{
+	  try
+	  {
+	 
+	
+	  table= PqlParser::parser(s);
+	  table.showTable();
+	  check.populateTable();
+	  
+	  result1=check.checkResults(table);
+	  
+	  getline(test,result2);
+
+	  if(result1&&result2=="true"||!result1&&result2=="false")
+		  cout<<1<<endl;
+	  else
+		  cout<<0<<endl;
+	  
+	  }
+	  catch(string *s)
+	  {
+		  cout<< *s;
+	  }
+	 }
+	 }
+
+	 }
+	 else
+	 {
+		 cout<<"can not open file testcase1 \n";
+	 }
+	  
+	  //cout<<"++"<<Convertor::getKeyword(154)<<Convertor::getIndex(")")<<"this is testing";
+	  //tokens=a.getNextToken();
+	// QueryTable qt = PqlParser::parser(s);
+	// qt.showTable();
+
+	 test.close();
+	  //system("pause");
+	  return 0;
+  }
+QueryTable PqlParser::parser(string s) {
+	 TokenList qu=TokenList(s);
+
+	enum KEYWORD
   {
 	AND=0,
 	SELECT=1,
@@ -15,99 +77,127 @@
 	CALLS_T=12,
 	//VALUE=101,
 	INT=201,
-	UNDERSCORE=157,
+	
+	
+	COMMA=151,
+	S_COLON	=152,
+	L_QUOT	=153,
+	R_QUOT	=154,
+	EQUAL	=155,
+	DOT		=156,
+	UNDERSCORE =157,
+	QUOTE	=158,
 	BOOLEAN	=60,
   };
+  Convertor::update();
   
-//int prefix(string token);
-QueryTable PqlParser::parser(string qu) {
-  QueryTable table;
-  string line;
-  string pch;//token elements
-  Tokenizer token;
-  Tokenizer withToken;
-  int p;//swither
-  int temp;//temp store the information
-  int prefix;//get the prefix of the user defined var
-  string withclause;//all the merged withclause.
-  string operand1,operand11,operand12, operand2,operand21,operand22;
-  int suchthatclause;
   int u=PqlParser::USERDEFINED;
   int g=PqlParser::GRAMMERDEFINED;
- 
-  Convertor::update();
-  int type;
-  vector<int> content;
-  string query=qu;
-  /*//ifstream myfile ("query.txt");
-  //if (myfile.is_open())
-  //{
-    while ( myfile.good() )
-    {
-      getline (myfile,line);
-	  query=query.append(line);
-	}
-	*/
-	  token.set(query," ,;()");
-	  pch=token.next();
-	  while (pch !="")
-		{
-			//printf ("%s\n",pch);
-			if(Convertor::isDeclar(pch))
-			{
-				string temp=pch;
-				pch=token.next();
-				while(pch!=""&&!(Convertor::isDeclar(pch))&&Convertor::getIndex(pch)==-1)
+  QueryTable table;
+  int i=0;
+  int count=0;
+  string pch="";
+ // int p;//swither
+   int type;//the clause type;
+   int index;
+   int prefix;
+   int suchthatclause;
+   string temp1,temp2;
+   pch=qu.getNextToken();
+   vector<int> content;
+   bool semi=false;
+   //temp store the clause content;
+  while(pch!="NULL"&&i<100)
+  {       i++;
+	      // pch=qu.getNextToken();
+      	if(Convertor::isDeclar(pch))
+			{   
+				temp1=pch;//temporally store the Content of shortcut;
+				pch=qu.getNextToken();
+				index=Convertor::getIndex(pch);
+				if(pch!="NULL"&&index==-1)
 				{
-					Convertor::insertShortcut(pch,temp);
-				    Convertor::insertIndex(u++,pch);
-					pch=token.next();
+					temp2=pch;
+				//	cout<<"stoppping here";
+				 do
+				 {
+					if(index==COMMA)
+					{
+                      pch=qu.getNextToken();
+					  index=Convertor::getIndex(pch);
+					  if(index!=-1)
+						  throw new string("should have a undeclared symbol after the COMMA\n");
+
+					}
+					Convertor::insertShortcut(temp2,temp1);
+				    Convertor::insertIndex(++u,temp2);
+					pch=qu.getNextToken();
+					index=Convertor::getIndex(pch);
+					//cout<<"feifei"<<pch<<index<<endl;
+					if (index==S_COLON)
+					{
+						pch=qu.getNextToken();
+						break;
+					}
+					else if(index==-1)
+					{
+						throw new string("unidentified symbol after the decalred symbol\n");
+					}
+				}while(index==COMMA);
+			  }
+				else
+				{
+					throw new string("the first token after the declaration should be undeclared symbol\n");
 				}
 			}
 			else 
 			{
 				
-			 p=Convertor::getIndex(pch);
+			 index=Convertor::getIndex(pch);
 			// cout<<p;
-			 switch(p)
+			 
+			 switch(index)
 			 {
 				case SELECT:
 					
 
 				type=SELECT;
-				 do
+				pch=qu.getNextToken();
+				 
+				do
 				 {
-					pch=token.next();
 					
-					temp=Convertor::getIndex(pch);
-					prefix=PqlParser::prefix(pch);
+	
 				
-					if (temp>=USERDEFINED||temp==BOOLEAN)
+					 index=Convertor::getIndex(pch);
+					 prefix=PqlParser::prefix(pch);
+				
+					 if (index>USERDEFINED&&index<=Convertor::QUATEDSTRING||index==BOOLEAN)
 					{   
 						//prefix=PqlParser::prefix(pch);
 						//cout<<"prefix"<<PqlParser::prefix(pch);
 						if(prefix!=0)
 						content.push_back(prefix);
 						
-						content.push_back(temp);
+						content.push_back(index);
 
 						table.addClause(SELECT,content);
 						content.clear();
 					}
-					else if(temp=-1)
+					else if(index==-1)
 					{
-						throw new string("select format error!");
-						break;
+						throw new string("undefined symbol in select\n");
 					}
 					else
 					{
-						break;
+						throw new string(pch+"should not apear in the select or select should not empty\n");
 					}
-					
-				  }while(pch!=""&&temp>u);
+					pch=qu.getNextToken();
+					index=Convertor::getIndex(pch);
+				  }while(index==COMMA);
 
 				  //table.addClause(SELECT,content);
-				  
+
 				  break;
 					
 				case SUCH_THAT:
@@ -115,185 +205,203 @@ QueryTable PqlParser::parser(string qu) {
 					
 				type=SUCH_THAT;
 				//content.clear();
-				pch=token.next();
+				pch=qu.getNextToken();
+				if(pch!="that") throw new string("miss that after such\n");
+				pch=qu.getNextToken();
 				//cout<<pch<<endl;
 				do{// this do loop is for the and clause inside the suchthat;
 
-				pch=token.next();
-				suchthatclause=Convertor::getIndex(pch);
-			
-						 content.push_back(suchthatclause);
+				    suchthatclause=Convertor::getIndex(pch);
+		            if(suchthatclause==-1||suchthatclause<=4||suchthatclause>=20)
+						throw new string(pch+" is undefined querycall in suchthatclause\n");
+					else
+					content.push_back(suchthatclause);
 					
 						 
-						 pch=token.next();
+					     pch=qu.getNextToken();
 
-						 temp=Convertor::getIndex(pch);
-						
-						 if (temp>Convertor::QUATEDSTRING)
+						 index=Convertor::getIndex(pch);
+						 if (index!=L_QUOT) throw new string("missing L_QUOT in suchthat after "+ pch+" \n");
+						 else
+						 {
+							 pch=qu.getNextToken();
+                             index=Convertor::getIndex(pch);
+						 }
+						 if (index>Convertor::QUATEDSTRING)
+							{
+								switch(suchthatclause)
+								{
+				                case CALLS: case CALLS_T:
+
+								Convertor::insertShortcut(pch,"procOfSimiple"); break;
+								default:
+
+                                 Convertor::insertShortcut(pch,"procOfSimiple");
+								}	
+					     //cout<<"temp:"<<temp<<"prefix"<<prefix;
+						    }
+							prefix=PqlParser::prefix(pch);
+						 //cout<<"temp:"<<temp<<"prefix"<<prefix;
+						// int paraPosition=0;//identify the position of the parameters; 
+						 if(index>=USERDEFINED||prefix==INT||index==UNDERSCORE)
+                        {   
+
+							 if(prefix!=0)
+							 content.push_back(prefix);
+						   	 content.push_back(index);
+							 pch=qu.getNextToken();
+							
+							 index=Convertor::getIndex(pch);
+							if(index!=COMMA) throw new string("should have COMMA after "+pch+" \n"); 
+						    
+							 pch=qu.getNextToken();
+							 index=Convertor::getIndex(pch);  
+
+
+				       if (index>Convertor::QUATEDSTRING)
 							{
 								switch(suchthatclause)
 								{
 				                case CALLS: case CALLS_T:
 								Convertor::insertShortcut(pch,"procOfSimiple"); break;
 								default:
-									//if (paraPosition==0)
-                                 Convertor::insertShortcut(pch,"varOfSimple");
-								//	else
-								 //Convertor::insertShortcut(pch,"varName"); break;
-								}	
-					     //cout<<"temp:"<<temp<<"prefix"<<prefix;
-						    }
-							 prefix=PqlParser::prefix(pch);
-						
-						// int paraPosition=0;//identify the position of the parameters; 
-						 while (temp>=USERDEFINED||prefix==INT||temp==UNDERSCORE)
-                        {   
-
-							 if(prefix!=0)
-							 content.push_back(prefix);
-						   	 content.push_back(temp);
-							 pch=token.next();
-							 //cout<<pch;
-							 temp=Convertor::getIndex(pch);
-							 
-						
-						
-
-				       if (temp>Convertor::QUATEDSTRING)
-							{
-								switch(suchthatclause)
-								{
-				                case CALLS: case CALLS_T:
-								Convertor::insertShortcut(pch,"procOfSimpl"); break;
-								default:
-									//if (paraPosition==0)
-                                 //Convertor::insertShortcut(pch,"procName");
-									//else
-								 Convertor::insertShortcut(pch,"varOfSimpl"); break;
-						        
-					     
+								
+								 Convertor::insertShortcut(pch,"varOfSimple"); break;
 						        }
 					       }
 					   
-					   prefix=PqlParser::prefix(pch);
-//					   paraPosition++;	
+					         prefix=PqlParser::prefix(pch);
+					   	     if(prefix!=0)
+							 content.push_back(prefix);
+						   	 content.push_back(index);
+							 
+							 pch=qu.getNextToken();
+							 index=Convertor::getIndex(pch);
+							 if(index!=R_QUOT) throw new string("missing R_QUOT after " +pch+" \n");
+
+							
 				   }
 				table.addClause(type,content);
 				content.clear();
-					//	table.showQuery();
-				}while(temp==0);
+				 pch=qu.getNextToken();
+				 index=Convertor::getIndex(pch);
+				 if(index!=0)
+					 break;
+				 else
+					 pch=qu.getNextToken();
+				}while(true);
 				        break;
-			  case WITH:
-
-					 
-					 int i;
-				     type=WITH;
-                     do
+				case WITH:
+					 type=WITH;
+					 do{
+					 pch=qu.getNextToken();
+					 index=Convertor::getIndex(pch);
+					 prefix=PqlParser::prefix(pch);
+					 if(index==-1) throw new string("undefined symbol in with after "+pch+" \n" );
+					 if(prefix!=0)
+					 content.push_back(prefix);
+					 content.push_back(index);
+					 pch=qu.getNextToken();
+					 index=Convertor::getIndex(pch);
+					 if(index==DOT)
 					 {
-				     pch=token.next();
-					 i=Convertor::getIndex(pch);
-					 while(i!=AND&&i!=SELECT&&i!=SUCH_THAT&&i!=WITH&&i!=PATTERN&&pch!=""||(PqlParser::prefix(pch)!=0))
-					 {
-						 withclause=withclause.append(pch);
-						 pch=token.next();
-						 i=Convertor::getIndex(pch);
+						 content.push_back(index);
+						 pch=qu.getNextToken();
+						 index=Convertor::getIndex(pch);
+						 if (index!=-1&&index!=EQUAL)
+                         content.push_back(index);
+						 else
+						 {
+							 throw new string ("undentified symbol "+pch+" after DOT \n");
+						 }
+						 pch=qu.getNextToken();
+						 index=Convertor::getIndex(pch);
 					 }
-					 //cout<<"______this is withclause_________"<<withclause;
-					 withToken.set(withclause,"=");
-					 operand1=withToken.next();
-					 operand2=withToken.next();
-					 
-					 if (operand1!="")
-                     {
-						 withToken.set(operand1,".");
-						 operand11=withToken.next();
-					     operand12=withToken.next();
-						 prefix=PqlParser::prefix(operand11);
-						 if(prefix!=0)
-						 content.push_back(prefix);
-						 content.push_back(Convertor::getIndex(operand11));
-						  
-						 //content.push_back(PqlParser::prefix("."));
-						 content.push_back(Convertor::getIndex("."));
-						  prefix=PqlParser::prefix(operand12);
-						 if(prefix!=0)	
-						 content.push_back(prefix);
-						 content.push_back(Convertor::getIndex(operand12));
-						 //content.push_back(PqlParser::prefix("="));
-						 content.push_back(Convertor::getIndex("="));
+					 if(index!=EQUAL)
+					 {
+						 throw new string("missing EQUAL after " +pch+" \n");
 					 }
 					 else
 					 {
-						 throw new string("error in with clause in operand 1");
-					 }
-					  if (operand2!="")
-                     {
-						 withToken.set(operand2,".");
-						 operand21=withToken.next();
-					     operand22=withToken.next();
-						 if(operand22=="")
+						 content.push_back(index);//push equal
+						 pch=qu.getNextToken();
+						 index=Convertor::getIndex(pch);
+						 prefix=PqlParser::prefix(pch);
+						 if(index!=-1)
 						 {
-                         //temp=Convertor::getIndex(operand21);
-							 prefix=PqlParser::prefix(operand21);
-							 if (prefix!=0)
+							 if(prefix!=0)
 						 content.push_back(prefix);
-
-						 content.push_back(Convertor::getIndex(operand21));
+                         content.push_back(index);//push first token after equal;
+						 pch=qu.getNextToken();
+						 index=Convertor::getIndex(pch);
 						 }
 						 else
 						 {
-						 prefix=PqlParser::prefix(operand21);
-							 if(prefix!=0)
-					     content.push_back(prefix);
-					     content.push_back(Convertor::getIndex(operand21));
-						 //content.push_back(PqlParser::prefix("."));
-						 content.push_back(Convertor::getIndex("."));
-						 prefix=PqlParser::prefix(operand22);
-							 if(prefix!=0)
-					     content.push_back(prefix);
-						  // content.push_back(PqlParser::prefix(operand22));
-						 content.push_back(Convertor::getIndex(operand22));
-						 } 
-				     }
-					 else
-					 {
-						 throw new string("error in with clause in operand 2");
+							 throw new string("undefined symbol after "+pch+" \n");
+						 }
+						 if(index==DOT)
+					     {
+						 content.push_back(index);
+						 pch=qu.getNextToken();
+						 index=Convertor::getIndex(pch);
+						 if (index!=-1)
+						 {
+                         content.push_back(index);
+						 pch=qu.getNextToken();
+						 index=Convertor::getIndex(pch);
+						 }
+						 else
+						 {
+							 throw new string("undefined symbol after DOT in Withclause\n");
+						 }
+						 }
 					 }
-	 
-                 
-					 table.addClause(type,content);
-					 content.clear(); 
-					 withclause.clear();
-					}while(i==0);
-		 
-		         //  table.showQuery();
-				break;
+				     table.addClause(type,content);
+				     content.clear();
+					 if(index!=0)
+						 break;
+					 }while(true);
 
-		    case PATTERN:
-				type=PATTERN;
-				break;
+					break;
+				case S_COLON:
+					pch=qu.getNextToken();
+					if(pch!="NULL") throw new string("illeagle using of S_COLON\n");
+					else
+					{
+						semi=true;
+						cout<<"PqlParsing Finished"<<endl;
+					}
+					break;
+				default:
+					throw new string("there are unpredicted format error in the query body "+pch+" \n");
+					break;
 
 
 
-        	default:
-		     pch=token.next();
-				break;
-	  }
-		//pch = strtok (NULL, " ,;()");
-   }
-			
-			
-			
 
-	}
-	//table.showTable();
-  //  myfile.close();
-  
-//}
-//  else cout << "Unable to open file"; 
 
-  return table;
+  }
+    
+
+
 }
+
+}
+if (semi==false) throw new string("missing S_COLON in the end \n");
+return table;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 int PqlParser:: prefix(string token)
 {
@@ -311,7 +419,7 @@ int PqlParser:: prefix(string token)
 	else 
 	   {
 		   if(atoi(token.c_str())!=0)
-              prefix=INT;
+              prefix=201;
 		   else
 			   prefix=0;
 		   //content.push_back(index);

@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
+#include <cstring>
 #include <map>
 #include <vector>
 #include"Tokenizer.h"
@@ -16,11 +17,13 @@ using namespace std;
 class Convertor
 {
 private:
-	
+	//static int index;
 	static map<int,string> indexToKeyword;//map the index with the keyword; index->keyword
 	static map<string, int> keywordToIndex;//map the keyword with the index; keyword->index
 	static map<string, string> shortcutToContent;//s->stmt;
+	
 public:
+	static void showIndexTable();
 	static const int QUATEDSTRING=400;
 	static bool isQuated(string s);
 	static bool isDeclar(string token);
