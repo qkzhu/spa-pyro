@@ -89,9 +89,10 @@ vector<int> PKB::ast_GetAllIf(){
 	return ast->getAllIf();
 }
 
+/*
 vector<int> PKB::ast_GetAllProc(){
 	return ast->getAllProc();
-}
+}*/
 
 vector<int>	PKB::ast_GetAllCall(){
 	return ast->getAllCall();
