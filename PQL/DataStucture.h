@@ -1,5 +1,5 @@
-#ifndef DATA_STRUCTURE_H
-#define DATA_STRUCTURE_H
+#ifndef DATASTRUCTURE_H
+#define DATASTRUCTURE_H
 
 #include <vector>
 
@@ -23,4 +23,4 @@ struct Declaration{
 	vector<int> declaration;
 };
 
-#endif
+#endif //DATASTRUCTURE_H

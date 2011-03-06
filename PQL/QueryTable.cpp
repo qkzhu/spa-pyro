@@ -3,14 +3,13 @@
 
 
 //////////////////////// add Clause --- Start ///////////////////////////////
-//QueryTable::QueryTable()
-//{}
 void QueryTable::addClause(int type, vector<int> content){
 
 	if(type == 1) // select
 	{
-		if(selectVector.empty() == true)
+		if(selectVector.empty())
 		{
+			
 			selectVector.push_back(1);
 		}
 
@@ -50,7 +49,7 @@ void QueryTable::addClause(int type, vector<int> content){
 
 		SuchThatTemp.relCond = content;
 		SuchThatTemp.argumentNoCorrect = false;
-		if(SuchThatTemp.relCond.size() == 5)
+		if((int)SuchThatTemp.relCond.size() == 5)
 		{
 			SuchThatTemp.argumentNoCorrect = true;
 		}
@@ -72,7 +71,7 @@ void QueryTable::addClause(int type, vector<int> content){
 		suchThatClause.push_back(SuchThatTemp);
 
 		//add data for validation
-		for(int i = 0; i<content.size();i++)
+		for(int i = 0; i<(int) content.size();i++)
 		{
 
 			//cout<<content[i]<<" ///////////////BEFORE CHANGE"<<endl;
@@ -134,7 +133,7 @@ void QueryTable::addClause(int type, vector<int> content){
 	{
 		With withTemp;
 		With validTemp;
-		if(content.size() == 7 || content.size() == 9)
+		if((int) content.size() == 7 || (int) content.size() == 9)
 		{
 			withTemp.argumentNoCorrect = true;
 		}
@@ -146,7 +145,7 @@ void QueryTable::addClause(int type, vector<int> content){
 		withClause.push_back(withTemp);
 
 		//add data for validation
-		for(int i = 0; i<content.size();i++)
+		for(int i = 0; i< (int) content.size();i++)
 		{
 
 			//cout<<content[i]<<" ///////////////BEFORE CHANGE"<<endl;
@@ -183,8 +182,8 @@ void QueryTable::addClause(int type, vector<int> content){
 	}
 	else // other value
 	{
-		cout<<"Wrong type of content!"<<endl;
-		exit(1);
+		throw  new string ("Wrong type of content! -- throw by QueryTable::addClause()");
+		
 	}
 
 
@@ -220,38 +219,30 @@ vector<int> QueryTable::getQuery(){
 //////////////////////// getQuery --- End ///////////////////////////////
 
 
-//////////////////////// getSize  --- Start ///////////////////////////////
-int QueryTable::getSize()
-{
-	cout<< "QueryTable::getSize(): " << selectClause.size() << endl;
-	return selectClause.size();
-}
-//////////////////////// getSize  --- End ///////////////////////////////
-
 //////////////////////// Clause Size  --- Start ///////////////////////////////
 int QueryTable::selectSize(){
 		
-	return selectClause.size();
+	return (int) selectClause.size();
 }
 
 int QueryTable::suchThatSize(){
 
-	return suchThatClause.size();
+	return (int) suchThatClause.size();
 }
 int QueryTable::withSize(){
 
-	return withClause.size();
+	return (int) withClause.size();
 }
 //////////////////////// Clause Size  --- End ///////////////////////////////
 
-//////////////////////// selectAt  --- Start ///////////////////////////////
+//////////////////////// selectAt + suchThatAT + withAT  --- Start ///////////////////////////////
 vector<int> QueryTable::selectAt(int index){
 	
 	vector<int> tupleTemp;
 	//check whether index is out of range (need to throw exception, make it as function)
-	if(index > selectClause.size())
+	if(index >= (int) selectClause.size())
 	{
-		throw new string("select index out of range!");
+		throw  new string ("Index Out of Range inside the Select Clause! -- throw by QueryTable::selectAt()");
 	}
 	else
 	{
@@ -265,9 +256,9 @@ vector<int> QueryTable::suchThatAt(int index)
 {
 	vector<int> relCondTemp;
 
-	if(index>suchThatClause.size())
+	if(index >= (int) suchThatClause.size())
 	{
-		cout<<"index out of range!"<<endl;
+		throw  new string("Index Out of Range inside the Such That Clause! -- throw by QueryTable::suchThatAt()");
 	}
 	else
 	{
@@ -281,9 +272,9 @@ vector<int> QueryTable::suchThatAt(int index)
 vector<int> QueryTable::withAt(int index){
 
 	vector<int> attrCondTemp;
-	if(index>withClause.size())
+	if(index >= (int) withClause.size())
 	{
-		cout<<"index out of range!"<<endl;
+		throw new string ("Index Out of Range inside the With Clause! --  throw by QueryTable::withAt");
 	}
 	else
 	{
@@ -293,7 +284,7 @@ vector<int> QueryTable::withAt(int index){
 	return attrCondTemp;
 
 }
-//////////////////////// selectAt  --- End ///////////////////////////////
+//////////////////////// selectAt  + suchThatAT + withAT --- End ///////////////////////////////
 
 
 /////////////////////////Get Clause --- Start ///////////////////////////
@@ -301,6 +292,16 @@ vector < Select > QueryTable::getSelectClause(){
 	return selectClause;
 }
 
+vector < SuchThat > QueryTable::getSuchThatClause(){
+	return suchThatClause;
+}
+
+vector < With > QueryTable::getWithClause(){
+	return withClause;
+}
+/////////////////////////Get Clause --- Start ///////////////////////////
+
+//////////////////////// Get Validation Clause --- Start/////////////////
 vector < SuchThat >  QueryTable::getSuchThatClauseV(){
 
 	return suchThatClauseValid;
@@ -309,17 +310,20 @@ vector < SuchThat >  QueryTable::getSuchThatClauseV(){
 vector < With >  QueryTable::getWithClauseV(){
 	return withClauseValid;
 }
+//////////////////////// Get Validation Clause --- End/////////////////
 
 /////////////////////////Get Clause --- End ///////////////////////////
 
+//////////////////////// Show Table  --- Start ////////////////////////
 void QueryTable::showTable()
 {
 
 	vector<int> temHolder = getQuery();
-	for(int i=0;i<temHolder.size();i++)
+	for(int i=0;i<(int) temHolder.size();i++)
 	{
 		cout<<temHolder[i]<<" ";
 	}
 	cout<<endl;
 
 }
+//////////////////////// Show Table  --- End ////////////////////////

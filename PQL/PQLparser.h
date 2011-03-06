@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include "Validator.h"
 #include"Convertor.h"
+#include"TokenList.h" 
 //#include"QueryTable.h"
 using namespace std;
 
@@ -16,7 +17,7 @@ class PqlParser
 public:
   static int const NORMAL=0;
   static int const GRAMMERDEFINED=101;
-  static int const USERDEFINED=301; 
+  static int const USERDEFINED=300; 
   static int prefix(string token);
   static QueryTable parser(string s);
 };

@@ -1,5 +1,5 @@
 #include "Validator.h"
-
+#include "Tokenizer.h"
 
 
 void Validator::populateTable(){
@@ -113,9 +113,9 @@ void Validator::displayTable(vector<vector<int>> table){
 	}
 	cout<<endl;
 	*/
-	for(int i=0;i<(table.size());i++)
+	for(int i=0;i<((int) table.size());i++)
 	{
-		for(int j=0;j<table[i].size();j++)
+		for(int j=0;j<(int) table[i].size();j++)
 		{
 			cout<<table[i][j]<<" ";
 		}
@@ -133,8 +133,12 @@ void Validator::displayTable(vector<vector<int>> table){
 vector<int> Validator::getIndex(vector<vector<int>> table, int name){
 
 	vector<int> index;
+	if((int)table.size() == 0)
+	{
+		throw "Query Validation Table is empty!  -- throw by Validator::getIndex()";
+	}
 	//cout<<suchThatTable[77][0]<<" getIndex"<<endl;
-	for(int i=0;i<table.size();i++)
+	for(int i=0;i<(int) table.size();i++)
 	{
 		if(table[i][0] == name)
 		{
@@ -149,9 +153,7 @@ vector<int> Validator::getIndex(vector<vector<int>> table, int name){
 bool Validator::checkSuchThat(QueryTable table){
 	
 	bool noError = true;
-	int size = table.getSuchThatClauseV().size();
-	
-	
+	int size = (int) table.getSuchThatClauseV().size();
 
 	//suchThat =table.suchThatAt(0);
 	//cout<<suchThat[0];
@@ -209,7 +211,7 @@ bool Validator::checkSuchThat(QueryTable table){
 
 bool Validator::checkWith(QueryTable table){
 	bool noError = true;
-	int size = table.getWithClauseV().size();
+	int size = (int) table.getWithClauseV().size();
 
 	//cout<<"with size is " <<size<<endl;
 
@@ -234,7 +236,7 @@ bool Validator::checkWith(QueryTable table){
 		index = getIndex(withTable, with[0]);
 
 		//cout<<"index size is "<<index.size()<<endl; 
-		for(int it = 0;it<index.size();it++)
+		for(int it = 0;it<(int) index.size();it++)
 		{
 			//cout<<"with size is 1 "<<with.size()<<endl;
 			if(with.size() == 7)
@@ -260,6 +262,22 @@ bool Validator::checkWith(QueryTable table){
 		noError = tempNoError && noError;
 	}
 	return noError;
+}
+
+bool Validator::checkResults(QueryTable table){
+
+	return (checkSuchThat(table) && checkWith(table));
+    /*
+	if(!checkSuchThat(table))
+	{
+		
+		//throw new string("Error inside Such That Clause! -- throw by Validator::checkResults()"); //  #### need to refine to print out which condition is wrong####
+	}
+	else if(!checkWith(table))
+	{
+		//throw new string ("Error inside With Clause!  -- throw by Validator::checkResults()");
+	}
+	*/
 }
 
 vector<vector<int>> Validator::getsuchThatTable(){

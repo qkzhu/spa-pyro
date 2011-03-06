@@ -1,12 +1,12 @@
 #ifndef VALIDATOR_H
 #define VALIDATOR_H
 
+
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
 #include "QueryTable.h"
-#include "Tokenizer.h"
 
 using namespace std;
 class Validator{
@@ -16,11 +16,16 @@ public:
 	//void fillTable(vector <vector<int>> table, string fileName);
 	void displayTable(vector<vector<int>> table);  // display table for debug
 	vector<int> getIndex(vector<vector<int>> table,int name); // get a vector of index if name = nameInsideTable
+	
+	bool checkResults(QueryTable table);  // show checking result as whole
 	bool checkSuchThat(QueryTable table); // check such that clause
 	bool checkWith(QueryTable table); // check with clause
+
 	vector<vector<int>>  getsuchThatTable();
 	vector<vector<int>>  getwithTable();
+
 	QueryTable preValidate(QueryTable table); // used to preprocess the table to make table driven more efficient
+
 
 private:
 	vector< vector<int> > suchThatTable;
@@ -28,4 +33,6 @@ private:
 
 
 };
-#endif
+
+
+#endif // VALIDATOR_H

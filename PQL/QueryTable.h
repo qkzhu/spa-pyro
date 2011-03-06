@@ -1,5 +1,7 @@
 #ifndef QUERYTABLE_H
 #define QUERYTABLE_H
+
+
 #include <iostream>
 #include <utility>
 #include "DataStucture.h"
@@ -13,10 +15,8 @@ class QueryTable{
 public: 
 	//QueryTable();
 	void addClause(int type, vector<int> content);
-	vector<int> getQuery();
-
-	vector < Select > getSelectClause();
-
+	
+	
 	vector < SuchThat > getSuchThatClauseV(); //return suchThatClauseValid for validator performing validation
 	vector<With> getWithClauseV(); //return withClauseValid for validator performing validation
 
@@ -28,9 +28,15 @@ public:
 
 	int withSize(); //return the number of with conditions in the with clause
 	vector<int> withAt(int index); //take an indx and return the with condition in index.
+	
+	// for internal usage
+	vector<int> getQuery();
+	vector < Select > getSelectClause();
+	vector < SuchThat > getSuchThatClause();
+	vector < With > QueryTable::getWithClause();
 
-	int getSize();
 	void showTable();
+
 
 private:
 	//for whole query
@@ -40,10 +46,12 @@ private:
 	vector < Select > selectClause;
 	vector < Select > selectClauseValid;
 	vector <int> selectVector;
+
 	//"such that-clause"
 	vector < SuchThat > suchThatClause;
 	vector < SuchThat > suchThatClauseValid;
 	vector <int> suchThatVector;
+
 	//"with-clause"
 	vector < With > withClause;
 	vector < With > withClauseValid;
@@ -56,4 +64,4 @@ private:
 	*/
 	
 };
-#endif
+#endif //QUERYTABLE_H
