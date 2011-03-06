@@ -40,7 +40,7 @@ public:
 	vector<int> ast_GetAllAssign();
 	vector<int> ast_GetAllWhile();
 	vector<int> ast_GetAllIf();
-	vector<int> ast_GetAllProc();
+//	vector<int> ast_GetAllProc(); Similar function can be found at pTable_GetAllProc()
 	vector<int>	ast_GetAllCall();
 	/**
 	 * VarTable Part
