@@ -116,7 +116,7 @@ void Modifies::printVarModifiedByStmt(VarTable* varTable){
 		set<int> stmtSet;
 		for(map<int, set<int>>::iterator itVar = mVarStmtMap.begin(); itVar != mVarStmtMap.end(); itVar++)
 		{
-			cout<<"Variable "<<varTable->getVarName(itVar->first)<<" is modified by statemetn#: ";
+			cout<<"Variable "<<varTable->getVarName(itVar->first)<<" is modified by statement#: ";
 			stmtSet = itVar->second;
 			for(set<int>::iterator itStmt = stmtSet.begin(); itStmt != stmtSet.end(); itStmt++)
 				cout<<*itStmt<<", ";

@@ -179,7 +179,7 @@ void Parser::parseProgram()
 		if (proc_index == -1)
 		{
 			string output = "Attempt to call non-existing procedure " + it->first + " at line(s) ";
-			for (int i = 0; i < results.size(); i++)
+			for (unsigned int i = 0; i < results.size(); i++)
 				output += intToString(get<1>(results[i])) + " ";
 			throw new string(output);
 		}
@@ -187,7 +187,7 @@ void Parser::parseProgram()
 		//records the proc call in the proc table
 		else
 		{
-			for (int i = 0; i < results.size(); i++)
+			for (unsigned int i = 0; i < results.size(); i++)
 			{
 				mPkb.pTable_AddCall(get<0>(results[i]), proc_index);
 				get<2>(results[i])->id = proc_index;
@@ -603,6 +603,6 @@ void Parser::checkValidName(string var_name)
 string Parser::intToString(int n)
 {
 	char buf[256];
-	itoa(n, buf, 10);
+	_itoa_s(n, buf, 10);
 	return string(buf);
 }
