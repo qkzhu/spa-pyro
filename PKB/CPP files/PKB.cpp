@@ -288,7 +288,33 @@ vector<string> PKB::convertSetToVector(set<string> setString){
 	return result;
 }
 
+
+//For Debugging
 void PKB::printTree()
 {
 	ast->printTree(*procTable, *varTable);
+}
+
+AST* PKB::getAST(){
+	return this->ast;
+}
+
+VarTable* PKB::getVarTable(){
+	return this->varTable;
+}
+
+ProcTable* PKB::getProcTable(){
+	return this->procTable;
+}
+
+ConstantTable* PKB::getConstantTable(){
+	return this->constantTable;
+}
+
+Uses* PKB::getUseTable(){
+	return this->useTable;
+}
+
+Modifies* PKB::getModifyTable(){
+	return this->modifyTable;
 }

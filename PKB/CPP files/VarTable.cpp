@@ -54,3 +54,10 @@ int main()
 	cin >> readin;
 	return 0;
 }//end main */
+
+
+//For debugging
+void VarTable::printVarTable()
+{
+	this->printSymbolTable("Variable");
+}//end printVarTable

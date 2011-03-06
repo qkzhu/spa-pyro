@@ -195,3 +195,42 @@ vector<int> ProcTable::getCalled(int procIndex){
 
 	return tmpVec;
 }//end getCalled
+
+
+//For Debugging
+void ProcTable::printProcTable()
+{
+	this->printSymbolTable("Procedure");
+}
+
+void ProcTable::printCallTable(){
+	if(callTable.size() == 0) 
+		cout<<"CallTable table is empty!"<<endl;
+	else{
+		set<int> proc2Set;
+		for(map<int, set<int>>::iterator itProc1 = callTable.begin(); itProc1 != callTable.end(); itProc1++)
+		{
+			cout<<"Procedure "<<this->getProcName(itProc1->first)<<" calls procedure: ";
+			proc2Set = itProc1->second;
+			for(set<int>::iterator itProc2 = proc2Set.begin(); itProc2 != proc2Set.end(); itProc2++)
+				cout<<this->getProcName(*itProc2)<<", ";
+			cout<<endl;
+		}
+	}
+}//end printCallTable
+
+void ProcTable::printCalledTable(){
+	if(calledTable.size() == 0) 
+		cout<<"CalledTable table is empty!"<<endl;
+	else{
+		set<int> proc2Set;
+		for(map<int, set<int>>::iterator itProc1 = calledTable.begin(); itProc1 != calledTable.end(); itProc1++)
+		{
+			cout<<"Procedure "<<this->getProcName(itProc1->first)<<" is called by procedure: ";
+			proc2Set = itProc1->second;
+			for(set<int>::iterator itProc2 = proc2Set.begin(); itProc2 != proc2Set.end(); itProc2++)
+				cout<<this->getProcName(*itProc2)<<", ";
+			cout<<endl;
+		}
+	}
+}//end printCalledTable
