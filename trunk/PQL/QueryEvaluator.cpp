@@ -30,11 +30,12 @@ void QueryEvaluator::evaluate()
 
 
 	//No tupled selection yet
-	int select_element = (mQueryTree->selectAt(0)).at(1);  //Elements to be selected
+	int select_element = (mQueryTree->selectAt(0)).at(0);  //Elements to be selected
+	if(select_element != mQueryTree->getIndex("BOOLEAN")) select_element = (mQueryTree->selectAt(0)).at(1);
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////FOR DEBUGGING
 	cout<< "PQL parser checking"<< endl;
-	cout << "Select element: " << (mQueryTree->selectAt(0)).at(0) << " "<< (mQueryTree->selectAt(0)).at(1) << endl;; 
+	cout << "Select element: " << select_element << endl;; 
 	for(int i=0; i< mQueryTree->withSize(); i++){
 		cout << "With clauses: " << endl;
 		vector<int> tmp_with =  mQueryTree->withAt(i);
@@ -43,7 +44,6 @@ void QueryEvaluator::evaluate()
 		}
 		cout << endl;
 	}
-
 	for(int i=0; i< mQueryTree->suchThatSize(); i++){
 		cout << "Such that clauses: " << endl;
 		vector<int> tmp_suchthat =  mQueryTree->suchThatAt(i);
@@ -52,7 +52,7 @@ void QueryEvaluator::evaluate()
 		}
 		cout << endl;
 	}
-	cout << "PQL PARSER chekcing FINISH." << endl;
+	cout << "PQL PARSER checking FINISH." << endl;
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	//Start evaluating With clauses                                  
@@ -203,7 +203,7 @@ void QueryEvaluator::evaluate()
 			eva_tuple = tmp_store;
 		}
 	}//while: With clause evaluation End
-
+	
 	//Start evaluating SuchThat clauses
 	int suchThatSize = mQueryTree->suchThatSize();
 	for(int i= 0; i<suchThatSize; i++)
@@ -307,6 +307,8 @@ void QueryEvaluator::evaluate()
 			numOfCommonElement = numOfCommonElement+2;
 		}
 
+		
+
 		//Evaluating Relation
 		vector<vector<int> > relResult;
 		map<int,vector<int> >::iterator it1 = var_value_table.find(para1);
@@ -368,8 +370,7 @@ void QueryEvaluator::evaluate()
 
 	}//while: such that evaluation END
 
-
-	if(select_element == mQueryTree->getIndex("boolean")) //If the select is boolean
+	if(select_element == mQueryTree->getIndex("BOOLEAN")) //If the select is boolean
 	{
 		if(mgTupleIndexing.empty()) mResult.setBoolValue(false);
 		else mResult.setBoolValue(true);
@@ -436,7 +437,9 @@ QueryResult QueryEvaluator::getResult()
 void QueryEvaluator::printResult(){
 	if(mResult.isBoolSet()){
 		cout << "Query evaluate: ";
-		cout << mResult.getBoolValue() << endl;
+		if(mResult.getBoolValue())
+			cout << "true" << endl;
+		else cout << "false" << endl;
 	}else{
 		vector<int> resultTuple = mResult.getTuple();
 		vector<int> resultTupleType = mResult.getTypes();

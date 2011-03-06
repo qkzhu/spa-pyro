@@ -82,7 +82,7 @@ QueryTable PqlParser::parser(string qu) {
 					temp=Convertor::getIndex(pch);
 					prefix=PqlParser::prefix(pch);
 				
-					if (temp>=USERDEFINED||prefix==BOOLEAN)
+					if (temp>=USERDEFINED||temp==BOOLEAN)
 					{   
 						//prefix=PqlParser::prefix(pch);
 						//cout<<"prefix"<<PqlParser::prefix(pch);
