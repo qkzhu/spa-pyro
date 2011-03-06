@@ -179,7 +179,9 @@ void QueryEvaluator::evaluate()
 		}
 
 		if(with_result.empty()){
-			mResult.addInTuple(-1);
+			if(select_element == mQueryTree->getIndex("BOOLEAN"))
+				mResult.setBoolValue(false);
+			else mResult.addInTuple(-1);
 			return;
 		}
 
@@ -334,7 +336,9 @@ void QueryEvaluator::evaluate()
 		//When the parameter of relation is not in simple, the query just evaluate to null
 
 		if(para1 == -1 || para2 == -1){
-			mResult.addInTuple(-1);
+			if(select_element == mQueryTree->getIndex("BOOLEAN"))
+				mResult.setBoolValue(false);
+			else mResult.addInTuple(-1);
 			return;
 		}
 
@@ -343,7 +347,9 @@ void QueryEvaluator::evaluate()
 		else 
 			throw new string("Relation not exists");
 		if(relResult.empty()){
-			mResult.addInTuple(-1);
+			if(select_element == mQueryTree->getIndex("BOOLEAN"))
+				mResult.setBoolValue(false);
+			else mResult.addInTuple(-1);
 			return;
 		}
 
@@ -369,6 +375,7 @@ void QueryEvaluator::evaluate()
 		}
 
 	}//while: such that evaluation END
+
 
 	if(select_element == mQueryTree->getIndex("BOOLEAN")) //If the select is boolean
 	{
