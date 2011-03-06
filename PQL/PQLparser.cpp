@@ -2,7 +2,7 @@
 
  
 
-
+/*
 //int prefix(string token);
   int main(void)
   {
@@ -61,6 +61,7 @@
 	  //system("pause");
 	  return 0;
   }
+  */
 QueryTable PqlParser::parser(string s) {
 	 TokenList qu=TokenList(s);
 
