@@ -24,71 +24,70 @@ public:
 	 * AST Part
 	 */
 	Node*		ast_CreateNode(Node::NodeType nt, int statNum, int name);
-	vector<int> ast_GetChild(int stmtNum);
+	vector<int> ast_GetChild(int stmtNum);   // For Query Evaluator
 	Node*		ast_GetPreviousStatement(Node* d);
-	int			ast_GetPreviousStatementNum(int stmtNum);
+	int			ast_GetPreviousStatementNum(int stmtNum);   // For Query Evaluator
 	Node*		ast_GetFollowingStatement(Node* d);
-	int			ast_GetFollowingStatementNum(int stmtNum);
+	int			ast_GetFollowingStatementNum(int stmtNum);   // For Query Evaluator
 	Node*		ast_GetNodeByStatementNum(int index);
-	void		ast_AddChild(Node *d, Node *childNode);
+	void		ast_AddChild(Node *d, Node *childNode);   
 	void		ast_AddDown(Node *upperNode, Node *bottomNode);
 	void		ast_AddFollow(Node *d, Node *followNode);
 	void		ast_AddProcedure(int procIndex, Node *d);
-	int			ast_getParent(int child);
-	bool		ast_hasStmt(int stmtNum);
-	int			ast_getMaxStmtNum();
-	vector<int> ast_GetAllAssign();
-	vector<int> ast_GetAllWhile();
-	vector<int> ast_GetAllIf();
-//	vector<int> ast_GetAllProc(); Similar function can be found at pTable_GetAllProc()
-	vector<int>	ast_GetAllCall();
+	int			ast_getParent(int child);    // For Query Evaluator
+	bool		ast_hasStmt(int stmtNum);   
+	int			ast_getMaxStmtNum();  // For Query Evaluator 
+	vector<int> ast_GetAllAssign();   // For Query Evaluator
+	vector<int> ast_GetAllWhile();	// For Query Evaluator
+	vector<int> ast_GetAllIf();	// For Query Evaluator
+	vector<int>	ast_GetAllCall();  // For Query Evaluator
 	/**
 	 * VarTable Part
 	 */
 	void			vTable_InsertVar(string var);
-	string			vTable_GetVarName(int index);
-	int				vTable_GetVarIndex(string var);
+	string			vTable_GetVarName(int index);   // For Query Evaluator
+	int				vTable_GetVarIndex(string var);  // For Query Evaluator
 	int				vTable_GetVarTableSize(); 
-	bool			vTable_IsVarNameExist(string var);
-	bool			vTable_IsVarIndexExist(int varIndex);
-	vector<int>		vTable_GetAllVar();
+	bool			vTable_IsVarNameExist(string var);  // For Query Evaluator
+	bool			vTable_IsVarIndexExist(int varIndex);  // For Query Evaluator
+	vector<int>		vTable_GetAllVar();   // For Query Evaluator
 	/**
 	 * ProcTable Part
 	 */
 	void			pTable_InsertProc(string procName);
-	string			pTable_GetProcName(int procIndex);
-	int				pTable_GetProcIndex(string procName);
+	string			pTable_GetProcName(int procIndex);   // For Query Evaluator
+	int				pTable_GetProcIndex(string procName);  // For Query Evaluator
 	int				pTable_GetProcTableSize();
-	bool			pTable_isProcNameExist(string procName);
-	bool			pTable_isProcIndexExist(int procIndex);
-	vector<int>		pTable_GetAllProc();
+	bool			pTable_isProcNameExist(string procName); // For Query Evaluator
+	bool			pTable_isProcIndexExist(int procIndex);  // For Query Evaluator
+	vector<int>		pTable_GetAllProc();				 // For Query Evaluator
 	void			pTable_AddCall(int procIndex1, int procIndex2);
-	vector<int> 	pTable_getCall(int procIndex);
-	vector<int> 	pTable_getCalled(int procIndex);
+	vector<int> 	pTable_getCall(int procIndex);			// For Query Evaluator
+	vector<int> 	pTable_getCalled(int procIndex);		// For Query Evaluator
 	/**
 	 * ConstantTable Part
 	 */
 	void		cTable_AddConstant(int c);
-	vector<int>	cTable_GetAllConstants();
-	bool		cTable_IsConstantExist(int c);
+	vector<int>	cTable_GetAllConstants();			// For Query Evaluator
+	bool		cTable_IsConstantExist(int c);      // For Query Evaluator
 	int			cTable_GetNumOfConstant();
-	bool		cTable_hasCons(int c);
+	bool		cTable_hasCons(int c);			// For Query Evaluator
 	/**
 	 * UseTable Part
 	 */
 	void			uTable_setUses(int stmtNum, int varIndex);
 	void			uTable_setUsesPV(int procIndex, int varIndex);
-	vector<int> 	uTable_getUsedVar(int stmtNum);
-	vector<int> 	uTable_getUsedVarPI(int procIndex);
-	vector<int> 	uTable_getStmtUses(int varIndex);
-	vector<int> 	uTable_getProcUses(int varIndex);
+	vector<int> 	uTable_getUsedVar(int stmtNum);         // For Query Evaluator
+	vector<int> 	uTable_getUsedVarPI(int procIndex);     // For Query Evaluator
+	vector<int> 	uTable_getStmtUses(int varIndex);       // For Query Evaluator 
+	vector<int> 	uTable_getProcUses(int varIndex);       // For Query Evaluator  
 	/**
 	 * ModifyTable Part
 	 */
-	vector<int>  mTable_getModifiedVar(int statNum);
-	vector<int>  mTable_getModifiedVarPI(int procIndex);
-	vector<int>  mTable_getStmtModifies(int varIndex);
-	vector<int>  mTable_getProcModifies(int procIndex);
+	vector<int>  mTable_getModifiedVar(int statNum);        // For Query Evaluator
+	vector<int>  mTable_getModifiedVarPI(int procIndex);    // For Query Evaluator
+	vector<int>  mTable_getStmtModifies(int varIndex);      // For Query Evaluator
+	vector<int>  mTable_getProcModifies(int procIndex);     // For Query Evaluator 
 	void		 mTable_setModify(int stmtNum, int varIndex);
 	void		 mTable_setModifyPV(int procIndex, int varIndex);
 
