@@ -8,9 +8,13 @@
 #include <sstream>
 #include <stack>
 #include <utility>
+#include <tuple>
 #include "PKB.h"
 
 using namespace std;
+
+typedef int ProcIndex;
+typedef int LineNum;
 
 class Parser 
 {
@@ -72,7 +76,7 @@ private:
 
 	static const string mKeyWords[];
 
-	map<string, pair<int, pair<int, Node*> > > mProcCallsBuf; //buffer to store calls to procedure not yet declared.
+	map<string, vector<tuple<ProcIndex, LineNum, Node*> > > mProcCallsBuf; //buffer to store calls to procedure not yet declared.
 };
 
 #endif

@@ -170,19 +170,28 @@ void Parser::parseProgram()
 
 	//process all calls to procedures undefined at the time of parsing.
 	// map["procedure name"] = (mCurrProcIndex, (mLineNum, Node)
-	for (map<string, pair<int, pair<int, Node*> > >::iterator it = mProcCallsBuf.begin(); it != mProcCallsBuf.end(); it++)
+	for (map<string, vector<tuple<ProcIndex, LineNum, Node*> > >::iterator it = mProcCallsBuf.begin(); it != mProcCallsBuf.end(); it++)
 	{
 		int proc_index = mPkb.pTable_GetProcIndex(it->first); 
+		vector<tuple<ProcIndex, LineNum, Node*> > results = it->second;
 	
 		//stores into call buffer, check whether the procedure exists when program ends.
 		if (proc_index == -1)
-			throw new string("Attempt to call non-existing procedure " + it->first + " at line " + intToString(it->second.second.first));
+		{
+			string output = "Attempt to call non-existing procedure " + it->first + " at line(s) ";
+			for (int i = 0; i < results.size(); i++)
+				output += intToString(get<1>(results[i])) + " ";
+			throw new string(output);
+		}
 
 		//records the proc call in the proc table
 		else
 		{
-			mPkb.pTable_AddCall(it->second.first, proc_index);
-			it->second.second.second->id = proc_index;
+			for (int i = 0; i < results.size(); i++)
+			{
+				mPkb.pTable_AddCall(get<0>(results[i]), proc_index);
+				get<2>(results[i])->id = proc_index;
+			}
 		}
 	}
 }
@@ -333,7 +342,17 @@ Node *Parser::parseCall()
 
 	//stores into call buffer, check whether the procedure exists when program ends.
 	if (proc_index == -1)
-		mProcCallsBuf[proc_name] = make_pair(mCurrProcIndex, make_pair(mLineNum, curr));
+	{
+		tuple<ProcIndex, LineNum, Node*> curr_tuple(mCurrProcIndex, mLineNum, curr);
+		if (mProcCallsBuf.find(proc_name) == mProcCallsBuf.end())
+		{
+			vector<tuple<ProcIndex, LineNum, Node*>> vec;
+			vec.push_back(curr_tuple);
+			mProcCallsBuf[proc_name] = vec;
+		}
+		else
+			mProcCallsBuf[proc_name].push_back(curr_tuple);
+	}
 	//records the proc call in the proc table
 	else
 		mPkb.pTable_AddCall(mCurrProcIndex, proc_index);
