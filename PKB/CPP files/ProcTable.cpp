@@ -135,7 +135,7 @@ vector<int> ProcTable::getCall(int procIndex){
 	set<int>	tmpSet;
 
 	/* verify procIndex */
-	if(procIndex <= 0 || isProcIndexExist(procIndex)){
+	if(procIndex < 0 || !isProcIndexExist(procIndex)){
 		tmpVec.push_back(-1);
 		return tmpVec;
 	}
@@ -169,7 +169,7 @@ vector<int> ProcTable::getCalled(int procIndex){
 	set<int>	tmpSet;
 
 	/* verify procIndex */
-	if(procIndex <= 0 || isProcIndexExist(procIndex)){
+	if(procIndex < 0 || !isProcIndexExist(procIndex)){
 		tmpVec.push_back(-1);
 		return tmpVec;
 	}
