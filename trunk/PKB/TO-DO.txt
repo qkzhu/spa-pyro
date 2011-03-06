@@ -9,3 +9,27 @@ ProcTable:
 
 VarTable:
 1. GetAllVar() -> Change return type to int (maximum VarIndex)
+
+
+
+
+
+	   //Modifies* m = pkb.getModifyTable();
+	   //m->printStmtModVar(pkb.getVarTable());
+	   //m->printProcModVar(pkb.getProcTable(), pkb.getVarTable());
+	   //m->printVarModifiedByStmt(pkb.getVarTable());
+	   //m->printVarModifiedByProc(pkb.getProcTable(), pkb.getVarTable());
+
+	   //VarTable* v = pkb.getVarTable();
+	   //v->printVarTable();
+
+	   ProcTable* proc = pkb.getProcTable();
+	   //proc->printProcTable();
+	   //proc->printCallTable();
+	   proc->printCalledTable();
+
+	   //Uses* u = pkb.getUseTable();
+	   //u->printStmtUseMap(pkb.getVarTable());
+	   //u->printProcUseMap(pkb.getProcTable(), pkb.getVarTable());
+	   //u->printVarStmtMap(pkb.getVarTable());
+	   //u->printVarProcMap(pkb.getProcTable(), pkb.getVarTable());

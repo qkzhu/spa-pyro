@@ -6,6 +6,7 @@
 #include <utility>
 #include <set>
 #include <vector>
+#include <iostream>	//For Debugging
 
 using namespace std;
 
@@ -23,6 +24,9 @@ public:
 	bool isNameExist(string name); // takes in symbol name; return bool isNameExist
 	bool isIndexExist(int index); // takes in symbol index; return bool isIndexExist
 	set<string> getAllSymbol();
+
+	//For Debugging
+	void printSymbolTable(std::string name);
 private:
 	map<string, int> mSymbolMap;
 };
@@ -37,6 +41,9 @@ public:
 	bool isVarNameExist(string name);
 	bool isVarIndexExist(int index);
 	set<string> getAllVar();
+
+	//For Debugging
+	void printVarTable();
 };
 
 class ProcTable : public SymbolTable
@@ -58,6 +65,10 @@ public:
 	vector<int> getCall(int procIndex);
 	vector<int> getCalled(int procIndex);
 
+	//For Debugging
+	void printProcTable();
+	void printCallTable();		/* int calls set<int> */
+	void printCalledTable();	/* int was called by set<int> */
 private:
 	map<int, set<int>> callTable;		/* int calls set<int> */
 	map<int, set<int>> calledTable;		/* int was called by set<int> */

@@ -95,6 +95,12 @@ public:
 		Debugging functions
 	*/
 	void printTree();
+	AST* getAST();
+	VarTable* getVarTable();
+	ProcTable* getProcTable();
+	ConstantTable* getConstantTable();
+	Uses* getUseTable();
+	Modifies* getModifyTable();
 
 private:
 	AST*			ast;
