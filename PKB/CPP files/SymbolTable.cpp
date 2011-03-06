@@ -12,11 +12,12 @@ void SymbolTable::insertSymbol(string s)
 
 string SymbolTable::getSymbolName(int sIndex)
 {
-	if((int)sIndex >= (int)mSymbolMap.size())
+	/*if((int)sIndex >= (int)mSymbolMap.size())
 	{
-		return "There is no nothing stored at the given index";
+		return ""; // return an empty string
 	}
-	else //get symbol name
+	else*/ 
+	//get symbol name
 	{
 		MapType::const_iterator end = mSymbolMap.end();
 		for(MapType::const_iterator it = mSymbolMap.begin(); it != end; it++)
