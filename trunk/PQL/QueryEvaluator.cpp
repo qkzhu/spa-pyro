@@ -737,3 +737,7 @@ int QueryEvaluator::PKB_varEncode(string s){
 string QueryEvaluator::PKB_varDecode(int i){
 	return mPKBObject->vTable_GetVarName(i);
 }
+
+int QueryEvaluator::PQL_getIndex(string s){
+	return mQueryTree->getIndex(s);
+}
