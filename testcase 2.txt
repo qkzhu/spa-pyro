@@ -1,0 +1,2 @@
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c such that uses ("p","s") ;
+true
