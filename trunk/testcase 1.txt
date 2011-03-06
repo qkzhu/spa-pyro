@@ -1,0 +1,177 @@
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.value = s.stmt#;
+true;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.value = ca.stmt#;
+true;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.value = ifstat.stmt#;
+true;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.value = w.stmt#;
+true;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.value = 10;
+true;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.value = c.value; 
+true;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.value = pl.value;
+true;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.value = -1;
+false;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.value = "a";
+false;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.value = "0";
+false;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.value = v.varName;
+false;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.value = p.procName;
+false;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.value = _;
+false;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.value = c.stmt#;
+false;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.value = v.stmt#;
+false;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.value = v.procName;
+false;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.value = v.value;
+false;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.value = p.varName;
+false;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.value = p.stmt#;
+false;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.value = p.value;
+false;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.stmt# = 10;
+false;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.stmt# = s.stmt#;
+false;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.stmt# = ca.stmt#;
+false;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.stmt# = ifstat.stmt#;
+false;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.stmt# = w.stmt#;
+false;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.procName = 10;
+false;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.procName = s.stmt#;
+false;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.procName = ca.stmt#;
+false;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.procName = ifstat.stmt#;
+false;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.procName = w.stmt#;
+false;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.varName = 10;
+false;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.varName = s.stmt#;
+false;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.varName = ca.stmt#;
+false;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.varName = ifstat.stmt#;
+false;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.varName = w.stmt#;
+false;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.stmt# = -1;
+false;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.stmt# = c.stmt#;
+false;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.stmt# = v.stmt#;
+false;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.stmt# = v.procName;
+false;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.stmt# = v.value;
+false;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.stmt# = p.varName;
+false;
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.stmt# = p.stmt#;
+false
+
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.stmt# = p.value;
+false
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.procName = -1;
+false
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.procName = c.stmt#;
+false
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.procName = v.stmt#;
+false
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.procName = v.procName;
+false
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.procName = v.value;
+false
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.procName = p.varName;
+false
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.procName = p.stmt#;
+false
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.procName = p.value;
+false
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.varName = -1;
+false
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.varName = c.stmt#;
+false
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.varName = v.stmt#;
+false
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.varName = v.procName;
+false
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.varName = v.value;
+false
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.varName = p.varName;
+false
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.varName = p.stmt#;
+false
+
+stmt s; call ca; assign a; while w; if ifstat;constant c; variable v;procedure p; select c with c.varName = p.value;
+false
