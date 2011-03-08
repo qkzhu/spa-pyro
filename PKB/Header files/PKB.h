@@ -21,7 +21,7 @@ public:
 		   useTable(new Uses()), modifyTable(new Modifies()), 
 		   ast(new AST()){}
 	/**
-	 * AST Part
+	 * AST Part:9
 	 */
 	Node*		ast_CreateNode(Node::NodeType nt, int statNum, int name);
 	vector<int> ast_GetChild(int stmtNum);   // For Query Evaluator
@@ -42,7 +42,7 @@ public:
 	vector<int> ast_GetAllIf();	// For Query Evaluator
 	vector<int>	ast_GetAllCall();  // For Query Evaluator
 	/**
-	 * VarTable Part
+	 * VarTable Part:5
 	 */
 	void			vTable_InsertVar(string var);
 	string			vTable_GetVarName(int index);   // For Query Evaluator
@@ -52,7 +52,7 @@ public:
 	bool			vTable_IsVarIndexExist(int varIndex);  // For Query Evaluator
 	vector<int>		vTable_GetAllVar();   // For Query Evaluator
 	/**
-	 * ProcTable Part
+	 * ProcTable Part:7
 	 */
 	void			pTable_InsertProc(string procName);
 	string			pTable_GetProcName(int procIndex);   // For Query Evaluator
@@ -65,7 +65,7 @@ public:
 	vector<int> 	pTable_getCall(int procIndex);			// For Query Evaluator
 	vector<int> 	pTable_getCalled(int procIndex);		// For Query Evaluator
 	/**
-	 * ConstantTable Part
+	 * ConstantTable Part:3
 	 */
 	void		cTable_AddConstant(int c);
 	vector<int>	cTable_GetAllConstants();			// For Query Evaluator
@@ -73,7 +73,7 @@ public:
 	int			cTable_GetNumOfConstant();
 	bool		cTable_hasCons(int c);			// For Query Evaluator
 	/**
-	 * UseTable Part
+	 * UseTable Part: 4
 	 */
 	void			uTable_setUses(int stmtNum, int varIndex);
 	void			uTable_setUsesPV(int procIndex, int varIndex);
@@ -82,7 +82,7 @@ public:
 	vector<int> 	uTable_getStmtUses(int varIndex);       // For Query Evaluator 
 	vector<int> 	uTable_getProcUses(int varIndex);       // For Query Evaluator  
 	/**
-	 * ModifyTable Part
+	 * ModifyTable Part:4
 	 */
 	vector<int>  mTable_getModifiedVar(int statNum);        // For Query Evaluator
 	vector<int>  mTable_getModifiedVarPI(int procIndex);    // For Query Evaluator
@@ -101,6 +101,7 @@ public:
 	ConstantTable* getConstantTable();
 	Uses* getUseTable();
 	Modifies* getModifyTable();
+	void printVectorInt(vector<int>);
 
 private:
 	AST*			ast;

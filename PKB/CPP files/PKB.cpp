@@ -318,3 +318,13 @@ Uses* PKB::getUseTable(){
 Modifies* PKB::getModifyTable(){
 	return this->modifyTable;
 }
+
+void PKB::printVectorInt(vector<int> vec){
+	if(vec.size() == 0) return;
+
+	for(vector<int>::iterator it = vec.begin(); it != vec.end(); it++)
+	{
+		cout<<*it<<", ";
+	}
+	cout<<endl;
+}
