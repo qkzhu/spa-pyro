@@ -59,7 +59,7 @@ varName   102
 
 procName    103
 
-integers     201
+integer     201
 
 varOfSimple         202
 
