@@ -36,6 +36,5 @@ public:
 	static void insertShortcut(string,string);
 	static void insertIndex(int,string);
 	//if not in the table,then return string "NULL";
-
 };
 #endif;
