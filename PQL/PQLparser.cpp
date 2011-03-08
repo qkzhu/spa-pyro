@@ -1,70 +1,9 @@
 #include"PqlParser.h"
 
- 
 
-/*
-//int prefix(string token);
-  int main(void)
-  {
-	  string s;
-	  bool result1;
-	  string result2;
-	  QueryTable table;
-	  Validator check;
-	 
-	 ifstream test("testcase 2.txt");
-	 if(test.is_open())
-	 {
-	 while(test.good())
-	 {
-		getline(test,s);
-		cout<<"+"<<s<<"+"<<endl;
-		if(s!="")
-		{
-	  try
-	  {
-	 
-	
-	  table= PqlParser::parser(s);
-	  table.showTable();
-	  check.populateTable();
-	  
-	  result1=check.checkResults(table);
-	  
-	  getline(test,result2);
-
-	  if(result1&&result2=="true"||!result1&&result2=="false")
-		  cout<<1<<endl;
-	  else
-		  cout<<0<<endl;
-	  
-	  }
-	  catch(string *s)
-	  {
-		  cout<< *s;
-	  }
-	 }
-	 }
-
-	 }
-	 else
-	 {
-		 cout<<"can not open file testcase1 \n";
-	 }
-	  
-	  //cout<<"++"<<Convertor::getKeyword(154)<<Convertor::getIndex(")")<<"this is testing";
-	  //tokens=a.getNextToken();
-	// QueryTable qt = PqlParser::parser(s);
-	// qt.showTable();
-
-	 test.close();
-	  //system("pause");
-	  return 0;
-  }
-  */
 QueryTable PqlParser::parser(string s) {
 	 TokenList qu=TokenList(s);
-
+	// qu.showTokenList();
 	enum KEYWORD
   {
 	AND=0,
@@ -105,17 +44,22 @@ QueryTable PqlParser::parser(string s) {
    int suchthatclause;
    string temp1,temp2;
    pch=qu.getNextToken();
+  // if(pch=="NULL") throw new string("the first token is NULL \n");
    vector<int> content;
    bool semi=false;
    //temp store the clause content;
   while(pch!="NULL"&&i<100)
   {       i++;
+        
+
+        //  cout<<pch<<"++++++++++++++++++";
 	      // pch=qu.getNextToken();
       	if(Convertor::isDeclar(pch))
 			{   
 				temp1=pch;//temporally store the Content of shortcut;
 				pch=qu.getNextToken();
 				index=Convertor::getIndex(pch);
+			//	cout<<"the first is :"<<index<<endl;
 				if(pch!="NULL"&&index==-1)
 				{
 					temp2=pch;
@@ -128,7 +72,7 @@ QueryTable PqlParser::parser(string s) {
 					  index=Convertor::getIndex(pch);
 					  if(index!=-1)
 						  throw new string("should have a undeclared symbol after the COMMA\n");
-
+					  temp2=pch;
 					}
 					Convertor::insertShortcut(temp2,temp1);
 				    Convertor::insertIndex(++u,temp2);
@@ -144,8 +88,8 @@ QueryTable PqlParser::parser(string s) {
 					{
 						throw new string("unidentified symbol after the decalred symbol\n");
 					}
-				}while(index==COMMA);
-			  }
+				 }while(index==COMMA);
+			   }
 				else
 				{
 					throw new string("the first token after the declaration should be undeclared symbol\n");
@@ -155,7 +99,7 @@ QueryTable PqlParser::parser(string s) {
 			{
 				
 			 index=Convertor::getIndex(pch);
-			// cout<<p;
+			 //cout<<pch<<"--------------";
 			 
 			 switch(index)
 			 {
@@ -234,10 +178,10 @@ QueryTable PqlParser::parser(string s) {
 								{
 				                case CALLS: case CALLS_T:
 
-								Convertor::insertShortcut(pch,"procOfSimpl"); break;
+								Convertor::insertShortcut(pch,"procOfSimiple"); break;
 								default:
 
-                                 Convertor::insertShortcut(pch,"procOfSimpl");
+                                 Convertor::insertShortcut(pch,"procOfSimiple");
 								}	
 					     //cout<<"temp:"<<temp<<"prefix"<<prefix;
 						    }
@@ -264,10 +208,10 @@ QueryTable PqlParser::parser(string s) {
 								switch(suchthatclause)
 								{
 				                case CALLS: case CALLS_T:
-								Convertor::insertShortcut(pch,"procOfSimpl"); break;
+								Convertor::insertShortcut(pch,"procOfSimiple"); break;
 								default:
 								
-								 Convertor::insertShortcut(pch,"varOfSimpl"); break;
+								 Convertor::insertShortcut(pch,"varOfSimple"); break;
 						        }
 					       }
 					   
@@ -327,6 +271,8 @@ QueryTable PqlParser::parser(string s) {
 						 content.push_back(index);//push equal
 						 pch=qu.getNextToken();
 						 index=Convertor::getIndex(pch);
+						 if (index>Convertor::QUATEDSTRING)
+						 Convertor::insertShortcut(pch,"varOfSimple");
 						 prefix=PqlParser::prefix(pch);
 						 if(index!=-1)
 						 {
@@ -365,6 +311,7 @@ QueryTable PqlParser::parser(string s) {
 
 					break;
 				case S_COLON:
+					//cout<<"reaching"<<endl;
 					pch=qu.getNextToken();
 					if(pch!="NULL") throw new string("illeagle using of S_COLON\n");
 					else

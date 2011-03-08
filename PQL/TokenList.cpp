@@ -1,14 +1,16 @@
 #include"TokenList.h"
-     int index=-1;
-	 vector<string> TokenList::fullVector;
+     int index;
+	// vector<string> TokenList::fullVector;
 	 TokenList::TokenList()
 	 {
-
+		 index=-1;
 	 }
 	 TokenList::TokenList(string s)
 	 {
+		 index=-1;
 		 tokenList(s);
 	 }
+
 int TokenList::tokenList(string s)
 {   
 	
@@ -100,12 +102,14 @@ void TokenList::showTokenList()
 }
  string TokenList::getNextToken()
  {
+
 	 index++;
 	 if(index<(int)fullVector.size())
 	     return fullVector[index];
 	 else
+	 {  
 		 return "NULL";
-
+	 }
 		 //throw new string("out of bond");
  }
  vector<string> TokenList::getTokenList()
@@ -115,4 +119,8 @@ void TokenList::showTokenList()
  int TokenList::getSize()
  {
 	 return fullVector.size();
+ }
+ void destruc()
+ {
+
  }

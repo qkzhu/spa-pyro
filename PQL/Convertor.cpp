@@ -9,6 +9,10 @@
  int u=Convertor::QUATEDSTRING;
 int Convertor::update()
 {
+	indexToKeyword.clear();
+	keywordToIndex.clear();
+	shortcutToContent.clear();
+	u=Convertor::QUATEDSTRING;
   string line;
    char * cstr, *p;
 

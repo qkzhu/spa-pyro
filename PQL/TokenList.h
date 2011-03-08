@@ -9,14 +9,15 @@ class TokenList
 public:
 	TokenList();
 	TokenList(string s);
-	 int tokenList(string s);
+	int tokenList(string s);
 	 string getNextToken();
 	 vector<string> getTokenList();
 	 void showTokenList();
 	 int getSize();
+	
 private:
 	// static int index;
-	 static vector<string> fullVector;
+	 vector<string> fullVector;
 	 Tokenizer tokenizer;
 	 vector<string> tokenBy(string s,string deliminator);
 	 void mergeVector(vector<string>vector);
