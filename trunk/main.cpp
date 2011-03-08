@@ -15,7 +15,36 @@ int main(int argc, char* argv[]){
 	   PKB pkb;
 	   Parser p (pkb, simple);
 	   p.parseProgram();
-		
+
+	   cout<<"******************** AST Testing ********************"<<endl;
+	   cout<<endl;
+
+	   cout<<"Child of statment: ";
+	   pkb.printVectorInt(pkb.ast_GetChild(6));
+
+	   cout<<"Previous statement of line 1 is "<<pkb.ast_GetPreviousStatementNum(1)<<endl;
+
+	   cout<<"Following statement of line 25 is "<<pkb.ast_GetFollowingStatementNum(25)<<endl;
+
+	   cout<<"Parent statement of line 1 is "<<pkb.ast_GetPreviousStatementNum(1)<<endl;
+
+	   cout<<"Max number of  statement is "<<pkb.ast_getMaxStmtNum()<<endl;
+
+	   cout<<"Get all assign: ";
+	   pkb.printVectorInt(pkb.ast_GetAllAssign());
+
+	   cout<<"Get all whil: ";
+	   pkb.printVectorInt(pkb.ast_GetAllWhile());
+
+	   cout<<"Get all if: ";
+	   pkb.printVectorInt(pkb.ast_GetAllIf());
+
+	   cout<<"Get all calls: ";
+	   pkb.printVectorInt(pkb.ast_GetAllCall());	   
+
+	   cout<<endl;
+	   cout<<"****************** End AST Testing ******************"<<endl;
+
 
 	   string query_file;
 	   cout << "Please enter the query file location: " << endl;
