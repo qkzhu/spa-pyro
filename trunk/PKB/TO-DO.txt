@@ -3,6 +3,10 @@ List of things to do/change for the next iteration for PKB:
 ModifyTable:
 1. mTable_getModifiedVar(int statNum) ->
    Change return type to int as a statement can only modify a variable.
+2. if the given statment number is call or while or if, there's no result return.
+
+UsesTable:
+1. if the given statment number is call or while or if, there's no result return.
 
 ProcTable:
 1. pTable_GetAllProc() -> Change return type to int (the maximum proc index)
