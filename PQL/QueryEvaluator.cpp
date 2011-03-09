@@ -275,7 +275,6 @@ void QueryEvaluator::evaluate()
 			}
 		}else;  //do nothing 
 
-
 		//Manipulation of indexing issue, adjust the mgTupleIndexing and find common index to pass
 		//When no common attr for new tuple with older old one, just do nothing, cause no relation inside
 		//But this requires the query passed to me 
@@ -326,6 +325,10 @@ void QueryEvaluator::evaluate()
 			para2 = (it2->second).at(1);
 		}
 		
+		cout << para1Type << endl;
+		cout << para1 << endl;
+		cout << PQL_procDecode(para1) << endl;
+		cout << PKB_procEncode("p1") << endl;
 		//Convert all "a", "b", "c" 's code from PQL code to PKB code
 		if(para1Type == mQueryTree->getIndex("varOfSimpl")) para1 = PKB_varEncode(PQL_varDecode(para1));
 		else if(para1Type == mQueryTree->getIndex("procOfSimpl")) para1 = PKB_procEncode(PQL_procDecode(para1));
@@ -334,7 +337,7 @@ void QueryEvaluator::evaluate()
 		else if(para2Type == mQueryTree->getIndex("procOfSimpl")) para2 = PKB_procEncode(PQL_procDecode(para2));
 	
 		//When the parameter of relation is not in simple, the query just evaluate to null
-
+		
 		if(para1 == -1 || para2 == -1){
 			if(select_element == mQueryTree->getIndex("BOOLEAN"))
 				mResult.setBoolValue(false);
@@ -352,7 +355,6 @@ void QueryEvaluator::evaluate()
 			else mResult.addInTuple(-1);
 			return;
 		}
-
 
 		if(numOfCommonElement == 2)
 				if(same1Tuple1 != 0)
@@ -568,6 +570,7 @@ vector<vector<int> > QueryEvaluator::getRel(int type1, int type2, int para1, int
 		}//Follows END
 	case 9: case 10: //relation is uses or modifies
 		{
+			//mQueryTree->getIndex("procOfSimpl")
 			if(type1 == mQueryTree->getIndex("integer") || type1 == mQueryTree->getIndex("stmt") || type1 == mQueryTree->getIndex("assign") || type1 == mQueryTree->getIndex("while") || type1 == mQueryTree->getIndex("if") ) //the first parameter is a constant stmt#
 			{
 				vector<int> para1List;

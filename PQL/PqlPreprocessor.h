@@ -32,6 +32,6 @@ public:
 	//int keywordCode(std::string key); //take a query keyword(The one between 0 and 300) and return its integer code
 	//std::string keywordDecode(int i); //take a integer of 0~300 and return its coding string
 
-
+	void Tokenize(const string& str,  vector<string>& tokens,  string& delimiters );
 };
 #endif
