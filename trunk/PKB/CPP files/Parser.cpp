@@ -160,16 +160,10 @@ void Parser::match(string token)
 		error(token, received);
 }
 
-//parses the source program
-void Parser::parseProgram() 
+//post process all calls to procedures undefined at the time of parsing.
+// map["procedure name"] = (mCurrProcIndex, (mLineNum, Node)
+void Parser::processCalls()
 {
-	while(hasToken())
-	{
-		parseProcedure();
-	}
-
-	//process all calls to procedures undefined at the time of parsing.
-	// map["procedure name"] = (mCurrProcIndex, (mLineNum, Node)
 	for (map<string, vector<tuple<ProcIndex, LineNum, Node*> > >::iterator it = mProcCallsBuf.begin(); it != mProcCallsBuf.end(); it++)
 	{
 		int proc_index = mPkb.pTable_GetProcIndex(it->first); 
@@ -194,6 +188,37 @@ void Parser::parseProgram()
 			}
 		}
 	}
+}
+void Parser::processModifyUse()
+{
+}
+
+void Parser::updateModify(Node* parent, int varIndex)
+{
+	while (parent != NULL)
+	{
+		mPkb.mTable_setModify(parent->stmtNum, varIndex);
+		parent = mPkb.ast_getParent(parent);
+	}
+}
+void Parser::updateUse(Node* parent, int varIndex)
+{
+	while (parent != NULL)
+	{
+		mPkb.uTable_setUses(parent->stmtNum, varIndex);
+		parent = mPkb.ast_getParent(parent);
+	}
+}
+
+//parses the source program
+void Parser::parseProgram() 
+{
+	while(hasToken())
+		parseProcedure();
+
+	//post-processing
+	processCalls();
+	processModifyUse();
 }
 
 void Parser::parseProcedure() 
@@ -226,18 +251,13 @@ void Parser::parseProcedure()
 Node *Parser::parseStmtList(Node* parentNode) 
 {
 	string tok =peekToken();
-	string tok1 = peekToken();
 	Node *stmt_list = mPkb.ast_CreateNode(Node::STMT_LIST, mStatNum, -1);
 	Node *prev_node = NULL; 
 	
 	if (tok != "" && tok != ";" && tok != "}")
 	{
-		prev_node = parseStmt();
+		prev_node = parseStmt(parentNode);
 		mPkb.ast_AddDown(stmt_list, prev_node); 
-
-		//adds the current node as the child of the parent if there is a parent.
-		if (parentNode != NULL)
-			mPkb.ast_AddChild(parentNode, prev_node);
 	}
 
 	//continue parsing more statements while
@@ -245,7 +265,7 @@ Node *Parser::parseStmtList(Node* parentNode)
 	//2. closing brace is not encountered
 	while (peekToken() != "" && peekToken() != "}") 
 	{
-		Node *new_node = parseStmt();
+		Node *new_node = parseStmt(parentNode);
 		mPkb.ast_AddFollow(prev_node, new_node);
 		prev_node = new_node;
 
@@ -253,39 +273,54 @@ Node *Parser::parseStmtList(Node* parentNode)
 		if (parentNode != NULL)
 			mPkb.ast_AddChild(parentNode, prev_node);
 	}
+
+	if (prev_node == NULL)
+		throw new string("There must be at least a statement within the braces. (Line " + intToString(mLineNum) + ")");
 	
 	return stmt_list;
 }
 
-Node *Parser::parseStmt()
+Node *Parser::parseStmt(Node* parentNode)
 {
 	string next_tok = peekToken();
 
 	if (next_tok == "while")
-		return parseWhile();
+		return parseWhile(parentNode);
 
 	else if (next_tok == "if")
-		return parseIf();
+		return parseIf(parentNode);
 
 	else if (next_tok == "call")
-		return parseCall();
+		return parseCall(parentNode);
 
 	else
-		return parseAssignment();
+		return parseAssignment(parentNode);
 }
 
 
-Node *Parser::parseWhile()
+Node *Parser::parseWhile(Node* parentNode)
 {
 	match("while");
 	Node *while_node = mPkb.ast_CreateNode(Node::WHILE, mStatNum, -1);
 
+	//adds the current node as the child of the parent if there is a parent.
+	if (parentNode != NULL)
+		mPkb.ast_AddChild(parentNode, while_node);
+
 	//obtains variable token, creates var node and adds it under while node.
 	string var_name = getToken();
+	checkValidName(var_name);
 	if (!isExistingVariable(var_name))
 		mPkb.vTable_InsertVar(var_name);
-	Node *var_node = mPkb.ast_CreateNode(Node::VAR, mStatNum, mPkb.vTable_GetVarIndex(var_name));
+	int var_index = mPkb.vTable_GetVarIndex(var_name);
+	Node *var_node = mPkb.ast_CreateNode(Node::VAR, mStatNum, var_index);
 	mPkb.ast_AddDown(while_node, var_node);
+	
+	//update useTable
+	mPkb.uTable_setUses(mStatNum, var_index);
+	//update ancestors
+	updateUse(parentNode, var_index);
+
 	mStatNum++;
 
 	//while body goes here
@@ -298,20 +333,31 @@ Node *Parser::parseWhile()
 }
 
 
-Node *Parser::parseIf()
+Node *Parser::parseIf(Node* parentNode)
 {
 	//creates if node.
 	match("if");
 	Node *if_node = mPkb.ast_CreateNode(Node::IF, mStatNum, -1);
 
+	//adds the current node as the child of the parent if there is a parent.
+	if (parentNode != NULL)
+		mPkb.ast_AddChild(parentNode, if_node);
+
 	//obtains variable token, creates var node and adds it under if node.
 	string var_name = getToken();
 	if (!isExistingVariable(var_name))
 		mPkb.vTable_InsertVar(var_name);
-	Node *var_node = mPkb.ast_CreateNode(Node::VAR, mStatNum, mPkb.vTable_GetVarIndex(var_name));
+	int var_index = mPkb.vTable_GetVarIndex(var_name);
+	Node *var_node = mPkb.ast_CreateNode(Node::VAR, mStatNum, var_index);
 	mPkb.ast_AddDown(if_node, var_node);
-	mStatNum++;
 	
+	//update useTable
+	mPkb.uTable_setUses(mStatNum, var_index);
+	//update ancestors
+	updateUse(parentNode, var_index);
+
+	mStatNum++;
+
 	//creates a then node then adds it under the down link of if node
 	match("then");
 	match("{");
@@ -330,7 +376,7 @@ Node *Parser::parseIf()
 }
 
 
-Node *Parser::parseCall()
+Node *Parser::parseCall(Node* parentNode)
 {
 	match("call");
 
@@ -339,6 +385,10 @@ Node *Parser::parseCall()
 	int proc_index = mPkb.pTable_GetProcIndex(proc_name); 
 
 	Node* curr = mPkb.ast_CreateNode(Node::CALL, mStatNum++, proc_index);
+
+	//adds the current node as the child of the parent if there is a parent.
+	if (parentNode != NULL)
+		mPkb.ast_AddChild(parentNode, curr);
 
 	//stores into call buffer, check whether the procedure exists when program ends.
 	if (proc_index == -1)
@@ -420,12 +470,18 @@ int Parser::getPriority(string s)
 	}
 }
 
-Node *Parser::parseAssignment() 
+Node *Parser::parseAssignment(Node* parentNode) 
 {
 	string var_name = getToken();
 	checkValidName(var_name);
 	
 	Node *assign = mPkb.ast_CreateNode(Node::ASSIGN, mStatNum, -1);
+
+	//adds the current node as the child of the parent if there is a parent.
+	if (parentNode != NULL)
+		mPkb.ast_AddChild(parentNode, assign);
+
+	//update vartable
 	mPkb.vTable_InsertVar(var_name);
 	int var_index = mPkb.vTable_GetVarIndex(var_name);
 	Node *lhs = mPkb.ast_CreateNode(Node::VAR, mStatNum, var_index);
@@ -433,6 +489,8 @@ Node *Parser::parseAssignment()
 	//update modify tables
 	mPkb.mTable_setModify(mStatNum, var_index);
 	mPkb.mTable_setModifyPV(mCurrProcIndex, var_index);
+	//recursively update modify tables
+	updateModify(parentNode, var_index);
 
 	mPkb.ast_AddDown(assign, lhs);
 	
@@ -467,6 +525,9 @@ Node *Parser::parseAssignment()
 			//Update use tables.
 			mPkb.uTable_setUses(mStatNum, var_index);
 			mPkb.uTable_setUsesPV(mCurrProcIndex, var_index);
+
+			//recursively update use tables.
+			updateUse(parentNode, var_index);
 
 		} //else if valid name
 

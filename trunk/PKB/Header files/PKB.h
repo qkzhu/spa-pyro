@@ -35,6 +35,7 @@ public:
 	void		ast_AddFollow(Node *d, Node *followNode);
 	void		ast_AddProcedure(int procIndex, Node *d);
 	int			ast_getParent(int child);    // For Query Evaluator
+	Node* ast_getParent(Node* n);
 	bool		ast_hasStmt(int stmtNum);   
 	int			ast_getMaxStmtNum();  // For Query Evaluator 
 	vector<int> ast_GetAllAssign();   // For Query Evaluator

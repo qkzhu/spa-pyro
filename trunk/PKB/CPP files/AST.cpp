@@ -57,6 +57,10 @@ vector<int> AST::getChild(int stmtNum)
 	return result;
 }
 
+Node* AST::getParent(Node* d)
+{
+	return d->parentNode;
+}
 
 int AST::getParent(int stmtNum)
 {

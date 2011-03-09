@@ -64,6 +64,11 @@ int PKB::ast_getParent(int child){
 	return ast->getParent(child);
 }
 
+Node *PKB::ast_getParent(Node* n)
+{
+	return ast->getParent(n);
+}
+
 bool PKB::ast_hasStmt(int stmtNum){
 	if(stmtNum <= 0) return false;
 

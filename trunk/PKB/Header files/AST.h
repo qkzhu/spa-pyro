@@ -32,7 +32,8 @@ public:
 	 */
 	Node*		createNode(Node::NodeType nt, int statNum, int name);	
 	vector<int> getChild(int stmtNum);				// get the child node of given node statement number stmtNum.
-	int			getParent(int stmtNum);				// get the parent node of given node statement number stmtNum.
+	int			getParent(int stmtNum);				// get the parent stmt number of given node statement number stmtNum.
+	Node* getParent(Node *d);	// get the parent node of given node statement number stmtNum.
 	Node*		getPreviousStatement(Node* d);		// Get the previous node of given node d, with follow relation.
 	Node*		getFollowingStatement(Node* d);		// Get the follow node of given node d, withe the follow relation.
 	Node*		getNodeByStatementNum(int index);	// Return a node corresponding to the given statement number.
