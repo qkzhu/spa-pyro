@@ -51,8 +51,26 @@ string PqlPreprocessor::varDecode(int i){
 }
 
 string PqlPreprocessor::procDecode(int i){
+	//cout << i << endl;
 	string indx = Convertor::getKeyword(i);
-	Tokenizer s;
-	s.set(indx, "\"");
-	return s.next();
+	vector<string> v;
+	string tmp = "\"";
+	Tokenize(indx, v, tmp);
+	//cout << "It should be correct: "<<v.at(0) << endl;
+	return v.at(0);
+}
+
+void PqlPreprocessor::Tokenize(const string& str,
+                      vector<string>& tokens,
+                      string& delimiters)
+{
+    string::size_type lastPos = str.find_first_not_of(delimiters, 0);
+    string::size_type pos     = str.find_first_of(delimiters, lastPos);
+
+    while (string::npos != pos || string::npos != lastPos)
+    {
+        tokens.push_back(str.substr(lastPos, pos - lastPos));
+        lastPos = str.find_first_not_of(delimiters, pos);
+        pos = str.find_first_of(delimiters, lastPos);
+    }
 }

@@ -208,10 +208,10 @@ QueryTable PqlParser::parser(string s) {
 								switch(suchthatclause)
 								{
 				                case CALLS: case CALLS_T:
-								Convertor::insertShortcut(pch,"procOfSimiple"); break;
+								Convertor::insertShortcut(pch,"procOfSimpl"); break;
 								default:
 								
-								 Convertor::insertShortcut(pch,"varOfSimple"); break;
+								 Convertor::insertShortcut(pch,"varOfSimpl"); break;
 						        }
 					       }
 					   
@@ -272,7 +272,7 @@ QueryTable PqlParser::parser(string s) {
 						 pch=qu.getNextToken();
 						 index=Convertor::getIndex(pch);
 						 if (index>Convertor::QUATEDSTRING)
-						 Convertor::insertShortcut(pch,"varOfSimple");
+						 Convertor::insertShortcut(pch,"varOfSimpl");
 						 prefix=PqlParser::prefix(pch);
 						 if(index!=-1)
 						 {
