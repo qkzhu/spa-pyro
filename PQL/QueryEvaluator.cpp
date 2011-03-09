@@ -693,6 +693,11 @@ vector<int> QueryEvaluator::getFollowsStar(int stmtN){
 		following.push_back(follow);
 		follow = mPKBObject->ast_GetFollowingStatementNum(follow);	
 	}
+	cout << "Checking follows star: " << endl;
+	for(vector<int>::iterator i= following.begin(); i<following.end(); i++){
+		cout << *i << " ";
+	}
+	cout << "Checking END"<< endl;
 	return following;
 }
 

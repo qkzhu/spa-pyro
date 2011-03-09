@@ -33,7 +33,7 @@ procedure   58
 
 call        59
 
-boolean     60
+BOOLEAN     60
 
 , 151
 
@@ -61,6 +61,6 @@ procName    103
 
 integer     201
 
-varOfSimple         202
+varOfSimpl         202
 
-procOfSimiple          203
+procOfSimipl          203
