@@ -46,11 +46,11 @@ private:
 	//functions to parse the source program
 	void parseProcedure();
 	Node *parseStmtList(Node* parentNode);
-	Node *parseStmt();
-	Node *parseAssignment();
-	Node *parseWhile();
-	Node *parseIf();
-	Node *parseCall();
+	Node *parseStmt(Node* parentNode);
+	Node *parseAssignment(Node* parentNode);
+	Node *parseWhile(Node* parentNode);
+	Node *parseIf(Node* parentNode);
+	Node *parseCall(Node* parentNode);
 
 	//functions to check whether tokens are constants or delimiters
 	bool isConstant(string tok);
@@ -67,6 +67,14 @@ private:
 	void checkValidName(std::string var_name);
 	bool isValidName(std::string var_name);
 	void checkValidFile();
+
+	//function to update all ur ancestors
+	void updateModify(Node* parent, int varIndex);
+	void updateUse(Node* parent, int varIndex);
+
+	//functions for post-processing
+	void processCalls();
+	void processModifyUse();
 
 	//member variables to hold files
 	string mFilename;

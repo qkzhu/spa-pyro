@@ -45,15 +45,9 @@ set<int> Modifies::getProcModifies(int varIndex)
 
 void Modifies::setModify(int stmtNum, int varIndex)
 {
-	//update mStmtModMap. Mapping each stmt# to modified variable. 1 stmt can only modify 1 variable. Once set, cant overwrite
-	if(mStmtModMap[stmtNum].size() == 1)
-	{
-		//To terminate program
-	}
-	else
-	{
-		mStmtModMap[stmtNum].insert(varIndex);
-	}
+	//update mStmtModMap. Mapping each stmt# to modified variable. 
+	//can modify multiple variables if stmt is a container.
+	mStmtModMap[stmtNum].insert(varIndex);
 
 	//update mVarStmtMap. Mapping each variable to stmt# that modify the variable
 	mVarStmtMap[varIndex].insert(stmtNum);
@@ -82,7 +76,7 @@ void Modifies::printStmtModVar(VarTable* varTable){
 
 			for(set<int>::iterator itVar = varSet.begin(); itVar != varSet.end(); itVar++)
 			{
-				cout<<varTable->getVarName(*itVar);
+				cout<<varTable->getVarName(*itVar) << ", ";
 			}
 			cout<<endl;
 		}
@@ -116,7 +110,7 @@ void Modifies::printVarModifiedByStmt(VarTable* varTable){
 		set<int> stmtSet;
 		for(map<int, set<int>>::iterator itVar = mVarStmtMap.begin(); itVar != mVarStmtMap.end(); itVar++)
 		{
-			cout<<"Variable "<<varTable->getVarName(itVar->first)<<" is modified by statement#: ";
+			cout<<"Variable "<<varTable->getVarName(itVar->first)<<" is modified in statement#: ";
 			stmtSet = itVar->second;
 			for(set<int>::iterator itStmt = stmtSet.begin(); itStmt != stmtSet.end(); itStmt++)
 				cout<<*itStmt<<", ";
