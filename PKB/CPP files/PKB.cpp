@@ -69,6 +69,11 @@ Node *PKB::ast_getParent(Node* n)
 	return ast->getParent(n);
 }
 
+int PKB::ast_getStmtNum(Node* n)
+{
+	return n->stmtNum;
+}
+
 bool PKB::ast_hasStmt(int stmtNum){
 	if(stmtNum <= 0) return false;
 
@@ -188,6 +193,13 @@ vector<int> PKB::pTable_getCall(int procIndex){
 
 vector<int> PKB::pTable_getCalled(int procIndex){
 	return procTable->getCalled(procIndex);
+}
+
+vector<int> PKB::pTable_getCall_(int procIndex) {
+	return procTable->getCall_(procIndex);
+}
+vector<int> PKB::pTable_getCalled_(int procIndex) {
+	return procTable->getCalled_(procIndex);
 }
 
 /**

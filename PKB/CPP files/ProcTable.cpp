@@ -128,7 +128,6 @@ void ProcTable::addCalled(int procIndex1, vector<int> procList){
 	}
 }//end addCalled(int procIndex1, vector<int> procList)
 
-
 /* get all procedures called by procIndex */
 vector<int> ProcTable::getCall(int procIndex){
 	vector<int> tmpVec;
@@ -196,6 +195,85 @@ vector<int> ProcTable::getCalled(int procIndex){
 	return tmpVec;
 }//end getCalled
 
+/* get all procedures called recursively by procIndex */
+vector<int> ProcTable::getCall_(int procIndex){
+	
+	if (call_Table.find(procIndex) != call_Table.end())
+		return call_Table[procIndex];
+
+	if (!isIndexExist(procIndex)) {
+		vector<int> result;
+		result.push_back(-1);
+		return result;
+	}
+
+	set<int> visited;
+	queue<int> curr_queue;
+
+	//minimum spanning tree
+	vector<int> next_queue = getCall(procIndex);
+	for (int i = 0; i < next_queue.size(); i++)
+		curr_queue.push(next_queue[i]);
+
+	while (!curr_queue.empty())
+	{
+		int curr_proc = curr_queue.front();
+		curr_queue.pop();
+
+		if (visited.find(curr_proc) == visited.end())
+		{
+			visited.insert(curr_proc);
+			vector<int> next_queue = getCall(curr_proc);
+			for (int i = 0; i < next_queue.size(); i++)
+				curr_queue.push(next_queue[i]);
+		}
+	}
+
+	vector<int> result(visited.begin(), visited.end());
+	call_Table[procIndex] = result;
+
+	return result;
+}
+
+/* get all procedures called recursively by procIndex */
+vector<int> ProcTable::getCalled_(int procIndex){
+	
+	if (called_Table.find(procIndex) != called_Table.end())
+		return called_Table[procIndex];
+
+	if (!isIndexExist(procIndex)) {
+		vector<int> result;
+		result.push_back(-1);
+		return result;
+	}
+
+	set<int> visited;
+	queue<int> curr_queue;
+
+	//minimum spanning tree
+	vector<int> next_queue = getCalled(procIndex);
+	for (int i = 0; i < next_queue.size(); i++)
+		curr_queue.push(next_queue[i]);
+
+	while (!curr_queue.empty())
+	{
+		int curr_proc = curr_queue.front();
+		curr_queue.pop();
+
+		if (visited.find(curr_proc) == visited.end())
+		{
+			visited.insert(curr_proc);
+			vector<int> next_queue = getCalled(curr_proc);
+			for (int i = 0; i < next_queue.size(); i++)
+				curr_queue.push(next_queue[i]);
+		}
+	}
+
+	vector<int> result(visited.begin(), visited.end());
+	called_Table[procIndex] = result;
+
+	return result;
+}
 
 //For Debugging
 void ProcTable::printProcTable()
@@ -234,3 +312,35 @@ void ProcTable::printCalledTable(){
 		}
 	}
 }//end printCalledTable
+
+void ProcTable::printCall_Table(){
+	if(call_Table.size() == 0) 
+		cout<<"Call*Table table is empty!"<<endl;
+	else{
+		vector<int> proc2Vec;
+		for(map<int, vector<int>>::iterator itProc1 = call_Table.begin(); itProc1 != call_Table.end(); itProc1++)
+		{
+			cout<<"Procedure "<<this->getProcName(itProc1->first)<<" recursively calls procedure(s): ";
+			proc2Vec = itProc1->second;
+			for(int i = 0; i < proc2Vec.size(); i++)
+				cout<<this->getProcName(proc2Vec[i])<<", ";
+			cout<<endl;
+		}
+	}
+}//end printCall_Table
+
+void ProcTable::printCalled_Table(){
+	if(called_Table.size() == 0) 
+		cout<<"Call*Table table is empty!"<<endl;
+	else{
+		vector<int> proc2Vec;
+		for(map<int, vector<int>>::iterator itProc1 = called_Table.begin(); itProc1 != called_Table.end(); itProc1++)
+		{
+			cout<<"Procedure "<<this->getProcName(itProc1->first)<<" is called recursively by procedure(s): ";
+			proc2Vec = itProc1->second;
+			for(int i = 0; i < proc2Vec.size(); i++)
+				cout<<this->getProcName(proc2Vec[i])<<", ";
+			cout<<endl;
+		}
+	}
+}//end printCall_Table

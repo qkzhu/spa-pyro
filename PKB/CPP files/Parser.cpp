@@ -189,8 +189,32 @@ void Parser::processCalls()
 		}
 	}
 }
+
 void Parser::processModifyUse()
 {
+	//updates modifies!
+	for (int i = 0; i < mProcNodesBuf.size(); i++)
+	{
+		pair<ProcIndex, Node*> curr = mProcNodesBuf[i];
+		vector<ProcIndex> recursiveCall = mPkb.pTable_getCall_(curr.first);
+		
+		//get all the direct and indirect calls
+		for (int j = 0; j < recursiveCall.size(); j++)
+		{
+			//get all the variables modified in the particular (indirect) call
+			vector<int> variables = mPkb.mTable_getModifiedVarPI(recursiveCall[j]);
+
+			//add them to the current procedure
+			for (int k = 0; k < variables.size(); k++)
+			{
+				mPkb.mTable_setModifyPV(curr.first, variables[k]);
+				mPkb.mTable_setModify(mPkb.ast_getStmtNum(curr.second), variables[k]);
+				updateModify(mPkb.ast_getParent(curr.second), variables[k]);
+			}
+		}
+	}
+
+	//TO-DO: update uses!!
 }
 
 void Parser::updateModify(Node* parent, int varIndex)
@@ -318,6 +342,7 @@ Node *Parser::parseWhile(Node* parentNode)
 	
 	//update useTable
 	mPkb.uTable_setUses(mStatNum, var_index);
+	mPkb.uTable_setUsesPV(mCurrProcIndex, var_index);
 	//update ancestors
 	updateUse(parentNode, var_index);
 
@@ -353,6 +378,7 @@ Node *Parser::parseIf(Node* parentNode)
 	
 	//update useTable
 	mPkb.uTable_setUses(mStatNum, var_index);
+	mPkb.uTable_setUsesPV(mCurrProcIndex, var_index);
 	//update ancestors
 	updateUse(parentNode, var_index);
 
@@ -389,6 +415,9 @@ Node *Parser::parseCall(Node* parentNode)
 	//adds the current node as the child of the parent if there is a parent.
 	if (parentNode != NULL)
 		mPkb.ast_AddChild(parentNode, curr);
+
+	//stores the call and node pair for post-processing modify and use.
+	mProcNodesBuf.push_back(make_pair(mCurrProcIndex, curr));
 
 	//stores into call buffer, check whether the procedure exists when program ends.
 	if (proc_index == -1)
