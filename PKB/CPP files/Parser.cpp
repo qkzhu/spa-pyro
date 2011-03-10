@@ -306,9 +306,9 @@ Node *Parser::parseStmtList(Node* parentNode)
 		mPkb.ast_AddFollow(prev_node, new_node);
 		prev_node = new_node;
 
-		//adds the current node as the child of the parent if there is a parent.
-		if (parentNode != NULL)
-			mPkb.ast_AddChild(parentNode, prev_node);
+		////adds the current node as the child of the parent if there is a parent.
+		//if (parentNode != NULL)
+		//	mPkb.ast_AddChild(parentNode, prev_node);
 	}
 
 	if (prev_node == NULL)
