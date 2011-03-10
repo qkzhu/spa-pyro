@@ -325,10 +325,6 @@ void QueryEvaluator::evaluate()
 			para2 = (it2->second).at(1);
 		}
 		
-		cout << para1Type << endl;
-		cout << para1 << endl;
-		cout << PQL_procDecode(para1) << endl;
-		cout << PKB_procEncode("p1") << endl;
 		//Convert all "a", "b", "c" 's code from PQL code to PKB code
 		if(para1Type == mQueryTree->getIndex("varOfSimpl")) para1 = PKB_varEncode(PQL_varDecode(para1));
 		else if(para1Type == mQueryTree->getIndex("procOfSimpl")) para1 = PKB_procEncode(PQL_procDecode(para1));
@@ -588,6 +584,7 @@ vector<vector<int> > QueryEvaluator::getRel(int type1, int type2, int para1, int
 						result = mPKBObject->uTable_getUsedVar(*i);
 					else  result = mPKBObject->mTable_getModifiedVar(*i);
 					
+					//vector<int> asdkfaldsk= mPKBObject->uTable_getUsedVar(4);
 					if(result.at(0) == -1) continue;    //continue this loop without eva this iteration
 					for(vector<int>::iterator k=result.begin(); k<result.end(); k++){
 						if(type2 == mQueryTree->getIndex("varOfSimpl") && para2 != *k) continue;
@@ -675,11 +672,18 @@ vector<vector<int> > QueryEvaluator::getRel(int type1, int type2, int para1, int
 	
 
 vector<int> QueryEvaluator::getChildStar(int stmtN){
+	cout << "stmtN1 = " << stmtN << endl;
 	vector<int> descendant = mPKBObject->ast_GetChild(stmtN);
+	cout << "stmtN3 = " << stmtN << endl;
+	
+	//It is important that I don't use iterator to loop descendant
+	//It will cause some error
 	if( descendant.at(0) != -1){
-		for(vector<int>::iterator i = descendant.begin(); i < descendant.end(); i++){
-			vector<int> k = mPKBObject->ast_GetChild(*i);
-			if(k.at(0) != -1)descendant.insert(descendant.end(), k.begin(), k.end());
+		for(int i = 0; i < descendant.size(); i++){
+			vector<int> k = mPKBObject->ast_GetChild(descendant[i]);
+			if(k.at(0) != -1){
+				descendant.insert(descendant.end(), k.begin(), k.end());
+			}
 		}
 	}
 	return descendant;
@@ -696,11 +700,6 @@ vector<int> QueryEvaluator::getFollowsStar(int stmtN){
 		following.push_back(follow);
 		follow = mPKBObject->ast_GetFollowingStatementNum(follow);	
 	}
-	cout << "Checking follows star: " << endl;
-	for(vector<int>::iterator i= following.begin(); i<following.end(); i++){
-		cout << *i << " ";
-	}
-	cout << "Checking END"<< endl;
 	return following;
 }
 
