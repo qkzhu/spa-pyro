@@ -84,7 +84,9 @@ private:
 
 	static const string mKeyWords[];
 
-	map<string, vector<tuple<ProcIndex, LineNum, Node*> > > mProcCallsBuf; //buffer to store calls to procedure not yet declared.
+	//buffers
+	map<string, vector<tuple<ProcIndex, LineNum, Node*> > > mProcCallsBuf; //store procedures undeclared at the point of parsing
+	vector<pair<ProcIndex, Node*>> mProcNodesBuf;
 };
 
 #endif

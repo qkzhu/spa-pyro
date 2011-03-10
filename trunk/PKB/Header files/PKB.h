@@ -35,7 +35,8 @@ public:
 	void		ast_AddFollow(Node *d, Node *followNode);
 	void		ast_AddProcedure(int procIndex, Node *d);
 	int			ast_getParent(int child);    // For Query Evaluator
-	Node* ast_getParent(Node* n);
+	Node*		ast_getParent(Node* n);
+	int			ast_getStmtNum(Node* n);
 	bool		ast_hasStmt(int stmtNum);   
 	int			ast_getMaxStmtNum();  // For Query Evaluator 
 	vector<int> ast_GetAllAssign();   // For Query Evaluator
@@ -65,6 +66,8 @@ public:
 	void			pTable_AddCall(int procIndex1, int procIndex2);
 	vector<int> 	pTable_getCall(int procIndex);			// For Query Evaluator
 	vector<int> 	pTable_getCalled(int procIndex);		// For Query Evaluator
+	vector<int>		pTable_getCall_(int procIndex);
+	vector<int>		pTable_getCalled_(int procIndex);
 	/**
 	 * ConstantTable Part:3
 	 */

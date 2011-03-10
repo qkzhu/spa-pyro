@@ -6,6 +6,7 @@
 #include <utility>
 #include <set>
 #include <vector>
+#include <queue>
 #include <iostream>	//For Debugging
 
 using namespace std;
@@ -63,15 +64,22 @@ public:
 	void addCalled(int procIndex1, int procIndex2);
 	void addCalled(int procIndex1, vector<int> procList);
 	vector<int> getCall(int procIndex);
+	vector<int> getCall_(int procIndex);
 	vector<int> getCalled(int procIndex);
+	vector<int> getCalled_(int procIndex);
 
 	//For Debugging
 	void printProcTable();
 	void printCallTable();		/* int calls set<int> */
 	void printCalledTable();	/* int was called by set<int> */
+	void printCall_Table();
+	void printCalled_Table();
 private:
 	map<int, set<int>> callTable;		/* int calls set<int> */
 	map<int, set<int>> calledTable;		/* int was called by set<int> */
+
+	map<int, vector<int>> call_Table;
+	map<int, vector<int>> called_Table;
 };
 
 #endif
