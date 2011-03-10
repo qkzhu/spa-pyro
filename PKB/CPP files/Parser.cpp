@@ -193,28 +193,41 @@ void Parser::processCalls()
 void Parser::processModifyUse()
 {
 	//updates modifies!
-	for (int i = 0; i < mProcNodesBuf.size(); i++)
+	for (unsigned int i = 0; i < mProcNodesBuf.size(); i++)
 	{
 		pair<ProcIndex, Node*> curr = mProcNodesBuf[i];
 		vector<ProcIndex> recursiveCall = mPkb.pTable_getCall_(curr.first);
 		
 		//get all the direct and indirect calls
-		for (int j = 0; j < recursiveCall.size(); j++)
+		for (unsigned int j = 0; j < recursiveCall.size(); j++)
 		{
 			//get all the variables modified in the particular (indirect) call
-			vector<int> variables = mPkb.mTable_getModifiedVarPI(recursiveCall[j]);
+			vector<int> modVariables = mPkb.mTable_getModifiedVarPI(recursiveCall[j]);
 
-			//add them to the current procedure
-			for (int k = 0; k < variables.size(); k++)
+			//add them to the current procedure, statement and statement's ancestors
+			for (unsigned int k = 0; k < modVariables.size(); k++)
 			{
-				mPkb.mTable_setModifyPV(curr.first, variables[k]);
-				mPkb.mTable_setModify(mPkb.ast_getStmtNum(curr.second), variables[k]);
-				updateModify(mPkb.ast_getParent(curr.second), variables[k]);
+				if (!mPkb.vTable_IsVarIndexExist(modVariables[k]))
+					continue;
+				mPkb.mTable_setModifyPV(curr.first, modVariables[k]);
+				mPkb.mTable_setModify(mPkb.ast_getStmtNum(curr.second), modVariables[k]);
+				updateModify(mPkb.ast_getParent(curr.second), modVariables[k]);
+			}
+
+			//get all the variables used in the particular (indirect) call
+			vector<int> usedVariables = mPkb.uTable_getUsedVarPI(recursiveCall[j]);
+
+			//add them to the current procedure, statement and statement's ancestors
+			for (unsigned int k = 0; k < usedVariables.size(); k++)
+			{
+				if (!mPkb.vTable_IsVarIndexExist(usedVariables[k]))
+					continue;
+				mPkb.uTable_setUsesPV(curr.first, usedVariables[k]);
+				mPkb.uTable_setUses(mPkb.ast_getStmtNum(curr.second), usedVariables[k]);
+				updateUse(mPkb.ast_getParent(curr.second), usedVariables[k]);
 			}
 		}
 	}
-
-	//TO-DO: update uses!!
 }
 
 void Parser::updateModify(Node* parent, int varIndex)
