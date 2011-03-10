@@ -78,6 +78,7 @@ private:
 	map<int, set<int>> callTable;		/* int calls set<int> */
 	map<int, set<int>> calledTable;		/* int was called by set<int> */
 
+	//these two will only be computed on demand.
 	map<int, vector<int>> call_Table;
 	map<int, vector<int>> called_Table;
 };

@@ -170,7 +170,7 @@ void Parser::processCalls()
 		vector<tuple<ProcIndex, LineNum, Node*> > results = it->second;
 	
 		//stores into call buffer, check whether the procedure exists when program ends.
-		if (proc_index == -1)
+		if (!mPkb.pTable_isProcIndexExist(proc_index))
 		{
 			string output = "Attempt to call non-existing procedure " + it->first + " at line(s) ";
 			for (unsigned int i = 0; i < results.size(); i++)
@@ -196,7 +196,38 @@ void Parser::processModifyUse()
 	for (unsigned int i = 0; i < mProcNodesBuf.size(); i++)
 	{
 		pair<ProcIndex, Node*> curr = mProcNodesBuf[i];
-		vector<ProcIndex> recursiveCall = mPkb.pTable_getCall_(curr.first);
+
+		/***obtains all the variables modified and used in the next procedure***/
+
+		//get all the variables modified in the particular (indirect) call
+		vector<int> nextModVars = mPkb.mTable_getModifiedVarPI(curr.second->id);
+
+		//add them to the current procedure, statement and statement's ancestors
+		for (unsigned int k = 0; k < nextModVars.size(); k++)
+		{
+			if (!mPkb.vTable_IsVarIndexExist(nextModVars[k]))
+				continue;
+			mPkb.mTable_setModifyPV(curr.first, nextModVars[k]);
+			mPkb.mTable_setModify(mPkb.ast_getStmtNum(curr.second), nextModVars[k]);
+			updateModify(mPkb.ast_getParent(curr.second), nextModVars[k]);
+		}
+
+		//get all the variables used in the particular (indirect) call
+		vector<int> nextUsedVars = mPkb.uTable_getUsedVarPI(curr.second->id);
+
+		//add them to the current procedure, statement and statement's ancestors
+		for (unsigned int k = 0; k < nextUsedVars.size(); k++)
+		{
+			if (!mPkb.vTable_IsVarIndexExist(nextUsedVars[k]))
+				continue;
+			mPkb.uTable_setUsesPV(curr.first, nextUsedVars[k]);
+			mPkb.uTable_setUses(mPkb.ast_getStmtNum(curr.second), nextUsedVars[k]);
+			updateUse(mPkb.ast_getParent(curr.second), nextUsedVars[k]);
+		}
+
+
+		//**** obtains all variables in recursive calls ****/
+		vector<ProcIndex> recursiveCall = mPkb.pTable_getCall_(curr.second->id);
 		
 		//get all the direct and indirect calls
 		for (unsigned int j = 0; j < recursiveCall.size(); j++)
@@ -433,7 +464,7 @@ Node *Parser::parseCall(Node* parentNode)
 	mProcNodesBuf.push_back(make_pair(mCurrProcIndex, curr));
 
 	//stores into call buffer, check whether the procedure exists when program ends.
-	if (proc_index == -1)
+	if (!mPkb.pTable_isProcIndexExist(proc_index))
 	{
 		tuple<ProcIndex, LineNum, Node*> curr_tuple(mCurrProcIndex, mLineNum, curr);
 		if (mProcCallsBuf.find(proc_name) == mProcCallsBuf.end())

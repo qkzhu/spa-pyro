@@ -210,8 +210,9 @@ vector<int> ProcTable::getCall_(int procIndex){
 	set<int> visited;
 	queue<int> curr_queue;
 
-	//minimum spanning tree
 	vector<int> next_queue = getCall(procIndex);
+
+	//minimum spanning tree
 	for (unsigned int i = 0; i < next_queue.size(); i++)
 		curr_queue.push(next_queue[i]);
 
@@ -224,6 +225,11 @@ vector<int> ProcTable::getCall_(int procIndex){
 		{
 			visited.insert(curr_proc);
 			vector<int> next_queue = getCall(curr_proc);
+
+			//ensures that -1 does not get creeped into result.
+			if (next_queue.size() == 1 && next_queue[0] == -1)
+				continue;
+
 			for (unsigned int i = 0; i < next_queue.size(); i++)
 				curr_queue.push(next_queue[i]);
 		}
@@ -264,6 +270,11 @@ vector<int> ProcTable::getCalled_(int procIndex){
 		{
 			visited.insert(curr_proc);
 			vector<int> next_queue = getCalled(curr_proc);
+
+			//ensures that -1 does not get creeped into result.
+			if (next_queue.size() == 1 && next_queue[0] == -1)
+				continue;
+
 			for (unsigned int i = 0; i < next_queue.size(); i++)
 				curr_queue.push(next_queue[i]);
 		}
@@ -314,12 +325,22 @@ void ProcTable::printCalledTable(){
 }//end printCalledTable
 
 void ProcTable::printCall_Table(){
+	//ensures that called* is applied on all procedures
+	set<string> allProcs = this->getAllSymbol();
+	for (set<string>::iterator it = allProcs.begin(); it != allProcs.end(); it++)
+		getCall_(getProcIndex(*it));
+
 	if(call_Table.size() == 0) 
 		cout<<"Call*Table table is empty!"<<endl;
 	else{
 		vector<int> proc2Vec;
 		for(map<int, vector<int>>::iterator itProc1 = call_Table.begin(); itProc1 != call_Table.end(); itProc1++)
 		{
+			if (itProc1->second.size() == 1 && itProc1->second[0] == -1)
+			{
+				cout<<"Procedure "<<this->getProcName(itProc1->first)<<" does not call any procedures. " << endl;
+				continue;
+			}
 			cout<<"Procedure "<<this->getProcName(itProc1->first)<<" recursively calls procedure(s): ";
 			proc2Vec = itProc1->second;
 			for(unsigned int i = 0; i < proc2Vec.size(); i++)
@@ -330,12 +351,22 @@ void ProcTable::printCall_Table(){
 }//end printCall_Table
 
 void ProcTable::printCalled_Table(){
+	//ensures that called* is applied on all procedures
+	set<string> allProcs = this->getAllSymbol();
+	for (set<string>::iterator it = allProcs.begin(); it != allProcs.end(); it++)
+		getCalled_(getProcIndex(*it));
+
 	if(called_Table.size() == 0) 
-		cout<<"Call*Table table is empty!"<<endl;
+		cout<<"Called*Table table is empty!"<<endl;
 	else{
 		vector<int> proc2Vec;
 		for(map<int, vector<int>>::iterator itProc1 = called_Table.begin(); itProc1 != called_Table.end(); itProc1++)
 		{
+			if (itProc1->second.size() == 1 && itProc1->second[0] == -1)
+			{
+				cout<<"Procedure "<<this->getProcName(itProc1->first)<<" is not recursively called by any procedures. " << endl;
+				continue;
+			}
 			cout<<"Procedure "<<this->getProcName(itProc1->first)<<" is called recursively by procedure(s): ";
 			proc2Vec = itProc1->second;
 			for(unsigned int i = 0; i < proc2Vec.size(); i++)
