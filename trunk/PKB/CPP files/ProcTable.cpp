@@ -212,7 +212,7 @@ vector<int> ProcTable::getCall_(int procIndex){
 
 	//minimum spanning tree
 	vector<int> next_queue = getCall(procIndex);
-	for (int i = 0; i < next_queue.size(); i++)
+	for (unsigned int i = 0; i < next_queue.size(); i++)
 		curr_queue.push(next_queue[i]);
 
 	while (!curr_queue.empty())
@@ -224,7 +224,7 @@ vector<int> ProcTable::getCall_(int procIndex){
 		{
 			visited.insert(curr_proc);
 			vector<int> next_queue = getCall(curr_proc);
-			for (int i = 0; i < next_queue.size(); i++)
+			for (unsigned int i = 0; i < next_queue.size(); i++)
 				curr_queue.push(next_queue[i]);
 		}
 	}
@@ -252,7 +252,7 @@ vector<int> ProcTable::getCalled_(int procIndex){
 
 	//minimum spanning tree
 	vector<int> next_queue = getCalled(procIndex);
-	for (int i = 0; i < next_queue.size(); i++)
+	for (unsigned int i = 0; i < next_queue.size(); i++)
 		curr_queue.push(next_queue[i]);
 
 	while (!curr_queue.empty())
@@ -264,7 +264,7 @@ vector<int> ProcTable::getCalled_(int procIndex){
 		{
 			visited.insert(curr_proc);
 			vector<int> next_queue = getCalled(curr_proc);
-			for (int i = 0; i < next_queue.size(); i++)
+			for (unsigned int i = 0; i < next_queue.size(); i++)
 				curr_queue.push(next_queue[i]);
 		}
 	}
@@ -322,7 +322,7 @@ void ProcTable::printCall_Table(){
 		{
 			cout<<"Procedure "<<this->getProcName(itProc1->first)<<" recursively calls procedure(s): ";
 			proc2Vec = itProc1->second;
-			for(int i = 0; i < proc2Vec.size(); i++)
+			for(unsigned int i = 0; i < proc2Vec.size(); i++)
 				cout<<this->getProcName(proc2Vec[i])<<", ";
 			cout<<endl;
 		}
@@ -338,7 +338,7 @@ void ProcTable::printCalled_Table(){
 		{
 			cout<<"Procedure "<<this->getProcName(itProc1->first)<<" is called recursively by procedure(s): ";
 			proc2Vec = itProc1->second;
-			for(int i = 0; i < proc2Vec.size(); i++)
+			for(unsigned int i = 0; i < proc2Vec.size(); i++)
 				cout<<this->getProcName(proc2Vec[i])<<", ";
 			cout<<endl;
 		}
