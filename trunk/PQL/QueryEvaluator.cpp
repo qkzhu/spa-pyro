@@ -9,7 +9,7 @@ QueryEvaluator::QueryEvaluator(PKB *p, PqlPreprocessor *q)
 {
 	mPKBObject = p;
 	mQueryTree = q;
-}  
+}
 
 //*********Noting before coding*****************
 //In the current implementation, I just have basic evaluator. Evaluate one clause after one. No complex optimization.
