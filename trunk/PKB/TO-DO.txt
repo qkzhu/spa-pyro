@@ -6,10 +6,10 @@ in B need to be updated as well if B calls procedure C.
 
 
 ProcTable:
-1. pTable_GetAllProc() -> Change return type to int (the maximum proc index)
+1. pTable_GetAllProc() -> Change return type to int (the maximum proc index)   **DONE 
 
 VarTable:
-1. GetAllVar() -> Change return type to int (maximum VarIndex)
+1. GetAllVar() -> Change return type to int (maximum VarIndex)			**DONE
 
 
 
