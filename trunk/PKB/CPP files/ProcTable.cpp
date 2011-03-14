@@ -34,7 +34,7 @@ bool ProcTable::isProcIndexExist(int procIndex)
 	return this->isIndexExist(procIndex);
 }// end ContainsProc
 
-set<string> ProcTable::getAllProc()
+int ProcTable::getAllProc()
 {
 	return this->getAllSymbol();
 }// end GetAllProc

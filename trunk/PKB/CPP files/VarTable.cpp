@@ -32,7 +32,7 @@ bool VarTable::isVarIndexExist(int varIndex) {
 	return this->isIndexExist(varIndex);
 }// end ContainsVar
 
-set<string> VarTable::getAllVar()
+int VarTable::getAllVar()
 {
 	return this->getAllSymbol();
 }// end GetAllVar

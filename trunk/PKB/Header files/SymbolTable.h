@@ -24,7 +24,7 @@ public:
 	int getSymbolMapSize(); // return total number of elements in symbol map
 	bool isNameExist(string name); // takes in symbol name; return bool isNameExist
 	bool isIndexExist(int index); // takes in symbol index; return bool isIndexExist
-	set<string> getAllSymbol();
+	int getAllSymbol();  // return the largest index of symbol (varIndex/ procIndex)
 
 	//For Debugging
 	void printSymbolTable(std::string name);
@@ -41,7 +41,7 @@ public:
 	int getSize(); // total no. of variables in VarTable
 	bool isVarNameExist(string name);
 	bool isVarIndexExist(int index);
-	set<string> getAllVar();
+	int getAllVar(); //return the largest varIndex
 
 	//For Debugging
 	void printVarTable();
@@ -56,7 +56,7 @@ public:
 	int getSize();  // total no. of procedures in ProcTable
 	bool isProcNameExist(string name);
 	bool isProcIndexExist(int index);
-	set<string> getAllProc();
+	int getAllProc(); //return the largest procIndex
 
 	/* For call Tables */
 	void addCall(int procIndex1, int procIndex2);
