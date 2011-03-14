@@ -52,7 +52,7 @@ public:
 	int				vTable_GetVarTableSize(); 
 	bool			vTable_IsVarNameExist(string var);  // For Query Evaluator
 	bool			vTable_IsVarIndexExist(int varIndex);  // For Query Evaluator
-	vector<int>		vTable_GetAllVar();   // For Query Evaluator
+	int				vTable_GetAllVar();   // For Query Evaluator
 	/**
 	 * ProcTable Part:7
 	 */
@@ -62,7 +62,7 @@ public:
 	int				pTable_GetProcTableSize();
 	bool			pTable_isProcNameExist(string procName); // For Query Evaluator
 	bool			pTable_isProcIndexExist(int procIndex);  // For Query Evaluator
-	vector<int>		pTable_GetAllProc();				 // For Query Evaluator
+	int				pTable_GetAllProc();				 // For Query Evaluator
 	void			pTable_AddCall(int procIndex1, int procIndex2);
 	vector<int> 	pTable_getCall(int procIndex);			// For Query Evaluator
 	vector<int> 	pTable_getCalled(int procIndex);		// For Query Evaluator

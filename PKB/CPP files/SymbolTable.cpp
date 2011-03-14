@@ -66,8 +66,9 @@ bool SymbolTable::isIndexExist(int varIndex)
 }
 
 
-set<string> SymbolTable::getAllSymbol()
+int SymbolTable::getAllSymbol() // return only the largest index of symbol
 {
+	/*
 	set<string> symbols;
 	MapType::const_iterator end = mSymbolMap.end();
 	for(MapType::const_iterator it = mSymbolMap.begin(); it != end; it++)
@@ -75,6 +76,8 @@ set<string> SymbolTable::getAllSymbol()
 		symbols.insert(it->first);
 	}
 	return symbols;
+	*/
+	return getSymbolMapSize();
 }
 
 
