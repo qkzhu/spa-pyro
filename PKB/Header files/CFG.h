@@ -17,7 +17,7 @@ public:
 	void getNextUp(vector<int>& theNextUp, int stmt);	//(for different nodes, insert a -1 inside.)
 
 private:
-	map<int, int> procToCFGNodeMap;//procIndex, stmtNum
+	map<int, int> procToCFGNodeMap;	//procIndex, stmtNum
 	map<int, set<int>> forwardMap;	
 	map<int, set<int>> reverseMap;
 };
