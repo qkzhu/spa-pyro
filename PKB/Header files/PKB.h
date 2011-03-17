@@ -43,6 +43,9 @@ public:
 	vector<int> ast_GetAllWhile();	// For Query Evaluator
 	vector<int> ast_GetAllIf();	// For Query Evaluator
 	vector<int>	ast_GetAllCall();  // For Query Evaluator
+	
+	vector<Node*> ast_GetAllProc(); //For CFG
+	vector<Node*> ast_GetDown(Node* n); //For CFG
 	/**
 	 * VarTable Part:5
 	 */

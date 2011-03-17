@@ -43,8 +43,11 @@ public:
 	vector<int> getAllAssign();
 	vector<int> getAllWhile();
 	vector<int> getAllIf();
-	vector<int> getAllProc();
 	vector<int>	getAllCall();
+
+	//for CFG
+	vector<Node*> getAllProc();
+	vector<Node*> getAllDown(Node* n);
 
 	void printTree(ProcTable &procTable, VarTable &varTable);
 	void printNode(Node* n, int level, ProcTable &procTable, VarTable &varTable);
