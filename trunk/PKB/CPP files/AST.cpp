@@ -131,10 +131,6 @@ vector<int> AST::getAllIf(){
 	return this->getAllType(Node::IF);
 }
 
-vector<int> AST::getAllProc(){
-	return this->getAllType(Node::PROC);
-}
-
 vector<int>	AST::getAllCall(){
 	return this->getAllType(Node::CALL);
 }
@@ -154,6 +150,18 @@ vector<int> AST::getAllType(Node::NodeType nt){
 	if(result.size() == 0) result.push_back(-1);
 
 	return result;
+}
+
+vector<Node*> AST::getAllProc(){
+	vector<Node*> result;
+	for (map<int, Node*>::iterator it = astList.begin(); it != astList.end(); it++)
+		result.push_back(it->second);
+	return result;
+}
+
+vector<Node*> getAllDown(Node* n)
+{
+	return n->bottomNodeList;
 }
 
 void AST::printNode(Node* n, int level, ProcTable &procTable, VarTable &varTable)

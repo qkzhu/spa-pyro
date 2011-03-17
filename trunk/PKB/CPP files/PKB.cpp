@@ -99,13 +99,16 @@ vector<int> PKB::ast_GetAllIf(){
 	return ast->getAllIf();
 }
 
-/*
-vector<int> PKB::ast_GetAllProc(){
-	return ast->getAllProc();
-}*/
-
 vector<int>	PKB::ast_GetAllCall(){
 	return ast->getAllCall();
+}
+
+vector<Node*> PKB::ast_GetAllProc(){
+	return ast->getAllProc();
+}
+
+vector<Node*> PKB::ast_GetDown(Node* n){
+	return ast->getAllDown(n);
 }
 
 /**

@@ -2,7 +2,7 @@ List of things to do/change for the next iteration for PKB:
 
 Use/Modifies:
 Arbitrary recursion length when procedure A calls procedure B, and the use and modifies
-in B need to be updated as well if B calls procedure C. 
+in B need to be updated as well if B calls procedure C. **DONE
 
 
 ProcTable:
