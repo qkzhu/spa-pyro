@@ -38,7 +38,7 @@ void CFG::processStatement(Node *inputNode, Node *parentNode, Node* followingNod
 		//either to the parent (for WHILE) or to the following statement (for IF)
 		else
 		{
-			if (parentNode != NULL)
+			if (parentNode != NULL && currNode->type != Node::IF)
 				addNext(mPkb.ast_getStmtNum(currNode), mPkb.ast_getStmtNum(parentNode));
 			
 			if (followingNode != NULL)
@@ -93,8 +93,8 @@ void CFG::processStatement(Node *inputNode, Node *parentNode, Node* followingNod
 			addNext(mPkb.ast_getStmtNum(currNode), mPkb.ast_getStmtNum(firstElseNode));
 
 			//sends the current IF node as parent to a recursive call
-			processStatement(thenList, NULL, nextNode);
-			processStatement(elseList, NULL, nextNode);
+			processStatement(thenList, NULL, (nextNode != NULL) ? nextNode : parentNode);
+			processStatement(elseList, NULL, (nextNode != NULL) ? nextNode : parentNode);
 		}
 
 		currNode = nextNode;
