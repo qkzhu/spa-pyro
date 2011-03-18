@@ -159,7 +159,7 @@ vector<Node*> AST::getAllProc(){
 	return result;
 }
 
-vector<Node*> getAllDown(Node* n)
+vector<Node*> AST::getAllDown(Node* n)
 {
 	return n->bottomNodeList;
 }
