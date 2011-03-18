@@ -31,7 +31,7 @@ void CFG::processStatement(Node *inputNode, Node *parentNode, Node* followingNod
 	{
 		Node *nextNode = mPkb.ast_GetFollowingStatement(currNode);
 		
-		if (nextNode != NULL)
+		if (nextNode != NULL && currNode->type != Node::IF)
 			addNext(mPkb.ast_getStmtNum(currNode), mPkb.ast_getStmtNum(nextNode));
 		
 		//reached the end of the statement, perform adding of next statement 
