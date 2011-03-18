@@ -41,7 +41,7 @@ void CFG::processStatement(Node *inputNode, Node *parentNode, Node* followingNod
 			if (parentNode != NULL && currNode->type != Node::IF)
 				addNext(mPkb.ast_getStmtNum(currNode), mPkb.ast_getStmtNum(parentNode));
 			
-			if (followingNode != NULL)
+			if (followingNode != NULL && currNode->type != Node::IF)
 				addNext(mPkb.ast_getStmtNum(currNode), mPkb.ast_getStmtNum(followingNode));
 		}
 
