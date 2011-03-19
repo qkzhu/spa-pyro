@@ -1,0 +1,112 @@
+16
+cat: modifies
+1
+variable v;
+select v such that modifies ("q1", v);
+x, z 
+5000
+2
+variable v;
+select v such that modifies (8, v);
+x, y, z, i
+5000
+3
+variable v;
+select v such that v.varname = "x" and modifies (8, v);
+x
+5000
+4
+variable v;
+select v such that modifies ("p", v);
+x, z, i
+5000
+5
+procedure p;
+select p such that modifies (p, "x");
+Example,p,q1,q2
+5000
+5
+procedure p;
+select p such that modifies (p, "z");
+Example,p,q2
+5000
+6
+procedure p;
+select p such that modifies (p, "x");
+Example,p,q1,q2
+5000
+7
+assign a;
+select a such that modifies (a, "x");
+1,7,9,11,18,23,26
+5000
+8
+procedure p;
+select p such that modifies (p, 8);
+Example
+5000
+9
+variable v;
+select v such that modifies (10, v);
+x,y
+5000
+10
+variable v;
+select v such that modifies (17, v);
+x,z,i
+5000
+11
+variable v;
+select v such that modifies (20, v);
+x
+5000
+12
+assign a;
+select a such that modifies (a, "i");
+5,15,20
+5000
+12
+assign a;
+select a such that modifies (a, "idunno");
+none
+5000
+13
+while w;
+select w such that modifies (w, "i");
+8, 17
+5000
+14
+procedure p;
+select p such that modifies (p, 17);
+p
+5000
+15
+procedure p;
+select p such that modifies (p, 688);
+none
+5000
+16
+while w;
+select w such that modifies (w, "x");
+8,17,20
+5000
+17
+stmt s;
+select s such that modifies (s, "p");
+none
+5000
+18
+stmt s;
+select s such that modifies (s, "x");
+1,4,7,8,9,11,14,16,17,18,19,20,21,25,28
+5000
+18
+stmt s;
+select s such that modifies (s, "i");
+5,8,15,22
+5000
+18
+assign a;
+select a such that modifies (a, "i");
+5,8,15,22
+5000
