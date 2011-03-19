@@ -573,10 +573,8 @@ Node *Parser::parseAssignment(Node* parentNode)
 	stack<string> ops;
 
 	string next;
-	string next0;
 	while (peekToken() != "" && peekToken() != ";")
 	{
-		next0 = peekToken();
 		next = getToken();
 		Node *curr;
 
@@ -607,7 +605,7 @@ Node *Parser::parseAssignment(Node* parentNode)
 		else if (isOperator(next))
 		{
 			int curr_priority = getPriority(next);
-			while (ops.size() > 0  && curr_priority < getPriority(ops.top()))
+			while (ops.size() > 0  && curr_priority <= getPriority(ops.top()))
 			{
 				if (result.size() < 2)
 					throw new string("Error in expression.");
