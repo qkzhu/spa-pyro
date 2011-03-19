@@ -1,0 +1,8 @@
+modifies 
+1.stmt no.
+2.procedure name
+3.variable name
+4.assign a
+5.while w
+6.if ifstat
+

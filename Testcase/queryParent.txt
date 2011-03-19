@@ -1,0 +1,87 @@
+16
+cat: Parent
+1
+stmt s, s1; 
+select s such that parent (s, s1) with s1.stmt# = 3;
+none
+5000
+2
+stmt s, s1;
+select s such that parent (s, s1) with s1.stmt# = 10;
+8
+5000
+3
+stmt s;
+select s such that parent (s, 4);
+none
+5000
+4
+stmt s;
+select s such that parent (s, 11);
+10
+5000
+5
+stmt s;
+select s such that parent (3, s);
+none
+5000
+6
+stmt s;
+select s such that parent (8, s);
+9, 10, 13, 14, 15
+5000
+7
+while w;
+select w such that parent (w, 20);
+17
+5000
+8
+while w;
+select w such that parent (w, 12);
+none
+5000
+9
+while w;
+select w such that parent (w, 10);
+8
+5000
+10
+while w;
+select w such that parent (w, 3);
+none
+5000
+11
+stmt s, s1;
+select s such that parent (s, s1) with s1.stmt# = 12;
+none
+5000
+12
+stmt s;
+select s such that parent (s, 168);
+none
+5000
+13
+stmt s, s1;
+select s such that parent (s, 14) with s1.stmt# = 16;
+8
+5000
+14
+stmt s, s1;
+select s such that parent (s1, 14) with s1.stmt# = 16;
+none
+5000
+14
+stmt s;
+select s such that parent (14, s);
+none
+5000
+15
+stmt s;
+select s such that parent (s, 21);
+none
+5000
+16
+assign a;
+select a such that parent (a, 21);
+none
+5000
