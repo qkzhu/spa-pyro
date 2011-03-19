@@ -135,6 +135,12 @@ string CFG::intToString(int n)
 
 void CFG::addNext(int firstStmt, int nextStmt)
 {
+	//Check the paramenter
+	if(firstStmt <= 0 || nextStmt <= 0) throw new string("CFG::addNext - Invalid parameter.");
+
+	//Check if the stmtNum already had 2 next stmts
+	if(forwardMap[firstStmt].size() == 2) throw new string("CFG::addNext - Given Stmt already had two next stmt.");
+
 	forwardMap[firstStmt].insert(nextStmt);
 	reverseMap[nextStmt].insert(firstStmt);
 }
@@ -163,3 +169,19 @@ void CFG::getNext(vector<int>& theNext, int stmt){
 void CFG::getNextUp(vector<int>& theNextUp, int stmt){
 	getNextLink(theNextUp, stmt, reverseMap);
 }
+
+//For debugging
+map<int, set<int>> CFG::getForwardMap(){ return this->forwardMap; }
+map<int, set<int>> CFG::getReverseMap(){ return this->reverseMap; }
+
+//For debugging:
+void CFG::prtMap(map<int, set<int>> &currMap){
+	for(map<int, set<int>>::iterator it = currMap.begin(); it != currMap.end(); it++){
+		int a = it->first;
+		set<int> tmp = currMap[a];
+		cout<<"stmt "<<a<<": ";
+		for(set<int>::iterator itSet = tmp.begin(); itSet != tmp.end(); itSet++)
+			cout<<*itSet<<", ";
+		cout<<endl;
+	}
+}//end prtMap
