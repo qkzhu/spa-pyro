@@ -1,4 +1,4 @@
-16
+30
 cat: modifies
 1
 variable v;
@@ -43,7 +43,7 @@ select a such that modifies (a, "x");
 8
 procedure p;
 select p such that modifies (p, 8);
-Example
+none
 5000
 9
 variable v;
@@ -78,7 +78,7 @@ select w such that modifies (w, "i");
 14
 procedure p;
 select p such that modifies (p, 17);
-p
+none
 5000
 15
 procedure p;
@@ -109,4 +109,19 @@ select s such that modifies (s, "i");
 assign a;
 select a such that modifies (a, "i");
 5,8,15,22
+5000
+19
+if ifstat;
+select ifstat such that modifies (ifstat, "i");
+none
+5000
+20
+if ifstat;
+select ifstat such that modifies (ifstat, "q1");
+none
+5000
+21
+if ifstat;
+select ifstat such that modifies (ifstat, "z");
+26
 5000
