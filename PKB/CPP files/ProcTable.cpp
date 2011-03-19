@@ -326,9 +326,15 @@ void ProcTable::printCalledTable(){
 
 void ProcTable::printCall_Table(){
 	//ensures that called* is applied on all procedures
+<<<<<<< .mine
+	int maxProc = this->getAllSymbol();
+	for (int i = 0; i <= maxProc; i++)
+		getCall_(i);
+=======
 	int maxProc = this->getAllProc();
 	for (int i = 0; i <= maxProc; i ++)
 		getCall_(i);
+>>>>>>> .r190
 
 	if(call_Table.size() == 0) 
 		cout<<"Call*Table table is empty!"<<endl;
@@ -352,9 +358,15 @@ void ProcTable::printCall_Table(){
 
 void ProcTable::printCalled_Table(){
 	//ensures that called* is applied on all procedures
+<<<<<<< .mine
+	int maxProc = this->getAllSymbol();
+	for (int i = 0; i <= maxProc; i++)
+		getCalled_(i);
+=======
 	int maxProc = this->getAllProc();
 	for (int i = 0; i <= maxProc; i ++)
 		getCalled_(i);
+>>>>>>> .r190
 
 	if(called_Table.size() == 0) 
 		cout<<"Called*Table table is empty!"<<endl;
