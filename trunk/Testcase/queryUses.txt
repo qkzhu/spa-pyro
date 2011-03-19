@@ -1,0 +1,87 @@
+16
+cat: All Category
+1
+assign a;
+select a such that uses (a, "x");
+2, 5, 9, 11, 12, 13, 21, 23, 24, 25, 27, 28
+5000
+2
+assign a;
+select a such that uses (a, "z");
+7, 12, 13, 18, 23, 25, 28
+5000
+3
+assign a;
+select a such that uses (a, "o");
+none
+5000
+4
+variable v;
+select v such that uses (4, v);
+x, z
+5000 
+5
+variable v;
+select v such that uses (6, v);
+x, z, I
+5000 
+6
+variable v;
+select v such that uses (15, v);
+i
+5000
+7
+variable v;
+select v such that uses (22, v);
+i
+5000
+8
+variable v;
+select v such that uses (1000, v);
+none
+5000 
+9
+if ifstat;
+select ifstat such that uses (ifstat, "x");
+10,26
+5000
+10
+if ifstat;
+select ifstat such that uses (ifstat, "i");
+none
+5000
+11
+if ifstat;
+select ifstat such that uses ("x" , ifstat);
+none
+5000
+12
+procedure p;
+select p such that uses (p, "x");
+example, p, q1, q2
+5000
+13
+procedure p;
+select p such that uses (p, "y");
+example, p
+5000
+14
+procedure p;
+select p such that uses (p, "yo");
+none
+5000
+15
+while w;
+select w such that uses (w, "yo");
+none
+5000
+15
+while w;
+select w such that uses (w, "y");
+17
+5000
+16
+while w;
+select w such that uses (w, "x");
+8,17,20
+5000
