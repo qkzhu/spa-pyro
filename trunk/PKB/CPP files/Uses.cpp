@@ -135,3 +135,65 @@ void Uses::printVarProcMap(ProcTable* pTable, VarTable* varTable){
 		}
 	}
 }//end printVarProcMap
+//For Unit Testing
+/*
+int main(){
+	Uses M;
+	M.setUses(1, 2); //stmt1 uses varIndex 2
+	M.setUses(1, 3); //stmt1 uses varIndex 3
+	cout << "Stmt1 Uses varIndex = ";
+	set<int> test1 = M.getUsedVar(1);
+	for(set<int>::iterator it = test1.begin(); it != test1.end(); it++)
+	{
+		cout << *it << " ";
+	}
+	cout << endl;
+	for (int stmt = 2; stmt <= 12; stmt++)
+	{
+		M.setUses(stmt, 3);  //stmt2 to stmt12 all uses varIndex 3
+	}
+	cout << "varIndex = 3 is used by stmt#: ";
+	set<int> test = M.getStmtUses(3);
+	for(set<int>::iterator it = test.begin(); it != test.end(); it++)
+	{
+		cout << *it << " ";
+	}
+	cout << endl;
+	cout << "varIndex = 109 is used by stmt#: ";
+	set<int> test5 = M.getStmtUses(109);	// No stmt# uses varIndex 109
+	for(set<int>::iterator it = test5.begin(); it != test5.end(); it++)
+	{
+		cout << *it << " ";
+	}
+	cout << endl;
+
+	M.setUsesPV(1,3);  //procIndex 1 uses varIndex 3
+	M.setUsesPV(1,2); //procIndex 1 uses varIndex 2
+	M.setUsesPV(1,33); //procIndex 1 uses varIndex 2
+	cout << "ProcIndex1 uses varIndex = ";
+	set<int> test2 = M.getUsedVarPI(1);
+	for(set<int>::iterator it = test2.begin(); it != test2.end(); it++)
+	{
+		cout << *it << " ";
+	}
+	cout << endl;
+	for (int proc = 2; proc <= 12; proc++)
+	{
+		M.setUsesPV(proc, 2);  //procIndex1 to procIndex12 all uses varIndex 2 becoz procIndex1 already used varIndex 2!
+	}
+	cout << "varIndex = 2 is used by procIndex: ";
+	set<int> test3 = M.getProcUses(2);
+	for(set<int>::iterator it = test3.begin(); it != test3.end(); it++)
+	{
+		cout << *it << " ";
+	}
+	cout << endl;
+	cout << "varIndex = 14 is used by procIndex: ";
+	set<int> test4 = M.getProcUses(14);		//No procIndex uses varIndex 14
+	for(set<int>::iterator it = test4.begin(); it != test4.end(); it++)
+	{
+		cout << *it << " ";
+	}
+	string readin;
+	cin >> readin;
+}*/
