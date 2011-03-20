@@ -6,7 +6,6 @@ using namespace std;
 QueryResult::QueryResult()
 {	
 	mBoolSet = false;
-	mTupleResult = vector<int>();
 }
 
 
@@ -26,12 +25,17 @@ bool QueryResult::getBoolValue()
 	return mBoolResult;	
 }
 
-vector<int> QueryResult::getTuple()
+vector<vector<int> > QueryResult::getTuple()
 {
 	return mTupleResult;
 }
-vector<int> QueryResult::getTypes(){
+vector<int> QueryResult::getTypes()
+{
 	return mTupleType;
+}
+
+int QueryResult::getTypeAt(int indx){
+	return mTupleType.at(indx);
 }
 
 void QueryResult::setBoolValue(bool b)
@@ -40,29 +44,46 @@ void QueryResult::setBoolValue(bool b)
 	mBoolResult = b;
 }
 
-void QueryResult::addInTuple(int value)
-{
-	mTupleResult.push_back(value);
+bool QueryResult::isTupleInserted(vector<int> v){
+	if((int)mTupleResult.size() == 0) return false;
+	for(int i = 0; i < (int)mTupleResult.size(); i++){
+		vector<int> tmp = mTupleResult[i];
+		if(v.size() != tmp.size()) throw new string("QueryResult, trying to insert invalid tuple, error element number!");
+		bool same = true;
+		for(int j = 0; j < (int) tmp.size(); j++){
+			if(tmp[j] != v[j])
+				same = false;
+		}
+		if(same) return true;
+	}
+	return false;
 }
 
-void QueryResult::addInType(int type){
+void QueryResult::addInType(int type)
+{
 	mTupleType.push_back(type);
 }
+
 void QueryResult::addInTuple(vector<int> concat)
 {
-	int s = (concat).size();
-	int i =0;
-	while(i < s){
-		mTupleResult.push_back((concat).at(i++));
+	if(!isTupleInserted(concat))
+		mTupleResult.push_back(concat);
+}
+
+void QueryResult::print(){
+	cout << "QueryResult Looks Like..."<< endl;
+	cout << "types : " ;
+	for(int i = 0; i < (int)mTupleType.size(); i++){
+		cout << mTupleType.at(i) << " ";
 	}
-}
+	cout << endl;
+	cout << "tuples: " << endl;
+	for(int i = 0; i < (int)mTupleResult.size(); i++){
+		for(int j = 0; j < (int)mTupleResult[i].size(); j++){
+			cout << mTupleResult[i][j] << " ";
+		}
+		cout << endl;
+	}
 
-int QueryResult::getValAtTuple(int indx)
-{
-	return mTupleResult.at(indx);	
-}
-
-void QueryResult::deleteValAtTuple(int indx)
-{
-	mTupleResult.erase(mTupleResult.begin()+indx);
+	cout << "OK, that's all!" << endl;
 }

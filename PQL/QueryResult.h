@@ -3,31 +3,33 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 class QueryResult{
 private:
 	bool mBoolSet;
 	bool mBoolResult;
-	std::vector<int> mTupleResult;
+	std::vector<std::vector<int> > mTupleResult;
 	std::vector<int> mTupleType;
 
 public:
 	QueryResult();
 	QueryResult(bool);
 
+	bool isTupleInserted(std::vector<int> v); //whether the v is inserted inside Tuple result already
 	bool isBoolSet();
 	bool getBoolValue();
-	std::vector<int> getTuple();  //
+	std::vector<std::vector<int> > getTuple();  //
 	std::vector<int> getTypes();
+	int getTypeAt(int indx);
 
 	void setBoolValue(bool);   //set bool value
 
 	void addInType(int);
-	void addInTuple(int);  //add a value at index indx in tuple
-	void addInTuple(std::vector<int>);
-	int getValAtTuple(int);  //get the value at index indx in tuple
-	void deleteValAtTuple(int); //delete the value at index indx in tuple, return true upon success
+	void addInTuple(std::vector<int>);  //add a value at index indx in tuple, and check the duplication
 
+
+	void print();
 };
 
 #endif
