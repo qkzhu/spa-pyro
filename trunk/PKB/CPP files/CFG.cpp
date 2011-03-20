@@ -158,7 +158,8 @@ void CFG::getNextLink(vector<int>& theNext, int stmt, map<int, set<int> >& theMa
 		if (++it != theMap[stmt].end())
 			theNext.push_back(-1);
 	}
-	reverseVec(theNext);
+	if(theNext.size() == 3)
+		reverseVec(theNext);
 }
 
 //(for different nodes, insert a -1 inside.)
