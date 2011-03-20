@@ -26,6 +26,7 @@ private:
 	void CFG::getNextLink(vector<int>& theNext, int stmt, map<int, set<int> >& theMap);
 	void processStatement(Node *inputNode, Node *parentNode, Node* followingNode);
 	string intToString(int n);
+	void reverseVec(vector<int>& vec);
 
 	map<int, set<int>> forwardMap;	
 	map<int, set<int>> reverseMap;

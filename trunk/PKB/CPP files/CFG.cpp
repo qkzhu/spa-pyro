@@ -158,6 +158,7 @@ void CFG::getNextLink(vector<int>& theNext, int stmt, map<int, set<int> >& theMa
 		if (++it != theMap[stmt].end())
 			theNext.push_back(-1);
 	}
+	reverseVec(theNext);
 }
 
 //(for different nodes, insert a -1 inside.)
@@ -167,7 +168,25 @@ void CFG::getNext(vector<int>& theNext, int stmt){
 
 //(for different nodes, insert a -1 inside.)
 void CFG::getNextUp(vector<int>& theNextUp, int stmt){
-	getNextLink(theNextUp, stmt, reverseMap);
+	getNextLink(theNextUp, stmt, reverseMap);	
+}
+
+//For HQ's reqest, the bigger stmt number should be at the first position of the vector,
+//followed by -1, then followed by smaller stmt number.
+void CFG::reverseVec(vector<int>& vec){
+	vector<int>::iterator it = vec.begin();
+	int firstStmt = *it;
+	int secStmt = *(it+2);
+	vec.clear();
+	if(firstStmt > secStmt){
+		vec.push_back(firstStmt);
+		vec.push_back(-1);
+		vec.push_back(secStmt);
+	}else {
+		vec.push_back(secStmt);
+		vec.push_back(-1);
+		vec.push_back(firstStmt);
+	}
 }
 
 //For debugging
