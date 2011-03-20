@@ -26,10 +26,12 @@ void AST::addFollow(Node* d, Node* followNode)
 
 void AST::addProcedure(int index, Node* d)
 {
+	if(index < 0) throw new string("AST::addProcedure - Invalid procedure index.");
 	astList.insert(pair<int, Node*>(index,d));
 }
 
 Node* AST::getNodeByProcdureIndex(int procIndex){
+	if(procIndex <= 0) throw new string("AST::getNodeByProcdureIndex - Invalid procedure index.");
 	if(astList.find(procIndex) != astList.end())
 		return astList[procIndex];
 	else return NULL;
@@ -65,7 +67,7 @@ Node* AST::getParent(Node* d)
 int AST::getParent(int stmtNum)
 {
 	
-	if(stmtNum <= 0) return -1;
+	if(stmtNum <= 0) throw new string("AST::getParent - Invalid procedure index.");;
 	
 	int result;
 	Node* currNode = getNodeByStatementNum(stmtNum);
@@ -80,6 +82,7 @@ int AST::getParent(int stmtNum)
 
 Node* AST::createNode(Node::NodeType nt, int statNum, int name)
 {
+	if(statNum <= 0) throw new string("AST::createNode - Invalid statNum or nameIndex.");
 	Node* newNode = new Node(nt, statNum, name);
 
 	if(nt == Node::ASSIGN || nt == Node::CALL || nt == Node::WHILE || nt == Node::IF) {
