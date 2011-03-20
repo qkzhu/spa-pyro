@@ -134,3 +134,66 @@ void Modifies::printVarModifiedByProc(ProcTable* pTable, VarTable* varTable){
 		}
 	}
 }//end printVarModifiedByProc
+
+//For Unit Testing
+/*
+int main(){
+	Modifies M;
+	M.setModify(1, 2); //stmt1 modifies varIndex 2
+	M.setModify(1, 3); //stmt1 modifies varIndex 3
+	cout << "Stmt1 modifies varIndex = ";
+	set<int> test1 = M.getModifiedVar(1);
+	for(set<int>::iterator it = test1.begin(); it != test1.end(); it++)
+	{
+		cout << *it << " ";
+	}
+	cout << endl;
+	for (int stmt = 2; stmt <= 12; stmt++)
+	{
+		M.setModify(stmt, 3);  //stmt2 to stmt12 all modifies varIndex 3
+	}
+	cout << "varIndex = 3 is modified by stmt#: ";
+	set<int> test = M.getStmtModifies(3);
+	for(set<int>::iterator it = test.begin(); it != test.end(); it++)
+	{
+		cout << *it << " ";
+	}
+	cout << endl;
+	cout << "varIndex = 109 is modified by stmt#: ";
+	set<int> test5 = M.getStmtModifies(109);	// No stmt# modify varIndex 109
+	for(set<int>::iterator it = test5.begin(); it != test5.end(); it++)
+	{
+		cout << *it << " ";
+	}
+	cout << endl;
+
+	M.setModifyPV(1,3);  //procIndex 1 modifies varIndex 3
+	M.setModifyPV(1,2); //procIndex 1 modifies varIndex 2
+	M.setModifyPV(1,33); //procIndex 1 modifies varIndex 2
+	cout << "ProcIndex1 modifies varIndex = ";
+	set<int> test2 = M.getModifiedVarPI(1);
+	for(set<int>::iterator it = test2.begin(); it != test2.end(); it++)
+	{
+		cout << *it << " ";
+	}
+	cout << endl;
+	for (int proc = 2; proc <= 12; proc++)
+	{
+		M.setModifyPV(proc, 2);  //procIndex1 to procIndex12 all modifies varIndex 2 becoz procIndex1 already modified varIndex 2!
+	}
+	cout << "varIndex = 2 is modified by procIndex: ";
+	set<int> test3 = M.getProcModifies(2);
+	for(set<int>::iterator it = test3.begin(); it != test3.end(); it++)
+	{
+		cout << *it << " ";
+	}
+	cout << endl;
+	cout << "varIndex = 14 is modified by procIndex: ";
+	set<int> test4 = M.getProcModifies(14);		//No procIndex modifies varIndex 14
+	for(set<int>::iterator it = test4.begin(); it != test4.end(); it++)
+	{
+		cout << *it << " ";
+	}
+	string readin;
+	cin >> readin;
+}*/
