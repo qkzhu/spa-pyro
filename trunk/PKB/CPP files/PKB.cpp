@@ -310,6 +310,14 @@ vector<string> PKB::convertSetToVector(set<string> setString){
 	return result;
 }
 
+/*
+ *   Pattern
+ */
+
+bool PKB::patternAssign(int stmtNum, string patternLeft, string patternRight)
+{
+	return pattern.patternAssign(stmtNum, patternLeft, patternRight, *ast, *varTable);
+}
 
 //For Debugging
 void PKB::printTree()
