@@ -42,19 +42,19 @@ int main()
 {	
 	cout << "Starting .. .. .. \n\n" << endl;
 	VarTable t;
-	t.InsertVar("first");
-	t.InsertVar("second");
-	cout << "Does mVarMap contains \"second\" ? " << t.ContainsVar("second") << endl;
+	t.insertVar("first");
+	t.insertVar("second");
+	cout << "Does mVarMap contains \"second\" ? " << t.isVarNameExist("second") << endl;
 	string readin;
-	for(int i=0; i< t.GetSize() + 1; i++)
+	for(int i=0; i< t.getSize() + 1; i++)
 	{
-		cout << "mVarMap[" << i << "] = " << t.GetVarName(i) << endl;
-		cout << "Index at \"" << t.GetVarName(i) << "\" is " << t.GetVarIndex(t.GetVarName(i)) << endl;
+		cout << "mVarMap[" << i << "] = " << t.getVarName(i) << endl;
+		cout << "Index at \"" << t.getVarName(i) << "\" is " << t.getVarIndex(t.getVarName(i)) << endl;
 	}
+	cout << t.getAllVar() << endl;
 	cin >> readin;
 	return 0;
 }//end main */
-
 
 //For debugging
 void VarTable::printVarTable()

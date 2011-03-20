@@ -375,3 +375,26 @@ void ProcTable::printCalled_Table(){
 		}
 	}
 }//end printCall_Table
+
+//For Unit testing
+/*
+int main()
+{
+	ProcTable p;
+	p.insertProc("dasf");
+	p.insertProc("hi");
+	p.insertProc("asfd");
+	p.insertProc("x");
+	p.insertProc("d");
+	p.addCall(1,2); //procIndex1 call procIndex2
+	p.addCall(1,3); //procIndex1 call procIndex3
+	p.addCall(1,4); //procIndex1 call procIndex4
+	vector<int> v = p.getCall(1);
+	for(int i=0; i<v.size(); i++)
+	{
+		cout << v.at(i) << " ";
+	}
+	cout << endl;
+	char s;
+	cin >> s;
+}*/
