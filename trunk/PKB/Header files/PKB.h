@@ -6,6 +6,7 @@
 #include "ConstantTable.h"
 #include "Modifies.h"
 #include "Uses.h"
+#include <sstream>
 
 
 class PKB
@@ -109,6 +110,7 @@ public:
 	Uses* getUseTable();
 	Modifies* getModifyTable();
 	void printVectorInt(vector<int>);
+	string intToString(int i);
 
 private:
 	AST*			ast;
