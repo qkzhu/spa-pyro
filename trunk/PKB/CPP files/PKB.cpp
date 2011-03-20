@@ -350,3 +350,10 @@ void PKB::printVectorInt(vector<int> vec){
 	}
 	cout<<endl;
 }
+
+string PKB::intToString(int i)
+{
+   stringstream ss;//create a stringstream
+   ss << i;//add number to the stream
+   return ss.str();
+}
