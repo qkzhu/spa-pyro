@@ -6,6 +6,7 @@
 #include "ConstantTable.h"
 #include "Modifies.h"
 #include "Uses.h"
+#include "Pattern.h"
 #include <sstream>
 
 
@@ -99,6 +100,11 @@ public:
 	void		 mTable_setModify(int stmtNum, int varIndex);
 	void		 mTable_setModifyPV(int procIndex, int varIndex);
 
+	/**
+	 * Pattern
+	 */
+	bool patternAssign(int stmtNum, string patternLeft, string patternRight); //For Query Evaluator
+
 	/*
 		Debugging functions
 	*/
@@ -120,6 +126,7 @@ private:
 	ConstantTable*	constantTable;
 	Uses*			useTable;
 	Modifies*		modifyTable;
+	Pattern pattern;
 	vector<int>		convertSetToVector(set<int>);
 	vector<string>	convertSetToVector(set<string>);
 };

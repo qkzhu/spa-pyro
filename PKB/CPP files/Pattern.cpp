@@ -52,7 +52,7 @@ string Pattern::removeSpacesAndQuotes(string s)
 	return output;
 }
 
-void Pattern::addOperator(vector<Node*> &tree, char op, PKB& pkb)
+void Pattern::addOperator(vector<Node*> &tree, char op, AST& ast, VarTable& varTable)
 {
 	if (tree.size() < 2)
 		throw new string("Error in pattern.");
@@ -66,13 +66,13 @@ void Pattern::addOperator(vector<Node*> &tree, char op, PKB& pkb)
 	else if (op == '*')
 		type = Node::TIMES;
 
-	//create a tree for this operator
-	Node *curr = pkb.ast_CreateNode(type, -1, -1);
+	//create a tree for this operator 
+	Node *curr = ast.createNode(type, 3333, 0);
 	
 	//adds the top two trees in the results stack to the current tree's 
 	//left and right child
-	pkb.ast_AddDown(curr, tree[tree.size() - 2]);
-	pkb.ast_AddDown(curr, tree[tree.size() - 1]);
+	ast.addDown(curr, tree[tree.size() - 2]);
+	ast.addDown(curr, tree[tree.size() - 1]);
 
 	//pops the top two trees
 	tree.pop_back();
@@ -82,7 +82,7 @@ void Pattern::addOperator(vector<Node*> &tree, char op, PKB& pkb)
 	tree.push_back(curr);
 }
 
-Node *Pattern::generateNode(string input, PKB& pkb)
+Node *Pattern::generateNode(string input, AST& ast, VarTable& varTable)
 {
 	//removes all spaces and quotes inside the input first.
 	input = removeSpacesAndQuotes(input);
@@ -105,7 +105,7 @@ Node *Pattern::generateNode(string input, PKB& pkb)
 					throw new string("Invalid pattern string: " + input);
 				
 				//adds the operator to the result tree
-				addOperator(result, ops.top(), pkb);
+				addOperator(result, ops.top(), ast, varTable);
 
 				//pops off the current operator from the operator stack
 				ops.pop();
@@ -123,14 +123,14 @@ Node *Pattern::generateNode(string input, PKB& pkb)
 
 		if (isConstant(next))
 		{
-			curr = pkb.ast_CreateNode(Node::CONST, -1, atoi(next.c_str()));
+			curr = ast.createNode(Node::CONST, 1, atoi(next.c_str()));
 			result.push_back(curr);
 		} //if constant
 
 		else if (isValidName(next))
 		{
-			int var_index = pkb.vTable_GetVarIndex(next);
-			curr = pkb.ast_CreateNode(Node::VAR, -1, var_index);
+			int var_index = varTable.getVarIndex(next);
+			curr = ast.createNode(Node::VAR, 3333, var_index);
 			result.push_back(curr);
 		} //else if valid name
 
@@ -141,7 +141,7 @@ Node *Pattern::generateNode(string input, PKB& pkb)
 		//pops off all remaining operators on the stack
 	while (ops.size() > 0)
 	{
-		addOperator(result, ops.top(), pkb);
+		addOperator(result, ops.top(), ast, varTable);
 		ops.pop();
 	}
 
@@ -151,21 +151,24 @@ Node *Pattern::generateNode(string input, PKB& pkb)
 	return result[0];
 }
 
-bool Pattern::patternAssign(int stmtNum, string patternLeft, string patternRight, PKB& pkb)
+bool Pattern::patternAssign(int stmtNum, string patternLeft, string patternRight, AST& ast, VarTable& varTable)
 {
-	Node *assign = pkb.ast_GetNodeByStatementNum(stmtNum);
+	if (stmtNum <= 0 || stmtNum > ast.getMaxStmtNum())
+		throw new string("Pattern: Invalid statement number.");
+
+	Node *assign = ast.getNodeByStatementNum(stmtNum);
 
 	if (assign->type != Node::ASSIGN)
 		return false;
 
 	//check that it has two bottom nodes, and the left is a variable
-	vector<Node*> bottomNodes = pkb.ast_GetDown(assign);
+	vector<Node*> bottomNodes = ast.getAllDown(assign);
 	if (bottomNodes.size() < 2 || bottomNodes[0]->type != Node::VAR || 
 		bottomNodes[0]->stmtNum != stmtNum)
 		return false;
 
 	//check that the modified variable corresponds to the pattern on the left
-	int var_index = pkb.vTable_GetVarIndex(patternLeft);
+	int var_index = varTable.getVarIndex(patternLeft);
 	if (var_index != bottomNodes[0]->id)
 		return false;
 
@@ -190,21 +193,57 @@ bool Pattern::patternAssign(int stmtNum, string patternLeft, string patternRight
 		matchEnd = false;
 	}
 
-	Node *inputNode = generateNode(patternRight, pkb);
-	Node *existingNode = bottomNodes[1];
+	if (patternRight.size() == 0)
+		throw new string("Pattern: Empty expression passed.");
 
-	return match(inputNode, existingNode, matchFront, matchEnd);
+	string input = stringToPrefix(patternRight);
+	string existing = nodeToPrefix(bottomNodes[1], ast, varTable);
+
+	return match(input, existing, matchFront, matchEnd);
 }
 
 //matches input and existing string using postfix.
-bool Pattern::match(Node* inputNode, Node* existingNode, bool matchFront, bool matchEnd)
+bool Pattern::match(const string& input, const string& existing, bool matchFront, bool matchEnd)
 {
+	//exact match
+	if (matchFront && matchEnd)
+		return input == existing;
 
+	//match from middle, ensuring that all characters before first the operator that matches
+	//with the input are all operators themselves
+	else if (matchFront)
+	{
+		for (unsigned int i = 0; i < existing.size() && existing.size() - i >= input.size(); i++)
+		{
+			if (existing.substr(i, input.size()) == input)
+				return true;
 
-	return false;
+			if (!isOperator(existing[i]))
+				break;
+		}
+		return false;
+	}
+
+	//match the prefix substring from behind
+	else if (matchEnd)
+	{
+		int i = existing.size();
+		int j = input.size();
+		while (j-- && i --)
+			if (existing[i] != input[j])
+				break;
+
+		return input.size() > 0 && j < 0;
+	}
+
+	//input must be a substring of existing
+	else
+		return existing.find(input) != string::npos;;
+
+	//won't reach here.
 }
 
-void Pattern::printNode(Node* n, int level, PKB &pkb)
+void Pattern::printNode(Node* n, int level, AST& ast, VarTable& varTable)
 {
 	for (int i = 0; i < level; i++)
 		cout << "\t";
@@ -228,7 +267,7 @@ void Pattern::printNode(Node* n, int level, PKB &pkb)
 		break;
 
 	case Node::VAR:
-		cout << pkb.vTable_GetVarName(n->id) << endl;
+		cout << varTable.getVarName(n->id) << endl;
 		break;
 
 	default:
@@ -238,15 +277,78 @@ void Pattern::printNode(Node* n, int level, PKB &pkb)
 
 	//print children
 	for  (unsigned int i = 0; i < n->bottomNodeList.size(); i++)
-		printNode(n->bottomNodeList[i], level + 1, pkb);
+		printNode(n->bottomNodeList[i], level + 1, ast, varTable);
 
 	//print following node if it exists
 	if (n->followNode != NULL)
-		printNode(n->followNode, level, pkb);
+		printNode(n->followNode, level, ast, varTable);
+}
+
+//converts from infix to prefix
+string Pattern::stringToPrefix(string& input)
+{
+	//removes all spaces and quotes inside the input first.
+	input = removeSpacesAndQuotes(input);
+
+	string result;
+	stack<char> ops;
+	
+	//prefix algorithm: same as postfix, except that expression
+	//is processed is reverse order, and the result is reversed again.
+	int i = input.size()-1;
+	int j = 0;
+	while (i >= 0)
+	{
+		//implicitly encountered delimiter
+		if (isOperator(input[i]))
+		{
+			int curr_priority = getPriority(input[i]);
+			while (ops.size() > 0  && curr_priority < getPriority(ops.top()))
+			{
+				if (result.size() < 2)
+					throw new string("Invalid pattern string: " + input);
+				
+				//adds the operator to the result tree
+				result += ops.top();
+
+				//pops off the current operator from the operator stack
+				ops.pop();
+			}
+
+			ops.push(input[i]);
+			i--;
+		} //if delimiter encountered
+
+		//gets the next token
+		j = i;
+		while (i >= 0 && !isDelimiter(input[i]))
+			i--;
+		string next = input.substr(i+1, j-i);
+
+		if (isConstant(next) || isValidName(next))
+			result += next;
+
+		else
+			throw new string("Invalid pattern string:" + input);
+	}
+
+	//pops off all remaining operators on the stack
+	while (ops.size() > 0)
+	{
+		result += ops.top();
+		ops.pop();
+	}
+
+	string reversed = "";
+	int k = result.size();
+	while (k--)
+		reversed += result[k];
+
+	return reversed;
 }
 
 //generates the postfix expression from a given string
-string Pattern::stringToPostFix(string input)
+string Pattern::stringToPostFix(string& input)
 {
 	//removes all spaces and quotes inside the input first.
 	input = removeSpacesAndQuotes(input);
@@ -303,10 +405,50 @@ string Pattern::stringToPostFix(string input)
 	return result;
 }
 
-//generates the postfix expression from a given node
-string Pattern::nodeToPostFix(Node *node, PKB& pkb)
+
+string Pattern::nodeToPrefix(Node *node, AST& ast, VarTable& varTable)
 {
-	vector<Node*> children = pkb.ast_GetDown(node);
+	vector<Node*> children = ast.getAllDown(node);
+	string result = "";
+
+	//process current node first.
+	switch (node->type)
+	{
+	case Node::PLUS:
+		result += "+";
+		break;
+	case Node::MINUS:
+		result += "-";
+		break;
+	case Node::TIMES:
+		result += "*";
+		break;
+	case Node::VAR:
+		result += varTable.getVarName(node->id);
+		break;
+	default:
+		throw new string("Invalid node type in expression");
+	}
+
+	if (children.size() != 0 && children.size() != 2)
+		throw new string("Invalid expression tree.");
+
+	//a given node in an expression tree has either two children or none
+	if (children.size() == 2)
+	{
+		//adds the left child
+		result += nodeToPrefix(children[0], ast, varTable);
+		//adds the right child
+		result += nodeToPrefix(children[1], ast, varTable);
+	}
+
+	return result;
+}
+
+//generates the postfix expression from a given node
+string Pattern::nodeToPostFix(Node *node, AST& ast, VarTable& varTable)
+{
+	vector<Node*> children = ast.getAllDown(node);
 	string result = "";
 
 	if (children.size() != 0 && children.size() != 2)
@@ -316,9 +458,9 @@ string Pattern::nodeToPostFix(Node *node, PKB& pkb)
 	if (children.size() == 2)
 	{
 		//adds the left child
-		result += nodeToPostFix(children[0], pkb);
+		result += nodeToPostFix(children[0], ast, varTable);
 		//adds the right child
-		result += nodeToPostFix(children[1], pkb);
+		result += nodeToPostFix(children[1], ast, varTable);
 	}
 
 	switch (node->type)
@@ -333,10 +475,7 @@ string Pattern::nodeToPostFix(Node *node, PKB& pkb)
 		result += "*";
 		break;
 	case Node::VAR:
-		if (!pkb.vTable_IsVarIndexExist(node->id))
-			throw new string("Variable with var index " + pkb.intToString(node->id));
-
-		result += pkb.vTable_GetVarName(node->id);
+		result += varTable.getVarName(node->id);
 		break;
 	default:
 		throw new string("Invalid node type in expression");
