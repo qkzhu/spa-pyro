@@ -1,7 +1,7 @@
 #ifndef CFG_H
 #define CFG_H
 
-#include "PKB.h"
+#include "AST.h"
 #include <map>
 
 using namespace std;
@@ -9,13 +9,13 @@ using namespace std;
 class CFG
 {
 public:
-	CFG(PKB &pkb);
+	CFG();
 	void generateCFG();
 
 	void addNext(int firstStmt, int nextStmt);
 
-	void getNext(vector<int>& theNext, int stmt);		//(for different nodes, insert a -1 inside.)
-	void getNextUp(vector<int>& theNextUp, int stmt);	//(for different nodes, insert a -1 inside.)
+	void getNext(vector<int>& theNext, int stmt, AST* ast);		//(for different nodes, insert a -1 inside.)
+	void getNextUp(vector<int>& theNextUp, int stmt, AST* ast);	//(for different nodes, insert a -1 inside.)
 
 	//For debugging
 	map<int, set<int>> CFG::getForwardMap();
@@ -30,7 +30,7 @@ private:
 
 	map<int, set<int>> forwardMap;	
 	map<int, set<int>> reverseMap;
-	PKB &mPkb;
+	AST* mAst;
 };
 
 
