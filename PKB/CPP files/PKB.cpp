@@ -365,3 +365,13 @@ string PKB::intToString(int i)
    ss << i;//add number to the stream
    return ss.str();
 }
+
+
+void PKB::cfg_getNext(vector<int>& theNext, int stmt)
+{
+	cfg->getNext(theNext, stmt, ast);
+}
+void PKB::cfg_getNextUp(vector<int>& theNextUp, int stmt)
+{
+	cfg->getNextUp(theNextUp, stmt, ast);
+}

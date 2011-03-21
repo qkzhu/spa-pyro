@@ -7,6 +7,7 @@
 #include "Modifies.h"
 #include "Uses.h"
 #include "Pattern.h"
+#include "CFG.h"
 #include <sstream>
 
 
@@ -21,7 +22,7 @@ public:
 		   procTable(new ProcTable()),
 		   constantTable(new ConstantTable()),
 		   useTable(new Uses()), modifyTable(new Modifies()), 
-		   ast(new AST()){}
+		   ast(new AST()), cfg(new CFG()){}
 	/**
 	 * AST Part:9
 	 */
@@ -105,6 +106,12 @@ public:
 	 */
 	bool patternAssign(int stmtNum, string patternLeft, string patternRight); //For Query Evaluator
 
+	/**
+	 * CFG
+	 */
+	void cfg_getNext(vector<int>& theNext, int stmt);		//(for different nodes, insert a -1 inside.)
+	void cfg_getNextUp(vector<int>& theNextUp, int stmt);   //(for different nodes, insert a -1 inside.)
+
 	/*
 		Debugging functions
 	*/
@@ -126,6 +133,8 @@ private:
 	ConstantTable*	constantTable;
 	Uses*			useTable;
 	Modifies*		modifyTable;
+	CFG*			cfg;
+
 	Pattern pattern;
 	vector<int>		convertSetToVector(set<int>);
 	vector<string>	convertSetToVector(set<string>);

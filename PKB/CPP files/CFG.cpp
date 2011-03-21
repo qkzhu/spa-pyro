@@ -3,7 +3,7 @@
 
 using namespace std;
 
-CFG::CFG(PKB& pkb):mPkb(pkb) 
+CFG::CFG():mAst(NULL)
 { 
 }
 
@@ -19,7 +19,7 @@ void CFG::processStatement(Node *inputNode, Node *parentNode, Node* followingNod
 	if (inputNode == NULL)
 		throw new string("CFG (processStatement)- firstNode is NULL");
 
-	vector<Node*> bottomNodes = mPkb.ast_GetDown(inputNode);
+	vector<Node*> bottomNodes = mAst->getAllDown(inputNode);
 
 	if (bottomNodes.size() == 0)
 		throw new string("CFG (processStatement)- statement list has no body");
@@ -29,37 +29,37 @@ void CFG::processStatement(Node *inputNode, Node *parentNode, Node* followingNod
 	//process all nodes chained by following links until a terminal node is reached
 	while (currNode != NULL)
 	{
-		Node *nextNode = mPkb.ast_GetFollowingStatement(currNode);
+		Node *nextNode = mAst->getFollowingStatement(currNode);
 		
 		if (nextNode != NULL && currNode->type != Node::IF)
-			addNext(mPkb.ast_getStmtNum(currNode), mPkb.ast_getStmtNum(nextNode));
+			addNext(mAst->getStatementNumByNode(currNode), mAst->getStatementNumByNode(nextNode));
 		
 		//reached the end of the statement, perform adding of next statement 
 		//either to the parent (for WHILE) or to the following statement (for IF)
 		else
 		{
 			if (parentNode != NULL && currNode->type != Node::IF)
-				addNext(mPkb.ast_getStmtNum(currNode), mPkb.ast_getStmtNum(parentNode));
+				addNext(mAst->getStatementNumByNode(currNode), mAst->getStatementNumByNode(parentNode));
 			
 			if (followingNode != NULL && currNode->type != Node::IF)
-				addNext(mPkb.ast_getStmtNum(currNode), mPkb.ast_getStmtNum(followingNode));
+				addNext(mAst->getStatementNumByNode(currNode), mAst->getStatementNumByNode(followingNode));
 		}
 
 		if (currNode->type == Node::WHILE)
 		{
-			vector<Node*> bottomNodes = mPkb.ast_GetDown(currNode);
+			vector<Node*> bottomNodes = mAst->getAllDown(currNode);
 
 			if (bottomNodes.size() < 2 || bottomNodes[1] == NULL)
 				throw new string("CFG: WHILE has no statement list.");
 
 			Node *stmtList = bottomNodes[1];
 
-			vector<Node*> whileDownNodes = mPkb.ast_GetDown(stmtList);
+			vector<Node*> whileDownNodes = mAst->getAllDown(stmtList);
 			if (whileDownNodes.size() == 0)
 				throw new string("CFG: WHILE statement list is empty");
 
 			Node* firstNode = whileDownNodes[0];
-			addNext(mPkb.ast_getStmtNum(currNode), mPkb.ast_getStmtNum(firstNode));
+			addNext(mAst->getStatementNumByNode(currNode), mAst->getStatementNumByNode(firstNode));
 
 
 			//sends the current WHILE node as parent to a recursive call
@@ -68,7 +68,7 @@ void CFG::processStatement(Node *inputNode, Node *parentNode, Node* followingNod
 
 		else if (currNode->type == Node::IF)
 		{
-			vector<Node*> bottomNodes = mPkb.ast_GetDown(currNode);
+			vector<Node*> bottomNodes = mAst->getAllDown(currNode);
 
 			if (bottomNodes.size() < 3)
 				throw new string("CFG (processStatement): IF is missing either a THEN or an ELSE statement list");
@@ -77,20 +77,20 @@ void CFG::processStatement(Node *inputNode, Node *parentNode, Node* followingNod
 			Node *elseList = bottomNodes[2];
 
 			//adds the next to the first then node
-			vector<Node*> thenDownNodes = mPkb.ast_GetDown(thenList);
+			vector<Node*> thenDownNodes = mAst->getAllDown(thenList);
 			if (thenDownNodes.size() == 0)
 				throw new string("CFG: THEN statement list is empty");
 
 			Node* firstThenNode = thenDownNodes[0];
-			addNext(mPkb.ast_getStmtNum(currNode), mPkb.ast_getStmtNum(firstThenNode));
+			addNext(mAst->getStatementNumByNode(currNode), mAst->getStatementNumByNode(firstThenNode));
 
 			//adds the next to the first else node
-			vector<Node*> elseDownNodes = mPkb.ast_GetDown(elseList);
+			vector<Node*> elseDownNodes = mAst->getAllDown(elseList);
 			if (elseDownNodes.size() == 0)
 				throw new string("CFG: ELSE statement list is empty");
 
 			Node* firstElseNode = elseDownNodes[0];
-			addNext(mPkb.ast_getStmtNum(currNode), mPkb.ast_getStmtNum(firstElseNode));
+			addNext(mAst->getStatementNumByNode(currNode), mAst->getStatementNumByNode(firstElseNode));
 
 			//sends the current IF node as parent to a recursive call
 			processStatement(thenList, NULL, (nextNode != NULL) ? nextNode : parentNode);
@@ -103,12 +103,12 @@ void CFG::processStatement(Node *inputNode, Node *parentNode, Node* followingNod
 
 void CFG::generateCFG()
 {
-	vector<Node*> procs = mPkb.ast_GetAllProc();
+	vector<Node*> procs = mAst->getAllProc();
 
 	//process all the procedures inside the AST
 	for (unsigned int i = 0; i < procs.size(); i++)
 	{
-		vector<Node*> bottomNodes = mPkb.ast_GetDown(procs[i]);
+		vector<Node*> bottomNodes = mAst->getAllDown(procs[i]);
 				
 		//check whether procedure has a node below
 		if (bottomNodes.size() == 0)
@@ -163,12 +163,23 @@ void CFG::getNextLink(vector<int>& theNext, int stmt, map<int, set<int> >& theMa
 }
 
 //(for different nodes, insert a -1 inside.)
-void CFG::getNext(vector<int>& theNext, int stmt){
+void CFG::getNext(vector<int>& theNext, int stmt, AST* ast){
+	if (mAst == NULL)
+	{
+		mAst = ast;
+		generateCFG();
+	}
 	getNextLink(theNext, stmt, forwardMap);
 }		
 
 //(for different nodes, insert a -1 inside.)
-void CFG::getNextUp(vector<int>& theNextUp, int stmt){
+void CFG::getNextUp(vector<int>& theNextUp, int stmt, AST* ast){
+	if (mAst == NULL)
+	{
+		mAst = ast;
+		generateCFG();
+	}
+
 	getNextLink(theNextUp, stmt, reverseMap);	
 }
 
