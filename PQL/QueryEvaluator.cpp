@@ -1177,7 +1177,7 @@ void QueryEvaluator::getAffects(int up, vector<int>& result, int para){
 	mPKBObject->mTable_getModifiedVar(tmp, para);
 	int modified = tmp[0];
 	vector<int> used;
-	mPKBObject->mTable_getStmtModifies(used, modified);
+	mPKBObject->uTable_getStmtUses(used, modified);
 	if(up == DOWN){
 		if(used[0] != -1){
 			for(int i = 0 ; i< (int) used.size(); i++){
@@ -1438,8 +1438,22 @@ void QueryEvaluator::getAllType(vector<int>& result, int type){
 	else if(type == mQueryTree->getIndex("while")) mPKBObject->ast_GetAllWhile(result);
 	else if(type == mQueryTree->getIndex("if")) mPKBObject->ast_GetAllIf(result);
 	else if(type == mQueryTree->getIndex("call")) mPKBObject->ast_GetAllCall(result);
-	else if(type == mQueryTree->getIndex("variable")) mPKBObject->vTable_GetAllVar(result);
-	else if(type == mQueryTree->getIndex("procedure")) mPKBObject->pTable_GetAllProc(result);
+	else if(type == mQueryTree->getIndex("variable")) getAllProc(result);
+	else if(type == mQueryTree->getIndex("procedure")) getAllVar(result);
 	else if(type == mQueryTree->getIndex("constant")) mPKBObject->cTable_GetAllConstants(result);
 	else throw new string("QueryEvaluator::getAllType, type not exist!");
+}
+
+void QueryEvaluator::getAllProc(vector<int>& result){
+	int max = mPKBObject->pTable_GetAllProc();
+	for(int i = 0; i < max; i++){
+		result.push_back(i);
+	}
+}
+
+void QueryEvaluator::getAllVar(vector<int>& result){
+	int max = mPKBObject->vTable_GetAllVar();
+	for(int i = 0; i < max; i++){
+		result.push_back(i);
+	}
 }
