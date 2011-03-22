@@ -8,8 +8,8 @@ Node* PKB::ast_CreateNode(Node::NodeType nt, int statNum, int name) {
 	return ast->createNode(nt, statNum, name);
 }
 
-vector<int> PKB::ast_GetChild(int stmtNum) {
-	return ast->getChild(stmtNum);
+void PKB::ast_GetChild(int stmtNum, vector<int>& result) {
+	ast->getChild(stmtNum, result);
 }
 
 Node* PKB::ast_GetPreviousStatement(Node* d){
@@ -87,20 +87,21 @@ int PKB::ast_getMaxStmtNum(){
 	return ast->getMaxStmtNum();
 }
 
-vector<int> PKB::ast_GetAllAssign(){
-	return ast->getAllAssign();
+
+void PKB::ast_GetAllAssign(vector<int>& result){
+	ast->getAllAssign(result);
 }
 
-vector<int> PKB::ast_GetAllWhile(){
-	return ast->getAllWhile();
+void PKB::ast_GetAllWhile(vector<int>& result){
+	ast->getAllWhile(result);
 }
 
-vector<int> PKB::ast_GetAllIf(){
-	return ast->getAllIf();
+void PKB::ast_GetAllIf(vector<int>& result){
+	ast->getAllIf(result);
 }
 
-vector<int>	PKB::ast_GetAllCall(){
-	return ast->getAllCall();
+void PKB::ast_GetAllCall(vector<int>& result){
+	ast->getAllCall(result);
 }
 
 vector<Node*> PKB::ast_GetAllProc(){
@@ -192,19 +193,19 @@ void PKB::pTable_AddCall(int procIndex1, int procIndex2){
 	procTable->addCall(procIndex1, procIndex2);
 }
 
-vector<int> PKB::pTable_getCall(int procIndex){
-	return procTable->getCall(procIndex);
+void PKB::pTable_getCall(int procIndex, vector<int>& result){
+	procTable->getCall(procIndex, result);
 }
 
-vector<int> PKB::pTable_getCalled(int procIndex){
-	return procTable->getCalled(procIndex);
+void PKB::pTable_getCalled(int procIndex, vector<int>& result){
+	procTable->getCalled(procIndex, result);
 }
 
-vector<int> PKB::pTable_getCall_(int procIndex) {
-	return procTable->getCall_(procIndex);
+void PKB::pTable_getCall_(int procIndex, vector<int>& result) {
+	procTable->getCall_(procIndex, result);
 }
-vector<int> PKB::pTable_getCalled_(int procIndex) {
-	return procTable->getCalled_(procIndex);
+void PKB::pTable_getCalled_(int procIndex, vector<int>& result) {
+	procTable->getCalled_(procIndex, result);
 }
 
 /**
@@ -214,11 +215,10 @@ void PKB::cTable_AddConstant(int c){
 	constantTable->addConstant(c);
 }
 
-vector<int> PKB::cTable_GetAllConstants(){
-	vector<int> result = convertSetToVector(constantTable->getAllConstants());
+void PKB::cTable_GetAllConstants(vector<int>& result){
+	convertSetToVector(constantTable->getAllConstants(), result);
 
 	if(result.size() == 0) result.push_back(-1);
-	return result;
 }
 
 bool PKB::cTable_IsConstantExist(int c){
@@ -244,39 +244,39 @@ void PKB::uTable_setUsesPV(int procIndex, int varIndex){
 	useTable->setUsesPV(procIndex, varIndex);
 }//end uTable_setUsesPV
 
-vector<int> PKB::uTable_getUsedVar(int stmtNum) {
-	return convertSetToVector(useTable->getUsedVar(stmtNum));
+void PKB::uTable_getUsedVar(int stmtNum, vector<int>& result) {
+	convertSetToVector(useTable->getUsedVar(stmtNum), result);
 }//end uTable_getUsedVar
 
-vector<int> PKB::uTable_getUsedVarPI(int procIndex){
-	return convertSetToVector(useTable->getUsedVarPI(procIndex));
+void PKB::uTable_getUsedVarPI(int procIndex, vector<int>& result){
+	convertSetToVector(useTable->getUsedVarPI(procIndex), result);
 }//end uTable_getUsedVarPI
 
-vector<int> PKB::uTable_getStmtUses(int varIndex){
-	return convertSetToVector(useTable->getStmtUses(varIndex));
+void PKB::uTable_getStmtUses(int varIndex, vector<int>& result){
+	convertSetToVector(useTable->getStmtUses(varIndex), result);
 }//end uTable_getStmtUses
 
-vector<int> PKB::uTable_getProcUses(int varIndex){
-	return convertSetToVector(useTable->getProcUses(varIndex));
+void PKB::uTable_getProcUses(int varIndex, vector<int>& result){
+	convertSetToVector(useTable->getProcUses(varIndex), result);
 }//end uTable_getProcUses
 
 /**
  * ModifyTable Part
  */
-vector<int> PKB::mTable_getModifiedVar(int statNum){
-	return convertSetToVector(modifyTable->getModifiedVar(statNum));
+void PKB::mTable_getModifiedVar(int statNum, vector<int>& result){
+	convertSetToVector(modifyTable->getModifiedVar(statNum), result);
 }
 
-vector<int> PKB::mTable_getModifiedVarPI(int procIndex){
-	return convertSetToVector(modifyTable->getModifiedVarPI(procIndex));
+void PKB::mTable_getModifiedVarPI(int procIndex, vector<int>& result){
+	convertSetToVector(modifyTable->getModifiedVarPI(procIndex), result);
 }
 
-vector<int> PKB::mTable_getStmtModifies(int varIndex){
-	return convertSetToVector(modifyTable->getStmtModifies(varIndex));
+void PKB::mTable_getStmtModifies(int varIndex, vector<int>& result){
+	return convertSetToVector(modifyTable->getStmtModifies(varIndex), result);
 }
 
-vector<int> PKB::mTable_getProcModifies(int procIndex){
-	return convertSetToVector(modifyTable->getProcModifies(procIndex));
+void PKB::mTable_getProcModifies(int procIndex, vector<int>& result){
+	return convertSetToVector(modifyTable->getProcModifies(procIndex), result);
 }
 
 void PKB::mTable_setModify(int stmtNum, int varIndex){
@@ -292,22 +292,15 @@ void PKB::mTable_setModifyPV(int procIndex, int varIndex){
 /**
  * PKB Part
  */
-vector<int> PKB::convertSetToVector(set<int> setInt){
-	vector<int> result;
+void PKB::convertSetToVector(set<int>& setInt, vector<int>& result){
 
 	for(set<int>::iterator it = setInt.begin(); it != setInt.end(); it++)
 		result.push_back(*it);
-
-	return result;
 }
 
-vector<string> PKB::convertSetToVector(set<string> setString){
-	vector<string> result;
-
+void PKB::convertSetToVector(set<string>& setString, vector<string>& result){
 	for(set<string>::iterator it = setString.begin(); it != setString.end(); it++)
 		result.push_back(*it);
-
-	return result;
 }
 
 /*

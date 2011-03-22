@@ -31,7 +31,7 @@ public:
 	 * for retrive the node by using statment number.
 	 */
 	Node*		createNode(Node::NodeType nt, int statNum, int name);	
-	vector<int> getChild(int stmtNum);				// get the child node of given node statement number stmtNum.
+	void		getChild(int stmtNum, vector<int>&);// get the child node of given node statement number stmtNum.
 	int			getParent(int stmtNum);				// get the parent stmt number of given node statement number stmtNum.
 	Node* getParent(Node *d);	// get the parent node of given node statement number stmtNum.
 	Node*		getPreviousStatement(Node* d);		// Get the previous node of given node d, with follow relation.
@@ -40,10 +40,10 @@ public:
 	int			getStatementNumByNode(Node* d);		// Return statement number corresponding to the given node.
 	int			getMaxStmtNum();
 
-	vector<int> getAllAssign();
-	vector<int> getAllWhile();
-	vector<int> getAllIf();
-	vector<int>	getAllCall();
+	void getAllAssign(vector<int>&);
+	void getAllWhile(vector<int>&);
+	void getAllIf(vector<int>&);
+	void getAllCall(vector<int>&);
 
 	//for CFG
 	vector<Node*> getAllProc();
@@ -59,7 +59,7 @@ private:
 	map<int, Node*> StatNumAndNodeList;			// StatNumAndNodeList stores the relation between statement number and node.
 	map<Node*, int>	NodeAndStatNumList;			// NodeAndStatNumList stores the relation between node and statement number.
 
-	vector<int> getAllType(Node::NodeType nt);	// Return all statement number with the given node type.
+	void AST::getAllType(Node::NodeType nt, vector<int>& result);	// Return all statement number with the given node type.
 };	
 
 #endif

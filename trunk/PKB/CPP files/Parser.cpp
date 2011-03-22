@@ -200,7 +200,8 @@ void Parser::processModifyUse()
 		/***obtains all the variables modified and used in the next procedure***/
 
 		//get all the variables modified in the particular (indirect) call
-		vector<int> nextModVars = mPkb.mTable_getModifiedVarPI(curr.second->id);
+		vector<int> nextModVars;
+		mPkb.mTable_getModifiedVarPI(curr.second->id, nextModVars);
 
 		//add them to the current procedure, statement and statement's ancestors
 		for (unsigned int k = 0; k < nextModVars.size(); k++)
@@ -213,7 +214,8 @@ void Parser::processModifyUse()
 		}
 
 		//get all the variables used in the particular (indirect) call
-		vector<int> nextUsedVars = mPkb.uTable_getUsedVarPI(curr.second->id);
+		vector<int> nextUsedVars;
+		mPkb.uTable_getUsedVarPI(curr.second->id, nextUsedVars);
 
 		//add them to the current procedure, statement and statement's ancestors
 		for (unsigned int k = 0; k < nextUsedVars.size(); k++)
@@ -227,13 +229,15 @@ void Parser::processModifyUse()
 
 
 		//**** obtains all variables in recursive calls ****/
-		vector<ProcIndex> recursiveCall = mPkb.pTable_getCall_(curr.second->id);
+		vector<ProcIndex> recursiveCall;
+		mPkb.pTable_getCall_(curr.second->id, recursiveCall);
 		
 		//get all the direct and indirect calls
 		for (unsigned int j = 0; j < recursiveCall.size(); j++)
 		{
 			//get all the variables modified in the particular (indirect) call
-			vector<int> modVariables = mPkb.mTable_getModifiedVarPI(recursiveCall[j]);
+			vector<int> modVariables;
+			mPkb.mTable_getModifiedVarPI(recursiveCall[j], modVariables);
 
 			//add them to the current procedure, statement and statement's ancestors
 			for (unsigned int k = 0; k < modVariables.size(); k++)
@@ -246,7 +250,8 @@ void Parser::processModifyUse()
 			}
 
 			//get all the variables used in the particular (indirect) call
-			vector<int> usedVariables = mPkb.uTable_getUsedVarPI(recursiveCall[j]);
+			vector<int> usedVariables;
+			mPkb.uTable_getUsedVarPI(recursiveCall[j], usedVariables);
 
 			//add them to the current procedure, statement and statement's ancestors
 			for (unsigned int k = 0; k < usedVariables.size(); k++)
