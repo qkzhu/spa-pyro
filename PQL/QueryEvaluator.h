@@ -36,7 +36,7 @@ private:
 	void evalWith(vector<vector<int> >& result, vector<int>& equal_var, vector<int>& var_value_table);
 	
 	//The result_tuple is passed down for optimisation purpose, result is initially empty
-	void evalPattern(vector<vector<int> >& result_tuple, vector<int>& result, int var, int var_type, int pattern1, int pattern2);
+	void evalPattern_PQL(vector<vector<int> >& result_tuple, vector<int>& result, int var, int var_type, int pattern1, int pattern2);
 
 	//read such that clause, deal with _ specifically
 	void underScore(int rel, vector<int> clause, int& para1, int& para1_type, int& para2, int& para2_type, int& var_code_ending);
@@ -68,8 +68,8 @@ private:
 
 	//For evaluating pattern
 	//result passed in is initially filled with all candidates ///////////////IMPORTANT
-	void getPatternAssign(std::vector<int>& result, string patternLeft, string patternRight);
-	void getPatternCond(std::vector<int>& result, int type, string patternCond);
+	void getPattern_PQLAssign(std::vector<int>& result, string patternLeft, string patternRight);
+	void getPattern_PQLCond(std::vector<int>& result, int type, string patternCond);
 
 	//For evaluation other iteration 1 relations
 	void evalFollows(int star, std::vector<std::vector<int> >& result, const std::vector<int>& para1, const std::vector<int>& para2);
@@ -85,8 +85,8 @@ private:
 	
 	//Other augmental functions
 	void getAllStmts(std::vector<int>& result);
-	void getAllProc(std::vector<int>& result);
 	void getAllVar(std::vector<int>& result);
+	void getAllProc(std::vector<int>& result);
 
 	string PQL_procDecode(int);
 	int PQL_procEncode(string);
@@ -116,7 +116,6 @@ public:
 	void evaluate();//Preprocessor call evaluate to pass Query tree to Evaluator
 	QueryResult getResult();//After calling evaluate, the result stored inside mResult and can be retrieved by this function.
 
-	
 	int PQL_getIndex(string);
 	void printResult();
 };

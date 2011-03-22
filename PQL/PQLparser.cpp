@@ -254,7 +254,7 @@ string PqlParser::patternParser(int type,TokenList *quPointer,QueryTable *tableP
 					index=Convertor::getIndex(pch);
 			        
 
-					if(index<USERDEFINED||index>USERDEFINED+STEP) throw new string("not valid symbol "+ pch+ " after the Pattern \n");
+					if(index<USERDEFINED||index>USERDEFINED+STEP) throw new string("not valid symbol "+ pch+ " after the Pattern_PQL \n");
 					prefix=PqlParser::prefix(pch);
 					
 					//cout<<"the pattern"<<pch<<"----"<<index<<"-------"<<prefix<<endl;
@@ -268,7 +268,7 @@ string PqlParser::patternParser(int type,TokenList *quPointer,QueryTable *tableP
 					pch=qu->getNextToken();
 					index=Convertor::getIndex(pch);
 					
-					if(index!=L_QUOT) throw new string("miss L_QUOT in the Pattern clause");
+					if(index!=L_QUOT) throw new string("miss L_QUOT in the Pattern_PQL clause");
 					switch (patterntype)
 					{
 					case WHILE: case ASSIGN:
@@ -283,7 +283,7 @@ string PqlParser::patternParser(int type,TokenList *quPointer,QueryTable *tableP
 						 
 						 pch=qu->getNextToken();
 					     index=Convertor::getIndex(pch);
-						 if(index!=COMMA) throw new string("miss COMMA after the "+pch+" in Pattern while /n ");
+						 if(index!=COMMA) throw new string("miss COMMA after the "+pch+" in Pattern_PQL while /n ");
 						 content.push_back(index);
 
 						 pch=qu->getNextToken();
@@ -296,7 +296,7 @@ string PqlParser::patternParser(int type,TokenList *quPointer,QueryTable *tableP
 						 pch=qu->getNextToken();
 					     index=Convertor::getIndex(pch);
 					
-					     if(index!=R_QUOT) throw new string("miss R_QUOT in the Pattern clause");
+					     if(index!=R_QUOT) throw new string("miss R_QUOT in the Pattern_PQL clause");
 
 
 						break;					
@@ -311,7 +311,7 @@ string PqlParser::patternParser(int type,TokenList *quPointer,QueryTable *tableP
 
 						 pch=qu->getNextToken();
 					     index=Convertor::getIndex(pch);
-						 if(index!=COMMA) throw new string("miss COMMA after the "+pch+" in Pattern while /n ");
+						 if(index!=COMMA) throw new string("miss COMMA after the "+pch+" in Pattern_PQL while /n ");
 						 content.push_back(index);
 
 						 pch=qu->getNextToken();
@@ -323,7 +323,7 @@ string PqlParser::patternParser(int type,TokenList *quPointer,QueryTable *tableP
 
 						 pch=qu->getNextToken();
 					     index=Convertor::getIndex(pch);
-						 if(index!=COMMA) throw new string("miss COMMA after the "+pch+" in Pattern while /n ");
+						 if(index!=COMMA) throw new string("miss COMMA after the "+pch+" in Pattern_PQL while /n ");
 						 content.push_back(index);
 
 						 pch=qu->getNextToken();
@@ -339,7 +339,7 @@ string PqlParser::patternParser(int type,TokenList *quPointer,QueryTable *tableP
 						 pch=qu->getNextToken();
 					     index=Convertor::getIndex(pch);
 					
-					     if(index!=R_QUOT) throw new string("miss R_QUOT in the Pattern clause");
+					     if(index!=R_QUOT) throw new string("miss R_QUOT in the Pattern_PQL clause");
 
 
 						break;

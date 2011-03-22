@@ -82,7 +82,7 @@ int Convertor::update()
 		 return false;
 
  }
- bool Convertor::isPatterned(string s)
+ bool Convertor::isPattern_PQLed(string s)
  {
 	 string a="_\"";
 	 string b="\"_";
@@ -125,7 +125,7 @@ int Convertor::getIndex(string token)//given a token, looking up for the coressp
 				else
                 throw new string("negative int contains\n");
 			}  
-			else if(isPatterned(token))
+			else if(isPattern_PQLed(token))
 			{
 				insertIndex(++u ,token);
 				insertShortcut(token,"patternOfSimpl");

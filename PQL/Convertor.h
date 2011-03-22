@@ -21,7 +21,7 @@ private:
 	static map<int,string> indexToKeyword;//map the index with the keyword; index->keyword
 	static map<string, int> keywordToIndex;//map the keyword with the index; keyword->index
 	static map<string, string> shortcutToContent;//s->stmt;
-	static bool isPatterned(string s);
+	static bool isPattern_PQLed(string s);
 public:
 	static void showIndexTable();
 	static const int QUATEDSTRING=400;

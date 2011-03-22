@@ -40,7 +40,7 @@ void QueryEvaluator::evaluate()
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////FOR DEBUGGING
 	cout<< "PQL parser checking"<< endl;
-	cout << "Pattern clauses: " << endl;
+	cout << "Pattern_PQL clauses: " << endl;
 	for(int i=0; i< mQueryTree->patternSize(); i++){
 		vector<int> tmp_pattern;
 		mQueryTree->patternAt(tmp_pattern, i);
@@ -199,7 +199,7 @@ void QueryEvaluator::evaluate()
 
 	
 
-	//Pattern Evaluation Start
+	//Pattern_PQL Evaluation Start
 	int patternSize = mQueryTree->patternSize();
 	for(int i = 0; i < patternSize; i++){
 		vector<int> clause;
@@ -233,7 +233,7 @@ void QueryEvaluator::evaluate()
 		//pattern clause read-in finish//
       
 		vector<int> pattern_result;
-		evalPattern(eva_tuple, pattern_result, var, var_type, pattern1, pattern2);
+		evalPattern_PQL(eva_tuple, pattern_result, var, var_type, pattern1, pattern2);
 
 		int it = find_ele(mgTupleIndexing, var);
 		if(it == (int)mgTupleIndexing.size()){
@@ -250,7 +250,7 @@ void QueryEvaluator::evaluate()
 					eva_tuple.erase(eva_tuple.begin() + row);
 			}
 		}
-	}//Pattern Evaluation Finish
+	}//Pattern_PQL Evaluation Finish
 
 	//Start evaluating SuchThat clauses
 	int suchThatSize = mQueryTree->suchThatSize();
@@ -312,16 +312,17 @@ void QueryEvaluator::evaluate()
 		//Check the input argument candidates
 		vector<int> para1_collection;
 		vector<int> para2_collection;
-
+		
 		if(para1Type == mQueryTree->getIndex("integer")) para1_collection.push_back(para1);
-		else if(para1Type == mQueryTree->getIndex("procOfSimple")) para1_collection.push_back(para1);
-		else if(para1Type == mQueryTree->getIndex("varOfSimple")) para1_collection.push_back(para1);
+		else if(para1Type == mQueryTree->getIndex("procOfSimpl")) para1_collection.push_back(para1);
+		else if(para1Type == mQueryTree->getIndex("varOfSimpl")) para1_collection.push_back(para1);
 		else getAllType(para1_collection, para1Type);
 
 		if(para2Type == mQueryTree->getIndex("integer")) para2_collection.push_back(para2);
-		else if(para2Type == mQueryTree->getIndex("procOfSimple")) para2_collection.push_back(para2);
-		else if(para2Type == mQueryTree->getIndex("varOfSimple")) para2_collection.push_back(para2);
+		else if(para2Type == mQueryTree->getIndex("procOfSimpl")) para2_collection.push_back(para2);
+		else if(para2Type == mQueryTree->getIndex("varOfSimpl")) para2_collection.push_back(para2);
 		else getAllType(para2_collection, para2Type);
+		
 
 		/*
 		//////////////////////////////////////TESTING /////////////////////////////////////////////////////////
@@ -675,7 +676,7 @@ void QueryEvaluator::underScore(int rel, vector<int> clause, int& para1, int& pa
 	}else throw new string("QueryEvaluator::underScore, no such relation type!");  //do nothing 
 }
 
-void QueryEvaluator::evalPattern(vector<vector<int> >& result_tuple, vector<int>& result, int var, int var_type, int pattern1, int pattern2){
+void QueryEvaluator::evalPattern_PQL(vector<vector<int> >& result_tuple, vector<int>& result, int var, int var_type, int pattern1, int pattern2){
 	int indx = find_ele(mgTupleIndexing, var);
 	int found = 0;
 	if(indx != (int)mgTupleIndexing.size()){
@@ -687,16 +688,16 @@ void QueryEvaluator::evalPattern(vector<vector<int> >& result_tuple, vector<int>
 	if(var_type == mQueryTree->getIndex("assign")){
 		if(found == 0)
 			mPKBObject->ast_GetAllAssign(result);
-		getPatternAssign(result, mQueryTree->getContent(pattern1), mQueryTree->getContent(pattern2));
+		getPattern_PQLAssign(result, mQueryTree->getContent(pattern1), mQueryTree->getContent(pattern2));
 	}else if(var_type == mQueryTree->getIndex("if") || var_type == mQueryTree->getIndex("while")){
 		if(found == 0)
 			if(var_type == mQueryTree->getIndex("if"))
 				mPKBObject->ast_GetAllIf(result);
 			else if(var_type == mQueryTree->getIndex("while"))
 				mPKBObject->ast_GetAllWhile(result);
-		getPatternCond(result, var_type, mQueryTree->getContent(pattern1));
+		getPattern_PQLCond(result, var_type, mQueryTree->getContent(pattern1));
 	}else 
-		throw new string("QueryEvaluator::evalPattern, no such variable type!");
+		throw new string("QueryEvaluator::evalPattern_PQL, no such variable type!");
 }
 
 void QueryEvaluator::joinTuples(vector<vector<int> >& eva_tuple, vector<vector<int> >& pre_tuple, int common_num, int same1_tuple1, int same2_tuple1){
@@ -1048,7 +1049,7 @@ void QueryEvaluator::evalNext(int star, vector<vector<int> >& result, const vect
 		for(int l = 0; l < (int)para1.size(); l++){
 			int stmtN = para1[l];
 			vector<int> nexts;
-			if(star == NOSTAR) mPKBObject->getNext(nexts, stmtN);
+			if(star == NOSTAR) mPKBObject->cfg_getNext(nexts, stmtN);
 			else if(star == STAR) getNextStar(DOWN, nexts, stmtN);
 			else throw new string("QueryEvaluator::evalNext, no such star type!");
 			
@@ -1068,7 +1069,7 @@ void QueryEvaluator::evalNext(int star, vector<vector<int> >& result, const vect
 		for(int l = 0; l < (int)para2.size(); l++){
 			int stmtN = para2[l];
 			vector<int> nexts;
-			if(star == NOSTAR) mPKBObject->getNextUp(nexts, stmtN);
+			if(star == NOSTAR) mPKBObject->cfg_getNextUp(nexts, stmtN);
 			else if(star == STAR) getNextStar(UP, nexts, stmtN);
 			else throw new string("QueryEvaluator::evalNext, no such star type!");
 			for(int i = 0; i < (int)nexts.size() ; i++){
@@ -1105,7 +1106,7 @@ void QueryEvaluator::getNextStar(int up, vector<int>& result, int para){
 
 void QueryEvaluator::getNextPure(int up, vector<int>& result, int para){
 	if(up == DOWN){
-		mPKBObject->getNext(result, para);
+		mPKBObject->cfg_getNext(result, para);
 		if((int)result.size() == 3){
 			int next1 = result[0];
 			int next2 = result[2];
@@ -1114,7 +1115,7 @@ void QueryEvaluator::getNextPure(int up, vector<int>& result, int para){
 			result.push_back(next2);
 		}
 	}else if(up == UP){
-		mPKBObject->getNextUp(result, para);
+		mPKBObject->cfg_getNextUp(result, para);
 		if((int)result.size() == 3){
 			int next1 = result[0];
 			int next2 = result[2];
@@ -1224,7 +1225,7 @@ bool QueryEvaluator::affects(int stmt1, int stmt2){
 	}else return false;
 }//affects END;
 
-void QueryEvaluator::getPatternAssign(vector<int>& result, string patternLeft, string patternRight){
+void QueryEvaluator::getPattern_PQLAssign(vector<int>& result, string patternLeft, string patternRight){
 	vector<int> tmp;
 	for(int i = 0; i < (int)result.size(); i++){
 		if(mPKBObject->patternAssign(result[i], patternLeft, patternRight))
@@ -1234,7 +1235,7 @@ void QueryEvaluator::getPatternAssign(vector<int>& result, string patternLeft, s
 	result.insert(result.end(), tmp.begin(), tmp.end());
 }
 
-void QueryEvaluator::getPatternCond(vector<int>& result, int type, string patternCond){
+void QueryEvaluator::getPattern_PQLCond(vector<int>& result, int type, string patternCond){
 	vector<int> tmp;
 	
 	for(int i = 0; i < (int)result.size(); i++){
@@ -1245,7 +1246,7 @@ void QueryEvaluator::getPatternCond(vector<int>& result, int type, string patter
 			if(mPKBObject->condWhile(result[i]) == PKB_varEncode(patternCond))
 				tmp.push_back(result[i]);
 		}else
-			throw new string("QueryEvaluator::getPatternCond, no such type!");
+			throw new string("QueryEvaluator::getPattern_PQLCond, no such type!");
 	}
 	result.clear();
 	result.insert(result.end(), tmp.begin(), tmp.end());
@@ -1432,6 +1433,7 @@ bool QueryEvaluator::nonModPath(int s, int mod, int dest, int final, bool& find_
 }
 
 void QueryEvaluator::getAllType(vector<int>& result, int type){
+	cout << type << endl;
 	if(type == mQueryTree->getIndex("stmt"))  getAllStmts(result);
 	else if(type == mQueryTree->getIndex("prog_line")) getAllStmts(result);
 	else if(type == mQueryTree->getIndex("assign")) mPKBObject->ast_GetAllAssign(result);

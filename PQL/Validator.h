@@ -23,10 +23,10 @@ public:
 	void checkSelect(QueryTable &table); // check select clause
 	void checkSuchThat(QueryTable &table); // check such that clause
 	void checkWith(QueryTable &table); // check with clause
-	void checkPattern(QueryTable &table); // check pattern clause
+	void checkPattern_PQL(QueryTable &table); // check pattern clause
 
-	void checkAssignPattern(const string &str); // check assign string pattern [LOOP]
-	void checkPatternString(vector<int> &patternExpression); // check assign string pattern [One Shot]
+	void checkAssignPattern_PQL(const string &str); // check assign string pattern [LOOP]
+	void checkPattern_PQLString(vector<int> &patternExpression); // check assign string pattern [One Shot]
 	void preCheckAssign(const string &str); // pre_check the expression.Check only outside " ". eg, _"x+y"_.
 
 	void checkFisrstCharacter(const vector<vector<int>> &varOfSimple, int i);
