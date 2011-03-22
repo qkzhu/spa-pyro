@@ -412,7 +412,7 @@ void Validator::checkAssignPattern(const string &str)
 		for(int j = 0; j<int(varOfSimple.at(i).size());j++)
 		{
 			//cout<<varOfSimple.at(i).at(j)<<" ";
-			if( !( (varOfSimple.at(i).at(j) >= 65 && varOfSimple.at(i).at(j) <= 97) || (varOfSimple.at(i).at(j) >= 97 && varOfSimple.at(i).at(j) <= 122) || (varOfSimple.at(i).at(j) >= 48 && varOfSimple.at(i).at(j) <= 57) ) )
+			if( !( (varOfSimple.at(i).at(j) >= 65 && varOfSimple.at(i).at(j) <= 97) || (varOfSimple.at(i).at(j) >= 97 && varOfSimple.at(i).at(j) <= 122) || (varOfSimple.at(i).at(j) >= 48 && varOfSimple.at(i).at(j) <= 57) || varOfSimple.at(i).at(j) == 32 ) )
 			{
 				throw new string("invalid symbol at pattern expression -- throw by Validator::checkAssignPattern");			
 			}
