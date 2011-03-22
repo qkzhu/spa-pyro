@@ -1,0 +1,28 @@
+stmt s;select BOOLEAN such that s.stmt#="2";
+false;
+
+procedure p;select p such that calls*(p,"Third") and call*(p,"Second");
+First;
+
+assign a;
+select  a with a.stmt#=4 pattern a("x",_"0"_);
+4;
+
+if g; assign a; while w;
+select <w,g> such that parent(g,a) and parent*(w,g);
+l,q,p;
+
+constant c; stmt s1; assign a1;
+select <a1,s1> with c.value=1 and affect(s1,a1) pattern a1(_,_"1"_);
+throw negative error;
+
+prog_line g1,g2,g3,g4,g5,g6; stmt s; assign a; constant c;
+select <g1,g6> such that next*(g1,g2) and next*(g2,g3) and next*(g3,g4) and next*(g4,g5) and next*(g5,g6) with g6.value=a.stmt# pattern a("x",_"x*y+z"_) with g1.value=s.stmt# and s.stmt#=c and c.value=1;
+
+1,23
+
+
+
+
+ 
+
