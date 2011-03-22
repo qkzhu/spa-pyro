@@ -81,13 +81,6 @@ private:
 	void getChildStar(int up, std::vector<int> &, int stmtN);
 	void getFollowsStar(int up, std::vector<int> &, int stmtN);
 	void getCallsStar(int up, std::vector<int> &, int procN);
-
-
-
-
-	
-	
-	
 	
 	
 	//Other augmental functions
@@ -109,10 +102,11 @@ private:
 	
 	bool isWhile(int stmt);
 	bool isInsideWhile(int parent, int stmt); //check if this stmt is inside the while loop
+	bool isInsideIf(int ifstat, int stmt);
 
 	int find_ele(const vector<int>& in, const int ele);//If the element is found in the vector, return its index; otherwise return the size of the vector.
 
-
+	bool nonModPath(int s, int mod, int dest, int final, bool& find_dest); //Check whether there is a non-mod path for variable mod in the stmt
 
 
 public:
@@ -120,7 +114,7 @@ public:
 	void evaluate();//Preprocessor call evaluate to pass Query tree to Evaluator
 	QueryResult getResult();//After calling evaluate, the result stored inside mResult and can be retrieved by this function.
 
-	bool nonModPath(int s, int mod, int dest, bool& find_dest); //Check whether there is a non-mod path for variable mod in the stmt
+	
 	int PQL_getIndex(string);
 	void printResult();
 };

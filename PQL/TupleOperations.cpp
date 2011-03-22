@@ -37,9 +37,7 @@ vector<vector<int> >  TupleOperations::tupleJoinTwoC(int same1Tuple1,int same2Tu
 		int common2 = (*i).at(same2Tuple1*2-1);
 		for(vector<vector<int> >::iterator k = tuple2.begin(); k< tuple2.end(); k++)
 		{
-			int common1_tuple2_type = (*k).at(0);
 			int common1_tuple2 = (*k).at(1);
-			int common2_tuple2_type = (*k).at(2);
 			int common2_tuple2 = (*k).at(3);
 			if(common1 == common1_tuple2 && common2 == common2_tuple2){
 				vector<int> tmp = *i;

@@ -15,10 +15,19 @@ using namespace std;
 class PqlParser
 {
 public:
+  static int const STEP=100; 
   static int const NORMAL=0;
-  static int const GRAMMERDEFINED=101;
+  static int const GRAMMERDEFINED=100;
   static int const USERDEFINED=300; 
+ 
+  static void parser(string s, QueryTable *table);
+private:
+
   static int prefix(string token);
-  static QueryTable parser(string s);
+  static string selectParser(int type,TokenList *qu,QueryTable *table);
+  static string suchThatParser(int type,TokenList *qu,QueryTable *table);
+  static string withParser(int type,TokenList *qu,QueryTable *table);
+  static string patternParser(int type,TokenList *qu,QueryTable *table);
+  static string declarParser(string type,TokenList *qu,QueryTable *table);
 };
 #endif
