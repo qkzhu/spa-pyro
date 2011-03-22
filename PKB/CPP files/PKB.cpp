@@ -368,3 +368,14 @@ void PKB::cfg_getNextUp(vector<int>& theNextUp, int stmt)
 {
 	cfg->getNextUp(theNextUp, stmt, ast);
 }
+
+//return the condition variable 		of the while stmt in its code
+int PKB::condWhile(int stmtNum)
+{
+	return pattern.condWhile(stmtNum, *ast);
+}
+
+int PKB::condIf(int stmtNum)
+{
+	return pattern.condIf(stmtNum, *ast);
+}

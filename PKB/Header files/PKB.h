@@ -105,6 +105,8 @@ public:
 	 * Pattern
 	 */
 	bool patternAssign(int stmtNum, string patternLeft, string patternRight); //For Query Evaluator
+	int condWhile(int stmtNum);
+	int condIf(int stmtNum);
 
 	/**
 	 * CFG
