@@ -1,0 +1,222 @@
+44
+cat: Pattern
+1
+assign a;
+select a such that pattern a("x", "x");
+none
+5000
+2
+assign a;
+select a such that pattern a("x", "x"_);
+9,11,21
+5000
+3
+assign a;
+select a such that pattern a("x", _"x"_);
+9,11,21,25,27,28
+5000
+4
+assign a;
+select a such that pattern a("s", "x");
+none
+5000
+5
+assign a;
+select a such that pattern a("s", "x"_);
+none
+5000
+6
+assign a;
+select a such that pattern a("s", _"x"_);
+none
+5000
+7
+variable v, assign a;
+select a such that pattern a(v, "x");
+none
+5000
+8
+variable v, assign a;
+select a such that pattern a(v, "x"_);
+none
+5000
+9
+assign a;
+select a such that pattern a("x", "x+1"_);
+11,21,24,27
+5000
+10
+assign a;
+select a such that pattern a("x", _"x+"_);
+none
+5000
+11
+assign a;
+select a such that pattern a("x", _"x+i");
+none
+5000
+12
+assign a;
+select a such that pattern a("x", _"z*3");
+none
+5000
+13
+assign a;
+select a such that pattern a("x", "z*3"_);
+18
+5000
+14
+assign a;
+select a such that pattern a("x", "z*2"_);
+none
+5000
+15
+assign a;
+select a such that pattern a("x", "+2*y"_);
+none
+5000
+16
+assign a;
+select a such that pattern a("x", "2*y"_);
+none
+5000
+17
+assign a;
+select a such that pattern a("x", _"2*y"_);
+18
+5000
+18
+assign a;
+select a such that pattern a("z", "x+1"_);
+none
+5000
+19
+constant c, assign a;
+select a such that pattern a("x", "c"_);
+none
+5000
+20
+assign a;
+select a such that pattern a("z", _"x+i");
+13,23
+5000
+21
+assign a;
+select a such that pattern a("x", "z"_);
+7
+5000
+22
+assign a;
+select a such that pattern a("z", _"x+1");
+24,27
+5000
+23
+assign a;
+select a such that pattern a("y", _"z+x");
+12
+5000
+24
+assign a;
+select a such that pattern a("y", _"x+z");
+none
+5000
+25
+assign a;
+select a such that pattern a(" ", _"x+z");
+none
+5000
+26
+assign a;
+select a such that pattern a("", _"x+z");
+none
+5000
+27
+assign a;
+select a such that pattern a(_, "x");
+2,5
+5000
+28
+assign a;
+select a such that pattern a(_, "x"_);
+2,5,9,11,21,24,27
+5000
+29
+assign a;
+select a such that pattern a(_, _"x"_);
+2,5,9,11,12,13,21,23,24,25,27,28
+5000
+30
+assign a;
+select a such that pattern a("X", "x");
+none
+5000
+31
+assign a;
+select a such that pattern a("x", "2x");
+none
+5000
+32
+assign a;
+select a such that pattern a("x&*", "x");
+none
+5000
+33
+assign a;
+select a such that pattern a("x", "y*2"_);
+none
+5000
+34
+assign a;
+select a such that pattern a("x", "2*Y"_);
+none
+5000
+35
+while w;
+select w such that pattern w("x", _"x"_);
+none
+5000
+36
+while w;
+select w such that pattern w("x", _"x"_, _);
+none
+5000
+37
+while w;
+select w such that pattern w("x",_);
+20
+5000
+38
+while w;
+select w such that pattern w("se",_);
+none
+5000
+39
+while w;
+select w such that pattern w(_,_);
+8,17,20
+5000
+40
+if ifstat;
+select ifstat such that pattern ifstat(_,_);
+none
+5000
+41
+if ifstat;
+select ifstat such that pattern ifstat("x",_);
+none
+5000
+42
+if ifstat;
+select ifstat such that pattern ifstat("x",_,_);
+10
+5000
+43
+if ifstat;
+select ifstat such that pattern ifstat(_,_,_);
+10,26
+5000
+44
+if ifstat;
+select ifstat such that pattern ifstat("y",_,_);
+none
+5000
