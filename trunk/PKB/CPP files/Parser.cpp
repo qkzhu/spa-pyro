@@ -302,8 +302,8 @@ void Parser::parseProcedure()
 	checkValidName(proc_name);
 	
 	//procedure names must be unique
-	if (mPkb.pTable_isProcNameExist(proc_name))
-		throw new string("Redeclaration of procedure: " + proc_name);
+	//if (mPkb.pTable_isProcNameExist(proc_name))
+	//	throw new string("Redeclaration of procedure: " + proc_name);
 
 	//inserts procedure name into proc table
 	mPkb.pTable_InsertProc(proc_name); 
