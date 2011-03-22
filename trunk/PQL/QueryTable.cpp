@@ -186,7 +186,7 @@ void QueryTable::addClause(int type, vector<int> content){
 	}
 	else if(type == PATTERN) // pattern type
 	{
-		Pattern patternTemp;
+		Pattern_PQL patternTemp;
 
 		if(int(content.size()) == 0) // nothing inside the content
 		{
@@ -367,7 +367,7 @@ void QueryTable::patternAt(vector<int> &expression, int index){
 
 	if(index >= (int) patternClause.size())
 	{
-		throw new string ("Index Out of Range inside the Pattern Clause! --  throw by QueryTable::patternAt");
+		throw new string ("Index Out of Range inside the Pattern_PQL Clause! --  throw by QueryTable::patternAt");
 	}
 	else
 	{
@@ -391,7 +391,7 @@ vector < With > QueryTable::getWithClause(){
 	return withClause;
 }
 
-vector < Pattern > QueryTable::getPatternClause(){
+vector < Pattern_PQL > QueryTable::getPattern_PQLClause(){
 	return patternClause;
 }
 /////////////////////////Get Clause --- Start ///////////////////////////
