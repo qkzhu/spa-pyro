@@ -50,23 +50,23 @@ public:
 class ProcTable : public SymbolTable
 {
 public:
-	void insertProc(string);  // assign procName to an index
-	string getProcName(int);  // get procName using index
-	int getProcIndex(string); // get procIndex using procName
-	int getSize();  // total no. of procedures in ProcTable
+	void insertProc(string);	// assign procName to an index
+	string getProcName(int);	// get procName using index
+	int getProcIndex(string);	// get procIndex using procName
+	int getSize();				// total no. of procedures in ProcTable
 	bool isProcNameExist(string name);
 	bool isProcIndexExist(int index);
-	int getAllProc(); //return the largest procIndex
+	int getAllProc();			 //return the largest procIndex
 
 	/* For call Tables */
 	void addCall(int procIndex1, int procIndex2);
 	void addCall(int procIndex1, vector<int> procList);
 	void addCalled(int procIndex1, int procIndex2);
 	void addCalled(int procIndex1, vector<int> procList);
-	vector<int> getCall(int procIndex);
-	vector<int> getCall_(int procIndex);
-	vector<int> getCalled(int procIndex);
-	vector<int> getCalled_(int procIndex);
+	void getCall(int procIndex, vector<int>&);
+	void getCall_(int procIndex, vector<int>&);
+	void getCalled(int procIndex, vector<int>&);
+	void getCalled_(int procIndex, vector<int>&);
 
 	//For Debugging
 	void printProcTable();

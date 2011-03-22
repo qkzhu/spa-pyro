@@ -37,13 +37,10 @@ Node* AST::getNodeByProcdureIndex(int procIndex){
 	else return NULL;
 }
 
-vector<int> AST::getChild(int stmtNum)
+void AST::getChild(int stmtNum, vector<int>& result)
 {
-	vector<int> result;
-	if(stmtNum <= 0){
+	if(stmtNum <= 0)
 		result.push_back(-1);
-		return result;
-	}
 
 	Node* currNode = getNodeByStatementNum(stmtNum);
 	vector<Node*> children = currNode->childList;
@@ -55,8 +52,6 @@ vector<int> AST::getChild(int stmtNum)
 		for(i = 0; i < children.size(); i++)
 			result.push_back(children[i]->stmtNum);
 	}
-
-	return result;
 }
 
 Node* AST::getParent(Node* d)
@@ -122,25 +117,24 @@ int AST::getMaxStmtNum(){
 	else return (int)(--it)->first;
 }
 
-vector<int> AST::getAllAssign(){
-	return this->getAllType(Node::ASSIGN);
+void AST::getAllAssign(vector<int>& result){
+	getAllType(Node::ASSIGN, result);
 }
 
-vector<int> AST::getAllWhile(){
-	return this->getAllType(Node::WHILE);
+void AST::getAllWhile(vector<int>& result){
+	getAllType(Node::WHILE, result);
 }
 
-vector<int> AST::getAllIf(){
-	return this->getAllType(Node::IF);
+void AST::getAllIf(vector<int>& result){
+	getAllType(Node::IF, result);
 }
 
-vector<int>	AST::getAllCall(){
-	return this->getAllType(Node::CALL);
+void AST::getAllCall(vector<int>& result){
+	getAllType(Node::CALL, result);
 }
 
-vector<int> AST::getAllType(Node::NodeType nt){
+void AST::getAllType(Node::NodeType nt, vector<int>& result){
 	int index, maxStmtNum = this->getMaxStmtNum();
-	vector<int> result;
 
 	for(index = 1; index <= maxStmtNum; index++){
 		Node* currNode = this->getNodeByStatementNum(index);
@@ -151,8 +145,6 @@ vector<int> AST::getAllType(Node::NodeType nt){
 
 	/* If no result found, return a vector with only one element: -1. */
 	if(result.size() == 0) result.push_back(-1);
-
-	return result;
 }
 
 vector<Node*> AST::getAllProc(){

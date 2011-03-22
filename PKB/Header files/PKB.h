@@ -27,7 +27,7 @@ public:
 	 * AST Part:9
 	 */
 	Node*		ast_CreateNode(Node::NodeType nt, int statNum, int name);
-	vector<int> ast_GetChild(int stmtNum);   // For Query Evaluator
+	void		ast_GetChild(int stmtNum, vector<int>&);	// For Query Evaluator
 	Node*		ast_GetPreviousStatement(Node* d);
 	int			ast_GetPreviousStatementNum(int stmtNum);   // For Query Evaluator
 	Node*		ast_GetFollowingStatement(Node* d);
@@ -42,10 +42,10 @@ public:
 	int			ast_getStmtNum(Node* n);
 	bool		ast_hasStmt(int stmtNum);   
 	int			ast_getMaxStmtNum();  // For Query Evaluator 
-	vector<int> ast_GetAllAssign();   // For Query Evaluator
-	vector<int> ast_GetAllWhile();	// For Query Evaluator
-	vector<int> ast_GetAllIf();	// For Query Evaluator
-	vector<int>	ast_GetAllCall();  // For Query Evaluator
+	void		ast_GetAllAssign(vector<int>&);   // For Query Evaluator
+	void		ast_GetAllWhile(vector<int>&);	// For Query Evaluator
+	void		ast_GetAllIf(vector<int>&);	// For Query Evaluator
+	void		ast_GetAllCall(vector<int>&);  // For Query Evaluator
 	
 	vector<Node*> ast_GetAllProc(); //For CFG
 	vector<Node*> ast_GetDown(Node* n); //For CFG
@@ -70,15 +70,15 @@ public:
 	bool			pTable_isProcIndexExist(int procIndex);  // For Query Evaluator
 	int				pTable_GetAllProc();				 // For Query Evaluator
 	void			pTable_AddCall(int procIndex1, int procIndex2);
-	vector<int> 	pTable_getCall(int procIndex);			// For Query Evaluator
-	vector<int> 	pTable_getCalled(int procIndex);		// For Query Evaluator
-	vector<int>		pTable_getCall_(int procIndex);
-	vector<int>		pTable_getCalled_(int procIndex);
+	void			pTable_getCall(int procIndex, vector<int>&);			// For Query Evaluator
+	void		 	pTable_getCalled(int procIndex, vector<int>&);		// For Query Evaluator
+	void			pTable_getCall_(int procIndex, vector<int>&);
+	void			pTable_getCalled_(int procIndex, vector<int>&);
 	/**
 	 * ConstantTable Part:3
 	 */
 	void		cTable_AddConstant(int c);
-	vector<int>	cTable_GetAllConstants();			// For Query Evaluator
+	void		cTable_GetAllConstants(vector<int>&);			// For Query Evaluator
 	bool		cTable_IsConstantExist(int c);      // For Query Evaluator
 	int			cTable_GetNumOfConstant();
 	bool		cTable_hasCons(int c);			// For Query Evaluator
@@ -87,19 +87,19 @@ public:
 	 */
 	void			uTable_setUses(int stmtNum, int varIndex);
 	void			uTable_setUsesPV(int procIndex, int varIndex);
-	vector<int> 	uTable_getUsedVar(int stmtNum);         // For Query Evaluator
-	vector<int> 	uTable_getUsedVarPI(int procIndex);     // For Query Evaluator
-	vector<int> 	uTable_getStmtUses(int varIndex);       // For Query Evaluator 
-	vector<int> 	uTable_getProcUses(int varIndex);       // For Query Evaluator  
+	void		 	uTable_getUsedVar(int stmtNum, vector<int>&);         // For Query Evaluator
+	void			uTable_getUsedVarPI(int procIndex, vector<int>&);     // For Query Evaluator
+	void			uTable_getStmtUses(int varIndex, vector<int>&);       // For Query Evaluator 
+	void			uTable_getProcUses(int varIndex, vector<int>&);       // For Query Evaluator  
 	/**
 	 * ModifyTable Part:4
 	 */
-	vector<int>  mTable_getModifiedVar(int statNum);        // For Query Evaluator
-	vector<int>  mTable_getModifiedVarPI(int procIndex);    // For Query Evaluator
-	vector<int>  mTable_getStmtModifies(int varIndex);      // For Query Evaluator
-	vector<int>  mTable_getProcModifies(int procIndex);     // For Query Evaluator 
-	void		 mTable_setModify(int stmtNum, int varIndex);
-	void		 mTable_setModifyPV(int procIndex, int varIndex);
+	void		mTable_getModifiedVar(int statNum, vector<int>&);        // For Query Evaluator
+	void		mTable_getModifiedVarPI(int procIndex, vector<int>&);    // For Query Evaluator
+	void		mTable_getStmtModifies(int varIndex, vector<int>&);      // For Query Evaluator
+	void		mTable_getProcModifies(int procIndex, vector<int>&);     // For Query Evaluator 
+	void		mTable_setModify(int stmtNum, int varIndex);
+	void		mTable_setModifyPV(int procIndex, int varIndex);
 
 	/**
 	 * Pattern
@@ -136,8 +136,8 @@ private:
 	CFG*			cfg;
 
 	Pattern pattern;
-	vector<int>		convertSetToVector(set<int>);
-	vector<string>	convertSetToVector(set<string>);
+	void convertSetToVector(set<int>&, vector<int>&);
+	void convertSetToVector(set<string>&, vector<string>&);
 };
 
 #endif
