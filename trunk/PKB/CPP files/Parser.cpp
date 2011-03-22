@@ -201,7 +201,7 @@ void Parser::processModifyUse()
 
 		//get all the variables modified in the particular (indirect) call
 		vector<int> nextModVars;
-		mPkb.mTable_getModifiedVarPI(curr.second->id, nextModVars);
+		mPkb.mTable_getModifiedVarPI(nextModVars, curr.second->id);
 
 		//add them to the current procedure, statement and statement's ancestors
 		for (unsigned int k = 0; k < nextModVars.size(); k++)
@@ -215,7 +215,7 @@ void Parser::processModifyUse()
 
 		//get all the variables used in the particular (indirect) call
 		vector<int> nextUsedVars;
-		mPkb.uTable_getUsedVarPI(curr.second->id, nextUsedVars);
+		mPkb.uTable_getUsedVarPI(nextUsedVars, curr.second->id);
 
 		//add them to the current procedure, statement and statement's ancestors
 		for (unsigned int k = 0; k < nextUsedVars.size(); k++)
@@ -230,14 +230,14 @@ void Parser::processModifyUse()
 
 		//**** obtains all variables in recursive calls ****/
 		vector<ProcIndex> recursiveCall;
-		mPkb.pTable_getCall_(curr.second->id, recursiveCall);
+		mPkb.pTable_getCall_(recursiveCall, curr.second->id);
 		
 		//get all the direct and indirect calls
 		for (unsigned int j = 0; j < recursiveCall.size(); j++)
 		{
 			//get all the variables modified in the particular (indirect) call
 			vector<int> modVariables;
-			mPkb.mTable_getModifiedVarPI(recursiveCall[j], modVariables);
+			mPkb.mTable_getModifiedVarPI(modVariables, recursiveCall[j]);
 
 			//add them to the current procedure, statement and statement's ancestors
 			for (unsigned int k = 0; k < modVariables.size(); k++)
@@ -251,7 +251,7 @@ void Parser::processModifyUse()
 
 			//get all the variables used in the particular (indirect) call
 			vector<int> usedVariables;
-			mPkb.uTable_getUsedVarPI(recursiveCall[j], usedVariables);
+			mPkb.uTable_getUsedVarPI(usedVariables, recursiveCall[j]);
 
 			//add them to the current procedure, statement and statement's ancestors
 			for (unsigned int k = 0; k < usedVariables.size(); k++)

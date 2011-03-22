@@ -27,7 +27,7 @@ public:
 	 * AST Part:9
 	 */
 	Node*		ast_CreateNode(Node::NodeType nt, int statNum, int name);
-	void		ast_GetChild(int stmtNum, vector<int>&);	// For Query Evaluator
+	void		ast_GetChild(vector<int>&, int stmtNum);	// For Query Evaluator
 	Node*		ast_GetPreviousStatement(Node* d);
 	int			ast_GetPreviousStatementNum(int stmtNum);   // For Query Evaluator
 	Node*		ast_GetFollowingStatement(Node* d);
@@ -53,12 +53,12 @@ public:
 	 * VarTable Part:5
 	 */
 	void			vTable_InsertVar(string var);
-	string			vTable_GetVarName(int index);   // For Query Evaluator
-	int				vTable_GetVarIndex(string var);  // For Query Evaluator
+	string			vTable_GetVarName(int index);			// For Query Evaluator
+	int				vTable_GetVarIndex(string var);			// For Query Evaluator
 	int				vTable_GetVarTableSize(); 
-	bool			vTable_IsVarNameExist(string var);  // For Query Evaluator
-	bool			vTable_IsVarIndexExist(int varIndex);  // For Query Evaluator
-	int				vTable_GetAllVar();   // For Query Evaluator
+	bool			vTable_IsVarNameExist(string var);		// For Query Evaluator
+	bool			vTable_IsVarIndexExist(int varIndex);	// For Query Evaluator
+	int				vTable_GetAllVar();						// For Query Evaluator
 	/**
 	 * ProcTable Part:7
 	 */
@@ -70,10 +70,10 @@ public:
 	bool			pTable_isProcIndexExist(int procIndex);  // For Query Evaluator
 	int				pTable_GetAllProc();				 // For Query Evaluator
 	void			pTable_AddCall(int procIndex1, int procIndex2);
-	void			pTable_getCall(int procIndex, vector<int>&);			// For Query Evaluator
-	void		 	pTable_getCalled(int procIndex, vector<int>&);		// For Query Evaluator
-	void			pTable_getCall_(int procIndex, vector<int>&);
-	void			pTable_getCalled_(int procIndex, vector<int>&);
+	void			pTable_getCall(vector<int>&, int procIndex);			// For Query Evaluator
+	void		 	pTable_getCalled(vector<int>&, int procIndex);		// For Query Evaluator
+	void			pTable_getCall_(vector<int>&, int procIndex);
+	void			pTable_getCalled_(vector<int>&, int procIndex);
 	/**
 	 * ConstantTable Part:3
 	 */
@@ -87,17 +87,17 @@ public:
 	 */
 	void			uTable_setUses(int stmtNum, int varIndex);
 	void			uTable_setUsesPV(int procIndex, int varIndex);
-	void		 	uTable_getUsedVar(int stmtNum, vector<int>&);         // For Query Evaluator
-	void			uTable_getUsedVarPI(int procIndex, vector<int>&);     // For Query Evaluator
-	void			uTable_getStmtUses(int varIndex, vector<int>&);       // For Query Evaluator 
-	void			uTable_getProcUses(int varIndex, vector<int>&);       // For Query Evaluator  
+	void		 	uTable_getUsedVar(vector<int>&, int stmtNum);         // For Query Evaluator
+	void			uTable_getUsedVarPI(vector<int>&, int procIndex);     // For Query Evaluator
+	void			uTable_getStmtUses(vector<int>&, int varIndex);       // For Query Evaluator 
+	void			uTable_getProcUses(vector<int>&, int varIndex);       // For Query Evaluator  
 	/**
 	 * ModifyTable Part:4
 	 */
-	void		mTable_getModifiedVar(int statNum, vector<int>&);        // For Query Evaluator
-	void		mTable_getModifiedVarPI(int procIndex, vector<int>&);    // For Query Evaluator
-	void		mTable_getStmtModifies(int varIndex, vector<int>&);      // For Query Evaluator
-	void		mTable_getProcModifies(int procIndex, vector<int>&);     // For Query Evaluator 
+	void		mTable_getModifiedVar(vector<int>&, int statNum);        // For Query Evaluator
+	void		mTable_getModifiedVarPI(vector<int>&, int procIndex);    // For Query Evaluator
+	void		mTable_getStmtModifies(vector<int>&, int varIndex);      // For Query Evaluator
+	void		mTable_getProcModifies(vector<int>&, int procIndex);     // For Query Evaluator 
 	void		mTable_setModify(int stmtNum, int varIndex);
 	void		mTable_setModifyPV(int procIndex, int varIndex);
 

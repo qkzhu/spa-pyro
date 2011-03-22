@@ -8,7 +8,7 @@ Node* PKB::ast_CreateNode(Node::NodeType nt, int statNum, int name) {
 	return ast->createNode(nt, statNum, name);
 }
 
-void PKB::ast_GetChild(int stmtNum, vector<int>& result) {
+void PKB::ast_GetChild(vector<int>& result, int stmtNum) {
 	ast->getChild(stmtNum, result);
 }
 
@@ -193,18 +193,18 @@ void PKB::pTable_AddCall(int procIndex1, int procIndex2){
 	procTable->addCall(procIndex1, procIndex2);
 }
 
-void PKB::pTable_getCall(int procIndex, vector<int>& result){
+void PKB::pTable_getCall(vector<int>& result, int procIndex){
 	procTable->getCall(procIndex, result);
 }
 
-void PKB::pTable_getCalled(int procIndex, vector<int>& result){
+void PKB::pTable_getCalled(vector<int>& result, int procIndex){
 	procTable->getCalled(procIndex, result);
 }
 
-void PKB::pTable_getCall_(int procIndex, vector<int>& result) {
+void PKB::pTable_getCall_(vector<int>& result, int procIndex) {
 	procTable->getCall_(procIndex, result);
 }
-void PKB::pTable_getCalled_(int procIndex, vector<int>& result) {
+void PKB::pTable_getCalled_(vector<int>& result, int procIndex) {
 	procTable->getCalled_(procIndex, result);
 }
 
@@ -244,38 +244,38 @@ void PKB::uTable_setUsesPV(int procIndex, int varIndex){
 	useTable->setUsesPV(procIndex, varIndex);
 }//end uTable_setUsesPV
 
-void PKB::uTable_getUsedVar(int stmtNum, vector<int>& result) {
+void PKB::uTable_getUsedVar(vector<int>& result, int stmtNum) {
 	convertSetToVector(useTable->getUsedVar(stmtNum), result);
 }//end uTable_getUsedVar
 
-void PKB::uTable_getUsedVarPI(int procIndex, vector<int>& result){
+void PKB::uTable_getUsedVarPI(vector<int>& result, int procIndex){
 	convertSetToVector(useTable->getUsedVarPI(procIndex), result);
 }//end uTable_getUsedVarPI
 
-void PKB::uTable_getStmtUses(int varIndex, vector<int>& result){
+void PKB::uTable_getStmtUses(vector<int>& result, int varIndex){
 	convertSetToVector(useTable->getStmtUses(varIndex), result);
 }//end uTable_getStmtUses
 
-void PKB::uTable_getProcUses(int varIndex, vector<int>& result){
+void PKB::uTable_getProcUses(vector<int>& result, int varIndex){
 	convertSetToVector(useTable->getProcUses(varIndex), result);
 }//end uTable_getProcUses
 
 /**
  * ModifyTable Part
  */
-void PKB::mTable_getModifiedVar(int statNum, vector<int>& result){
+void PKB::mTable_getModifiedVar(vector<int>& result, int statNum){
 	convertSetToVector(modifyTable->getModifiedVar(statNum), result);
 }
 
-void PKB::mTable_getModifiedVarPI(int procIndex, vector<int>& result){
+void PKB::mTable_getModifiedVarPI(vector<int>& result, int procIndex){
 	convertSetToVector(modifyTable->getModifiedVarPI(procIndex), result);
 }
 
-void PKB::mTable_getStmtModifies(int varIndex, vector<int>& result){
+void PKB::mTable_getStmtModifies(vector<int>& result, int varIndex){
 	return convertSetToVector(modifyTable->getStmtModifies(varIndex), result);
 }
 
-void PKB::mTable_getProcModifies(int procIndex, vector<int>& result){
+void PKB::mTable_getProcModifies(vector<int>& result, int procIndex){
 	return convertSetToVector(modifyTable->getProcModifies(procIndex), result);
 }
 
