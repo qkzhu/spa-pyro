@@ -70,7 +70,7 @@ void QueryTable::addClause(int type, vector<int> content){
 		}
 		suchThatClause.push_back(SuchThatTemp);
 
-		//add data for validation
+		//add the content to the withVector for display
 		for(int i = 0; i<(int) content.size();i++)
 		{
 
@@ -113,7 +113,7 @@ void QueryTable::addClause(int type, vector<int> content){
 		//cout<<endl;
 		
 
-		//add the content to the suchThatVector
+		//add the content to the withVector for display
 		if(suchThatVector.empty() == true)
 		{
 			suchThatVector.push_back(2);
@@ -163,10 +163,10 @@ void QueryTable::addClause(int type, vector<int> content){
 		}
 		withClauseValid.push_back(validTemp);
 		
-		//add the content to the withVector
+		//add the content to the withVector for display
 		if(withVector.empty() == true)
 		{
-			withVector.push_back(3);
+			withVector.push_back(WITH);
 		}
 		else 
 		{
@@ -178,6 +178,71 @@ void QueryTable::addClause(int type, vector<int> content){
 			withVector.push_back(*it);
 		}
 		
+	
+	}
+	else if(type == PATTERN) // pattern type
+	{
+		Pattern patternTemp;
+
+		if(int(content.size()) == 0) // nothing inside the content
+		{
+			throw new string ("the content is empty! -- throw by QueryTable::addClause");
+		}
+		else if(content.at(0) == ASSIGN) // assign pattern
+		{
+			if( !(int(content.size()) == 5 || int(content.size()) == 6 || int(content.size()) == 7) ) // size is 4 when first argument is _,  size is 5 when first argument is patternOfSimple
+			{
+				patternTemp.argumentNoCorrect = false;
+			}
+			else
+			{
+				patternTemp.argumentNoCorrect = true;
+			}	
+		}
+		else if(content.at(0) == WHILE) // while pattern 
+		{
+			if( !(int(content.size()) == 5 || int(content.size()) == 6) ) 
+			{
+				patternTemp.argumentNoCorrect = false;
+			}
+			else
+			{
+				patternTemp.argumentNoCorrect = true;
+			}	
+		
+		}
+		else if(content.at(0) == IF) // while pattern
+		{
+			if( !(int(content.size()) == 7 || int(content.size()) == 8) ) 
+			{
+				patternTemp.argumentNoCorrect = false;
+			}
+			else
+			{
+				patternTemp.argumentNoCorrect = true;
+			}	
+		
+		}
+
+		patternTemp.expression = content;
+		patternClause.push_back(patternTemp);
+
+		//add the content to the withVector for display
+		if(patternVector.empty() == true)
+		{
+			patternVector.push_back(PATTERN);
+		}
+		else 
+		{
+			patternVector.push_back(-1);
+		}
+		vector<int>::iterator it;
+		for (it = content.begin(); it < content.end(); it++)
+		{
+			patternVector.push_back(*it);
+		}
+		
+
 	
 	}
 	else // other value
@@ -213,6 +278,13 @@ vector<int> QueryTable::getQuery(){
 		queryHolder.insert(queryHolder.end(), withVector.begin(), withVector.end());
 		queryHolder.push_back(-2); // add a tail to with part
 	}
+
+	//insert pattern part
+	if(patternVector.empty() == false)
+	{
+		queryHolder.insert(queryHolder.end(), patternVector.begin(), patternVector.end());
+		queryHolder.push_back(-2); // add a tail to with part
+	}
 	return queryHolder;
 
 }
@@ -233,12 +305,16 @@ int QueryTable::withSize(){
 
 	return (int) withClause.size();
 }
+int QueryTable::patternSize(){
+
+	return (int) patternClause.size();
+}
 //////////////////////// Clause Size  --- End ///////////////////////////////
 
-//////////////////////// selectAt + suchThatAT + withAT  --- Start ///////////////////////////////
-vector<int> QueryTable::selectAt(int index){
+//////////////////////// selectAt + suchThatAT + withAT + patternAt--- Start ///////////////////////////////
+void QueryTable::selectAt(vector<int> &tupleTemp, int index){
 	
-	vector<int> tupleTemp;
+	
 	//check whether index is out of range (need to throw exception, make it as function)
 	if(index >= (int) selectClause.size())
 	{
@@ -249,12 +325,11 @@ vector<int> QueryTable::selectAt(int index){
 		tupleTemp = selectClause.at(index).tuple;
 	}
 
-	return tupleTemp;
 }
 
-vector<int> QueryTable::suchThatAt(int index)
-{
-	vector<int> relCondTemp;
+void QueryTable::suchThatAt(vector<int> &relCondTemp, int index){
+
+	
 
 	if(index >= (int) suchThatClause.size())
 	{
@@ -265,13 +340,11 @@ vector<int> QueryTable::suchThatAt(int index)
 		relCondTemp = suchThatClause.at(index).relCond;
 	}
 
-	return relCondTemp;
-
 }
 
-vector<int> QueryTable::withAt(int index){
+void QueryTable::withAt(vector<int> &attrCondTemp,int index){
 
-	vector<int> attrCondTemp;
+	
 	if(index >= (int) withClause.size())
 	{
 		throw new string ("Index Out of Range inside the With Clause! --  throw by QueryTable::withAt");
@@ -281,7 +354,21 @@ vector<int> QueryTable::withAt(int index){
 		attrCondTemp = withClause.at(index).attrCond;
 	}
 
-	return attrCondTemp;
+	
+
+}
+
+void QueryTable::patternAt(vector<int> &expression, int index){
+
+
+	if(index >= (int) patternClause.size())
+	{
+		throw new string ("Index Out of Range inside the Pattern Clause! --  throw by QueryTable::patternAt");
+	}
+	else
+	{
+		expression = patternClause.at(index).expression;
+	}
 
 }
 //////////////////////// selectAt  + suchThatAT + withAT --- End ///////////////////////////////
@@ -298,6 +385,10 @@ vector < SuchThat > QueryTable::getSuchThatClause(){
 
 vector < With > QueryTable::getWithClause(){
 	return withClause;
+}
+
+vector < Pattern > QueryTable::getPatternClause(){
+	return patternClause;
 }
 /////////////////////////Get Clause --- Start ///////////////////////////
 
@@ -317,7 +408,6 @@ vector < With >  QueryTable::getWithClauseV(){
 //////////////////////// Show Table  --- Start ////////////////////////
 void QueryTable::showTable()
 {
-
 	vector<int> temHolder = getQuery();
 	for(int i=0;i<(int) temHolder.size();i++)
 	{

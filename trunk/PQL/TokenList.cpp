@@ -22,8 +22,8 @@ int TokenList::tokenList(string s)
 	
 	fullVector.clear();
 
-    string a[]={";",",","(",")",".","="};
-	for(int j=0;j<6;j++)
+    string a[]={";",",","(",")",".","=","<",">"};
+	for(int j=0;j<8;j++)
 	{
 		for(int i=0;i<(int)temp1.size();i++)
 		{

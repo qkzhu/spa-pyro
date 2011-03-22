@@ -13,7 +13,7 @@ int const MOD = 1;
 int const USE = 0;
 
 int const PROC = 1;
-int const STMT = 0;
+int const STMT_QE = 0;
 
 
 //Controller passes the PKB and Query Parser to evaluator, and trigger evaluator to start.
@@ -84,8 +84,7 @@ void QueryEvaluator::evaluate()
 		vector<int> part1;
 		vector<int> part2;
 		int withCount = 0;
-		for(; withCount<clause_size; withCount++)
-		{
+		for(; withCount<clause_size; withCount++){
 			if(clause.at(withCount) != mQueryTree->getIndex("="))
 				part1.push_back(clause.at(withCount));
 			else break;
@@ -96,7 +95,7 @@ void QueryEvaluator::evaluate()
 		}
 		//clause dividing END
 
-		int part2_size =(int) part2.size();
+		int part2_size = (int) part2.size();
 
 		int p1_type = part1.at(0);
 		int p1_name = part1.at(1);
@@ -115,8 +114,8 @@ void QueryEvaluator::evaluate()
 		}	
 		vector<vector<int> > with_result;
 		vector<int> tmp;
-		if(p1_type == mQueryTree->getIndex("prog_line"))
-			throw new string("QueryEvaluator, getAllType function can not take prog_line type!");
+		if(p1_type == mQueryTree->getIndex("integer")||p1_type == mQueryTree->getIndex("procOfSimpl") || p1_type == mQueryTree->getIndex("varOfSimpl"))
+			throw new string("QueryEvaluator, getAllType function can not take constant type!");
 		else getAllType(tmp, p1_type);
 		
 		vector<int> tmp2;
@@ -137,12 +136,12 @@ void QueryEvaluator::evaluate()
 			}
 			tmp2.push_back(tmp_code);
 		}
-		else if(p2_type == mQueryTree->getIndex("prog_line"))
-			throw new string("QueryEvaluator, getAllType function can not take prog_line type!");
+		else if(p2_type == mQueryTree->getIndex("integer")||p2_type == mQueryTree->getIndex("procOfSimpl") || p2_type == mQueryTree->getIndex("varOfSimpl"))
+			throw new string("QueryEvaluator, getAllType function can not take constant type!");
 		else getAllType(tmp2, p2_type);
 		
 		int entry_type;
-		if(p1_type == mQueryTree->getIndex("stmt")|| p1_type==mQueryTree->getIndex("assign")|| p1_type==mQueryTree->getIndex("while")|| p1_type==mQueryTree->getIndex("if")||p1_type==mQueryTree->getIndex("call") ||p1_type==mQueryTree->getIndex("constant"))
+		if(p1_type == mQueryTree->getIndex("stmt")|| p1_type==mQueryTree->getIndex("assign")|| p1_type==mQueryTree->getIndex("while")|| p1_type==mQueryTree->getIndex("if")||p1_type==mQueryTree->getIndex("call") ||p1_type==mQueryTree->getIndex("constant") || p1_type==mQueryTree->getIndex("prog_line"))
 			entry_type = mQueryTree->getIndex("integer");
 		else if(p1_type==mQueryTree->getIndex("variable"))
 			entry_type = mQueryTree->getIndex("varOfSimpl");
@@ -197,6 +196,7 @@ void QueryEvaluator::evaluate()
 
 		joinTuples(eva_tuple, with_result, numOfCommonElement, same1Tuple1, same2Tuple1);
 	}//while: With clause evaluation End
+
 	
 
 	//Pattern Evaluation Start
@@ -267,7 +267,7 @@ void QueryEvaluator::evaluate()
 		
 		underScore(rel, clause, para1, para1Type, para2, para2Type, var_code_ending);
 
-
+		/*
 		///////////////////////////////////////////TESTING//////////////////////////////////////////////////
 		cout << "underScore check:" << endl;
 		cout << para1 << endl;
@@ -276,7 +276,7 @@ void QueryEvaluator::evaluate()
 		cout << para2Type << endl;
 		cout << "underScore check finish" << endl;
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
-
+		*/
 
 		//Evaluating Relation
 		vector<vector<int> > relResult;
@@ -323,7 +323,7 @@ void QueryEvaluator::evaluate()
 		else if(para2Type == mQueryTree->getIndex("varOfSimple")) para2_collection.push_back(para2);
 		else getAllType(para2_collection, para2Type);
 
-
+		/*
 		//////////////////////////////////////TESTING /////////////////////////////////////////////////////////
 		cout << "para1_collection = " << endl;
 		for(int p = 0; p < (int)para1_collection.size(); p++){
@@ -336,7 +336,7 @@ void QueryEvaluator::evaluate()
 		}
 		cout << endl;
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+		*/
 
 		if(rel == mQueryTree->getIndex("parent")){	
 			evalParent(NOSTAR, relResult, para1_collection, para2_collection);
@@ -471,6 +471,11 @@ void QueryEvaluator::evaluate()
 	}//while: such that evaluation END
 
 	if(is_bool_sel){  //If the select is boolean
+		if(with_size == 0 && suchThatSize == 0 && patternSize == 0){
+			mResult.setBoolValue(true);
+			return;
+		}
+
 		if(mgTupleIndexing.empty()) mResult.setBoolValue(false);
 		else mResult.setBoolValue(true);
 		return;
@@ -492,6 +497,8 @@ void QueryEvaluator::evaluate()
 			is_selected = false;
 		}else indexes.push_back(indx);
 	}
+	
+
 
 	/*
 	cout << "eval_tuple check:" << endl;
@@ -524,8 +531,8 @@ void QueryEvaluator::evaluate()
 			mQueryTree->selectAt(tmp_selected, i);
 			int select_type = tmp_selected[0];
 			vector<int> tmp;
-			if(select_type == mQueryTree->getIndex("prog_line"))  
-				throw new string("QueryEvaluator, getAllType function can not take prog_line type!");
+			if(select_type == mQueryTree->getIndex("integer") || select_type == mQueryTree->getIndex("procOfSimpl") || select_type == mQueryTree->getIndex("varOfSimpl"))  
+				throw new string("QueryEvaluator, getAllType function can not take constant type!");
 			else getAllType(tmp, select_type);
 			selection_candidates.push_back(tmp);
 			if(select_type == mQueryTree->getIndex("procedure"))
@@ -573,6 +580,11 @@ void QueryEvaluator::evaluate()
 		//mResult.print();   // TESTING
 		//candidates join finishes
 	}else{
+		if(eva_tuple.size() == 0){
+			mResult.addInType(-1);
+			return;
+		}
+
 		int size = eva_tuple[0].size();
 		for(int i = 0; i < (int)indexes.size(); i++){
 			int type = eva_tuple[0][indexes[i]*2];
@@ -587,7 +599,6 @@ void QueryEvaluator::evaluate()
 			}
 			mResult.addInTuple(tmp_entry);
 		}
-		cout << endl;
 	}
 
 	//In case the returned mResult is empty, then insert -1 to the result.
@@ -689,13 +700,12 @@ void QueryEvaluator::evalPattern(vector<vector<int> >& result_tuple, vector<int>
 }
 
 void QueryEvaluator::joinTuples(vector<vector<int> >& eva_tuple, vector<vector<int> >& pre_tuple, int common_num, int same1_tuple1, int same2_tuple1){
-		vector<vector<int> > tmp_result;
 		if(common_num == 2)
 			if(same1_tuple1 != 0)
-				tmp_result = TupleOperations::tupleJoinOneC(same1_tuple1, 0, eva_tuple, pre_tuple);
-			else tmp_result = TupleOperations::tupleJoinOneC(same2_tuple1, 1, eva_tuple, pre_tuple);
+				eva_tuple = TupleOperations::tupleJoinOneC(same1_tuple1, 0, eva_tuple, pre_tuple);
+			else eva_tuple = TupleOperations::tupleJoinOneC(same2_tuple1, 1, eva_tuple, pre_tuple);
 		else if(common_num == 4){
-			tmp_result = TupleOperations::tupleJoinTwoC(same1_tuple1, same2_tuple1, eva_tuple, pre_tuple);
+			eva_tuple = TupleOperations::tupleJoinTwoC(same1_tuple1, same2_tuple1, eva_tuple, pre_tuple);
 		}else if((int) eva_tuple.size() == 0)
 			eva_tuple = pre_tuple;
 		else{
@@ -1203,13 +1213,9 @@ bool QueryEvaluator::affects(int stmt1, int stmt2){
 	getNextStar(DOWN, nexts, stmt1);
 	int found2 = find_ele(nexts, stmt2);
 
-	//Some problems to be solved:
-	// 1. if stmt clause has multiple stmts, this is not checked
-	// 2. if the final stmt is inside a if stmt
-	// not consider much about if stmt
 	if(found1 != (int)used.size() && found2 != (int)nexts.size()){
 		bool find_dest = false;
-		bool has_non_mod_path = nonModPath(stmt1, modified, stmt2, find_dest);
+		bool has_non_mod_path = nonModPath(stmt1, modified, stmt2, stmt2, find_dest);
 		if(has_non_mod_path) return true;
 		else return false;
 	}else return false;
@@ -1321,27 +1327,63 @@ bool QueryEvaluator::isInsideWhile(int w, int stmt){
 	else return true;
 }
 
+bool QueryEvaluator::isInsideIf(int ifstat, int stmt){
+	vector<int> descadent;
+	getChildStar(DOWN, descadent, ifstat);
+	int found = find_ele(descadent, stmt);
+	if(found == (int)descadent.size())
+		return false;
+	else return true;
+
+}
+
 //Check whether there is a non-mod path for variable mod in the stmt
-bool QueryEvaluator::nonModPath(int s, int mod, int dest, bool& find_dest){
+bool QueryEvaluator::nonModPath(int s, int mod, int dest, int final, bool& find_dest){
 	find_dest = false;
 	cout << s << " " << mod << " " << dest << endl;
 	int next = s;
-	if(next == dest) {
+	if(s <= 0)
+		return true;
+	
+	if(next == final) {
 		find_dest = true;
 		return true;
 	}
-	if(isIf(next)){
+	if(s == dest) return true;
+
+	bool is_if = isIf(next);
+	bool is_while = isWhile(next);
+	if(is_if){
 		vector<int> tmp_nexts;
 		getNextPure(DOWN, tmp_nexts, next);
 		int thenC = tmp_nexts[0];
 		int elseC = tmp_nexts[1];
 		
+		bool is_in_if = isInsideIf(next, final);
 		int joint_node = mPKBObject->ast_GetFollowingStatementNum(s);
-		bool find_dest1 = false;
-		bool find_dest2 = false;
-		bool non_mod_path1 = nonModPath(thenC, mod, joint_node, find_dest1);
-		bool non_mod_path2 = nonModPath(elseC, mod, joint_node, find_dest2);
-		if(find_dest1) {
+		bool find_dest1;
+		bool find_dest2;
+		bool non_mod_path1;
+		bool non_mod_path2;
+
+		if((!is_in_if) || is_in_if && joint_node != -1){
+			non_mod_path1 = nonModPath(thenC, mod, joint_node, final, find_dest1);
+			non_mod_path2 = nonModPath(elseC, mod, joint_node, final, find_dest2);
+		}else{
+			non_mod_path1 = nonModPath(thenC, mod, final, final, find_dest1);
+			non_mod_path2 = nonModPath(elseC, mod, final, final, find_dest2);
+			if(find_dest1){
+				find_dest = true;
+				return non_mod_path1;
+			}
+			if(find_dest2){
+				find_dest = true;
+				return non_mod_path2;
+			}
+			throw new string("QueryEvaluator::nonModPath, either find_dest1 or find_dest2 is true, inconsistency!");
+		}
+
+		if(find_dest1 && !find_dest2) {
 			find_dest = true;
 			return non_mod_path1;
 		}
@@ -1350,23 +1392,45 @@ bool QueryEvaluator::nonModPath(int s, int mod, int dest, bool& find_dest){
 			return non_mod_path2;
 		}
 		if(!non_mod_path1 && !non_mod_path2) return false;
-	}else if(isWhile(next)){
+		else return nonModPath(joint_node, mod, dest, final, find_dest);
+	}else if(is_while){
 		bool is_in_while = isInsideWhile(next, dest);
 		vector<int> tmp_nexts;
 		getNextPure(DOWN, tmp_nexts, next);
+		int size = tmp_nexts.size();
+		int inner;
+		int outer;
+		if(size == 2){
+			outer = tmp_nexts[0];
+			inner = tmp_nexts[1];
+		}else inner = tmp_nexts[0];
+	
+		if(is_in_while)
+			return nonModPath(inner, mod, dest, final, find_dest);
+		else if(size == 2) return nonModPath(outer, mod, dest, final, find_dest);
+		else return true;
 	}else{
 		vector<int> modifies;
+		vector<int> tmp_nexts;
+		getNextPure(DOWN, tmp_nexts, next);
+		next = tmp_nexts[0];
+		if(next == final){
+			find_dest = true;
+			return true;
+		}
+
 		mPKBObject->mTable_getModifiedVar(modifies, next); 
 		int found = find_ele(modifies, mod);
 		if(found != (int)modifies.size())
 			return false;
+		else return nonModPath(next, mod, dest, final, find_dest);
 	}
 	return true;
 }
 
 void QueryEvaluator::getAllType(vector<int>& result, int type){
 	if(type == mQueryTree->getIndex("stmt"))  getAllStmts(result);
-	else if(type == mQueryTree->getIndex("prog_line")) mPKBObject->ast_GetAllCall(result);
+	else if(type == mQueryTree->getIndex("prog_line")) getAllStmts(result);
 	else if(type == mQueryTree->getIndex("assign")) mPKBObject->ast_GetAllAssign(result);
 	else if(type == mQueryTree->getIndex("while")) mPKBObject->ast_GetAllWhile(result);
 	else if(type == mQueryTree->getIndex("if")) mPKBObject->ast_GetAllIf(result);

@@ -7,6 +7,7 @@
  map<string, string> Convertor::shortcutToContent;//s->stmt;
  //Tokenizer keywordToken;
  int u=Convertor::QUATEDSTRING;
+ int w=Convertor::PATTERNSTRING;
 int Convertor::update()
 {
 	indexToKeyword.clear();
@@ -56,7 +57,7 @@ int Convertor::update()
   return 0;
 }
 
- bool Convertor::isDeclar(string token)
+ bool Convertor::isDeclared(string token)
  {
 	 bool flag;
 	 int i;
@@ -72,19 +73,43 @@ int Convertor::update()
 
 
  bool Convertor::isQuated(string s)
- {      
+ {      if(s.size()<2)
+           return false;
      string a="\"";
-	
     if((s.substr(0,1)==a )&& (s.substr(s.size()-1,1)==a) )
 		 return true;
 	    else
 		 return false;
 
  }
+ bool Convertor::isPatterned(string s)
+ {
+	 string a="_\"";
+	 string b="\"_";
 
+
+	 if (isQuated(s))
+		 return true;
+	 else if(s.size()>=4)
+	 {
+	 if(s.substr(0,2)==a&&s.substr(s.size()-2,2)==b||isQuated(s))
+		 return true;
+	 else
+		 return false;
+	 }else if(s.size()>4)
+	 {
+        if(s.substr(0,2)==a||s.substr(s.size()-2,2)==b||isQuated(s))
+		   return true;
+	    else
+		   return false;
+	 }
+	 else
+	 return false;
+ }
 int Convertor::getIndex(string token)//given a token, looking up for the coressponding index, and return it, 
 	                                   //if not in the maptable and the declarkeywordtable return -1;
 		{
+			//cout<<token<<endl;
 			int index=-1;
 			int num;
 
@@ -93,18 +118,24 @@ int Convertor::getIndex(string token)//given a token, looking up for the coressp
 			//cout<<a;
 			if (a==1)
 				index=keywordToIndex.find(token)->second;
-            else if(isQuated(token))
+			else if(num!=0||token=="0")
+			{
+				if(num>=0)
+				index=num;
+				else
+                throw new string("negative int contains\n");
+			}  
+			else if(isPatterned(token))
 			{
 				insertIndex(++u ,token);
+				insertShortcut(token,"patternOfSimpl");
 				index=keywordToIndex.find(token)->second;
 			}
-			else if(num!=0)
-				index=num;
 			else
 			{
 				index=-1;
 			}
-			//cout<<index<<endl;
+		//	cout<<token<<index<<endl;
 			return index;
 		}
 string Convertor:: getKeyword(int index)//given a index, looking for the coressponding keyword, and return it,

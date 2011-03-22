@@ -12,19 +12,26 @@ private:
 public:
 
 	PqlPreprocessor(std::string query);
-
+	QueryTable getTable();
 	int selectSize(); //return the number of result variables
-	std::vector<int> selectAt(int indx); //take an index and return the result variable at index indx.
+	void selectAt(vector<int> &tupleTemp, int index); //take an index and return the result variable at index indx.
 	int suchThatSize(); //return the number of such that conditions in such that clause
-	std::vector<int> suchThatAt(int indx); //take an indx and return the such that condition in 				index indx
+	void suchThatAt(vector<int> &relCondTemp, int index); //take an indx and return the such that condition in 				index indx
 	int withSize(); //return the number of with conditions in the with clause
-	std::vector<int> withAt(int indx); //take an indx and return the with condition in index indx
+	void withAt(vector<int> &attrCondTemp,int index);//take an indx and return the with condition in index indx
+	int patternSize(); //return the number of pattern expressions in the pattern clause
+	void patternAt(vector<int> &expression, int index); ////take an indx and return the pattern expression in index.
 
 	//int varNum(); //return the number of all query variables
 	//int varType(int var); //take an integer form of a query variable and return its type in integer
 
+
+
+
+
 		//For keyword decoding
 	int getIndex(std::string key);
+	string getContent(int indx);
 	int procCode(std::string key);  //take a simple procedure name and return the PQL code
 	int varCode(std::string key);  //take a simple variable name and return the PQL code
 	std::string varDecode(int i);  //take a code of simple variable and return the variable string

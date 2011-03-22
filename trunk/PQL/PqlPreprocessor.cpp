@@ -2,35 +2,51 @@
 
 
 PqlPreprocessor::PqlPreprocessor(string query){
-	qt = PqlParser::parser(query);
+	PqlParser::parser(query, &qt);
+}
+
+QueryTable PqlPreprocessor::getTable(){
+	return qt;
 }
 
 int PqlPreprocessor::selectSize(){
 	return qt.selectSize();
 }
 
-vector<int> PqlPreprocessor::selectAt(int i){
-	return qt.selectAt(i);
+void PqlPreprocessor::selectAt(vector<int> &tupleTemp, int index){
+	qt.selectAt(tupleTemp,index);
 }
 
 int PqlPreprocessor::suchThatSize(){
 	return qt.suchThatSize();
 }
 
-vector<int> PqlPreprocessor::suchThatAt(int i){
-	return qt.suchThatAt(i);
+void PqlPreprocessor::suchThatAt(vector<int> &relCondTemp, int index){
+	qt.suchThatAt(relCondTemp,index);
 }
 
 int PqlPreprocessor::withSize(){
 	return qt.withSize();
 }
 
-vector<int> PqlPreprocessor::withAt(int i){
-	return qt.withAt(i);
+void PqlPreprocessor::withAt(vector<int> &attrCondTemp,int index){
+	qt.withAt(attrCondTemp,index);
 }
+int PqlPreprocessor::patternSize(){
+	return qt.patternSize();
+}
+
+void PqlPreprocessor::patternAt(vector<int> &expression, int index){
+	qt.patternAt(expression,index);
+}
+
 
 int PqlPreprocessor::getIndex(std::string key){
 	return Convertor::getIndex(key);
+}
+
+string PqlPreprocessor::getContent(int indx){
+	return Convertor::getKeyword(indx);
 }
 
 int PqlPreprocessor::procCode(string key){

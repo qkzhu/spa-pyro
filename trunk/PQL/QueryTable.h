@@ -14,26 +14,31 @@ class QueryTable{
 
 public: 
 	//QueryTable();
-	void addClause(int type, vector<int> content);
-	
+	void addClause(int type, vector<int> content); // add query to the data structure
 	
 	vector < SuchThat > getSuchThatClauseV(); //return suchThatClauseValid for validator performing validation
 	vector<With> getWithClauseV(); //return withClauseValid for validator performing validation
 
 	int selectSize(); // return the number of result variables
-	vector<int> selectAt(int index); //take an index and return the result variable at index
+	void selectAt(vector<int> &tupleTemp, int index); //take an index and return the result variable at index
 
 	int suchThatSize(); //return the number of such that conditions in such that clause
-	vector<int> suchThatAt(int index); //take an indx and return the such that condition in index
+	void suchThatAt(vector<int> &relCondTemp, int index); //take an indx and return the such that condition in index
 
 	int withSize(); //return the number of with conditions in the with clause
-	vector<int> withAt(int index); //take an indx and return the with condition in index.
-	
+	void withAt(vector<int> &attrCondTemp,int index); //take an indx and return the with condition in index.
+
+	int patternSize(); //return the number of pattern expressions in the pattern clause
+	void patternAt(vector<int> &expression, int index); ////take an indx and return the pattern expression in index.
+
+
+
 	// for internal usage
 	vector<int> getQuery();
 	vector < Select > getSelectClause();
 	vector < SuchThat > getSuchThatClause();
-	vector < With > QueryTable::getWithClause();
+	vector < With > getWithClause();
+	vector < Pattern > getPatternClause();
 
 	void showTable();
 
@@ -56,6 +61,12 @@ private:
 	vector < With > withClause;
 	vector < With > withClauseValid;
 	vector <int> withVector;
+
+	//"pattern-clause"
+	vector < Pattern > patternClause;
+	vector < Pattern > patternClauseValid;
+	vector <int> patternVector;
+
 
 	/*
 	//"declaration - clause"
