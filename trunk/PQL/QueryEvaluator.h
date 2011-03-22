@@ -6,7 +6,7 @@
 
 
 #include "PqlPreprocessor.h"
-#include "PKB_APIs.h"
+#include "PKB.h"
 #include "QueryResult.h"
 #include "TupleOperations.h"
 
@@ -85,6 +85,8 @@ private:
 	
 	//Other augmental functions
 	void getAllStmts(std::vector<int>& result);
+	void getAllProc(std::vector<int>& result);
+	void getAllVar(std::vector<int>& result);
 
 	string PQL_procDecode(int);
 	int PQL_procEncode(string);
