@@ -483,3 +483,31 @@ string Pattern::nodeToPostFix(Node *node, AST& ast, VarTable& varTable)
 
 	return result;
 }
+
+int Pattern::condWhile(int stmtNum, AST& ast)
+{
+	Node *whe = ast.getNodeByStatementNum(stmtNum);
+	if (whe->type != Node::WHILE)
+		throw new string("Pattern: Statement number does not correspond to a while statement.");
+
+	vector<Node*> bottomNodes = whe->bottomNodeList;
+	
+	if (bottomNodes.size() == 0)
+		throw new string("Pattern: While has no down nodes");
+
+	return bottomNodes[0]->id;
+}
+
+int Pattern::condIf(int stmtNum, AST& ast)
+{
+	Node *iff = ast.getNodeByStatementNum(stmtNum);
+	if (iff->type != Node::IF)
+		throw new string("Pattern: Statement number does not correspond to a if statement.");
+
+	vector<Node*> bottomNodes = iff->bottomNodeList;
+	
+	if (bottomNodes.size() == 0)
+		throw new string("Pattern: If has no down nodes");
+
+	return bottomNodes[0]->id;
+}

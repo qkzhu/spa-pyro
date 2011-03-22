@@ -300,6 +300,10 @@ void Parser::parseProcedure()
 
 	string proc_name = getToken();
 	checkValidName(proc_name);
+	
+	//procedure names must be unique
+	if (mPkb.pTable_isProcNameExist(proc_name))
+		throw new string("Redeclaration of procedure: " + proc_name);
 
 	//inserts procedure name into proc table
 	mPkb.pTable_InsertProc(proc_name); 
@@ -458,6 +462,10 @@ Node *Parser::parseCall(Node* parentNode)
 	string proc_name = getToken();
 
 	int proc_index = mPkb.pTable_GetProcIndex(proc_name); 
+
+	//recursive calls are not allowed
+	if (proc_index == mCurrProcIndex)
+		throw new string("Recursive calls in " + proc_name + " are not allowed.");
 
 	Node* curr = mPkb.ast_CreateNode(Node::CALL, mStatNum++, proc_index);
 
