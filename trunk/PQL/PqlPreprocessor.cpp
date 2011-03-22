@@ -3,6 +3,8 @@
 
 PqlPreprocessor::PqlPreprocessor(string query){
 	PqlParser::parser(query, &qt);
+	validator.populateTable();
+	validator.checkResults(qt);
 }
 
 QueryTable PqlPreprocessor::getTable(){

@@ -8,7 +8,7 @@ class PqlPreprocessor{
 
 private:
 	QueryTable qt;
-
+	Validator validator;
 public:
 
 	PqlPreprocessor(std::string query);

@@ -1171,9 +1171,8 @@ void QueryEvaluator::getAffectsStar(int up, vector<int>& result, int para){
 	}
 }
 
-//If no affects exists, return a the original result vector
+//If no affects exists, return the original result vector
 void QueryEvaluator::getAffects(int up, vector<int>& result, int para){
-	result.push_back(para);
 	vector<int> tmp;
 	mPKBObject->mTable_getModifiedVar(tmp, para);
 	int modified = tmp[0];
@@ -1183,16 +1182,20 @@ void QueryEvaluator::getAffects(int up, vector<int>& result, int para){
 		if(used[0] != -1){
 			for(int i = 0 ; i< (int) used.size(); i++){
 				int next = used[i];
-				if(affects(para, next))
-					result.push_back(next);
+				int found = find_ele(result, next);
+				if(found == (int)result.size())
+					if(affects(para, next))
+						result.push_back(next);
 			}
 		}
 	}else if(up == UP){
 		if(used[0] != -1){
 			for(int i = 0 ; i< (int) used.size(); i++){
 				int next = used[i];
-				if(affects(next, para))
-					result.push_back(next);
+				int found = find_ele(result, next);
+				if(found == (int)result.size())
+					if(affects(next, para))
+						result.push_back(next);
 			}
 		}
 	}else throw new string("QueryEvaluator::getAffects, No such up type!");
@@ -1340,7 +1343,7 @@ bool QueryEvaluator::isInsideIf(int ifstat, int stmt){
 //Check whether there is a non-mod path for variable mod in the stmt
 bool QueryEvaluator::nonModPath(int s, int mod, int dest, int final, bool& find_dest){
 	find_dest = false;
-	cout << s << " " << mod << " " << dest << endl;
+
 	int next = s;
 	if(s <= 0)
 		return true;

@@ -90,7 +90,10 @@ void QueryTable::addClause(int type, vector<int> content){
 			else if(content[i] == 53 || content[i] == 54 || content[i] == 55) // make "assign", "while", "if" to be "stmt" 
 			{
 				//cout<<" I am inside this 53 54 55!"<<endl;
-				validTemp.relCond.push_back(51);
+				if(content.at(0) == 15 || content.at(0) == 16)
+					validTemp.relCond.push_back(content[i]);
+				else
+					validTemp.relCond.push_back(51);
 			}
 			else
 			{
@@ -99,6 +102,7 @@ void QueryTable::addClause(int type, vector<int> content){
 			//cout<<validTemp.relCond[i]<<" ###########AFTER CHANGE"<<endl;
 			
 		}
+		validTemp.argumentNoCorrect = SuchThatTemp.argumentNoCorrect;
 		suchThatClauseValid.push_back(validTemp);
 
 
