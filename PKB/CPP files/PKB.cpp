@@ -359,14 +359,19 @@ string PKB::intToString(int i)
    return ss.str();
 }
 
-
+/*
+ *   CFG
+ */
 void PKB::cfg_getNext(vector<int>& theNext, int stmt)
 {
-	cfg->getNext(theNext, stmt, ast);
+	if(stmt > ast_getMaxStmtNum()) theNext.push_back(-1);
+	else cfg->getNext(theNext, stmt, ast);
 }
+
 void PKB::cfg_getNextUp(vector<int>& theNextUp, int stmt)
 {
-	cfg->getNextUp(theNextUp, stmt, ast);
+	if(stmt <= 1) theNextUp.push_back(-1);
+	else cfg->getNextUp(theNextUp, stmt, ast);
 }
 
 //return the condition variable 		of the while stmt in its code
