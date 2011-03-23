@@ -217,41 +217,67 @@ void QueryEvaluator::evaluate()
 			pattern1_type = clause[next];
 			pattern1 = clause[next++];
 		}else{
-			pattern1_type = clause[next];
+			pattern1_type = clause[next++];
 			pattern1 = clause[next++];
 		}
 		if(clause[next++] != mQueryTree->getIndex(",")) {
 			throw new string("QueryEvaluator::evaluate, pattern format error, no \",\"!");
 		}
 		
-		pattern2_type = clause[next++];
-		pattern2 = clause[next++];
+		if(clause[next] == mQueryTree->getIndex("_")){
+			pattern2_type = clause[next];
+			pattern2 = clause[next++];
+		}else{
+			pattern2_type = clause[next++];
+			pattern2 = clause[next++];
+		}
 
 		if(var_type == mQueryTree->getIndex("if"))
-			if(clause[next] != mQueryTree->getIndex("_"))
+			if(clause[++next] != mQueryTree->getIndex("_")){
+				cout << clause[next] << endl;
+				cout << mQueryTree->getIndex("_") << endl;
 				throw new string("QueryEvaluator::evaluate, pattern format error, if third parameter!");
+			}
 		//pattern clause read-in finish//
       
 		vector<int> pattern_result;
 		evalPattern_PQL(eva_tuple, pattern_result, var, var_type, pattern1, pattern2);
-
-		int it = find_ele(mgTupleIndexing, var);
-		if(it == (int)mgTupleIndexing.size()){
+	
+		if(mgTupleIndexing.size() == 0){
 			mgTupleIndexing.push_back(var);
-			for(int row = 0; row < (int)eva_tuple.size(); row++){
-				for(int indx = 0; indx < (int)pattern_result.size(); indx++)
-					eva_tuple[row].push_back(pattern_result[indx]);
+			for(int i = 0; i < (int)pattern_result.size(); i++){
+				vector<int> tmp_insertion;
+				tmp_insertion.push_back(mQueryTree->getIndex("integer"));
+				tmp_insertion.push_back(pattern_result[i]);
+				eva_tuple.push_back(tmp_insertion);
 			}
-		}else{
-			for(int row = 0; row < (int)eva_tuple.size(); row++){
-				int entry = eva_tuple[row][it];
-				int found = find_ele(pattern_result, entry);
-				if(found == (int)pattern_result.size())
-					eva_tuple.erase(eva_tuple.begin() + row);
+		}
+		else{
+			int it = find_ele(mgTupleIndexing, var);
+			if(it == (int)mgTupleIndexing.size()){
+				mgTupleIndexing.push_back(var);
+				vector<vector<int> > new_tmp_eva_tuple;
+				for(int row = 0; row < (int)eva_tuple.size(); row++){
+					for(int indx = 0; indx < (int)pattern_result.size(); indx++){
+						vector<int> tmp_pattern_vector;
+						tmp_pattern_vector.insert(tmp_pattern_vector.end(), eva_tuple[row].begin(), eva_tuple[row].end());
+						tmp_pattern_vector.push_back(mQueryTree->getIndex("integer"));
+						tmp_pattern_vector.push_back(pattern_result[indx]);
+						new_tmp_eva_tuple.push_back(tmp_pattern_vector);
+					}
+				}
+				eva_tuple = new_tmp_eva_tuple;
+			}else{
+				for(int row = 0; row < (int)eva_tuple.size(); row++){
+					int entry = eva_tuple[row][it];
+					int found = find_ele(pattern_result, entry);
+					if(found == (int)pattern_result.size())
+						eva_tuple.erase(eva_tuple.begin() + row);
+				}
 			}
 		}
 	}//Pattern_PQL Evaluation Finish
-
+	
 	//Start evaluating SuchThat clauses
 	int suchThatSize = mQueryTree->suchThatSize();
 	for(int i= 0; i<suchThatSize; i++)
@@ -512,11 +538,9 @@ void QueryEvaluator::evaluate()
 	}
 	cout << "Checking finish" << endl;
 	*/
-
 	//if no with and such that clause, just return;
 	//Or if the selected element is not inside evaluated result tuple, depend on the tuple
-	if((with_size == 0 && suchThatSize == 0)|| ((int)mgTupleIndexing.size()!=0 && !is_selected)){
-		
+	if((with_size == 0 && suchThatSize == 0 && patternSize == 0) || ((int)mgTupleIndexing.size()!=0 && !is_selected)){
 		//if the selected element is not inside evaluated result tuple and result tuple is null
 		if((int)mgTupleIndexing.size() != 0){
 			if(eva_tuple.empty()) {
@@ -585,21 +609,24 @@ void QueryEvaluator::evaluate()
 			mResult.addInType(-1);
 			return;
 		}
-
+		
 		int size = eva_tuple[0].size();
 		for(int i = 0; i < (int)indexes.size(); i++){
 			int type = eva_tuple[0][indexes[i]*2];
 			mResult.addInType(type);
 		}
-
+		
 		for(int i = 0; i< (int)eva_tuple.size(); i++){
 			vector<int> tmp_entry;
+			cout << "HERE"<< endl;
+			cout << mQueryTree->selectSize() << endl;
 			for(int j = 0; j < (int)mQueryTree->selectSize(); j++){
 				int v = eva_tuple[i][indexes[j]*2+1];
 				tmp_entry.push_back(v);
 			}
 			mResult.addInTuple(tmp_entry);
 		}
+		
 	}
 
 	//In case the returned mResult is empty, then insert -1 to the result.
@@ -681,8 +708,9 @@ void QueryEvaluator::evalPattern_PQL(vector<vector<int> >& result_tuple, vector<
 	int found = 0;
 	if(indx != (int)mgTupleIndexing.size()){
 		found = 1;
-		for(int i = 0; i < (int)result_tuple.size(); i++)
-			result.push_back(result_tuple[i][indx]);
+		for(int i = 0; i < (int)result_tuple.size(); i++){
+			result.push_back(result_tuple[i][2*indx+1]);
+		}
 	}
 
 	if(var_type == mQueryTree->getIndex("assign")){
@@ -695,7 +723,7 @@ void QueryEvaluator::evalPattern_PQL(vector<vector<int> >& result_tuple, vector<
 				mPKBObject->ast_GetAllIf(result);
 			else if(var_type == mQueryTree->getIndex("while"))
 				mPKBObject->ast_GetAllWhile(result);
-		getPattern_PQLCond(result, var_type, mQueryTree->getContent(pattern1));
+		getPattern_PQLCond(result, var_type, PQL_varDecode(pattern1));
 	}else 
 		throw new string("QueryEvaluator::evalPattern_PQL, no such variable type!");
 }
@@ -1049,6 +1077,16 @@ void QueryEvaluator::evalNext(int star, vector<vector<int> >& result, const vect
 		for(int l = 0; l < (int)para1.size(); l++){
 			int stmtN = para1[l];
 			vector<int> nexts;
+
+
+			///////////////////////////////////DEBUGGING/////////////////////////////
+			cout << "PASS" << endl;
+			mPKBObject->cfg_getNext(nexts, 16);
+			nexts.clear();
+			cout << "PASS 2" << endl;
+
+
+
 			if(star == NOSTAR) mPKBObject->cfg_getNext(nexts, stmtN);
 			else if(star == STAR) getNextStar(DOWN, nexts, stmtN);
 			else throw new string("QueryEvaluator::evalNext, no such star type!");
@@ -1227,6 +1265,7 @@ bool QueryEvaluator::affects(int stmt1, int stmt2){
 
 void QueryEvaluator::getPattern_PQLAssign(vector<int>& result, string patternLeft, string patternRight){
 	vector<int> tmp;
+
 	for(int i = 0; i < (int)result.size(); i++){
 		if(mPKBObject->patternAssign(result[i], patternLeft, patternRight))
 			tmp.push_back(result[i]);
@@ -1237,12 +1276,11 @@ void QueryEvaluator::getPattern_PQLAssign(vector<int>& result, string patternLef
 
 void QueryEvaluator::getPattern_PQLCond(vector<int>& result, int type, string patternCond){
 	vector<int> tmp;
-	
 	for(int i = 0; i < (int)result.size(); i++){
-		if(type = mQueryTree->getIndex("if")){
+		if(type == mQueryTree->getIndex("if")){
 			if(mPKBObject->condIf(result[i]) == PKB_varEncode(patternCond))
 				tmp.push_back(result[i]);
-		}else if(type = mQueryTree->getIndex("while")){
+		}else if(type == mQueryTree->getIndex("while")){
 			if(mPKBObject->condWhile(result[i]) == PKB_varEncode(patternCond))
 				tmp.push_back(result[i]);
 		}else
@@ -1433,7 +1471,6 @@ bool QueryEvaluator::nonModPath(int s, int mod, int dest, int final, bool& find_
 }
 
 void QueryEvaluator::getAllType(vector<int>& result, int type){
-	cout << type << endl;
 	if(type == mQueryTree->getIndex("stmt"))  getAllStmts(result);
 	else if(type == mQueryTree->getIndex("prog_line")) getAllStmts(result);
 	else if(type == mQueryTree->getIndex("assign")) mPKBObject->ast_GetAllAssign(result);

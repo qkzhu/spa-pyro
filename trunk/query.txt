@@ -1,2 +1,2 @@
-stmt s ; assign a; variable v; constant c; if ifstat; while w; procedure p;
-select BOOLEAN such that calls(p, "Third") and follows*(s, 10) and modifies(a, v) with v.varName = "k";
+stmt s, s1; assign a; while w; if ifstat;
+select a pattern a( _ , _);
