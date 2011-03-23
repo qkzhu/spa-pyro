@@ -37,15 +37,15 @@ public:
 	void		ast_AddDown(Node *upperNode, Node *bottomNode);
 	void		ast_AddFollow(Node *d, Node *followNode);
 	void		ast_AddProcedure(int procIndex, Node *d);
-	int			ast_getParent(int child);    // For Query Evaluator
+	int			ast_getParent(int child);			// For Query Evaluator
 	Node*		ast_getParent(Node* n);
 	int			ast_getStmtNum(Node* n);
 	bool		ast_hasStmt(int stmtNum);   
-	int			ast_getMaxStmtNum();  // For Query Evaluator 
-	void		ast_GetAllAssign(vector<int>&);   // For Query Evaluator
-	void		ast_GetAllWhile(vector<int>&);	// For Query Evaluator
-	void		ast_GetAllIf(vector<int>&);	// For Query Evaluator
-	void		ast_GetAllCall(vector<int>&);  // For Query Evaluator
+	int			ast_getMaxStmtNum();				// For Query Evaluator 
+	void		ast_GetAllAssign(vector<int>&);		// For Query Evaluator
+	void		ast_GetAllWhile(vector<int>&);		// For Query Evaluator
+	void		ast_GetAllIf(vector<int>&);			// For Query Evaluator
+	void		ast_GetAllCall(vector<int>&);		// For Query Evaluator
 	
 	vector<Node*> ast_GetAllProc(); //For CFG
 	vector<Node*> ast_GetDown(Node* n); //For CFG
