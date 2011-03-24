@@ -18,6 +18,7 @@ public:
 	void addDown(Node *upperNode, Node *bottomNode);	// establish a bottom relation to upperNode, and the same time, establish a up realtion to upperNode.
 	void addFollow(Node *d, Node *followNode);			// establish follow relation to the given node d, and also establish a followed by relation to followNode internally.
 
+
 	/**
 	 * In the AST, there is a table used to store all the root node of each procedure, this table is called proList, it's used
 	 * for retrive the root node of a procedure, and the procedure name can be obtanined from d.name.
