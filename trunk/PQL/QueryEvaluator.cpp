@@ -1171,7 +1171,8 @@ void QueryEvaluator::evalAffects(vector<vector<int> >& result, const vector<int>
 
 //The para passed inside is checked to be assign
 void QueryEvaluator::evalAffectsStar(vector<vector<int> >& result, const vector<int>& para1, const vector<int>& para2){
-	if(para1.size() <= para2.size()){
+	//The second case is not implemented well, skipt first
+	if(true){
 		for(int i = 0; i < (int)para1.size(); i++){
 			int in1 = para1[i];
 			vector<int> affectsStar;
@@ -1179,7 +1180,7 @@ void QueryEvaluator::evalAffectsStar(vector<vector<int> >& result, const vector<
 			for(int j = 0; j < (int)para2.size(); j++){
 				int in2 = para2[j];
 				int found = find_ele(affectsStar, in2);
-				if(found == (int)affectsStar.size()){
+				if(found != (int)affectsStar.size()){
 					int t[4] = {mQueryTree->getIndex("integer"), in1, mQueryTree->getIndex("integer"), in2};
 					vector<int> tmp;
 					tmp.insert(tmp.end(), t, t+4);
@@ -1195,7 +1196,7 @@ void QueryEvaluator::evalAffectsStar(vector<vector<int> >& result, const vector<
 			for(int j = 0; j < (int)para1.size(); j++){
 				int in1 = para1[j];
 				int found = find_ele(affectsStar, in1);
-				if(found == (int)affectsStar.size()){
+				if(found != (int)affectsStar.size()){
 					int t[4] = {mQueryTree->getIndex("integer"), in1, mQueryTree->getIndex("integer"), in2};
 					vector<int> tmp;
 					tmp.insert(tmp.end(), t, t+4);
@@ -1217,27 +1218,44 @@ void QueryEvaluator::getAffectsStar(int up, vector<int>& result, int para){
 
 //If no affects exists, return the original result vector
 void QueryEvaluator::getAffects(int up, vector<int>& result, int para){
-	vector<int> tmp;
-	mPKBObject->mTable_getModifiedVar(tmp, para);
-	int modified = tmp[0];
-	vector<int> used;
-	mPKBObject->uTable_getStmtUses(used, modified);
 	if(up == DOWN){
+		vector<int> tmp;
+		mPKBObject->mTable_getModifiedVar(tmp, para);
+		int modified = tmp[0];
+		vector<int> used;
+		mPKBObject->uTable_getStmtUses(used, modified);
 		if(used[0] != -1){
 			for(int i = 0 ; i< (int) used.size(); i++){
 				int next = used[i];
+				//Check next is assign or not
+				vector<int> assigns;
+				mPKBObject->ast_GetAllAssign(assigns);
+				int found_assign = find_ele(assigns, next);
+
 				int found = find_ele(result, next);
-				if(found == (int)result.size())
+				if(found_assign != (int)assigns.size() && found == (int)result.size())
 					if(affects(para, next))
 						result.push_back(next);
 			}
 		}
 	}else if(up == UP){
+		//The UP one has some problem , not completed
+		//The used has many vairables , no time to correct it
+		vector<int> tmp;
+		mPKBObject->uTable_getUsedVar(tmp, para);
+		int modified = tmp[0];
+		vector<int> used;
+		mPKBObject->uTable_getStmtUses(used, modified);
 		if(used[0] != -1){
 			for(int i = 0 ; i< (int) used.size(); i++){
 				int next = used[i];
+				//Check next is assign or not
+				vector<int> assigns;
+				mPKBObject->ast_GetAllAssign(assigns);
+				int found_assign = find_ele(assigns, next);
+
 				int found = find_ele(result, next);
-				if(found == (int)result.size())
+				if(found_assign != (int)assigns.size() && found == (int)result.size())
 					if(affects(next, para))
 						result.push_back(next);
 			}
