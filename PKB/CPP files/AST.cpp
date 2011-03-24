@@ -31,10 +31,16 @@ void AST::addProcedure(int index, Node* d)
 }
 
 Node* AST::getNodeByProcdureIndex(int procIndex){
-	if(procIndex <= 0) throw new string("AST::getNodeByProcdureIndex - Invalid procedure index.");
+	if(procIndex < 0) throw new string("AST::getNodeByProcdureIndex - Invalid procedure index.");
 	if(astList.find(procIndex) != astList.end())
 		return astList[procIndex];
 	else return NULL;
+}
+
+int AST::getProcRootStmtNumByProcdureIndex(int procIndex){
+	Node* procRootStmt = getNodeByProcdureIndex(procIndex);
+	if(procRootStmt == NULL) return -1;
+	else return procRootStmt->stmtNum;
 }
 
 void AST::getChild(int stmtNum, vector<int>& result)

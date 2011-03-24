@@ -24,6 +24,7 @@ public:
 	 */
 	void addProcedure(int index, Node *d);
 	Node* getNodeByProcdureIndex(int procIndex);
+	int getProcRootStmtNumByProcdureIndex(int procIndex);
 
 	/**
 	 * Create a new node and return the pointer of the node. If the given type is assignment, the new node will also be stored
@@ -33,7 +34,7 @@ public:
 	Node*		createNode(Node::NodeType nt, int statNum, int name);	
 	void		getChild(int stmtNum, vector<int>&);// get the child node of given node statement number stmtNum.
 	int			getParent(int stmtNum);				// get the parent stmt number of given node statement number stmtNum.
-	Node* getParent(Node *d);	// get the parent node of given node statement number stmtNum.
+	Node*		getParent(Node *d);					// get the parent node of given node statement number stmtNum.
 	Node*		getPreviousStatement(Node* d);		// Get the previous node of given node d, with follow relation.
 	Node*		getFollowingStatement(Node* d);		// Get the follow node of given node d, withe the follow relation.
 	Node*		getNodeByStatementNum(int index);	// Return a node corresponding to the given statement number.
