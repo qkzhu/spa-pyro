@@ -364,9 +364,20 @@ string PKB::intToString(int i)
  */
 void PKB::cfg_getNext(vector<int>& theNext, int stmt)
 {
-	int tm = ast_getMaxStmtNum();
-	if(stmt > tm) theNext.push_back(-1);
-	else cfg->getNext(theNext, stmt, ast);
+	if(stmt > ast_getMaxStmtNum() || stmt <= 0) theNext.push_back(-1);
+	else{
+		int i;
+		for(i = 0; i < pTable_GetAllProc(); i++)
+		{
+			//Check if the stmt is the last stmt in any procdure
+			if((this->ast->getProcRootStmtNumByProcdureIndex(i) - 1) == stmt){
+				theNext.push_back(-1);
+				return;
+			}
+		}
+		cfg->getNext(theNext, stmt, ast);
+	}
+
 }
 
 void PKB::cfg_getNextUp(vector<int>& theNextUp, int stmt)
