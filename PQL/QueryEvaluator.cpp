@@ -373,7 +373,7 @@ void QueryEvaluator::evaluate()
 		}else if(rel==mQueryTree->getIndex("follows*")){
 			evalFollows(STAR, relResult, para1_collection, para2_collection);
 		}else if(rel==mQueryTree->getIndex("uses")){
-			if(para1Type == mQueryTree->getIndex("procedure"))
+			if(para1Type == mQueryTree->getIndex("procedure") || para1Type == mQueryTree->getIndex("procOfSimpl"))
 				evalMU(USE, relResult, mQueryTree->getIndex("procOfSimpl"), para1_collection, para2_collection);
 			else if(para1Type == mQueryTree->getIndex("stmt") || para1Type == mQueryTree->getIndex("assign")|| para1Type == mQueryTree->getIndex("if")|| para1Type == mQueryTree->getIndex("while")|| para1Type == mQueryTree->getIndex("call")||para1Type == mQueryTree->getIndex("integer"))
 				evalMU(USE, relResult, mQueryTree->getIndex("integer"), para1_collection, para2_collection);
