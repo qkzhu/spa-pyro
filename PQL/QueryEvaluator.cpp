@@ -1187,6 +1187,22 @@ void QueryEvaluator::evalAffectsStar(vector<vector<int> >& result, const vector<
 				}
 			}
 		}
+	}else{
+		for(int i = 0; i < (int)para2.size(); i++){
+			int in2 = para2[i];
+			vector<int> affectsStar;
+			getAffectsStar(UP, affectsStar, in2);
+			for(int j = 0; j < (int)para1.size(); j++){
+				int in1 = para1[j];
+				int found = find_ele(affectsStar, in1);
+				if(found == (int)affectsStar.size()){
+					int t[4] = {mQueryTree->getIndex("integer"), in1, mQueryTree->getIndex("integer"), in2};
+					vector<int> tmp;
+					tmp.insert(tmp.end(), t, t+4);
+					result.push_back(tmp);
+				}
+			}
+		}
 	}
 }
 
