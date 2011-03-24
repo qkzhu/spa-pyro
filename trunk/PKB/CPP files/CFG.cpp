@@ -148,8 +148,10 @@ void CFG::addNext(int firstStmt, int nextStmt)
 //set direction to > 0 for forward link, to < 0 for reverse link 
 void CFG::getNextLink(vector<int>& theNext, int stmt, map<int, set<int> >& theMap)
 {
-	if (theMap.find(stmt) == theMap.end())
+	if (theMap.find(stmt) == theMap.end()){
 		theNext.push_back(-1);
+		return;
+	}
 
 	for (set<int>::iterator it = theMap[stmt].begin(); it != theMap[stmt].end();)
 	{
@@ -180,7 +182,7 @@ void CFG::getNextUp(vector<int>& theNextUp, int stmt, AST* ast){
 		generateCFG();
 	}
 
-	getNextLink(theNextUp, stmt, reverseMap);	
+	getNextLink(theNextUp, stmt, reverseMap);
 }
 
 //For HQ's reqest, the bigger stmt number should be at the first position of the vector,
