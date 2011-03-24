@@ -90,10 +90,7 @@ void QueryTable::addClause(int type, vector<int> content){
 			else if(content[i] == 53 || content[i] == 54 || content[i] == 55) // make "assign", "while", "if" to be "stmt" 
 			{
 				//cout<<" I am inside this 53 54 55!"<<endl;
-				if(content.at(0) == 15 || content.at(0) == 16)
-					validTemp.relCond.push_back(content[i]);
-				else
-					validTemp.relCond.push_back(51);
+				validTemp.relCond.push_back(51);
 			}
 			else
 			{
@@ -102,7 +99,6 @@ void QueryTable::addClause(int type, vector<int> content){
 			//cout<<validTemp.relCond[i]<<" ###########AFTER CHANGE"<<endl;
 			
 		}
-		validTemp.argumentNoCorrect = SuchThatTemp.argumentNoCorrect;
 		suchThatClauseValid.push_back(validTemp);
 
 
@@ -186,7 +182,7 @@ void QueryTable::addClause(int type, vector<int> content){
 	}
 	else if(type == PATTERN) // pattern type
 	{
-		Pattern_PQL patternTemp;
+		Pattern patternTemp;
 
 		if(int(content.size()) == 0) // nothing inside the content
 		{
@@ -367,7 +363,7 @@ void QueryTable::patternAt(vector<int> &expression, int index){
 
 	if(index >= (int) patternClause.size())
 	{
-		throw new string ("Index Out of Range inside the Pattern_PQL Clause! --  throw by QueryTable::patternAt");
+		throw new string ("Index Out of Range inside the Pattern Clause! --  throw by QueryTable::patternAt");
 	}
 	else
 	{
@@ -391,7 +387,7 @@ vector < With > QueryTable::getWithClause(){
 	return withClause;
 }
 
-vector < Pattern_PQL > QueryTable::getPattern_PQLClause(){
+vector < Pattern > QueryTable::getPatternClause(){
 	return patternClause;
 }
 /////////////////////////Get Clause --- Start ///////////////////////////
@@ -412,6 +408,7 @@ vector < With >  QueryTable::getWithClauseV(){
 //////////////////////// Show Table  --- Start ////////////////////////
 void QueryTable::showTable()
 {
+
 	vector<int> temHolder = getQuery();
 	for(int i=0;i<(int) temHolder.size();i++)
 	{

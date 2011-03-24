@@ -23,7 +23,7 @@ struct Declaration{
 	vector<int> declaration;
 };
 
-struct Pattern_PQL{
+struct Pattern{
 	bool argumentNoCorrect;
 	vector<int> expression;
 };

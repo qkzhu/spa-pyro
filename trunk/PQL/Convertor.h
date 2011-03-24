@@ -21,7 +21,7 @@ private:
 	static map<int,string> indexToKeyword;//map the index with the keyword; index->keyword
 	static map<string, int> keywordToIndex;//map the keyword with the index; keyword->index
 	static map<string, string> shortcutToContent;//s->stmt;
-	static bool isPattern_PQLed(string s);
+	static bool isPatterned(string s);
 public:
 	static void showIndexTable();
 	static const int QUATEDSTRING=400;
@@ -32,7 +32,7 @@ public:
 	static int getIndex(string token);//given a token, looking up for the coressponding index, and return it, 
 	static string getShortCut(string content);
 	static string getContent(string shortcut);
-	
+	static bool isPureNum(string token);
 	
 	//if not in the table, then return -1; 
 	static string getKeyword(int index);//given a index, looking for the coressponding keyword, and return it,

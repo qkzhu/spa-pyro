@@ -38,7 +38,7 @@ public:
 	vector < Select > getSelectClause();
 	vector < SuchThat > getSuchThatClause();
 	vector < With > getWithClause();
-	vector < Pattern_PQL > getPattern_PQLClause();
+	vector < Pattern > getPatternClause();
 
 	void showTable();
 
@@ -63,8 +63,8 @@ private:
 	vector <int> withVector;
 
 	//"pattern-clause"
-	vector < Pattern_PQL > patternClause;
-	vector < Pattern_PQL > patternClauseValid;
+	vector < Pattern > patternClause;
+	vector < Pattern > patternClauseValid;
 	vector <int> patternVector;
 
 
