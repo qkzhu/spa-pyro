@@ -37,12 +37,6 @@ Node* AST::getNodeByProcdureIndex(int procIndex){
 	else return NULL;
 }
 
-int AST::getProcRootStmtNumByProcdureIndex(int procIndex){
-	Node* procRootStmt = getNodeByProcdureIndex(procIndex);
-	if(procRootStmt == NULL) return -1;
-	else return procRootStmt->stmtNum;
-}
-
 void AST::getChild(int stmtNum, vector<int>& result)
 {
 	if(stmtNum <= 0)

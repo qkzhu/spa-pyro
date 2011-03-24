@@ -25,7 +25,6 @@ public:
 	 */
 	void addProcedure(int index, Node *d);
 	Node* getNodeByProcdureIndex(int procIndex);
-	int getProcRootStmtNumByProcdureIndex(int procIndex);
 
 	/**
 	 * Create a new node and return the pointer of the node. If the given type is assignment, the new node will also be stored
