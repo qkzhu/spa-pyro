@@ -618,8 +618,6 @@ void QueryEvaluator::evaluate()
 		
 		for(int i = 0; i< (int)eva_tuple.size(); i++){
 			vector<int> tmp_entry;
-			cout << "HERE"<< endl;
-			cout << mQueryTree->selectSize() << endl;
 			for(int j = 0; j < (int)mQueryTree->selectSize(); j++){
 				int v = eva_tuple[i][indexes[j]*2+1];
 				tmp_entry.push_back(v);
@@ -1118,8 +1116,6 @@ void QueryEvaluator::evalNext(int star, vector<vector<int> >& result, const vect
 //Take care of next loop
 void QueryEvaluator::getNextStar(int up, vector<int>& result, int para){
 	getNextPure(up, result, para);
-	cout << para << endl;
-	cout << "size = " << result.size() << endl;
 	if(result[0] != -1){
 		for(int i = 0; i < (int)result.size(); i++){
 			int ele = result[i];
@@ -1136,7 +1132,6 @@ void QueryEvaluator::getNextStar(int up, vector<int>& result, int para){
 
 void QueryEvaluator::getNextPure(int up, vector<int>& result, int para){
 	if(up == DOWN){
-		mPKBObject->cfg_getNext(result, 16);
 		mPKBObject->cfg_getNext(result, para);
 		if((int)result.size() == 3){
 			int next1 = result[0];
