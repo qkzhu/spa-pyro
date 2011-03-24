@@ -76,13 +76,18 @@ int Convertor::update()
  {      if(s.size()<2)
            return false;
      string a="\"";
+	
     if((s.substr(0,1)==a )&& (s.substr(s.size()-1,1)==a) )
+	{
+		 
 		 return true;
-	    else
+		 
+	} 
+	else
 		 return false;
 
  }
- bool Convertor::isPattern_PQLed(string s)
+ bool Convertor::isPatterned(string s)
  {
 	 string a="_\"";
 	 string b="\"_";
@@ -90,15 +95,16 @@ int Convertor::update()
 
 	 if (isQuated(s))
 		 return true;
-	 else if(s.size()>=4)
+	 if(s.size()>=4)
 	 {
-	 if(s.substr(0,2)==a&&s.substr(s.size()-2,2)==b||isQuated(s))
-		 return true;
-	 else
-		 return false;
-	 }else if(s.size()>4)
+        if(s.substr(0,2)==a||s.substr(s.size()-2,2)==b)
+		   return true;
+	    else
+		   return false;
+	 }
+	 if(s.size()>=3)
 	 {
-        if(s.substr(0,2)==a||s.substr(s.size()-2,2)==b||isQuated(s))
+		if(s.substr(0,2)==a||s.substr(s.size()-2,2)==b)
 		   return true;
 	    else
 		   return false;
@@ -106,33 +112,58 @@ int Convertor::update()
 	 else
 	 return false;
  }
+bool Convertor::isPureNum(string token)
+{
+	int num;
+	char buffer[33];
+	if (token=="0")
+		return true;
+	else 
+		{
+			num=atoi(token.c_str());
+			if(num!=0)
+			{
+				itoa(num,buffer,10);
+				if(num>=0&&(buffer==token))
+			        return true;
+				else if(num<0&&(buffer==token))
+				    throw new string("negative int\n"); 
+				else if(num>=0&&buffer!=token)
+                    throw new string("illegal defined symbol start with positive int\n");
+				else
+					throw new string("illegal defined symbol start with negative int\n");
+			}
+			else
+				return false;
+	    }
+}
 int Convertor::getIndex(string token)//given a token, looking up for the coressponding index, and return it, 
 	                                   //if not in the maptable and the declarkeywordtable return -1;
 		{
 			//cout<<token<<endl;
 			int index=-1;
 			int num;
-
+			char buffer[33];
 			num=atoi(token.c_str());
 		    int a=keywordToIndex.count(token);
 			//cout<<a;
 			if (a==1)
 				index=keywordToIndex.find(token)->second;
-			else if(num!=0||token=="0")
+			else if(isPureNum(token))
 			{
-				if(num>=0)
 				index=num;
-				else
-                throw new string("negative int contains\n");
 			}  
-			else if(isPattern_PQLed(token))
+			else if(isPatterned(token))
 			{
+			
+				
 				insertIndex(++u ,token);
 				insertShortcut(token,"patternOfSimpl");
 				index=keywordToIndex.find(token)->second;
 			}
 			else
 			{
+				
 				index=-1;
 			}
 		//	cout<<token<<index<<endl;
