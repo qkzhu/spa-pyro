@@ -168,12 +168,21 @@ void Validator::checkPattern(QueryTable &table){
 
 		if(pattern.at(0) == ASSIGN)
 		{
+			//cout<<"pattern size "<< pattern.size()<<endl;5
+			/*
+			for(int i = 0;i<pattern.size();i++)
+			{
+				cout<<pattern.at(i)<<" ";
+			}
+			cout<<endl;
+			*/
+
 			if(int(pattern.size()) == 5) // pattern a(_,_); ASSIGN 301 UNDERSCORE COMMA UNDERSCORE
 			{
 				if( pattern.at(2) != UNDERSCORE || pattern.at(4) != UNDERSCORE || pattern.at(3) != COMMA )
 					throw new string("argument error inside pattern clause! -- throw by Validator::checkPattern - pattern size 5");
 			}
-			if(int(pattern.size()) == 6) 
+			else if(int(pattern.size()) == 6) 
 			{
 				if( pattern.at(2) == UNDERSCORE ) // pattern a(_, _"x+y"_ ) ASSIGN 301 UNDERSCORE COMMA PATTERNOFSIMPLE 302
 				{
@@ -307,6 +316,8 @@ void Validator::checkSuchThat(QueryTable &table){
 }
 
 void Validator::checkWith(QueryTable &table){
+	
+	//cout<<"hahahah"<<endl;
 	bool noError = true;
 	int size = (int) table.getWithClauseV().size();
 
@@ -318,13 +329,13 @@ void Validator::checkWith(QueryTable &table){
 		bool tempNoError = false;
 		//cout<<"argumentNoCorrect "<<table.getWithClause().at(i).argumentNoCorrect<<endl;
 		// to check with the argument is correct of not
+		
 		if(!table.getWithClauseV().at(i).argumentNoCorrect)
 		{
 			noError = tempNoError && noError;
 
 			break;
 		}
-		
 		vector<int> with;
 		vector<int> index;
 	
@@ -332,11 +343,14 @@ void Validator::checkWith(QueryTable &table){
 		with =  table.getWithClauseV().at(i).attrCond;
 		//cout<<"with[0] is "<<with[0]<<endl;
 		index = getIndex(withTable, with[0]);
-
+		
+		cout<<index.size()<<endl;
+		
 		//cout<<"index size is "<<index.size()<<endl; 
 		for(int it = 0;it<(int) index.size();it++)
 		{
-			//cout<<"with size is 1 "<<with.size()<<endl;
+			//cout<<"with size is  "<<with.size()<<endl;
+			
 			if(with.size() == 7)
 			{
 				//cout<<"with size is "<<with.size()<<endl;
