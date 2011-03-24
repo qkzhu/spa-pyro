@@ -164,6 +164,7 @@ bool Pattern::patternAssign(int stmtNum, string patternLeft, string patternRight
 	if (assign->type != Node::ASSIGN)
 		return false;
 
+	
 	//check that it has two bottom nodes, and the left is a variable
 	vector<Node*> bottomNodes = ast.getAllDown(assign);
 	if (bottomNodes.size() < 2 || bottomNodes[0]->type != Node::VAR || 
@@ -172,7 +173,7 @@ bool Pattern::patternAssign(int stmtNum, string patternLeft, string patternRight
 
 	//check that the modified variable corresponds to the pattern on the left
 	int var_index = varTable.getVarIndex(patternLeft);
-	if (var_index != bottomNodes[0]->id)
+	if (patternLeft != "_" && var_index != bottomNodes[0]->id)
 		return false;
 
 	//check the pattern on the right.
@@ -200,7 +201,7 @@ bool Pattern::patternAssign(int stmtNum, string patternLeft, string patternRight
 	}
 
 
-	if (patternRight.size() == 0)
+	if(patternRight.size() == 0)
 		throw new string("Pattern: Empty expression passed.");
 
 	string input = stringToPrefix(patternRight);
