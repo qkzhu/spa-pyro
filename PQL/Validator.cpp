@@ -168,6 +168,13 @@ void Validator::checkPattern_PQL(QueryTable &table){
 
 		if(pattern.at(0) == ASSIGN)
 		{
+			//cout<<"pattern size "<< pattern.size()<<endl;
+			for(int i = 0;i<pattern.size();i++)
+			{
+				cout<<pattern.at(i)<<" ";
+			}
+			cout<<endl;
+
 			if(int(pattern.size()) == 5) // pattern a(_,_); ASSIGN 301 UNDERSCORE COMMA UNDERSCORE
 			{
 				if( pattern.at(2) != UNDERSCORE || pattern.at(4) != UNDERSCORE || pattern.at(3) != COMMA )
