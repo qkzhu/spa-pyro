@@ -366,6 +366,12 @@ void PKB::cfg_getNext(vector<int>& theNext, int stmt)
 {
 	if(stmt > ast_getMaxStmtNum() || stmt <= 0) theNext.push_back(-1);
 	else{
+		int tm = ast_getMaxStmtNum();
+		if(stmt > tm) {
+			theNext.push_back(-1);
+			return;
+		}
+
 		int i;
 		for(i = 0; i < pTable_GetAllProc(); i++)
 		{
