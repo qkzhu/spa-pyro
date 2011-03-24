@@ -3,6 +3,7 @@
 
 #include "AST.h"
 #include "SymbolTable.h"
+#include <sstream>
 #include <stack>
 #include <regex>
 
@@ -20,6 +21,9 @@ public:
 	//conversion to prefix for matching
 	string stringToPrefix(string& input);
 	string nodeToPrefix(Node *node, AST& ast, VarTable& varTable);
+
+	//conversion to infix for printing
+	string nodeToInfix(Node *node, AST& ast, VarTable& varTable);
 
 	//debugging
 	void printNode(Node* n, int level, AST& ast, VarTable& varTable);

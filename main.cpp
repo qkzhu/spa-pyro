@@ -16,7 +16,6 @@ int main(int argc, char* argv[]){
 	   Parser p (pkb, simple);
 	   p.parseProgram();
 
-
 	   string query_file;
 	   cout << "Please enter the query file location: " << endl;
 	   query_file = "query.txt";

@@ -46,7 +46,7 @@ string Pattern::removeSpacesAndQuotes(string s)
 	string output = "";
 	
 	for (unsigned int i = 0; i < s.size(); i++)
-		if (s[i] != ' ' && s[i] != '\t' && s[i] != '\n' && s[i] != '\'')
+		if (s[i] != ' ' && s[i] != '\t' && s[i] != '\n' && s[i] != '\"')
 			output += s[i];
 
 	return output;
@@ -158,6 +158,9 @@ bool Pattern::patternAssign(int stmtNum, string patternLeft, string patternRight
 
 	Node *assign = ast.getNodeByStatementNum(stmtNum);
 
+	if (stmtNum == 21 || stmtNum == 23)
+		cout << "reached" << endl;
+
 	if (assign->type != Node::ASSIGN)
 		return false;
 
@@ -175,6 +178,9 @@ bool Pattern::patternAssign(int stmtNum, string patternLeft, string patternRight
 	//check the pattern on the right.
 	if (patternRight.size() == 0)
 		return false;
+
+	if (patternRight.size() == 1 && patternRight[0] == '_')
+		return true;
 	
 	bool matchFront = true;
 	bool matchEnd = true;
@@ -192,6 +198,7 @@ bool Pattern::patternAssign(int stmtNum, string patternLeft, string patternRight
 		patternRight = patternRight.substr(0, patternRight.size()-1);
 		matchEnd = false;
 	}
+
 
 	if (patternRight.size() == 0)
 		throw new string("Pattern: Empty expression passed.");
@@ -405,15 +412,65 @@ string Pattern::stringToPostFix(string& input)
 	return result;
 }
 
+string Pattern::nodeToInfix(Node *node, AST& ast, VarTable& varTable)
+{
+	vector<Node*> children = ast.getAllDown(node);
+	string result = "";
+	stringstream ss;
+
+	//process current node first.
+	switch (node->type)
+	{
+	case Node::CONST:
+		//create a stringstream
+		ss << node->id;//add number to the stream
+		result += ss.str();
+		break;
+	case Node::PLUS:
+		result += "+";
+		break;
+	case Node::MINUS:
+		result += "-";
+		break;
+	case Node::TIMES:
+		result += "*";
+		break;
+	case Node::VAR:
+		result += varTable.getVarName(node->id);
+		break;
+	default:
+		throw new string("Invalid node type in expression");
+	}
+
+	if (children.size() != 0 && children.size() != 2)
+		throw new string("Invalid expression tree.");
+
+	//a given node in an expression tree has either two children or none
+	if (children.size() == 2)
+	{
+		//adds the left child
+		result = result + nodeToInfix(children[0], ast, varTable);
+		//adds the right child
+		result += nodeToInfix(children[1], ast, varTable);
+	}
+
+	return result;
+}
 
 string Pattern::nodeToPrefix(Node *node, AST& ast, VarTable& varTable)
 {
 	vector<Node*> children = ast.getAllDown(node);
 	string result = "";
+	stringstream ss;
 
 	//process current node first.
 	switch (node->type)
 	{
+	case Node::CONST:
+		//create a stringstream
+		ss << node->id;//add number to the stream
+		result += ss.str();
+		break;
 	case Node::PLUS:
 		result += "+";
 		break;
