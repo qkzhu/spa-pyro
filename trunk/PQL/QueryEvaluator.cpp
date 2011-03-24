@@ -364,7 +364,6 @@ void QueryEvaluator::evaluate()
 		cout << endl;
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////
 		*/
-
 		if(rel == mQueryTree->getIndex("parent")){	
 			evalParent(NOSTAR, relResult, para1_collection, para2_collection);
 		}else if(rel==mQueryTree->getIndex("parent*")){
@@ -466,7 +465,7 @@ void QueryEvaluator::evaluate()
 			}
 			numOfCommonElement = numOfCommonElement+2;
 		}
-
+		/*
 		cout << "relResult = " << endl;
 		for(int p = 0; p < (int)relResult.size(); p++){
 			vector<int> tmp_store = relResult[p];
@@ -481,7 +480,7 @@ void QueryEvaluator::evaluate()
 			cout << mgTupleIndexing[k] << " ";
 		}
 		cout << endl;
-		cout << numOfCommonElement <<" "<< same1Tuple1 << " " <<  same2Tuple1 << endl;
+		cout << numOfCommonElement <<" "<< same1Tuple1 << " " <<  same2Tuple1 << endl;*/
 
 		joinTuples(eva_tuple, relResult, numOfCommonElement, same1Tuple1, same2Tuple1);
 
@@ -538,6 +537,8 @@ void QueryEvaluator::evaluate()
 	}
 	cout << "Checking finish" << endl;
 	*/
+
+
 	//if no with and such that clause, just return;
 	//Or if the selected element is not inside evaluated result tuple, depend on the tuple
 	if((with_size == 0 && suchThatSize == 0 && patternSize == 0) || ((int)mgTupleIndexing.size()!=0 && !is_selected)){
@@ -714,7 +715,7 @@ void QueryEvaluator::evalPattern_PQL(vector<vector<int> >& result_tuple, vector<
 	if(var_type == mQueryTree->getIndex("assign")){
 		if(found == 0)
 			mPKBObject->ast_GetAllAssign(result);
-		getPattern_PQLAssign(result, mQueryTree->getContent(pattern1), mQueryTree->getContent(pattern2));
+		getPattern_PQLAssign(result, PQL_varDecode(pattern1), mQueryTree->getContent(pattern2));
 	}else if(var_type == mQueryTree->getIndex("if") || var_type == mQueryTree->getIndex("while")){
 		if(found == 0)
 			if(var_type == mQueryTree->getIndex("if"))
@@ -1253,11 +1254,14 @@ bool QueryEvaluator::affects(int stmt1, int stmt2){
 
 void QueryEvaluator::getPattern_PQLAssign(vector<int>& result, string patternLeft, string patternRight){
 	vector<int> tmp;
-
+	cout << patternLeft << endl;
+	cout << patternRight << endl;
 	for(int i = 0; i < (int)result.size(); i++){
+		cout << result[i] << endl;
 		if(mPKBObject->patternAssign(result[i], patternLeft, patternRight))
 			tmp.push_back(result[i]);
 	}
+	cout << tmp.size() << endl;
 	result.clear();
 	result.insert(result.end(), tmp.begin(), tmp.end());
 }
