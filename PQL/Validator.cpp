@@ -173,7 +173,7 @@ void Validator::checkPattern_PQL(QueryTable &table){
 				if( pattern.at(2) != UNDERSCORE || pattern.at(4) != UNDERSCORE || pattern.at(3) != COMMA )
 					throw new string("argument error inside pattern clause! -- throw by Validator::checkPattern_PQL - pattern size 5");
 			}
-			if(int(pattern.size()) == 6) 
+			else if(int(pattern.size()) == 6) 
 			{
 				if( pattern.at(2) == UNDERSCORE ) // pattern a(_, _"x+y"_ ) ASSIGN 301 UNDERSCORE COMMA PATTERNOFSIMPLE 302
 				{
