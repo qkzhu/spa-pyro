@@ -165,6 +165,7 @@ void QueryTable::addClause(int type, vector<int> content){
 			//cout<<validTemp.attrCond[i]<<" ###########AFTER CHANGE"<<endl;
 			
 		}
+		validTemp.argumentNoCorrect = withTemp.argumentNoCorrect;
 		withClauseValid.push_back(validTemp);
 		
 		//add the content to the withVector for display
