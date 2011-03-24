@@ -30,7 +30,7 @@ int main(int argc, char* argv[]){
 		   query.append(tmp);
 	   }
 	   PqlPreprocessor pql (query);
-
+	   
 	   QueryEvaluator bqe (&pkb, &pql);
 	   bqe.evaluate();
 	   bqe.printResult();

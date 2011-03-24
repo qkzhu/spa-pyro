@@ -380,7 +380,7 @@ void QueryEvaluator::evaluate()
 				evalMU(USE, relResult, mQueryTree->getIndex("integer"), para1_collection, para2_collection);
 			else throw new string("QueryEvaluator::evaluate, for evaluating uses, no such para type");
 		}else if(rel==mQueryTree->getIndex("modifies")){
-			if(para1Type == mQueryTree->getIndex("procedure"))
+			if(para1Type == mQueryTree->getIndex("procedure") || para1Type == mQueryTree->getIndex("procOfSimpl"))
 				evalMU(MOD, relResult, mQueryTree->getIndex("procOfSimpl"), para1_collection, para2_collection);
 			else if(para1Type == mQueryTree->getIndex("stmt") || para1Type == mQueryTree->getIndex("assign")|| para1Type == mQueryTree->getIndex("if")|| para1Type == mQueryTree->getIndex("while")|| para1Type == mQueryTree->getIndex("call")||para1Type == mQueryTree->getIndex("integer"))
 				evalMU(MOD, relResult, mQueryTree->getIndex("integer"), para1_collection, para2_collection);
@@ -1077,16 +1077,6 @@ void QueryEvaluator::evalNext(int star, vector<vector<int> >& result, const vect
 		for(int l = 0; l < (int)para1.size(); l++){
 			int stmtN = para1[l];
 			vector<int> nexts;
-
-
-			///////////////////////////////////DEBUGGING/////////////////////////////
-			cout << "PASS" << endl;
-			mPKBObject->cfg_getNext(nexts, 16);
-			nexts.clear();
-			cout << "PASS 2" << endl;
-
-
-
 			if(star == NOSTAR) mPKBObject->cfg_getNext(nexts, stmtN);
 			else if(star == STAR) getNextStar(DOWN, nexts, stmtN);
 			else throw new string("QueryEvaluator::evalNext, no such star type!");
@@ -1128,6 +1118,8 @@ void QueryEvaluator::evalNext(int star, vector<vector<int> >& result, const vect
 //Take care of next loop
 void QueryEvaluator::getNextStar(int up, vector<int>& result, int para){
 	getNextPure(up, result, para);
+	cout << para << endl;
+	cout << "size = " << result.size() << endl;
 	if(result[0] != -1){
 		for(int i = 0; i < (int)result.size(); i++){
 			int ele = result[i];
@@ -1144,6 +1136,7 @@ void QueryEvaluator::getNextStar(int up, vector<int>& result, int para){
 
 void QueryEvaluator::getNextPure(int up, vector<int>& result, int para){
 	if(up == DOWN){
+		mPKBObject->cfg_getNext(result, 16);
 		mPKBObject->cfg_getNext(result, para);
 		if((int)result.size() == 3){
 			int next1 = result[0];
