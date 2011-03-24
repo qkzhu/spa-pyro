@@ -87,7 +87,6 @@ void QueryTable::addClause(int type, vector<int> content){
 			{
 				validTemp.relCond.push_back(11);
 			}
-			
 			else if(content[i] == 53 || content[i] == 54 || content[i] == 55) // make "assign", "while", "if" to be "stmt" 
 			{
 				//cout<<" I am inside this 53 54 55!"<<endl;
@@ -103,6 +102,7 @@ void QueryTable::addClause(int type, vector<int> content){
 			//cout<<validTemp.relCond[i]<<" ###########AFTER CHANGE"<<endl;
 			
 		}
+		validTemp.argumentNoCorrect = SuchThatTemp.argumentNoCorrect;
 		suchThatClauseValid.push_back(validTemp);
 
 
@@ -165,7 +165,6 @@ void QueryTable::addClause(int type, vector<int> content){
 			//cout<<validTemp.attrCond[i]<<" ###########AFTER CHANGE"<<endl;
 			
 		}
-		validTemp.argumentNoCorrect = withTemp.argumentNoCorrect;
 		withClauseValid.push_back(validTemp);
 		
 		//add the content to the withVector for display
@@ -187,7 +186,7 @@ void QueryTable::addClause(int type, vector<int> content){
 	}
 	else if(type == PATTERN) // pattern type
 	{
-		Pattern patternTemp;
+		Pattern_PQL patternTemp;
 
 		if(int(content.size()) == 0) // nothing inside the content
 		{
@@ -368,7 +367,7 @@ void QueryTable::patternAt(vector<int> &expression, int index){
 
 	if(index >= (int) patternClause.size())
 	{
-		throw new string ("Index Out of Range inside the Pattern Clause! --  throw by QueryTable::patternAt");
+		throw new string ("Index Out of Range inside the Pattern_PQL Clause! --  throw by QueryTable::patternAt");
 	}
 	else
 	{
@@ -392,7 +391,7 @@ vector < With > QueryTable::getWithClause(){
 	return withClause;
 }
 
-vector < Pattern > QueryTable::getPatternClause(){
+vector < Pattern_PQL > QueryTable::getPattern_PQLClause(){
 	return patternClause;
 }
 /////////////////////////Get Clause --- Start ///////////////////////////
@@ -413,7 +412,6 @@ vector < With >  QueryTable::getWithClauseV(){
 //////////////////////// Show Table  --- Start ////////////////////////
 void QueryTable::showTable()
 {
-
 	vector<int> temHolder = getQuery();
 	for(int i=0;i<(int) temHolder.size();i++)
 	{
