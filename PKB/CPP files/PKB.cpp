@@ -364,7 +364,8 @@ string PKB::intToString(int i)
  */
 void PKB::cfg_getNext(vector<int>& theNext, int stmt)
 {
-	if(stmt > ast_getMaxStmtNum()) theNext.push_back(-1);
+	int tm = ast_getMaxStmtNum();
+	if(stmt > tm) theNext.push_back(-1);
 	else cfg->getNext(theNext, stmt, ast);
 }
 
