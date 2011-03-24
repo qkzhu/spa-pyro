@@ -220,3 +220,28 @@ if ifstat;
 select ifstat such that pattern ifstat("y",_,_);
 none
 5000
+45
+assign a;
+select a such that pattern a("x","1x");
+throw error
+5000
+46
+assign a;
+select a such that pattern a("x",);
+throw error
+5000
+47
+assign a;
+select a such that pattern a("x",_"z"_"x+y"_);
+throw error
+5000
+48
+assign a;
+select a such that pattern a("x",_"x+y*z}"_);
+throw error
+5000
+49
+assign a1,a2;
+select <a1,a2> such that pattern a1("x","x") and pattern a2("x","y");
+Throw error
+5000
