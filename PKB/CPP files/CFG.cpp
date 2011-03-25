@@ -146,7 +146,7 @@ void CFG::addNext(int firstStmt, int nextStmt)
 }
 
 //set direction to > 0 for forward link, to < 0 for reverse link 
-void CFG::getNextLink(vector<int>& theNext, int stmt, map<int, set<int> >& theMap)
+void CFG::getNextLink(vector<int>& theNext, int stmt, hash_map<int, set<int> >& theMap)
 {
 	if (theMap.find(stmt) == theMap.end()){
 		theNext.push_back(-1);
@@ -204,12 +204,12 @@ void CFG::reverseVec(vector<int>& vec){
 }
 
 //For debugging
-map<int, set<int>> CFG::getForwardMap(){ return this->forwardMap; }
-map<int, set<int>> CFG::getReverseMap(){ return this->reverseMap; }
+hash_map<int, set<int>> CFG::getForwardMap(){ return this->forwardMap; }
+hash_map<int, set<int>> CFG::getReverseMap(){ return this->reverseMap; }
 
 //For debugging:
-void CFG::prtMap(map<int, set<int>> &currMap){
-	for(map<int, set<int>>::iterator it = currMap.begin(); it != currMap.end(); it++){
+void CFG::prtMap(hash_map<int, set<int>> &currMap){
+	for(hash_map<int, set<int>>::iterator it = currMap.begin(); it != currMap.end(); it++){
 		int a = it->first;
 		set<int> tmp = currMap[a];
 		cout<<"stmt "<<a<<": ";

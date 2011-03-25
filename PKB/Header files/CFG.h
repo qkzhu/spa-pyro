@@ -2,7 +2,7 @@
 #define CFG_H
 
 #include "AST.h"
-#include <map>
+#include <hash_map>
 
 using namespace std;
 
@@ -18,18 +18,18 @@ public:
 	void getNextUp(vector<int>& theNextUp, int stmt, AST* ast);	//(for different nodes, insert a -1 inside.)
 
 	//For debugging
-	map<int, set<int>> CFG::getForwardMap();
-	map<int, set<int>> CFG::getReverseMap();
-	void CFG::prtMap(map<int, set<int>> &currMap);
+	hash_map<int, set<int>> CFG::getForwardMap();
+	hash_map<int, set<int>> CFG::getReverseMap();
+	void CFG::prtMap(hash_map<int, set<int>> &currMap);
 
 private:
-	void CFG::getNextLink(vector<int>& theNext, int stmt, map<int, set<int> >& theMap);
+	void CFG::getNextLink(vector<int>& theNext, int stmt, hash_map<int, set<int> >& theMap);
 	void processStatement(Node *inputNode, Node *parentNode, Node* followingNode);
 	string intToString(int n);
 	void reverseVec(vector<int>& vec);
 
-	map<int, set<int>> forwardMap;	
-	map<int, set<int>> reverseMap;
+	hash_map<int, set<int>> forwardMap;	
+	hash_map<int, set<int>> reverseMap;
 	AST* mAst;
 };
 
