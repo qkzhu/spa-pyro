@@ -29,7 +29,7 @@ mPkb(pkb), mLineNum(0), mStatNum(1),
 	 mCurrProcIndex(0), mFilename(filename), mpFile(new ifstream()), 
 	 mStringBuf(new stringstream(stringstream::in | stringstream::out))
  {
-	 mpFile->open(filename, ios::in);
+	 mpFile->open(filename.c_str(), ios::in);
  }
 
 //Destructor closes the file if it is open.
