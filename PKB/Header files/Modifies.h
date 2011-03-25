@@ -2,7 +2,7 @@
 #define MODIFIES_H
 
 #include <set>
-#include <map>
+#include <hash_map>
 #include <iostream>			//For Debugging
 #include "SymbolTable.h"	//For Debugging
 using namespace std;
@@ -24,10 +24,10 @@ public:
 	void printVarModifiedByProc(ProcTable* pTable, VarTable* varTable);	// map each modified varIndex to a set of procIndex
 
 private:
-	map<int, set<int>> mStmtModMap; // map each stmt# to a set of modified varIndex
-	map<int, set<int>> mProcModMap; // map each ProcIndex to a set of modified varIndex
-	map<int, set<int>> mVarStmtMap; // map each modified varIndex to a set of stmt#
-	map<int, set<int>> mVarProcMap; // map each modified varIndex to a set of procIndex
+	hash_map<int, set<int>> mStmtModMap; // map each stmt# to a set of modified varIndex
+	hash_map<int, set<int>> mProcModMap; // map each ProcIndex to a set of modified varIndex
+	hash_map<int, set<int>> mVarStmtMap; // map each modified varIndex to a set of stmt#
+	hash_map<int, set<int>> mVarProcMap; // map each modified varIndex to a set of procIndex
 };
 
 #endif
