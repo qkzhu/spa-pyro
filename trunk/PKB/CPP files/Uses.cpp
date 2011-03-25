@@ -70,7 +70,7 @@ void Uses::printStmtUseMap(VarTable* varTable){
 		cout<<"Statement uses Variable table is empty!"<<endl;
 	else{
 		set<int> varSet;
-		for(map<int, set<int>>::iterator it = mStmtUseMap.begin(); it != mStmtUseMap.end(); it++)
+		for(hash_map<int, set<int>>::iterator it = mStmtUseMap.begin(); it != mStmtUseMap.end(); it++)
 		{
 			cout<<"Statment Number "<<it->first<<" Uses: ";
 			varSet = it->second;
@@ -89,7 +89,7 @@ void Uses::printProcUseMap(ProcTable* pTable, VarTable* varTable){
 		cout<<"Procedure uses Variable table is empty!"<<endl;
 	else{
 		set<int> varSet;
-		for(map<int, set<int>>::iterator itPro = mProcUseMap.begin(); itPro != mProcUseMap.end(); itPro++)
+		for(hash_map<int, set<int>>::iterator itPro = mProcUseMap.begin(); itPro != mProcUseMap.end(); itPro++)
 		{
 			cout<<"Procedure "<<pTable->getProcName(itPro->first)<<" uses variable: ";
 
@@ -109,7 +109,7 @@ void Uses::printVarStmtMap(VarTable* varTable){
 		cout<<"Variable used by Statement table is empty!"<<endl;
 	else{
 		set<int> stmtSet;
-		for(map<int, set<int>>::iterator itVar = mVarStmtMap.begin(); itVar != mVarStmtMap.end(); itVar++)
+		for(hash_map<int, set<int>>::iterator itVar = mVarStmtMap.begin(); itVar != mVarStmtMap.end(); itVar++)
 		{
 			cout<<"Variable "<<varTable->getVarName(itVar->first)<<" is used by statement#: ";
 			stmtSet = itVar->second;
@@ -125,7 +125,7 @@ void Uses::printVarProcMap(ProcTable* pTable, VarTable* varTable){
 		cout<<"Variable used by Procedure table is empty!"<<endl;
 	else{
 		set<int> procSet;
-		for(map<int, set<int>>::iterator itVar = mVarProcMap.begin(); itVar != mVarProcMap.end(); itVar++)
+		for(hash_map<int, set<int>>::iterator itVar = mVarProcMap.begin(); itVar != mVarProcMap.end(); itVar++)
 		{
 			cout<<"Variable "<<varTable->getVarName(itVar->first)<<" is used by procedure: ";
 			procSet = itVar->second;
@@ -135,6 +135,7 @@ void Uses::printVarProcMap(ProcTable* pTable, VarTable* varTable){
 		}
 	}
 }//end printVarProcMap
+
 //For Unit Testing
 /*
 int main(){
