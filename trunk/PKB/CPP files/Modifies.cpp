@@ -45,12 +45,12 @@ set<int> Modifies::getProcModifies(int varIndex)
 
 void Modifies::setModify(int stmtNum, int varIndex)
 {
-	//update mStmtModMap. Mapping each stmt# to modified variable. 
-	//can modify multiple variables if stmt is a container.
+	//update mStmtModMap. Mapping each stmt# to only one modified variable. 
 	mStmtModMap[stmtNum].insert(varIndex);
 
 	//update mVarStmtMap. Mapping each variable to stmt# that modify the variable
 	mVarStmtMap[varIndex].insert(stmtNum);
+	
 }// end setModify
 
 void Modifies::setModifyPV(int procIndex, int varIndex)
@@ -62,14 +62,13 @@ void Modifies::setModifyPV(int procIndex, int varIndex)
 	mVarProcMap[varIndex].insert(procIndex);
 }// end setModifyPV
 
-
 //For Debugging
 void Modifies::printStmtModVar(VarTable* varTable){
 	if(mStmtModMap.size() == 0) 
 		cout<<"Statement modifies Variable table is empty!"<<endl;
 	else{
 		set<int> varSet;
-		for(map<int, set<int>>::iterator it = mStmtModMap.begin(); it != mStmtModMap.end(); it++)
+		for(hash_map<int, set<int>>::iterator it = mStmtModMap.begin(); it != mStmtModMap.end(); it++)
 		{
 			cout<<"Statment Number "<<it->first<<" Modifies: ";
 			varSet = it->second;
@@ -88,7 +87,7 @@ void Modifies::printProcModVar(ProcTable* pTable, VarTable* varTable){
 		cout<<"Procedure modifies Variable table is empty!"<<endl;
 	else{
 		set<int> varSet;
-		for(map<int, set<int>>::iterator itPro = mProcModMap.begin(); itPro != mProcModMap.end(); itPro++)
+		for(hash_map<int, set<int>>::iterator itPro = mProcModMap.begin(); itPro != mProcModMap.end(); itPro++)
 		{
 			cout<<"Procedure "<<pTable->getProcName(itPro->first)<<" modifies variable: ";
 
@@ -108,7 +107,7 @@ void Modifies::printVarModifiedByStmt(VarTable* varTable){
 		cout<<"Variable modified by Statement table is empty!"<<endl;
 	else{
 		set<int> stmtSet;
-		for(map<int, set<int>>::iterator itVar = mVarStmtMap.begin(); itVar != mVarStmtMap.end(); itVar++)
+		for(hash_map<int, set<int>>::iterator itVar = mVarStmtMap.begin(); itVar != mVarStmtMap.end(); itVar++)
 		{
 			cout<<"Variable "<<varTable->getVarName(itVar->first)<<" is modified in statement#: ";
 			stmtSet = itVar->second;
@@ -124,7 +123,7 @@ void Modifies::printVarModifiedByProc(ProcTable* pTable, VarTable* varTable){
 		cout<<"Variable modified by Procedure table is empty!"<<endl;
 	else{
 		set<int> procSet;
-		for(map<int, set<int>>::iterator itVar = mVarProcMap.begin(); itVar != mVarProcMap.end(); itVar++)
+		for(hash_map<int, set<int>>::iterator itVar = mVarProcMap.begin(); itVar != mVarProcMap.end(); itVar++)
 		{
 			cout<<"Variable "<<varTable->getVarName(itVar->first)<<" is modified by procedure: ";
 			procSet = itVar->second;
@@ -134,8 +133,6 @@ void Modifies::printVarModifiedByProc(ProcTable* pTable, VarTable* varTable){
 		}
 	}
 }//end printVarModifiedByProc
-
-//For Unit Testing
 /*
 int main(){
 	Modifies M;
