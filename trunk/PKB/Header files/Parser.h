@@ -9,6 +9,7 @@
 #include <stack>
 #include <utility>
 #include <tuple>
+#include <hash_map>
 #include "PKB.h"
 
 using namespace std;
@@ -85,7 +86,7 @@ private:
 	static const string mKeyWords[];
 
 	//buffers
-	map<string, vector<tuple<ProcIndex, LineNum, Node*> > > mProcCallsBuf; //store procedures undeclared at the point of parsing
+	hash_map<string, vector<tuple<ProcIndex, LineNum, Node*> > > mProcCallsBuf; //store procedures undeclared at the point of parsing
 	vector<pair<ProcIndex, Node*>> mProcNodesBuf;
 };
 

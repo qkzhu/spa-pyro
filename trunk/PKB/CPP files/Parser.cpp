@@ -140,13 +140,13 @@ mPkb(pkb), mLineNum(0), mStatNum(1),
  void Parser::checkValidFile()
  {
 	 if (!mpFile->is_open())
-		 throw new string("Error opening file: " + mFilename);
+		 throw new string("Parser: Error opening file: " + mFilename);
  }
 
 //prints an error msg and quits the program
 void Parser::error(string expected, string received) 
 {
-	throw new string("Error at line " + intToString(mLineNum) +  ": expected - \"" + 
+	throw new string("Parser: Error at line " + intToString(mLineNum) +  ": expected - \"" + 
 		expected + "\" received - \"" + received + "\"");
 	//exit(1);
 }
@@ -164,7 +164,7 @@ void Parser::match(string token)
 // map["procedure name"] = (mCurrProcIndex, (mLineNum, Node)
 void Parser::processCalls()
 {
-	for (map<string, vector<tuple<ProcIndex, LineNum, Node*> > >::iterator it = mProcCallsBuf.begin(); it != mProcCallsBuf.end(); it++)
+	for (hash_map<string, vector<tuple<ProcIndex, LineNum, Node*> > >::iterator it = mProcCallsBuf.begin(); it != mProcCallsBuf.end(); it++)
 	{
 		int proc_index = mPkb.pTable_GetProcIndex(it->first); 
 		vector<tuple<ProcIndex, LineNum, Node*> > results = it->second;
@@ -172,7 +172,7 @@ void Parser::processCalls()
 		//stores into call buffer, check whether the procedure exists when program ends.
 		if (!mPkb.pTable_isProcIndexExist(proc_index))
 		{
-			string output = "Attempt to call non-existing procedure " + it->first + " at line(s) ";
+			string output = "Parser: Attempt to call non-existing procedure " + it->first + " at line(s) ";
 			for (unsigned int i = 0; i < results.size(); i++)
 				output += intToString(get<1>(results[i])) + " ";
 			throw new string(output);
@@ -303,7 +303,7 @@ void Parser::parseProcedure()
 	
 	//procedure names must be unique
 	if (mPkb.pTable_isProcNameExist(proc_name))
-		throw new string("Redeclaration of procedure: " + proc_name);
+		throw new string("Parser: Redeclaration of procedure: " + proc_name);
 
 	//inserts procedure name into proc table
 	mPkb.pTable_InsertProc(proc_name); 
@@ -352,7 +352,7 @@ Node *Parser::parseStmtList(Node* parentNode)
 	}
 
 	if (prev_node == NULL)
-		throw new string("There must be at least a statement within the braces. (Line " + intToString(mLineNum) + ")");
+		throw new string("Parser: There must be at least a statement within the braces. (Line " + intToString(mLineNum) + ")");
 	
 	return stmt_list;
 }
@@ -501,7 +501,7 @@ Node *Parser::parseCall(Node* parentNode)
 void Parser::addOperator(vector<Node*> &tree, string op)
 {
 	if (tree.size() < 2)
-		throw new string("Error in expression at line " + intToString(mLineNum));
+		throw new string("Parser: Error in expression at line " + intToString(mLineNum));
 
 	Node::NodeType type;
 
@@ -621,7 +621,7 @@ Node *Parser::parseAssignment(Node* parentNode)
 			while (ops.size() > 0  && curr_priority <= getPriority(ops.top()))
 			{
 				if (result.size() < 2)
-					throw new string("Error in expression.");
+					throw new string("Parser: Error in expression.");
 				
 				//adds the operator to the result tree
 				addOperator(result, ops.top());
@@ -649,14 +649,14 @@ Node *Parser::parseAssignment(Node* parentNode)
 				}
 
 				if (ops.size() == 0 || ops.top() != "(")
-					throw string("No corresponding '(' for ')'");
+					throw string("Parser: No corresponding '(' for ')'");
 
 				ops.pop();
 			} //end else
 		} //if bracket
 		else
 		{
-			error("Valid variable name, operator or constant", next);
+			error("Parser: Valid variable name, operator or constant", next);
 		}
 	} //end while
 
@@ -670,7 +670,7 @@ Node *Parser::parseAssignment(Node* parentNode)
 	}
 
 	if (result.size() != 1)
-		throw new string("Error in expression at line " + intToString(mLineNum));
+		throw new string("Parser: Error in expression at line " + intToString(mLineNum));
 	
 	mPkb.ast_AddDown(assign, result[0]);
 
@@ -722,7 +722,7 @@ void Parser::checkValidName(string var_name)
 	
 	if (!regex_match(var_name.begin(), var_name.end(), exp))
 	{
-		throw new string("Error at line " + intToString(mLineNum) + ": Invalid variable name \"" + 
+		throw new string("Parser: Error at line " + intToString(mLineNum) + ": Invalid variable name \"" + 
 			var_name + "\"");
 		//cout << "Error at line " << mLineNum << ": Invalid variable name \"" << 
 		//	var_name << "\"" << endl;
@@ -734,7 +734,7 @@ void Parser::checkValidName(string var_name)
 		{
 			if (strcmp(var_name.c_str(), mKeyWords[i].c_str()) == 0)
 			{
-				throw new string("Cannot use \"" + var_name + "\" as a variable. " +
+				throw new string("Parser: Cannot use \"" + var_name + "\" as a variable. " +
 					" (line " + intToString(mLineNum) + ")");
 
 				//cout << "Cannot use \"" << var_name << "\" as a variable. " <<

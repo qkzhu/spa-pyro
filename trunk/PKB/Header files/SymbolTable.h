@@ -63,10 +63,10 @@ public:
 	void addCall(int procIndex1, vector<int> procList);
 	void addCalled(int procIndex1, int procIndex2);
 	void addCalled(int procIndex1, vector<int> procList);
-	vector<int> getCall(int procIndex);
-	vector<int> getCall_(int procIndex);
-	vector<int> getCalled(int procIndex);
-	vector<int> getCalled_(int procIndex);
+	void getCall(int procIndex, vector<int>& result);
+	void getCall_(int procIndex, vector<int>& result);
+	void getCalled(int procIndex, vector<int>& result);
+	void getCalled_(int procIndex, vector<int>& result);
 
 	//For Debugging
 	void printProcTable();
