@@ -83,7 +83,7 @@ int SymbolTable::getAllSymbol() // return only the largest index of symbol
 
 //For debugging
 void SymbolTable::printSymbolTable(string name){
-	for(map<string, int>::iterator it = mSymbolMap.begin(); it != mSymbolMap.end(); it++)
+	for(hash_map<string, int>::iterator it = mSymbolMap.begin(); it != mSymbolMap.end(); it++)
 	{
 		cout<<name<<" name "<<it->first<<" is index# "<<it->second<<endl;;
 	}

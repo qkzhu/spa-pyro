@@ -129,77 +129,88 @@ void ProcTable::addCalled(int procIndex1, vector<int> procList){
 }//end addCalled(int procIndex1, vector<int> procList)
 
 /* get all procedures called by procIndex */
-void ProcTable::getCall(int procIndex, vector<int>& result){
-
-	set<int> tmpSet;
+vector<int> ProcTable::getCall(int procIndex){
+	vector<int> tmpVec;
+	set<int>	tmpSet;
 
 	/* verify procIndex */
-	if(procIndex < 0 || !isProcIndexExist(procIndex))
-		result.push_back(-1);
+	if(procIndex < 0 || !isProcIndexExist(procIndex)){
+		tmpVec.push_back(-1);
+		return tmpVec;
+	}
 
 	/* Check if procIndex exists in exists */
 	if(callTable.find(procIndex) != callTable.end())	//procIndex exists
 	{
 		tmpSet = callTable[procIndex];
 		/* In case procIndex calls no procdure */
-		if(tmpSet.size() <= 0)
-			result.push_back(-1);
+		if(tmpSet.size() <= 0){
+			tmpVec.push_back(-1);
+			return tmpVec;
+		}
 
 		/* copy element from set<int> to list<int> */
 		for(set<int>::iterator it = tmpSet.begin(); it != tmpSet.end(); it++)
-			result.push_back(*it);
+			tmpVec.push_back(*it);
 	}
 	else	//procIndex does not exist
 	{
-		result.push_back(-1);
+		tmpVec.push_back(-1);
 	}
+
+	return tmpVec;
 }//end getCall
 
 
 /* get all procedures who call procIndex */
-void ProcTable::getCalled(int procIndex, vector<int>& result){
-
-	set<int> tmpSet;
+vector<int> ProcTable::getCalled(int procIndex){
+	vector<int> tmpVec;
+	set<int>	tmpSet;
 
 	/* verify procIndex */
-	if(procIndex < 0 || !isProcIndexExist(procIndex))
-		result.push_back(-1);
+	if(procIndex < 0 || !isProcIndexExist(procIndex)){
+		tmpVec.push_back(-1);
+		return tmpVec;
+	}
 
 	/* Check if procIndex exists in exists */
 	if(calledTable.find(procIndex) != calledTable.end())	//procIndex exists
 	{
 		tmpSet = calledTable[procIndex];
 		/* In case procIndex was called by no procdure */
-		if(tmpSet.size() <= 0)
-			result.push_back(-1);
+		if(tmpSet.size() <= 0){
+			tmpVec.push_back(-1);
+			return tmpVec;
+		}
 
 		/* copy element from set<int> to list<int> */
 		for(set<int>::iterator it = tmpSet.begin(); it != tmpSet.end(); it++)
-			result.push_back(*it);
+			tmpVec.push_back(*it);
 	}
 	else	//procIndex does not exist
 	{
-		result.push_back(-1);
+		tmpVec.push_back(-1);
 	}
 
+	return tmpVec;
 }//end getCalled
 
 /* get all procedures called recursively by procIndex */
-void ProcTable::getCall_(int procIndex, vector<int>& result){
+vector<int> ProcTable::getCall_(int procIndex){
 	
-	if (call_Table.find(procIndex) != call_Table.end()) {
-		for(vector<int>::iterator it = call_Table[procIndex].begin(); it != call_Table[procIndex].end(); it++)
-			result.push_back(*it);
-	}
+	if (call_Table.find(procIndex) != call_Table.end())
+		return call_Table[procIndex];
 
-	if (!isIndexExist(procIndex)) 
+	if (!isIndexExist(procIndex)) {
+		vector<int> result;
 		result.push_back(-1);
+		return result;
+	}
 
 	set<int> visited;
 	queue<int> curr_queue;
 
-	vector<int> next_queue; 
-	getCall(procIndex, next_queue);
+	vector<int> next_queue = getCall(procIndex);
 
 	//minimum spanning tree
 	for (unsigned int i = 0; i < next_queue.size(); i++)
@@ -213,8 +224,7 @@ void ProcTable::getCall_(int procIndex, vector<int>& result){
 		if (visited.find(curr_proc) == visited.end())
 		{
 			visited.insert(curr_proc);
-			vector<int> next_queue;
-			getCall(curr_proc, next_queue);
+			vector<int> next_queue = getCall(curr_proc);
 
 			//ensures that -1 does not get creeped into result.
 			if (next_queue.size() == 1 && next_queue[0] == -1)
@@ -225,29 +235,29 @@ void ProcTable::getCall_(int procIndex, vector<int>& result){
 		}
 	}
 
-	for(set<int>::iterator it = visited.begin(); it != visited.end(); it++)
-		result.push_back(*it);
-
+	vector<int> result(visited.begin(), visited.end());
 	call_Table[procIndex] = result;
+
+	return result;
 }
 
 /* get all procedures called recursively by procIndex */
-void ProcTable::getCalled_(int procIndex, vector<int>& result){
+vector<int> ProcTable::getCalled_(int procIndex){
 	
 	if (called_Table.find(procIndex) != called_Table.end())
-		for(vector<int>::iterator it = called_Table[procIndex].begin(); it != called_Table[procIndex].end(); it++)
-			result.push_back(*it);
+		return called_Table[procIndex];
 
-	if (!isIndexExist(procIndex))
+	if (!isIndexExist(procIndex)) {
+		vector<int> result;
 		result.push_back(-1);
+		return result;
+	}
 
 	set<int> visited;
 	queue<int> curr_queue;
 
 	//minimum spanning tree
-	vector<int> next_queue;
-	getCalled(procIndex, next_queue);
-
+	vector<int> next_queue = getCalled(procIndex);
 	for (unsigned int i = 0; i < next_queue.size(); i++)
 		curr_queue.push(next_queue[i]);
 
@@ -259,8 +269,7 @@ void ProcTable::getCalled_(int procIndex, vector<int>& result){
 		if (visited.find(curr_proc) == visited.end())
 		{
 			visited.insert(curr_proc);
-			vector<int> next_queue;
-			getCalled(curr_proc, next_queue);
+			vector<int> next_queue = getCalled(curr_proc);
 
 			//ensures that -1 does not get creeped into result.
 			if (next_queue.size() == 1 && next_queue[0] == -1)
@@ -271,10 +280,10 @@ void ProcTable::getCalled_(int procIndex, vector<int>& result){
 		}
 	}
 
-	for(set<int>::iterator it = visited.begin(); it != visited.end(); it++)
-		result.push_back(*it);
-
+	vector<int> result(visited.begin(), visited.end());
 	called_Table[procIndex] = result;
+
+	return result;
 }
 
 //For Debugging
@@ -288,7 +297,7 @@ void ProcTable::printCallTable(){
 		cout<<"CallTable table is empty!"<<endl;
 	else{
 		set<int> proc2Set;
-		for(map<int, set<int>>::iterator itProc1 = callTable.begin(); itProc1 != callTable.end(); itProc1++)
+		for(hash_map<int, set<int>>::iterator itProc1 = callTable.begin(); itProc1 != callTable.end(); itProc1++)
 		{
 			cout<<"Procedure "<<this->getProcName(itProc1->first)<<" calls procedure: ";
 			proc2Set = itProc1->second;
@@ -304,7 +313,7 @@ void ProcTable::printCalledTable(){
 		cout<<"CalledTable table is empty!"<<endl;
 	else{
 		set<int> proc2Set;
-		for(map<int, set<int>>::iterator itProc1 = calledTable.begin(); itProc1 != calledTable.end(); itProc1++)
+		for(hash_map<int, set<int>>::iterator itProc1 = calledTable.begin(); itProc1 != calledTable.end(); itProc1++)
 		{
 			cout<<"Procedure "<<this->getProcName(itProc1->first)<<" is called by procedure: ";
 			proc2Set = itProc1->second;
@@ -318,15 +327,14 @@ void ProcTable::printCalledTable(){
 void ProcTable::printCall_Table(){
 	//ensures that called* is applied on all procedures
 	int maxProc = this->getAllProc();
-	vector<int> tmp;
 	for (int i = 0; i <= maxProc; i ++)
-		getCall_(i, tmp);
+		getCall_(i);
 
 	if(call_Table.size() == 0) 
 		cout<<"Call*Table table is empty!"<<endl;
 	else{
 		vector<int> proc2Vec;
-		for(map<int, vector<int>>::iterator itProc1 = call_Table.begin(); itProc1 != call_Table.end(); itProc1++)
+		for(hash_map<int, vector<int>>::iterator itProc1 = call_Table.begin(); itProc1 != call_Table.end(); itProc1++)
 		{
 			if (itProc1->second.size() == 1 && itProc1->second[0] == -1)
 			{
@@ -345,15 +353,14 @@ void ProcTable::printCall_Table(){
 void ProcTable::printCalled_Table(){
 	//ensures that called* is applied on all procedures
 	int maxProc = this->getAllProc();
-	vector<int> tmp;
 	for (int i = 0; i <= maxProc; i ++)
-		getCalled_(i, tmp);
+		getCalled_(i);
 
 	if(called_Table.size() == 0) 
 		cout<<"Called*Table table is empty!"<<endl;
 	else{
 		vector<int> proc2Vec;
-		for(map<int, vector<int>>::iterator itProc1 = called_Table.begin(); itProc1 != called_Table.end(); itProc1++)
+		for(hash_map<int, vector<int>>::iterator itProc1 = called_Table.begin(); itProc1 != called_Table.end(); itProc1++)
 		{
 			if (itProc1->second.size() == 1 && itProc1->second[0] == -1)
 			{

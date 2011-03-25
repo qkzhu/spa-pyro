@@ -2,7 +2,7 @@
 #define USES_H
 
 #include <set>
-#include <map>
+#include <hash_map>
 #include "SymbolTable.h"	//For debugging
 using namespace std;
 
@@ -22,10 +22,10 @@ public:
 	void printVarStmtMap(VarTable* varTable);						// map each used varIndex to a set of stmt#
 	void printVarProcMap(ProcTable* pTable, VarTable* varTable);	// map each used varIndex to a set of procIndex
 private:
-	map<int, set<int>> mStmtUseMap; // map each stmt# to a set of used varIndex
-	map<int, set<int>> mProcUseMap; // map each ProcIndex to a set of used varIndex
-	map<int, set<int>> mVarStmtMap; // map each used varIndex to a set of stmt#
-	map<int, set<int>> mVarProcMap; // map each used varIndex to a set of procIndex
+	hash_map<int, set<int>> mStmtUseMap; // map each stmt# to a set of used varIndex
+	hash_map<int, set<int>> mProcUseMap; // map each ProcIndex to a set of used varIndex
+	hash_map<int, set<int>> mVarStmtMap; // map each used varIndex to a set of stmt#
+	hash_map<int, set<int>> mVarProcMap; // map each used varIndex to a set of procIndex
 };
 
 #endif
