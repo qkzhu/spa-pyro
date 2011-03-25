@@ -111,7 +111,7 @@ int AST::getStatementNumByNode(Node* d){
 }
 
 int AST::getMaxStmtNum(){
-	map<int, Node*>::iterator it = this->StatNumAndNodeList.end();
+	hash_map<int, Node*>::iterator it = this->StatNumAndNodeList.end();
 
 	if(it == this->StatNumAndNodeList.begin()) return 0;
 	else return (int)(--it)->first;
@@ -149,7 +149,7 @@ void AST::getAllType(Node::NodeType nt, vector<int>& result){
 
 vector<Node*> AST::getAllProc(){
 	vector<Node*> result;
-	for (map<int, Node*>::iterator it = astList.begin(); it != astList.end(); it++)
+	for (hash_map<int, Node*>::iterator it = astList.begin(); it != astList.end(); it++)
 		result.push_back(it->second);
 	return result;
 }
