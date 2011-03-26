@@ -281,22 +281,22 @@ void Validator::checkWith(QueryTable &table){
 ///////////////////////////////////////////// Check With Start////////////////////////////////////////////////////
 
 
-///////////////////////////////////////////// Check Pattern Start //////////////////////////////////////////////////
-void Validator::checkPattern(QueryTable &table){
+///////////////////////////////////////////// Check Pattern_PQL Start //////////////////////////////////////////////////
+void Validator::checkPattern_PQL(QueryTable &table){
 
-	int size =  (int) table.getPatternClause().size();
+	int size =  (int) table.getPattern_PQLClause().size();
 
 	for(int i=0; i<size;i++)
 	{
 		bool tempNoError = false;
 
-		if(table.getPatternClause().at(i).argumentNoCorrect == false)
+		if(table.getPattern_PQLClause().at(i).argumentNoCorrect == false)
 		{
-			throw new string("argument error inside pattern clause! -- throw by Validator::checkPattern - argumentNoCorrect is false");
+			throw new string("argument error inside pattern clause! -- throw by Validator::checkPattern_PQL - argumentNoCorrect is false");
 			
 		}
 		vector<int> pattern;
-		pattern = table.getPatternClause().at(i).expression;
+		pattern = table.getPattern_PQLClause().at(i).expression;
 
 		if(pattern.at(0) == ASSIGN)
 		{
@@ -305,7 +305,7 @@ void Validator::checkPattern(QueryTable &table){
 				//cout<< pattern.at(2)<<" "<<pattern.at(3)<<" "<<pattern.at(4)<<endl;
 				if( pattern.at(2) != UNDERSCORE || pattern.at(3) != COMMA || pattern.at(4) != UNDERSCORE )
 				{
-					throw new string("argument error inside pattern clause! -- throw by Validator::checkPattern - pattern size 5");
+					throw new string("argument error inside pattern clause! -- throw by Validator::checkPattern_PQL - pattern size 5");
 				}
 			}
 			else if(int(pattern.size()) == 6) 
@@ -313,16 +313,16 @@ void Validator::checkPattern(QueryTable &table){
 				if( pattern.at(2) == UNDERSCORE ) // pattern a(_, _"x+y"_ ) ASSIGN 301 UNDERSCORE COMMA PATTERNOFSIMPLE 302
 				{
 					if( pattern.at(3) != COMMA || pattern.at(4) != PATTERNOFSIMPLE )
-						throw new string("argument error inside pattern clause! -- throw by Validator::checkPattern - pattern size 6");
+						throw new string("argument error inside pattern clause! -- throw by Validator::checkPattern_PQL - pattern size 6");
 				}
 				else if(pattern.at(2) == PATTERNOFSIMPLE) // pattern("x", _) ASSIGN 301 PATTERNOFSIMPLE 301 COMMA UNDERCORE
 				{
 					if( pattern.at(4) != COMMA || pattern.at(5) != UNDERSCORE )
-						throw new string("argument error inside pattern clause! -- throw by Validator::checkPattern - pattern size 6");
+						throw new string("argument error inside pattern clause! -- throw by Validator::checkPattern_PQL - pattern size 6");
 				}
 				else
 				{
-					throw new string("argument error inside pattern clause! -- throw by Validator::checkPattern - pattern size 6");
+					throw new string("argument error inside pattern clause! -- throw by Validator::checkPattern_PQL - pattern size 6");
 				}
 					
 			}
@@ -331,12 +331,12 @@ void Validator::checkPattern(QueryTable &table){
 				
 					if( pattern.at(2) != PATTERNOFSIMPLE || pattern.at(4) != COMMA || pattern.at(5) != PATTERNOFSIMPLE) // assign("x", "x+y") ->  ASSIGN 301 PATTERNOFSIMPLE 301 COMMA PATTERNOFSIMPLE 302
 					{
-						throw new string("argument error inside pattern clause! -- throw by Validator::checkPattern - pattern size 7");
+						throw new string("argument error inside pattern clause! -- throw by Validator::checkPattern_PQL - pattern size 7");
 					}
 			}
 			else
 			{
-				throw new string("pattern size error -- throw by Validator::checkPattern - pattern size 5");
+				throw new string("pattern size error -- throw by Validator::checkPattern_PQL - pattern size 5");
 			}
 		}
 		else if(pattern.at(0) == WHILE)
@@ -345,16 +345,16 @@ void Validator::checkPattern(QueryTable &table){
 			if(pattern.at(2) == UNDERSCORE)
 			{
 				if( pattern.at(3) != COMMA || pattern.at(4) != UNDERSCORE ) // while(_,_) WHILE 301 UNDERSCORE COMMA UNDERSCORE
-					throw new string("argument error inside pattern clause! -- throw by Validator::checkPattern -  WHILE - size 5");
+					throw new string("argument error inside pattern clause! -- throw by Validator::checkPattern_PQL -  WHILE - size 5");
 			}
 			else if(pattern.at(2) == PATTERNOFSIMPLE)
 			{
 				if( pattern.at(4) != COMMA || pattern.at(5) != UNDERSCORE ) // while("x",_) WHILE 301 PATTERNOFSIMPLE 301 COMMA UNDERSCORE
-					throw new string("argument error inside pattern clause! -- throw by Validator::checkPattern -  WHILE - size 6");
+					throw new string("argument error inside pattern clause! -- throw by Validator::checkPattern_PQL -  WHILE - size 6");
 			}
 			else
 			{
-				throw new string("size error! -- throw by Validator::checkPattern -  WHILE ");
+				throw new string("size error! -- throw by Validator::checkPattern_PQL -  WHILE ");
 			}
 		}
 		else if(pattern.at(0) == IF)
@@ -362,23 +362,23 @@ void Validator::checkPattern(QueryTable &table){
 			if(pattern.at(2) == UNDERSCORE)
 			{
 				if( pattern.at(3) != COMMA || pattern.at(4) != UNDERSCORE || pattern.at(5) != COMMA || pattern.at(6) != UNDERSCORE ) // if(_,_,_) IF UNDERSCORE COMMA UNDERSCORE COMMA UNDERSCORE
-					throw new string("argument error inside pattern clause! -- throw by Validator::checkPattern -  IF - size 6 ");
+					throw new string("argument error inside pattern clause! -- throw by Validator::checkPattern_PQL -  IF - size 6 ");
 			}
 			else if(pattern.at(2) == PATTERNOFSIMPLE)
 			{
 				if( pattern.at(4) != COMMA || pattern.at(5) != UNDERSCORE || pattern.at(6) != COMMA || pattern.at(7) != UNDERSCORE ) // if("x",_,_) WHILE PATTERNOFSIMPLE 301 COMMA UNDERSCORE COMMA UNDERSCORE
-					throw new string("argument error inside pattern clause! -- throw by Validator::checkPattern -  IF - size 7");
+					throw new string("argument error inside pattern clause! -- throw by Validator::checkPattern_PQL -  IF - size 7");
 			}
 			else
 			{
-				throw new string("size error -- throw by Validator::checkPattern -  IF ");
+				throw new string("size error -- throw by Validator::checkPattern_PQL -  IF ");
 			}
 		}
 
-		checkPatternThree(pattern);
+		checkPattern_PQLThree(pattern);
 	}
 }
-void Validator::checkPatternOne(const string &str)
+void Validator::checkPattern_PQLOne(const string &str)
 {
 	vector<int> expression;
 	vector<int> separatorPostion;
@@ -398,13 +398,13 @@ void Validator::checkPatternOne(const string &str)
 			//cout<<varOfSimple.at(i).at(j)<<" ";
 			if( !( (varOfSimple.at(i).at(j) >= 65 && varOfSimple.at(i).at(j) <= 97) || (varOfSimple.at(i).at(j) >= 97 && varOfSimple.at(i).at(j) <= 122) || (varOfSimple.at(i).at(j) >= 48 && varOfSimple.at(i).at(j) <= 57) || (varOfSimple.at(i).at(j) == 32) ) )
 			{
-				throw new string("invalid symbol at pattern expression -- throw by Validator::checkAssignPattern");			
+				throw new string("invalid symbol at pattern expression -- throw by Validator::checkAssignPattern_PQL");			
 			}
 		}
 	}
 }
 
-void Validator::checkPatternTwo(const string &str){
+void Validator::checkPattern_PQLTwo(const string &str){
 
 	int qouteNo = 0;
 	int quoteStart = 0;
@@ -502,11 +502,11 @@ void Validator::checkPatternTwo(const string &str){
 	tempString = str.substr(quoteStart+1, (quoteEnd-quoteStart-1));
 
 	//cout<<tempString<<endl;
-	checkPatternOne(tempString);
+	checkPattern_PQLOne(tempString);
 }
 
 
-void Validator::checkPatternThree(vector<int> &patternExpression){
+void Validator::checkPattern_PQLThree(vector<int> &patternExpression){
 
 	//cout<<patternExpression.at(0)<<endl;
 	//cout<<patternExpression.size()<<endl;
@@ -521,13 +521,13 @@ void Validator::checkPatternThree(vector<int> &patternExpression){
 			
 			if((i+1) > int(patternExpression.size()))
 			{
-				throw new string("index out of range -- throw by Validator::checkPatternString");
+				throw new string("index out of range -- throw by Validator::checkPattern_PQLString");
 			}
 			
 			//cout<<getString(patternExpression.at(i+1))<<"----------------------get string----------------- "<<endl;
 			
-			//checkPatternTwo(getString(patternExpression.at(i+1)));
-			checkAssignPattern(Convertor::getKeyword(i+1));
+			checkPattern_PQLTwo(Convertor::getKeyword(i+1));
+			//checkAssignPattern_PQL();
 			
 		}
 		
@@ -594,7 +594,7 @@ void Validator::fillAssignVector(const string &str, vector<int> &expression, vec
 	}
 
 }
-///////////////////////////////////////////// Check Pattern End//////////////////////////////////////////////////
+///////////////////////////////////////////// Check Pattern_PQL End//////////////////////////////////////////////////
 
 ///////////////////////////////////////////// Check ALL Start////////////////////////////////////////////////////
 void Validator::checkResults(QueryTable &table){
@@ -602,7 +602,7 @@ void Validator::checkResults(QueryTable &table){
 	checkSelect(table);
 	checkSuchThat(table);
 	checkWith(table);
-	checkPattern(table);
+	checkPattern_PQL(table);
 }
 ///////////////////////////////////////////// Check ALL End////////////////////////////////////////////////////
 
@@ -651,6 +651,7 @@ string Validator::getString(int index){
 		return temp2;
 	}
 
+	return NULL;
 }
 /******************************************** FOR DEGUGGING END ********************************************/
 
