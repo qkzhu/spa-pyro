@@ -91,7 +91,7 @@ void QueryResult::print(){
 
 
 void QueryResult::resultSort(){
-	if(mTupleResult.empty()) return;
+	if(mTupleResult.empty() || (int)mTupleResult.size() == 1) return;
 
 	sort(mTupleResult.begin(), mTupleResult.end(), myCompare);
 
@@ -101,6 +101,8 @@ void QueryResult::resultSort(){
 	equilities.push_back(0);
 	for(int i = 1; i < (int)mTupleResult.size(); i++){
 		if(equalityCompare(mTupleResult[i-1], mTupleResult[i])){
+			if(i == mTupleResult.size() -1) 
+				tmp_store.push_back(mTupleResult[i]);
 			equilities.push_back(i);
 		}else{
 			if(i == mTupleResult.size() -1) 
