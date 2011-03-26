@@ -30,7 +30,7 @@ public:
 
 
 	void resultSort(); //Do sorting and condense the result to eliminate duplicates
-	bool myCompare(std::vector<int> v1, std::vector<int> v2);
+	static bool myCompare(std::vector<int> v1, std::vector<int> v2);
 	bool equalityCompare(std::vector<int>, std::vector<int>);
 
 	void print();

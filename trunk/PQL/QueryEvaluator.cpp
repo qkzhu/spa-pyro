@@ -638,8 +638,7 @@ void QueryEvaluator::evaluate()
 				tmp_entry.push_back(v);
 			}
 			mResult.addInTuple(tmp_entry);
-		}
-		
+		}	
 	}
 
 	//In case the returned mResult is empty, then insert -1 to the result.
