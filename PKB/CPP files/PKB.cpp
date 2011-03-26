@@ -373,7 +373,7 @@ void PKB::cfg_getNext(vector<int>& theNext, int stmt)
 
 void PKB::cfg_getNextUp(vector<int>& theNextUp, int stmt)
 {
-	if(stmt <= 1) theNextUp.push_back(-1);
+	if(stmt <= 0) theNextUp.push_back(-1);
 	else cfg->getNextUp(theNextUp, stmt, ast);
 }
 
