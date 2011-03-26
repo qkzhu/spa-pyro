@@ -33,6 +33,7 @@ void Validator::fillTable(vector <vector<int>> &table, string fileName){
 
 void Validator::populateTable(){
 	fillTable(suchThatTable,"DesignModel.txt");
+	cout<<"suchThatTable size  in populate table "<< suchThatTable.size()<<endl;
 	fillTable(withTable,"withTable.txt");
 }
 ///////////////////////////////////////////// Populate Checking Table End////////////////////////////////////////////////////
@@ -141,14 +142,18 @@ vector<int> Validator::getIndex(vector<vector<int>> table, int name){
 		throw "Query Validation Table is empty!  -- throw by Validator::getIndex()";
 	}
 	//cout<<suchThatTable[77][0]<<" getIndex"<<endl;
-	for(int i=0;i<(int) table.size();i++)
+	
+	//int counter = 0;
+	//cout<<table.size()<<endl;
+	for(int i=0;i<int(table.size());i++)
 	{
+		//cout<<table[i][0]<<"   "<<name<<endl;
 		if(table[i][0] == name)
 		{
 			index.push_back(i);
 		}
-		
 	}
+
 	return index;
 }
 
@@ -178,6 +183,9 @@ void Validator::checkSuchThat(QueryTable &table){
 		vector<int> suchThat;
 		vector<int> index;
 		suchThat =table.getSuchThatClauseV().at(i).relCond;	
+		
+		//cout<<"haha "<<suchThat[0]<<endl;
+		//cout<<"suchThatTable size "<<suchThatTable.size()<<endl;
 		index = getIndex(suchThatTable, suchThat[0]);
 		/* for debug***
 		for(int i=0;i<suchThat.size();i++)
@@ -186,6 +194,15 @@ void Validator::checkSuchThat(QueryTable &table){
 		}
 		cout<<endl;
 		*/
+		//cout<<"index "<<index.size()<<endl;
+
+		
+		for(int i=0;i<index.size();i++)
+		{
+			cout<<index.at(i)<<" "<<endl;
+		}
+		cout<<endl;
+		
 		vector<int>::iterator it;
 		for(it = index.begin();it<index.end();it++)
 		{
