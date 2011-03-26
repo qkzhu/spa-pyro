@@ -238,7 +238,7 @@ string PqlParser::selectParser(int type,TokenList *quPointer,QueryTable *tablePo
 							index=Convertor::getIndex(pch);
 							if(index!=-1)
 							   content.push_back(index);
-							content.push_back(index);
+						//	content.push_back(index);
 							pch=qu->getNextToken();
 						}
 						

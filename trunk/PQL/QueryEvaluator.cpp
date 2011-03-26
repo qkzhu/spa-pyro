@@ -757,6 +757,7 @@ void QueryEvaluator::evalPattern_PQL(vector<vector<int> >& result_tuple, vector<
 		getPattern_PQLCond(result, var_type, PQL_varDecode(pattern1));
 	}else 
 		throw new string("QueryEvaluator::evalPattern_PQL, no such variable type!");
+	cout << endl;
 }
 
 void QueryEvaluator::joinTuples(vector<vector<int> >& eva_tuple, vector<vector<int> >& pre_tuple, int common_num, int same1_tuple1, int same2_tuple1, int first_time){
@@ -817,9 +818,8 @@ void QueryEvaluator::printResult(){
 				else 
 					throw new string("No type match when decode result for query result");
 			}
-			cout << endl;
+			cout << ",";
 		}
-		cout << endl;
 	}
 }
 	
@@ -1002,7 +1002,7 @@ void QueryEvaluator::getCallsStar(int up, vector<int>& result, int procNameCode)
 				if(k.at(0) != -1){
 					for(int j = 0; j < (int)k.size(); j++){
 						int found = find_ele(result, k[j]);
-						if(found != (int)result.size())	result.push_back(k[j]);
+						if(found == (int)result.size())	result.push_back(k[j]);
 					}
 				}
 			}
@@ -1016,7 +1016,7 @@ void QueryEvaluator::getCallsStar(int up, vector<int>& result, int procNameCode)
 				if(k.at(0) != -1){
 					for(int j = 0; j < (int)k.size(); j++){
 						int found = find_ele(result, k[j]);
-						if(found != (int)result.size())	result.push_back(k[j]);
+						if(found == (int)result.size())	result.push_back(k[j]);
 					}
 				}
 			}
@@ -1321,14 +1321,11 @@ bool QueryEvaluator::affects(int stmt1, int stmt2){
 
 void QueryEvaluator::getPattern_PQLAssign(vector<int>& result, string patternLeft, string patternRight){
 	vector<int> tmp;
-	cout << patternLeft << endl;
-	cout << patternRight << endl;
 	for(int i = 0; i < (int)result.size(); i++){
 		cout << result[i] << endl;
 		if(mPKBObject->patternAssign(result[i], patternLeft, patternRight))
 			tmp.push_back(result[i]);
 	}
-	cout << tmp.size() << endl;
 	result.clear();
 	result.insert(result.end(), tmp.begin(), tmp.end());
 }
@@ -1337,10 +1334,14 @@ void QueryEvaluator::getPattern_PQLCond(vector<int>& result, int type, string pa
 	vector<int> tmp;
 	for(int i = 0; i < (int)result.size(); i++){
 		if(type == mQueryTree->getIndex("if")){
-			if(mPKBObject->condIf(result[i]) == PKB_varEncode(patternCond))
+			int p1 = mPKBObject->condIf(result[i]);
+			int p2 = PKB_varEncode(patternCond);
+			if(p1 == p2)
 				tmp.push_back(result[i]);
 		}else if(type == mQueryTree->getIndex("while")){
-			if(mPKBObject->condWhile(result[i]) == PKB_varEncode(patternCond))
+			int p1 = mPKBObject->condWhile(result[i]);
+			int p2 = PKB_varEncode(patternCond);
+			if(p1 == p2)
 				tmp.push_back(result[i]);
 		}else
 			throw new string("QueryEvaluator::getPattern_PQLCond, no such type!");
