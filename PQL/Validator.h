@@ -14,7 +14,7 @@ class Validator{
 public:
 
 	void populateTable(); //read data from file and add them into suchThatTable<vector>
-	//void fillTable(vector <vector<int>> table, string fileName);
+	void fillTable(vector <vector<int>> table, string fileName);
 	void displayTable(vector<vector<int>> table);  // display table for debug
 
 	vector<int> getIndex(vector<vector<int>> table,int name); // get a vector of index if name = nameInsideTable
