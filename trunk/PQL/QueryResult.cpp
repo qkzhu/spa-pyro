@@ -66,6 +66,7 @@ void QueryResult::addInType(int type)
 
 void QueryResult::addInTuple(vector<int> concat)
 {
+	cout << "Inserting " << mTupleResult.size() << endl;;
 	if(!isTupleInserted(concat))
 		mTupleResult.push_back(concat);
 }
