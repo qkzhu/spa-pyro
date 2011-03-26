@@ -93,7 +93,7 @@ void QueryResult::print(){
 void QueryResult::resultSort(){
 	if(mTupleResult.empty()) return;
 
-	sort(mTupleResult.begin(), mTupleResult.end(), QueryResult::myCompare);
+	sort(mTupleResult.begin(), mTupleResult.end(), myCompare);
 
 
 	//Eliminate duplicates
