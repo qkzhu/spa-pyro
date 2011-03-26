@@ -16,7 +16,8 @@ public:
 
 	//matching	
 	bool patternAssign(int stmtNum, string patternLeft, string patternRight, AST& ast, VarTable& varTable);
-	bool match(const string& input, const string& existing, bool matchFront, bool matchEnd);
+	bool match(Node* input, Node* existing, bool matchFront, bool matchEnd);
+	bool matchUsingPrefix(const string& input, const string& existing, bool matchFront, bool matchEnd);
 	
 	//conversion to prefix for matching
 	string stringToPrefix(string& input);
@@ -32,6 +33,9 @@ public:
 	//conversion to postfix for matching
 	string nodeToPostFix(Node *node, AST& ast, VarTable& varTable);
 	string stringToPostFix(string& input);
+
+	//match trees inside AST
+	bool matchTree(Node* first, Node* second);
 
 private:
 	bool isConstant(string tok);

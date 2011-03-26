@@ -55,7 +55,7 @@ string Pattern::removeSpacesAndQuotes(string s)
 void Pattern::addOperator(vector<Node*> &tree, char op, AST& ast, VarTable& varTable)
 {
 	if (tree.size() < 2)
-		throw new string("Error in pattern.");
+		throw new string("Pattern: Error in pattern.");
 
 	Node::NodeType type;
 
@@ -67,7 +67,7 @@ void Pattern::addOperator(vector<Node*> &tree, char op, AST& ast, VarTable& varT
 		type = Node::TIMES;
 
 	//create a tree for this operator 
-	Node *curr = ast.createNode(type, 3333, 0);
+	Node *curr = ast.createNode(type, 3333, -1);
 	
 	//adds the top two trees in the results stack to the current tree's 
 	//left and right child
@@ -135,7 +135,7 @@ Node *Pattern::generateNode(string input, AST& ast, VarTable& varTable)
 		} //else if valid name
 
 		else
-			throw new string("Invalid pattern string:" + input);
+			throw new string("Pattern: Invalid pattern string:" + input);
 	}
 
 		//pops off all remaining operators on the stack
@@ -146,7 +146,7 @@ Node *Pattern::generateNode(string input, AST& ast, VarTable& varTable)
 	}
 
 	if (result.size() != 1)
-		throw new string("Invalid pattern string: " + input);
+		throw new string("Pattern: Invalid pattern string: " + input);
 
 	return result[0];
 }
@@ -157,10 +157,7 @@ bool Pattern::patternAssign(int stmtNum, string patternLeft, string patternRight
 		throw new string("Pattern: Invalid statement number.");
 
 	Node *assign = ast.getNodeByStatementNum(stmtNum);
-
-	if (stmtNum == 21 || stmtNum == 23)
-		cout << "reached" << endl;
-
+	
 	if (assign->type != Node::ASSIGN)
 		return false;
 
@@ -200,18 +197,58 @@ bool Pattern::patternAssign(int stmtNum, string patternLeft, string patternRight
 		matchEnd = false;
 	}
 
-
 	if(patternRight.size() == 0)
 		throw new string("Pattern: Empty expression passed.");
 
-	string input = stringToPrefix(patternRight);
-	string existing = nodeToPrefix(bottomNodes[1], ast, varTable);
+	Node* input = generateNode(patternRight, ast, varTable);
+	Node* existing = bottomNodes[1];
 
 	return match(input, existing, matchFront, matchEnd);
 }
 
-//matches input and existing string using postfix.
-bool Pattern::match(const string& input, const string& existing, bool matchFront, bool matchEnd)
+bool Pattern::match(Node* input, Node* existing, bool matchFront, bool matchEnd)
+{
+	//either trees are null, return false
+	if (input == NULL || existing == NULL)
+		return false;
+
+	//if both expression trees match, no questions asked.
+	if (matchTree(input, existing))
+		return true;
+
+	if (matchFront)
+	{
+		//match front and left tree matches input
+		if (existing->bottomNodeList.size() == 1 && 
+			matchTree(input, existing->bottomNodeList[0]))
+			return true;
+
+		//match front and right tree matches input
+		if (existing->bottomNodeList.size() == 2 && 
+			matchTree(input, existing->bottomNodeList[1]))
+			return false;
+	}
+
+	if (matchEnd)
+	{
+		//match end and right tree matches input
+		if (existing->bottomNodeList.size() == 2 && 
+				matchTree(input, existing->bottomNodeList[1]))
+				return true;
+
+		//match end and left tree matches input
+		if (existing->bottomNodeList.size() >= 1 &&
+			matchTree(input, existing->bottomNodeList[0]))
+				return false;
+	}
+
+	//match the subtrees recursively
+	return (existing->bottomNodeList.size() > 0 && match(input, existing->bottomNodeList[0], matchFront, matchEnd)) ||
+		(existing->bottomNodeList.size() > 1 && match(input, existing->bottomNodeList[1], matchFront, matchEnd));
+}
+
+//matches input and existing string using prefix.
+bool Pattern::matchUsingPrefix(const string& input, const string& existing, bool matchFront, bool matchEnd)
 {
 	//exact match
 	if (matchFront && matchEnd)
@@ -279,7 +316,7 @@ void Pattern::printNode(Node* n, int level, AST& ast, VarTable& varTable)
 		break;
 
 	default:
-		cout << "Unidentified node type." << endl;
+		cout << "Pattern: Unidentified node type." << endl;
 		break;
 	}
 
@@ -314,7 +351,7 @@ string Pattern::stringToPrefix(string& input)
 			while (ops.size() > 0  && curr_priority < getPriority(ops.top()))
 			{
 				if (result.size() < 2)
-					throw new string("Invalid pattern string: " + input);
+					throw new string("Pattern: Invalid pattern string: " + input);
 				
 				//adds the operator to the result tree
 				result += ops.top();
@@ -337,7 +374,7 @@ string Pattern::stringToPrefix(string& input)
 			result += next;
 
 		else
-			throw new string("Invalid pattern string:" + input);
+			throw new string("Pattern: Invalid pattern string:" + input);
 	}
 
 	//pops off all remaining operators on the stack
@@ -375,7 +412,7 @@ string Pattern::stringToPostFix(string& input)
 			while (ops.size() > 0  && curr_priority <= getPriority(ops.top()))
 			{
 				if (result.size() < 2)
-					throw new string("Invalid pattern string: " + input);
+					throw new string("Pattern: Invalid pattern string: " + input);
 				
 				//adds the operator to the result tree
 				result += ops.top();
@@ -400,7 +437,7 @@ string Pattern::stringToPostFix(string& input)
 		} 
 
 		else
-			throw new string("Invalid pattern string:" + input);
+			throw new string("Pattern: Invalid pattern string:" + input);
 	}
 
 	//pops off all remaining operators on the stack
@@ -440,11 +477,11 @@ string Pattern::nodeToInfix(Node *node, AST& ast, VarTable& varTable)
 		result += varTable.getVarName(node->id);
 		break;
 	default:
-		throw new string("Invalid node type in expression");
+		throw new string("Pattern: Invalid node type in expression");
 	}
 
 	if (children.size() != 0 && children.size() != 2)
-		throw new string("Invalid expression tree.");
+		throw new string("Pattern: Invalid expression tree.");
 
 	//a given node in an expression tree has either two children or none
 	if (children.size() == 2)
@@ -485,11 +522,11 @@ string Pattern::nodeToPrefix(Node *node, AST& ast, VarTable& varTable)
 		result += varTable.getVarName(node->id);
 		break;
 	default:
-		throw new string("Invalid node type in expression");
+		throw new string("Pattern: Invalid node type in expression");
 	}
 
 	if (children.size() != 0 && children.size() != 2)
-		throw new string("Invalid expression tree.");
+		throw new string("Pattern: Invalid expression tree.");
 
 	//a given node in an expression tree has either two children or none
 	if (children.size() == 2)
@@ -510,7 +547,7 @@ string Pattern::nodeToPostFix(Node *node, AST& ast, VarTable& varTable)
 	string result = "";
 
 	if (children.size() != 0 && children.size() != 2)
-		throw new string("Invalid expression tree.");
+		throw new string("Pattern: Invalid expression tree.");
 
 	//a given node in an expression tree has either two children or none
 	if (children.size() == 2)
@@ -536,7 +573,7 @@ string Pattern::nodeToPostFix(Node *node, AST& ast, VarTable& varTable)
 		result += varTable.getVarName(node->id);
 		break;
 	default:
-		throw new string("Invalid node type in expression");
+		throw new string("Pattern: Invalid node type in expression");
 	}
 
 	return result;
@@ -568,4 +605,23 @@ int Pattern::condIf(int stmtNum, AST& ast)
 		throw new string("Pattern: If has no down nodes");
 
 	return bottomNodes[0]->id;
+}
+
+bool Pattern::matchTree(Node* first, Node* second)
+{
+	//first level of check:
+	//1. both node types must not be null
+	//2. both nodes must have the same id
+	//3. both nodes must have same number of bottom nodes
+	if (first == NULL || second == NULL || first->type != second->type || 
+		first->id != second->id || first->bottomNodeList.size() != second->bottomNodeList.size())
+			return false;
+
+	//second level of check. all bottom nodes must match
+	for (unsigned int i = 0; i < first->bottomNodeList.size(); i++)
+		if (!matchTree(first->bottomNodeList[i], second->bottomNodeList[i]))
+			return false;
+
+	//pass all checks - must be true.
+	return true;
 }
