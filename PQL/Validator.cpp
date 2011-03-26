@@ -405,7 +405,7 @@ void Validator::checkPattern_PQLOne(const string &str)
 			//cout<<varOfSimple.at(i).at(j)<<" ";
 			if( !( (varOfSimple.at(i).at(j) >= 65 && varOfSimple.at(i).at(j) <= 97) || (varOfSimple.at(i).at(j) >= 97 && varOfSimple.at(i).at(j) <= 122) || (varOfSimple.at(i).at(j) >= 48 && varOfSimple.at(i).at(j) <= 57) || (varOfSimple.at(i).at(j) == 32) ) )
 			{
-				throw new string("invalid symbol at pattern expression -- throw by Validator::checkAssignPattern_PQL");			
+				throw new string("invalid symbol at pattern expression -- throw by Validator::checkPattern_PQLOne");			
 			}
 		}
 	}
@@ -418,10 +418,12 @@ void Validator::checkPattern_PQLTwo(const string &str){
 	int quoteEnd = 0;
 	int underscoreNo = 0;
 	string tempString;
-	
+	//cout<<"string is "<<str<<endl;
+	//cout <<Convertor::getKeyword(401)<<endl;
+
 	if(str.empty())
 	{
-		throw new string("expression is empty, after _ must be \" -- throw by Validator::preCheckAssign");
+		throw new string("expression is empty, after _ must be \" -- throw by Validator::checkPattern_PQLTwo");
 	}
 	
 	for(int i=0;i<int(str.length());i++)
@@ -451,7 +453,7 @@ void Validator::checkPattern_PQLTwo(const string &str){
 	
 	if(qouteNo!=2)
 	{
-		throw new string("quotation Number is wrong-- throw by Validator::preCheckAssign");
+		throw new string("quotation Number is wrong-- throw by Validator::checkPattern_PQLTwo");
 	}
 	if(underscoreNo == 0) // no underscore involved
 	{
@@ -461,7 +463,7 @@ void Validator::checkPattern_PQLTwo(const string &str){
 
 		if( int(str.find_first_of("\"") ) != 0 || int(str.find_last_of("\"")) != int((str.length()-1)))
 		{
-			throw new string("quotation position is wrong -- throw by Validator::preCheckAssign");
+			throw new string("quotation position is wrong -- throw by Validator::checkPattern_PQLTwo");
 		}
 	}
 	
@@ -473,7 +475,7 @@ void Validator::checkPattern_PQLTwo(const string &str){
 		{
 			if( int(str.at(1)) != 34 ) // second character is "
 			{
-				throw new string("quotation error in the front -- throw by Validator::preCheckAssign");
+				throw new string("quotation error in the front -- throw by Validator::checkPattern_PQLTwo");
 			}
 		}
 		else if( int(str.at(str.length()-1)) == 95 )
@@ -481,13 +483,13 @@ void Validator::checkPattern_PQLTwo(const string &str){
 			
 			if( int(int(str.at(str.length()-2))) != 34 ) // check "_
 			{
-				throw new string("quotation error in the end -- throw by Validator::preCheckAssign");
+				throw new string("quotation error in the end -- throw by Validator::checkPattern_PQLTwo");
 			}
 
 		}
 		else
 		{
-			throw new string("underscore error, underscoreNo == 1 -- throw by Validator::preCheckAssign");
+			throw new string("underscore error, underscoreNo == 1 -- throw by Validator::checkPattern_PQLTwo");
 			
 		}
 	}
@@ -497,13 +499,13 @@ void Validator::checkPattern_PQLTwo(const string &str){
 
 		if( int(str.find_first_of("_")) != 0 || int(str.find_first_of("\"")) != 1 || int(str.find_last_of("_")) != (int(str.length())-1) || int(str.find_last_of("\"")) != (int(str.length())-2))
 		{
-			throw new string("undersocore and quotation wrong, underscoreNo == 2  -- throw by Validator::preCheckAssign");
+			throw new string("undersocore and quotation wrong, underscoreNo == 2  -- throw by Validator::checkPattern_PQLTwo");
 		}
 	
 	}
 	else
 	{
-		throw new string("undersocreNo is wrong -- throw by Validator::preCheckAssign");
+		throw new string("undersocreNo is wrong -- throw by Validator::checkPattern_PQLTwo");
 	}
 	
 	tempString = str.substr(quoteStart+1, (quoteEnd-quoteStart-1));
@@ -528,12 +530,13 @@ void Validator::checkPattern_PQLThree(vector<int> &patternExpression){
 			
 			if((i+1) > int(patternExpression.size()))
 			{
-				throw new string("index out of range -- throw by Validator::checkPattern_PQLString");
+				throw new string("index out of range -- throw by Validator::checkPattern_PQLThree");
 			}
 			
 			//cout<<getString(patternExpression.at(i+1))<<"----------------------get string----------------- "<<endl;
 			
-			checkPattern_PQLTwo(Convertor::getKeyword(i+1));
+			
+			checkPattern_PQLTwo(Convertor::getKeyword(patternExpression.at(i+1)));
 			//checkAssignPattern_PQL();
 			
 		}
