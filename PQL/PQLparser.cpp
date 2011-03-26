@@ -187,6 +187,15 @@ string PqlParser::selectParser(int type,TokenList *quPointer,QueryTable *tablePo
 						
 						content.push_back(index);
 
+						if(index==DOT)
+						{
+							content.push_back(index);
+							pch=qu->getNextToken();
+						    index=Convertor::getIndex(pch);
+							if(index!=-1)
+							content.push_back(index);
+						}
+
 						table->addClause(SELECT,content);
 						content.clear();
 					}
@@ -202,6 +211,8 @@ string PqlParser::selectParser(int type,TokenList *quPointer,QueryTable *tablePo
 					index=Convertor::getIndex(pch);
 				  }while(index==COMMA);
 				 if(index!=R_ARROW) throw new string("missing R_ARROW");
+				 pch=qu->getNextToken();
+	             index=Convertor::getIndex(pch);
 	  }
 	  else
 	  {
@@ -216,6 +227,25 @@ string PqlParser::selectParser(int type,TokenList *quPointer,QueryTable *tablePo
 						
 						content.push_back(index);
 
+					    pch=qu->getNextToken();
+						index=Convertor::getIndex(pch);
+						if(index==DOT)
+						{
+							
+							content.push_back(index);
+							pch=qu->getNextToken();
+						    cout<<index<<pch<<endl;
+							index=Convertor::getIndex(pch);
+							if(index!=-1)
+							   content.push_back(index);
+							content.push_back(index);
+							pch=qu->getNextToken();
+						}
+						
+						
+							
+
+						
 						table->addClause(SELECT,content);
 						content.clear();
 					}
@@ -230,8 +260,7 @@ string PqlParser::selectParser(int type,TokenList *quPointer,QueryTable *tablePo
 					
 	  }
 
-	  pch=qu->getNextToken();
-	  index=Convertor::getIndex(pch);
+
 
 	  return pch;
 }
@@ -623,7 +652,9 @@ string PqlParser::declarParser(string type,TokenList *quPointer,QueryTable *tabl
 			   }
 				else
 				{
-					throw new string("the first token after the declaration should be undeclared symbol\n");
+
+					throw new string("the first token after the declaration"+type+" should be undeclared symbol\n");
 				}
+				
 				return pch;
 }
