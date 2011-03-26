@@ -106,7 +106,7 @@ void Validator::checkSelect(QueryTable &table){
 			}
 
 		}
-		else if(int(table.getSelectClause().at(i).tuple.size()) == 1)
+		else if(int(table.getSelectClause().at(i).tuple.size()) == 2)
 		{
 			if( !(table.getSelectClause().at(i).tuple.at(0) >=51 && table.getSelectClause().at(i).tuple.at(0) <=60))
 			{
