@@ -110,13 +110,20 @@ void Validator::checkSelect(QueryTable &table){
 		{
 			if( !(table.getSelectClause().at(i).tuple.at(0) >=51 && table.getSelectClause().at(i).tuple.at(0) <=60))
 			{
-				throw new string ("first prefix undefined in select clause! -- throw by Validator::checkSelect -- size = 1");
+				throw new string ("first prefix undefined in select clause! -- throw by Validator::checkSelect -- size = 2");
+			}
+		}
+		else if(int(table.getSelectClause().at(i).tuple.size()) == 1)
+		{
+			if( table.getSelectClause().at(i).tuple.at(0) !=60)
+			{
+				throw new string ("the prefix has to be BOOLEAN in select clause! -- throw by Validator::checkSelect -- size = 1");
 			}
 		}
 		else
 		{
 		
-			throw new string ("size error in select clause! -- throw by Validator::checkSelect -- size = 1");
+			throw new string ("size error in select clause! -- throw by Validator::checkSelect ");
 		}
 	}
 
