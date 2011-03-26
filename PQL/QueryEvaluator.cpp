@@ -645,6 +645,11 @@ void QueryEvaluator::evaluate()
 	//In case the returned mResult is empty, then insert -1 to the result.
 	vector<int> resultType = mResult.getTypes();
 	if(resultType.empty()) mResult.addInType(-1);
+
+
+	//Sort and condense the result
+	mResult.resultSort();
+
 }//End of evaluate
 
 
