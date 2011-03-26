@@ -1,0 +1,22 @@
+procedure p {
+       while x1 {
+               while x2 {
+                       if x3 then {
+                               while x4 {
+                                       x5 = 0;
+                               }
+                               x6 = 0;
+                       }  else {
+                               x7 = 0;
+                               while x8 {
+                                       x9 = 0;
+                                      x10 = 0;
+                                }
+                              x11 = 0;
+                              x12 = 0;
+                       }
+               }
+              x13 = 0;
+        }
+      x14 = 0;
+}
