@@ -1,38 +1,84 @@
-procedure Example {
-1 x = 1;
-2 y = x;
-3 z = y;
-4 call q1;
-5 i = x;
-6 call q2;
-7 x = z;
-8 while i {
-9	x = x - 1;
-10	if x then {
-11		x = x+1; }
-	else {
-12		y = z+x; }
-13	z = z + x + i;
-14	call q1;
-15	i = i - 1; }
-16 call p; 
+procedure First {
+1     x = 1;
+2      y = x;
+3    z = y;
+4     call Second;
+5    i = x;
+6    call Fifth;
+7    x = z;
+8     while i {
+9        x = x - 1;
+10        if x then {
+11            x = x+1; 
+
+   		 }else {
+
+ 12            y = z+x; 
+
+		}
+
+13         z = z + x + i;
+14         call Seventh;
+15         i = i - 1; 
+
 }
-procedure p {
-17 while i {
-18	x = z*3 + 2*y;
-19	call q2;
-20	while x {
-21		x = x + 1;}
-22	i = i - 1; 
+
+16     call Sixth;
 }
-23  z = z + x + i; 
+procedure  Second{
+17    while i {
+18        x = z*3 + 2*y;
+19        call Third;
+20        while x {
+21             x = x + 1;}
+22         i = i - 1;
+
 }
-procedure q1 {
-24 z = x + 1;
-25 x = z + x; 
+
+23     z = z + x + i;
 }
-procedure q2 {
-26 if i then {
-27	z = x + 1; }
+procedure Third {
+24     z = x + 1;
+25     x = z + x;
+}
+procedure Fourth{
+26     if i then {
+27        z = x + 1; }
+
 else {
-28	x = z + x; } }
+
+28        call Fifth;
+29         x = z + x; 
+
+} 
+
+}
+procedure Fifth{
+30    call Sixth;
+}
+
+procedure Sixth{
+31    while x{
+32        if i then{
+33            x = 10;
+34            while z {
+35                if p then{
+36                    p = 100;
+                }else{
+37                    d = 10;
+                }
+            }
+        }else{
+38            call Seventh;
+        }
+
+	}
+}
+
+procedure Seventh{
+39    p = 100;
+40    while z{
+41        t = 10;
+42        n = 200;
+    }
+}
