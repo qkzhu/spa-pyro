@@ -4,7 +4,8 @@
 
 #include "Tokenizer.h"
 
-
+bool LQuate=false;
+bool RQuate=false;
 
 // constructor
 Tokenizer::Tokenizer() : buffer(""), token(""), delimiter(DEFAULT_DELIMITER)
@@ -52,6 +53,7 @@ void Tokenizer::setDelimiter(const std::string& delimiter)
 // return the next token. If cannot find a token anymore, return "".
 std::string Tokenizer::next()
 {
+	
     if(buffer.size() <= 0) return "";           // skip if buffer is empty
 
     token.clear();                              // reset token string
@@ -59,11 +61,17 @@ std::string Tokenizer::next()
     this->skipDelimiter();                      // skip leading delimiters
 
     // append each char to token string until it meets delimiter
-    while(currPos != buffer.end() && !isDelimiter(*currPos))
+    while((currPos != buffer.end() && !isDelimiter(*currPos))||(LQuate==true&&RQuate==false))
     {
         token += *currPos;
+		if(*currPos=='\"'&&LQuate==false)
+		   LQuate=true;
+		else if(*currPos=='\"'&&LQuate==true)
+			RQuate=true;
         ++currPos;
     }
+	LQuate=false;
+	RQuate=false;
     return token;
 }
 

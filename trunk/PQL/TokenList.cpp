@@ -15,6 +15,7 @@ int TokenList::tokenList(string s)
 {   
 	
 	vector<string> temp1,temp2;
+	//temp1=tokenBy(s,"\"");
 	temp1=tokenBy(s," ");
 	
 	mergeVector(temp1);
@@ -43,6 +44,8 @@ vector<string> TokenList::tokenBy(string s,string deliminator)
 	vector<string> temp;
 	bool indicatorH=false,indicatorT=false;
 	string pch;
+	
+	
 	tokenizer.set(s,deliminator);
 	pch=tokenizer.next();
 	if(deliminator==" "||s.substr(s.size()-1,1)==deliminator)
@@ -75,6 +78,7 @@ vector<string> TokenList::tokenBy(string s,string deliminator)
 		//cout<<"error tokenize with"<<deliminator<<endl;
 		throw new string("error tokenize with"+deliminator);
 	}
+	
 	return temp;
 }
 int TokenList::TokenListLength(vector<string> s)
@@ -124,3 +128,4 @@ void TokenList::showTokenList()
  {
 
  }
+ 

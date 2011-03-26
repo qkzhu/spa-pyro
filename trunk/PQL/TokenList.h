@@ -22,5 +22,6 @@ private:
 	 vector<string> tokenBy(string s,string deliminator);
 	 void mergeVector(vector<string>vector);
 	 int TokenListLength(vector<string> s);
+
 };
 #endif;
