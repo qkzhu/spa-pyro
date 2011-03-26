@@ -149,11 +149,11 @@ void QueryEvaluator::evaluate()
 			entry_type = mQueryTree->getIndex("procOfSimpl");
 		else throw new string("with clause error type");
 
-		for(vector<int>::iterator i=tmp.begin(); i< tmp.end(); i++)
+		for(vector<int>::iterator count_t=tmp.begin(); count_t< tmp.end(); count_t++)
 			for(vector<int>::iterator k = tmp2.begin(); k<tmp2.end(); k++){
-				if(*i == *k) {
+				if(*count_t == *k) {
 					vector<int> entry;
-					int entry_array [] = {entry_type, *i, entry_type, *k};
+					int entry_array [] = {entry_type, *count_t, entry_type, *k};
 					entry.insert(entry.end(), entry_array, entry_array+4);
 					with_result.push_back(entry);
 				}
@@ -169,7 +169,7 @@ void QueryEvaluator::evaluate()
 			mgTupleIndexing.push_back(p1_name);
 		else
 		{
-			for(vector<int>::iterator i = mgTupleIndexing.begin(); i<=it; i++){
+			for(vector<int>::iterator count_t = mgTupleIndexing.begin(); count_t<=it; count_t++){
 				same1Tuple1++;
 			}
 			numOfCommonElement = 2;
@@ -194,9 +194,13 @@ void QueryEvaluator::evaluate()
 			return;
 		}
 
-		joinTuples(eva_tuple, with_result, numOfCommonElement, same1Tuple1, same2Tuple1);
+		joinTuples(eva_tuple, with_result, numOfCommonElement, same1Tuple1, same2Tuple1, i);
 	}//while: With clause evaluation End
 
+	//AutoTester Collaborative
+	//if(AbstractWrapper::GlobalStop){
+	//	throw new string("GlobalStop, time out!");
+	//}
 	
 
 	//Pattern_PQL Evaluation Start
@@ -277,6 +281,11 @@ void QueryEvaluator::evaluate()
 			}
 		}
 	}//Pattern_PQL Evaluation Finish
+
+	//AutoTester Collaborative
+	//if(AbstractWrapper::GlobalStop){
+	//	throw new string("GlobalStop, time out!");
+	//}
 	
 	//Start evaluating SuchThat clauses
 	int suchThatSize = mQueryTree->suchThatSize();
@@ -465,8 +474,8 @@ void QueryEvaluator::evaluate()
 			}
 			numOfCommonElement = numOfCommonElement+2;
 		}
-		/*
-		cout << "relResult = " << endl;
+		
+		/*cout << "relResult = " << endl;
 		for(int p = 0; p < (int)relResult.size(); p++){
 			vector<int> tmp_store = relResult[p];
 			for(int j = 0; j < (int)tmp_store.size(); j++){
@@ -482,10 +491,10 @@ void QueryEvaluator::evaluate()
 		cout << endl;
 		cout << numOfCommonElement <<" "<< same1Tuple1 << " " <<  same2Tuple1 << endl;*/
 
-		joinTuples(eva_tuple, relResult, numOfCommonElement, same1Tuple1, same2Tuple1);
+		joinTuples(eva_tuple, relResult, numOfCommonElement, same1Tuple1, same2Tuple1, i);
 
-		/*
-		cout << "eva_tuple = " << endl;
+		
+		/*cout << "eva_tuple = " << endl;
 		for(int p = 0; p < (int)eva_tuple.size(); p++){
 			vector<int> tmp_store = eva_tuple[p];
 			for(int j = 0; j < (int)tmp_store.size(); j++){
@@ -495,6 +504,11 @@ void QueryEvaluator::evaluate()
 		}*/
 
 	}//while: such that evaluation END
+
+	//AutoTester Collaborative
+	//if(AbstractWrapper::GlobalStop){
+	//	throw new string("GlobalStop, time out!");
+	//}
 
 	if(is_bool_sel){  //If the select is boolean
 		if(with_size == 0 && suchThatSize == 0 && patternSize == 0){
@@ -568,7 +582,7 @@ void QueryEvaluator::evaluate()
 			else mResult.addInType(mQueryTree->getIndex("integer")); 
 		}
 
-		/* ///////////////////////////////////////////////////////////////TESTING ///////////////////////////
+		/*///////////////////////////////////////////////////////////////TESTING ///////////////////////////
 		cout << "selection_candidate check" << endl;
 		for(int i = 0; i < (int)selection_candidates.size(); i++){
 			vector<int> tmp_sto = selection_candidates[i];
@@ -577,15 +591,15 @@ void QueryEvaluator::evaluate()
 			}
 			cout << endl;
 		}
-		cout << "Checking finish!!!" << endl;
-		*/
+		cout << "Checking finish!!!" << endl;*/
+		
 
 		//Join all the variable candidates
 		vector<vector<int> > final_result;
 		joinSelection(final_result, selection_candidates);
 		
 		/* //////////////////////////////////////////////////TESTING/////////////////////////////////////
-		cout << "Final_result check" << endl;
+		cout << "Final_result check: " << endl;
 		for(int i = 0; i < (int)final_result.size(); i++){
 			vector<int> tmp_sto = final_result[i];
 			for(int j = 0; j < (int)tmp_sto.size(); j++){
@@ -646,7 +660,21 @@ void QueryEvaluator::joinSelection(vector<vector<int> >& pre_tuple, vector<vecto
 			tmp.push_back(tmp_tuple.at(j));
 			new_tuple.push_back(tmp);
 		}
-		joinTuples(pre_tuple, new_tuple, 0, 0, 0);
+		
+		vector<vector<int> > tmp_result;
+		if(pre_tuple.empty())
+			pre_tuple = new_tuple;
+		else{
+			for(int i = 0; i< (int)pre_tuple.size(); i++){
+				for(int k = 0; k< (int)new_tuple.size(); k++){
+					vector<int> join_entry;
+					join_entry.insert(join_entry.end(), pre_tuple[i].begin(), pre_tuple[i].end());
+					join_entry.insert(join_entry.end(), new_tuple[k].begin(), new_tuple[k].end());
+					tmp_result.push_back(join_entry);
+				}
+			}
+			pre_tuple = tmp_result;
+		}
 	}
 }
 
@@ -727,16 +755,17 @@ void QueryEvaluator::evalPattern_PQL(vector<vector<int> >& result_tuple, vector<
 		throw new string("QueryEvaluator::evalPattern_PQL, no such variable type!");
 }
 
-void QueryEvaluator::joinTuples(vector<vector<int> >& eva_tuple, vector<vector<int> >& pre_tuple, int common_num, int same1_tuple1, int same2_tuple1){
-		if(common_num == 2)
+void QueryEvaluator::joinTuples(vector<vector<int> >& eva_tuple, vector<vector<int> >& pre_tuple, int common_num, int same1_tuple1, int same2_tuple1, int first_time){
+		if(common_num == 2){
 			if(same1_tuple1 != 0)
 				eva_tuple = TupleOperations::tupleJoinOneC(same1_tuple1, 0, eva_tuple, pre_tuple);
 			else eva_tuple = TupleOperations::tupleJoinOneC(same2_tuple1, 1, eva_tuple, pre_tuple);
-		else if(common_num == 4){
+		}else if(common_num == 4){
 			eva_tuple = TupleOperations::tupleJoinTwoC(same1_tuple1, same2_tuple1, eva_tuple, pre_tuple);
-		}else if((int) eva_tuple.size() == 0)
-			eva_tuple = pre_tuple;
-		else{
+		}else if((int) eva_tuple.size() == 0){
+			if(first_time == 0)
+				eva_tuple = pre_tuple;
+		}else{
 			vector<vector<int> > tmp_store;
 			for(vector<vector<int> >::iterator i = eva_tuple.begin(); i<eva_tuple.end(); i++)
 				for(vector<vector<int> >::iterator k = pre_tuple.begin(); k<pre_tuple.end(); k++){
@@ -1503,8 +1532,8 @@ void QueryEvaluator::getAllType(vector<int>& result, int type){
 	else if(type == mQueryTree->getIndex("while")) mPKBObject->ast_GetAllWhile(result);
 	else if(type == mQueryTree->getIndex("if")) mPKBObject->ast_GetAllIf(result);
 	else if(type == mQueryTree->getIndex("call")) mPKBObject->ast_GetAllCall(result);
-	else if(type == mQueryTree->getIndex("variable")) getAllProc(result);
-	else if(type == mQueryTree->getIndex("procedure")) getAllVar(result);
+	else if(type == mQueryTree->getIndex("variable")) getAllVar(result);
+	else if(type == mQueryTree->getIndex("procedure")) getAllProc(result);
 	else if(type == mQueryTree->getIndex("constant")) mPKBObject->cTable_GetAllConstants(result);
 	else throw new string("QueryEvaluator::getAllType, type not exist!");
 }

@@ -4,7 +4,7 @@
 #include <map>
 #include <algorithm>
 
-
+//#include "AbstractWrapper.h"
 #include "PqlPreprocessor.h"
 #include "PKB.h"
 #include "QueryResult.h"
@@ -41,7 +41,7 @@ private:
 	//read such that clause, deal with _ specifically
 	void underScore(int rel, vector<int> clause, int& para1, int& para1_type, int& para2, int& para2_type, int& var_code_ending);
 	//
-	void joinTuples(vector<vector<int> >& result, vector<vector<int> >& pre_tuple, int commonNum, int same1Tuple1, int same2Tuple1);
+	void joinTuples(vector<vector<int> >& result, vector<vector<int> >& pre_tuple, int commonNum, int same1Tuple1, int same2Tuple1, int first_time);
 	
 	//Deal with no selected elements in the result_tuple and patial case
 	void joinSelection(vector<vector<int> >& pre_tuple, vector<vector<int> >& candidates);
