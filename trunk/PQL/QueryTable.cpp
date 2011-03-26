@@ -22,23 +22,20 @@ void QueryTable::addClause(int type, vector<int> content){
 		}
 		else  //content is tuple
 		{   
-
-			vector<int>::iterator it;
-			for (it = content.begin(); it < content.end(); it++)
+			Select selectTemp;
+			selectTemp.tuple = content;
+			selectClause.push_back(selectTemp);
+			
+			//for display
+			if(selectVector.size()>1)
 			{
-				Select selectTemp;
-				if(selectVector.size()>1)
-				{
-					selectVector.push_back(-1);
-				}
-				selectTemp.tuple.push_back(*it);
-				selectVector.push_back(*it);
-				it = it+1;
-				selectTemp.tuple.push_back(*it);
-				selectVector.push_back(*it);
-
-				selectClause.push_back(selectTemp);
-			}		
+				selectVector.push_back(-1);
+			}
+			for(int i= 0; i<int(content.size());i++)
+			{
+				selectVector.push_back(content.at(i));
+			}
+	
 		}
 		
 	}
