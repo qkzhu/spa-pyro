@@ -153,7 +153,6 @@ vector<int> Validator::getIndex(vector<vector<int>> table, int name){
 			index.push_back(i);
 		}
 	}
-
 	return index;
 }
 
@@ -196,13 +195,13 @@ void Validator::checkSuchThat(QueryTable &table){
 		*/
 		//cout<<"index "<<index.size()<<endl;
 
-		
+		/*
 		for(int i=0;i<index.size();i++)
 		{
 			cout<<index.at(i)<<" "<<endl;
 		}
 		cout<<endl;
-		
+		*/
 		vector<int>::iterator it;
 		for(it = index.begin();it<index.end();it++)
 		{
@@ -224,6 +223,10 @@ void Validator::checkSuchThat(QueryTable &table){
 			}
 			else if(suchThat.size() == 3)
 			{
+				if(suchThat.at(0) == 9 || suchThat.at(0) == 10)
+				{
+					continue;
+				}
 				if((suchThat.at(1) == 157) && (suchThat.at(2) == 157))
 				{
 					tempNoError = true;
