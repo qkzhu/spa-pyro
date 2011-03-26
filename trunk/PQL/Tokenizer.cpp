@@ -61,7 +61,7 @@ std::string Tokenizer::next()
     this->skipDelimiter();                      // skip leading delimiters
 
     // append each char to token string until it meets delimiter
-    while((currPos != buffer.end() && !isDelimiter(*currPos))||(LQuate==true&&RQuate==false))
+    while(currPos != buffer.end() && (!isDelimiter(*currPos)||(LQuate==true&&RQuate==false)))
     {
         token += *currPos;
 		if(*currPos=='\"'&&LQuate==false)
@@ -70,6 +70,7 @@ std::string Tokenizer::next()
 			RQuate=true;
         ++currPos;
     }
+	if(LQuate==true&&RQuate==false) throw new std::string("miss RQuate");
 	LQuate=false;
 	RQuate=false;
     return token;

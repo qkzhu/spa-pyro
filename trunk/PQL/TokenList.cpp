@@ -75,6 +75,7 @@ vector<string> TokenList::tokenBy(string s,string deliminator)
 	}
 	else if(length>(int)s.length())
 	{
+		//if(s.find_first_of(deliminator)==0)
 		//cout<<"error tokenize with"<<deliminator<<endl;
 		throw new string("error tokenize with"+deliminator);
 	}
