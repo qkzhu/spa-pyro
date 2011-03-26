@@ -103,6 +103,8 @@ void QueryResult::resultSort(){
 		if(equalityCompare(mTupleResult[i-1], mTupleResult[i])){
 			equilities.push_back(i);
 		}else{
+			if(i == mTupleResult.size() -1) 
+				tmp_store.push_back(mTupleResult[i]);
 			tmp_store.push_back(mTupleResult[equilities[0]]);
 			equilities.clear();
 			equilities.push_back(i);
