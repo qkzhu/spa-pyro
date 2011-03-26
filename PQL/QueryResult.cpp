@@ -95,7 +95,6 @@ void QueryResult::resultSort(){
 
 	sort(mTupleResult.begin(), mTupleResult.end(), myCompare);
 
-
 	//Eliminate duplicates
 	vector<vector<int> > tmp_store;
 	vector<int> equilities; //keeps equal tuples' indexes
