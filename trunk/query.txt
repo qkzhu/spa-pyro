@@ -1,2 +1,2 @@
 stmt s, s1; assign a; while w; if ifstat;
-select a pattern a( _ , _);
+select a pattern a( "x" , _);
