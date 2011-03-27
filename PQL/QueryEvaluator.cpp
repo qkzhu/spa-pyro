@@ -405,17 +405,18 @@ void QueryEvaluator::evaluate()
 			//Check whether the parameters are assign
 			vector<int> assigns;
 			mPKBObject->ast_GetAllAssign(assigns);
-			for(int i = 0; i< (int)para1_collection.size(); i++){
-				int found = find_ele(assigns, para1_collection[i]);
+			for(int i = 0; i< (int)para1_collection.size(); ){
+				int ele = para1_collection[i];
+				int found = find_ele(assigns, ele);
 				if(found == (int)assigns.size()){
 					para1_collection.erase(para1_collection.begin() + i);
-				}
+				}else i++;
 			}
-			for(int i = 0; i< (int)para2_collection.size(); i++){
+			for(int i = 0; i< (int)para2_collection.size();){
 				int found = find_ele(assigns, para2_collection[i]);
 				if(found == (int)assigns.size()){
 					para2_collection.erase(para2_collection.begin() + i);
-				}
+				}else i++;
 			}
 			//evaluate affects
 			evalAffects(relResult, para1_collection, para2_collection);
@@ -423,17 +424,17 @@ void QueryEvaluator::evaluate()
 			//Check whether the parameters are assign
 			vector<int> assigns;
 			mPKBObject->ast_GetAllAssign(assigns);
-			for(int i = 0; i< (int)para1_collection.size(); i++){
+			for(int i = 0; i< (int)para1_collection.size();){
 				int found = find_ele(assigns, para1_collection[i]);
 				if(found == (int)assigns.size()){
 					para1_collection.erase(para1_collection.begin() + i);
-				}
+				}else i++;
 			}
-			for(int i = 0; i< (int)para2_collection.size(); i++){
+			for(int i = 0; i< (int)para2_collection.size();){
 				int found = find_ele(assigns, para2_collection[i]);
 				if(found == (int)assigns.size()){
 					para2_collection.erase(para2_collection.begin() + i);
-				}
+				}else i++;
 			}
 			//evaluate affects star
 			evalAffectsStar(relResult, para1_collection, para2_collection);
@@ -1313,7 +1314,7 @@ bool QueryEvaluator::affects(int stmt1, int stmt2){
 
 	if(found1 != (int)used.size() && found2 != (int)nexts.size()){
 		bool find_dest = false;
-		bool has_non_mod_path = nonModPath(stmt1, modified, stmt2, stmt2, find_dest);
+		bool has_non_mod_path = nonModPath(stmt1, modified, stmt2, stmt2, find_dest, true);
 		if(has_non_mod_path) return true;
 		else return false;
 	}else return false;
@@ -1440,18 +1441,20 @@ bool QueryEvaluator::isInsideIf(int ifstat, int stmt){
 }
 
 //Check whether there is a non-mod path for variable mod in the stmt
-bool QueryEvaluator::nonModPath(int s, int mod, int dest, int final, bool& find_dest){
+bool QueryEvaluator::nonModPath(int s, int mod, int dest, int final, bool& find_dest, bool init){
 	find_dest = false;
 
 	int next = s;
 	if(s <= 0)
 		return true;
 	
-	if(next == final) {
-		find_dest = true;
-		return true;
+	if(!init){
+		if(next == final) {
+			find_dest = true;
+			return true;
+		}
+		if(s == dest) return true;
 	}
-	if(s == dest) return true;
 
 	bool is_if = isIf(next);
 	bool is_while = isWhile(next);
@@ -1469,11 +1472,11 @@ bool QueryEvaluator::nonModPath(int s, int mod, int dest, int final, bool& find_
 		bool non_mod_path2;
 
 		if((!is_in_if) || is_in_if && joint_node != -1){
-			non_mod_path1 = nonModPath(thenC, mod, joint_node, final, find_dest1);
-			non_mod_path2 = nonModPath(elseC, mod, joint_node, final, find_dest2);
+			non_mod_path1 = nonModPath(thenC, mod, joint_node, final, find_dest1, false);
+			non_mod_path2 = nonModPath(elseC, mod, joint_node, final, find_dest2, false);
 		}else{
-			non_mod_path1 = nonModPath(thenC, mod, final, final, find_dest1);
-			non_mod_path2 = nonModPath(elseC, mod, final, final, find_dest2);
+			non_mod_path1 = nonModPath(thenC, mod, final, final, find_dest1, false);
+			non_mod_path2 = nonModPath(elseC, mod, final, final, find_dest2, false);
 			if(find_dest1){
 				find_dest = true;
 				return non_mod_path1;
@@ -1494,7 +1497,7 @@ bool QueryEvaluator::nonModPath(int s, int mod, int dest, int final, bool& find_
 			return non_mod_path2;
 		}
 		if(!non_mod_path1 && !non_mod_path2) return false;
-		else return nonModPath(joint_node, mod, dest, final, find_dest);
+		else return nonModPath(joint_node, mod, dest, final, find_dest, false);
 	}else if(is_while){
 		bool is_in_while = isInsideWhile(next, dest);
 		vector<int> tmp_nexts;
@@ -1508,24 +1511,28 @@ bool QueryEvaluator::nonModPath(int s, int mod, int dest, int final, bool& find_
 		}else inner = tmp_nexts[0];
 	
 		if(is_in_while)
-			return nonModPath(inner, mod, dest, final, find_dest);
-		else if(size == 2) return nonModPath(outer, mod, dest, final, find_dest);
+			return nonModPath(inner, mod, dest, final, find_dest, false);
+		else if(size == 2) return nonModPath(outer, mod, dest, final, find_dest, false);
 		else return true;
 	}else{
 		vector<int> modifies;
 		vector<int> tmp_nexts;
-		getNextPure(DOWN, tmp_nexts, next);
-		next = tmp_nexts[0];
-		if(next == final){
-			find_dest = true;
-			return true;
-		}
+		int found;
 
-		mPKBObject->mTable_getModifiedVar(modifies, next); 
-		int found = find_ele(modifies, mod);
+		if(init){
+			getNextPure(DOWN, tmp_nexts, next);
+			next = tmp_nexts[0];
+			mPKBObject->mTable_getModifiedVar(modifies, next); 
+			found = find_ele(modifies, mod);
+		}else{
+			mPKBObject->mTable_getModifiedVar(modifies, next); 
+			found = find_ele(modifies, mod);
+			getNextPure(DOWN, tmp_nexts, next);
+			next = tmp_nexts[0];
+		}		
 		if(found != (int)modifies.size())
 			return false;
-		else return nonModPath(next, mod, dest, final, find_dest);
+		else return nonModPath(tmp_nexts[0], mod, dest, final, find_dest, false);
 	}
 	return true;
 }
