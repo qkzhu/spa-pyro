@@ -10,7 +10,7 @@
 #include "QueryResult.h"
 #include "TupleOperations.h"
 
-#define ENCODE_ENDING 500  //I need to use it when I meet '_' in relation to create new variable
+#define ENCODE_ENDING 500  //I need to use it when I meet '_' and constant in relation to create new variable for join
 
 
 class QueryEvaluator{
@@ -108,7 +108,7 @@ private:
 
 	int find_ele(const vector<int>& in, const int ele);//If the element is found in the vector, return its index; otherwise return the size of the vector.
 
-	bool nonModPath(int s, int mod, int dest, int final, bool& find_dest); //Check whether there is a non-mod path for variable mod in the stmt
+	bool nonModPath(int s, int mod, int dest, int final, bool& find_dest, bool init); //Check whether there is a non-mod path for variable mod in the stmt
 
 
 public:

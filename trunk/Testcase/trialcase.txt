@@ -763,20 +763,20 @@ none
 153
 assign a;
 select a such that pattern a("x","1x");
-throw error
+none
 5000
 154
 assign a;
 select a such that pattern a("x",);
-throw error
+none
 5000
 155
 assign a;
 select a such that pattern a("x",_"z"_"x+y"_);
-throw error
+none
 5000
 156
 assign a;
 select a such that pattern a("x",_"x+y*z}"_);
-throw error
+none
 5000

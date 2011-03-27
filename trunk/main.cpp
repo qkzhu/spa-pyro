@@ -39,7 +39,6 @@ int main(int argc, char* argv[]){
 		cout << *s << endl;
 	}
 
-
 	system("pause");
 	return 0;
 }
