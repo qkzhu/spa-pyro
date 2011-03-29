@@ -66,7 +66,7 @@ void Validator::checkSelect(QueryTable &table){
 			{
 				throw new string ("short of DOT ! -- throw by Validator::checkSelect -- size = 4");
 			}
-			//stmt, call, assign, while, if -- attrName: ‘stmt#’
+			//stmt, call, assign, while, if -- attrName: ‘stmt#?
 			if (table.getSelectClause().at(i).tuple.at(0) == 51 || table.getSelectClause().at(i).tuple.at(0) == 53 || table.getSelectClause().at(i).tuple.at(0) == 54 || table.getSelectClause().at(i).tuple.at(0) == 55 || table.getSelectClause().at(i).tuple.at(0) == 59)
 			{
 				if(table.getSelectClause().at(i).tuple.at(3)!=104)
@@ -75,7 +75,7 @@ void Validator::checkSelect(QueryTable &table){
 				}	
 
 			}
-			//prog_line, constant c -- attrName: ‘value’
+			//prog_line, constant c -- attrName: ‘value?
 			else if(table.getSelectClause().at(i).tuple.at(0) == 52 || table.getSelectClause().at(i).tuple.at(0) == 56)
 			{
 				if(table.getSelectClause().at(i).tuple.at(3)!=101)
@@ -83,7 +83,7 @@ void Validator::checkSelect(QueryTable &table){
 					throw new string ("attribute error in select clause! -- throw by Validator::checkSelect  -- size = 4");
 				}
 			}
-			//variable  -- attrName: ‘varName’
+			//variable  -- attrName: ‘varName?
 			else if (table.getSelectClause().at(i).tuple.at(0) == 57)
 			{
 				if(table.getSelectClause().at(i).tuple.at(3)!=102)
@@ -92,7 +92,7 @@ void Validator::checkSelect(QueryTable &table){
 				}
 		
 			}
-			//procedure  --- attrName: ‘procName’
+			//procedure  --- attrName: ‘procName?
 			else if (table.getSelectClause().at(i).tuple.at(0) == 58)
 			{
 				if(table.getSelectClause().at(i).tuple.at(3)!=103)
@@ -178,10 +178,52 @@ void Validator::checkSuchThat(QueryTable &table){
 			noError = tempNoError && noError;
 			break;
 		}
-
 		vector<int> suchThat;
 		vector<int> index;
 		suchThat =table.getSuchThatClauseV().at(i).relCond;	
+
+		//check for empty string for varOfSimple and procOfSimple
+		for(int j=0;j<int(suchThat.size());j++)
+		{
+			if(suchThat.at(j) == 202 ||suchThat.at(j) == 203)
+			{
+				if((j+1)<int(suchThat.size()))
+				{
+					string tempString = Convertor::getKeyword(suchThat.at(j+1));
+					cout<<"tempString "<<tempString<<endl;
+					if(int(tempString.size())<2)
+					{
+						if(suchThat.at(j) == 202)
+						{
+							throw new string("varOfSimple size is wrong -- throw by Validator::checkSuchThat");
+						}
+						else if(suchThat.at(j) == 203)
+						{
+							throw new string("procOfSimple size is wrong -- throw by Validator::checkSuchThat");
+						}
+					}
+					if(tempString == "\"\"")
+					{
+						throw new string("nothing inside the double quotes -- throw by Validator::checkSuchThat");
+					}
+					else
+					{
+						if(tempString.at(0) != '\"' || tempString.at(int(tempString.size())-1) !='\"')
+						{
+							throw new string("format error in first argument -- throw by Validator::checkSuchThat");
+						}
+					}
+					
+				}
+				else
+				{
+					throw new string("no parameter after prefix! -- throw by Validator::checkSuchThat");
+				}
+			
+			}
+		
+		}
+		
 		
 		//cout<<"haha "<<suchThat[0]<<endl;
 		//cout<<"suchThatTable size "<<suchThatTable.size()<<endl;
@@ -313,6 +355,7 @@ void Validator::checkPattern_PQL(QueryTable &table){
 
 	int size =  (int) table.getPattern_PQLClause().size();
 
+
 	for(int i=0; i<size;i++)
 	{
 		bool tempNoError = false;
@@ -401,7 +444,13 @@ void Validator::checkPattern_PQL(QueryTable &table){
 				throw new string("size error -- throw by Validator::checkPattern_PQL -  IF ");
 			}
 		}
-
+		/*
+		for(int i=0;i<int(pattern.size());i++)
+		{
+			cout<<pattern.at(i)<<" ";
+		}
+		cout<<endl;
+		*/
 		checkPattern_PQLThree(pattern);
 	}
 }
@@ -539,15 +588,35 @@ void Validator::checkPattern_PQLThree(vector<int> &patternExpression){
 
 	//cout<<patternExpression.at(0)<<endl;
 	//cout<<patternExpression.size()<<endl;
-
+	
+	//cout<<"patternExpression.at(2)  "<<patternExpression.at(2)<<endl;
+	if(patternExpression.at(2) == PATTERNOFSIMPLE)
+	{
+		string tempString = Convertor::getKeyword(patternExpression.at(3));
+		//cout<<"tempString "<<tempString<<endl;
+		if(int(tempString.size())<2)
+		{
+			throw new string("first argument size is wrong -- throw by Validator::checkPattern_PQLThree");
+		}
+		if(tempString == "\"\"")
+		{
+			throw new string("nothing inside the double quotes -- throw by Validator::checkPattern_PQLThree");
+		}
+		else
+		{
+			if(tempString.at(0) != '\"' || tempString.at(int(tempString.size())-1) !='\"')
+			{
+				throw new string("format error in first argument -- throw by Validator::checkPattern_PQLThree");
+			}
+		}
+	}
+	
 	for(int i=0; i < int(patternExpression.size());i++)
 	{
 		//cout<<patternExpression.at(i)<< " "; 
 		
 		if(patternExpression.at(i) == PATTERNOFSIMPLE)
-		{
-			
-			
+		{		
 			if((i+1) > int(patternExpression.size()))
 			{
 				throw new string("index out of range -- throw by Validator::checkPattern_PQLThree");
@@ -555,14 +624,22 @@ void Validator::checkPattern_PQLThree(vector<int> &patternExpression){
 			
 			//cout<<getString(patternExpression.at(i+1))<<"----------------------get string----------------- "<<endl;
 			
+			//cout<<"haha"<<endl;
+			//cout<<"get keyword: "<<Convertor::getKeyword(patternExpression.at(i+1))<<endl;
 			
-			checkPattern_PQLTwo(Convertor::getKeyword(patternExpression.at(i+1)));
-			//checkAssignPattern_PQL();
+			if(Convertor::getKeyword(patternExpression.at(i+1)) == "\"\"")
+			{
+				throw new string("nothing inside the double quotes -- throw by Validator::checkPattern_PQLThree");
+			}
+			else
+			{
+				checkPattern_PQLTwo(Convertor::getKeyword(patternExpression.at(i+1)));
+			}
 			
 		}
 		
 	}
-	cout<<endl;
+	//cout<<endl;
 	
 }
 

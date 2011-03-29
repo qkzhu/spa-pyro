@@ -185,6 +185,7 @@ void QueryTable::addClause(int type, vector<int> content){
 	else if(type == PATTERN) // pattern type
 	{
 		Pattern_PQL patternTemp;
+		
 
 		if(int(content.size()) == 0) // nothing inside the content
 		{
@@ -225,6 +226,13 @@ void QueryTable::addClause(int type, vector<int> content){
 			}	
 		
 		}
+		else
+		{
+			throw new string ("the content is empty! -- throw by QueryTable::addClause");
+			
+		}
+
+	
 
 		patternTemp.expression = content;
 		patternClause.push_back(patternTemp);
