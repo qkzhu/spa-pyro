@@ -31,37 +31,61 @@ struct Pattern_PQL{
 
 enum KEYWORD
   {
-	AND=0,
-	SELECT=1,
-	SUCH_THAT=2,
-	WITH=3,
-	PATTERN=4,
-	USES=9,
-    MODIFIES=10,
-	CALLS=11,
-	CALLS_T=12,
-	//VALUE=101,
-	INT=201,
+	//query body
+	AND				=	0,
+	SELECT			=	1,
+	SUCH_THAT		=	2,
+	WITH			=	3,
+	PATTERN			=	4,
+	PARENT			=	5,
+    PARENT_T        =	6,
+    FOLLOWS			=	7,
+	FOLLOWS_T       =	8,
+	USES			=	9,
+    MODIFIES		=	10,
+	CALLS			=	11,
+	CALLS_T			=	12,
+	NEXT			=   13,
+    NEXT_T			=	14,
+    AFFECTS			=	15,
+    AFFECTS_T       =	16,
+
+	//variable types
+	STMT			=	51,
+	PROG_L			=	52,
+	ASSIGN			=	53,
+	WHILE			=	54,	
+	IF				=	55,
+	CONSTANT        =	56,
+	VARIABLE        =	57,
+	PROCEDURE		=	58,
+	CALL			=	59,
+	BOOLEAN			=	60,
+
+
+	//variable attributes
+	VALUE           =	101,
+	VARNAME			=	102,
+	PROCNAME        =	103,
+	STMT_NUM        =	104,	
+
+
+	//punctuations
+	COMMA			=	151,
+	S_COLON			=	152,
+	L_QUOT			=	153,
+	R_QUOT			=	154,
+	EQUAL			=	155,
+	DOT				=	156,
+	UNDERSCORE		=	157,
+	QUOTE			=	158,
+	L_ARROW			=	159,
+	R_ARROW			=	160,
 	
-	ASSIGN=53,
-	WHILE=54,	
-	IF=55,
-	CALL=59,
-	STMT=51,
-	
-	COMMA=151,
-	S_COLON	=152,
-	L_QUOT	=153,
-	R_QUOT	=154,
-	EQUAL	=155,
-	DOT		=156,
-	UNDERSCORE =157,
-	QUOTE	=158,
-	L_ARROW =159,
-	R_ARROW =160,
-	BOOLEAN	=60,
-	VAROFSIMPLE =	202,
-	PATTERNOFSIMPLE = 205
+	INT				=	201,
+	VAROFSIMPLE		=	202,
+	PROCOFSIMPLE	=	203,
+	PATTERNOFSIMPLE =	205
   };
 
 #endif //DATASTRUCTURE_H
