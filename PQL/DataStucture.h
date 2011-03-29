@@ -25,6 +25,7 @@ struct Declaration{
 
 struct Pattern_PQL{
 	bool argumentNoCorrect;
+	int patternStringNo;
 	vector<int> expression;
 };
 
