@@ -190,7 +190,7 @@ void Validator::checkSuchThat(QueryTable &table){
 				if((j+1)<int(suchThat.size()))
 				{
 					string tempString = Convertor::getKeyword(suchThat.at(j+1));
-					cout<<"tempString "<<tempString<<endl;
+					//cout<<"tempString "<<tempString<<endl;
 					if(int(tempString.size())<2)
 					{
 						if(suchThat.at(j) == 202)
@@ -315,6 +315,48 @@ void Validator::checkWith(QueryTable &table){
 		with =  table.getWithClauseV().at(i).attrCond;
 		//cout<<"with[0] is "<<with[0]<<endl;
 		index = getIndex(withTable, with[0]);
+
+				for(int j=0;j<int(with.size());j++)
+		{
+			if(with.at(j) == 202 ||with.at(j) == 203)
+			{
+				if((j+1)<int(with.size()))
+				{
+					string tempString = Convertor::getKeyword(with.at(j+1));
+					//cout<<"tempString "<<tempString<<endl;
+					if(int(tempString.size())<2)
+					{
+						if(with.at(j) == 202)
+						{
+							throw new string("varOfSimple size is wrong -- throw by Validator::checkWith");
+						}
+						else if(with.at(j) == 203)
+						{
+							throw new string("procOfSimple size is wrong -- throw by Validator::checkWith");
+						}
+					}
+					if(tempString == "\"\"")
+					{
+						throw new string("nothing inside the double quotes -- throw by Validator::checkWith");
+					}
+					else
+					{
+						if(tempString.at(0) != '\"' || tempString.at(int(tempString.size())-1) !='\"')
+						{
+							throw new string("format error in first argument -- throw by Validator::checkWith");
+						}
+					}
+					
+				}
+				else
+				{
+					throw new string("no parameter after prefix! -- throw by Validator::checkWith");
+				}
+			
+			}
+		
+		}
+
 
 		//cout<<"index size is "<<index.size()<<endl; 
 		for(int it = 0;it<(int) index.size();it++)
