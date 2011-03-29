@@ -1,0 +1,21 @@
+procedure p {
+1       if s then {
+2               s = s+1;
+        }  else {
+3               if s then {
+4                       s = s+2;
+5                       if x then {
+6                               while i {
+7                                       x = 1;
+8                                       y = 4;
+9                                       z = x*y;
+                                }
+                        }  else {
+10                              x = x;
+                        }
+                }  else {
+11                      s = s;
+12                      x = x*2+3+y*z;
+                }
+        }
+}

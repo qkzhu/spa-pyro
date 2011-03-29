@@ -1,0 +1,33 @@
+procedure p{
+	call r;
+	while x{
+		call t;
+		if xx then {
+			call r;
+		}
+		else{
+			y = x*3 + 3;
+		}
+		x = x +1;
+		while x {
+			call t;
+			if y then {
+				x = y;
+			}
+			else {
+				x = Y + 1;
+				while i {
+					i = i +1;
+				}
+			}
+		}
+	}
+}
+procedure r{
+x = y*s + t + q + e +  u;
+}
+procedure t{
+while x{
+	x = 7;
+}
+}
