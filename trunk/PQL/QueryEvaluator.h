@@ -4,7 +4,7 @@
 #include <map>
 #include <algorithm>
 
-//#include "AbstractWrapper.h"
+#include "AbstractWrapper.h"
 #include "PqlPreprocessor.h"
 #include "PKB.h"
 #include "QueryResult.h"
@@ -21,13 +21,17 @@ private:
 	QueryResult mResult;  //The final result in QueryResult.
 	std::vector<int> mgTupleIndexing; //The global indexing for tuple evaluation, corresponding to the current tuple result
 	
-	//for use when in with clause, there is sth like v.varName = p.varName .... OLD WAY
-	//If contains only the pair of variable codes, no type needed.
+	//for use when in with clause, there is sth like v.varName = p.varName
+	//it contains only the pair of variable codes, prefixed with the variable type
 	vector<int> equal_vars;
 
 	//maps the variable to the value assigned in With clause, attr 1 is the variable string in its code
-	//The value must have the type indicated
+	//the value must have the constant type indicated
 	map<int, vector<int> > var_value_table;
+
+	//maps the variable and the pattern evaluated candidates.
+	//the value must have the constant type indicated in the beginning of the vector
+	map<int, vector<int> > pattern_var_candidates;
 
 
 	//Evaluating query functions
@@ -93,11 +97,6 @@ private:
 	string PQL_varDecode(int);
 	int PQL_varEncode(string);
 
-	int PKB_procEncode(string);
-	string PKB_procDecode(int);
-	int PKB_varEncode(string);
-	string PKB_varDecode(int);
-
 	void getAllType(vector<int>& result, int type);
 
 	bool isIf(int stmt);
@@ -115,6 +114,14 @@ public:
 	QueryEvaluator(PKB *, PqlPreprocessor *);  //Constructor
 	void evaluate();//Preprocessor call evaluate to pass Query tree to Evaluator
 	QueryResult getResult();//After calling evaluate, the result stored inside mResult and can be retrieved by this function.
+
+
+	//Put these functions public for autotester uses
+	int PKB_procEncode(string);
+	string PKB_procDecode(int);
+	int PKB_varEncode(string);
+	string PKB_varDecode(int);
+
 
 	int PQL_getIndex(string);
 	void printResult();
