@@ -198,9 +198,9 @@ void QueryEvaluator::evaluate()
 	}//while: With clause evaluation End
 
 	//AutoTester Collaborative
-	if(AbstractWrapper::GlobalStop){
-		throw new string("GlobalStop, time out!");
-	}
+	//if(AbstractWrapper::GlobalStop){
+	//	throw new string("GlobalStop, time out!");
+	//}
 	
 
 	//Pattern_PQL Evaluation Start
@@ -283,9 +283,9 @@ void QueryEvaluator::evaluate()
 	}//Pattern_PQL Evaluation Finish
 
 	//AutoTester Collaborative
-	if(AbstractWrapper::GlobalStop){
-		throw new string("GlobalStop, time out!");
-	}
+	//if(AbstractWrapper::GlobalStop){
+	//	throw new string("GlobalStop, time out!");
+	//}
 	
 	//Start evaluating SuchThat clauses
 	int suchThatSize = mQueryTree->suchThatSize();
@@ -507,9 +507,9 @@ void QueryEvaluator::evaluate()
 	}//while: such that evaluation END
 
 	//AutoTester Collaborative
-	if(AbstractWrapper::GlobalStop){
-		throw new string("GlobalStop, time out!");
-	}
+	//if(AbstractWrapper::GlobalStop){
+	//	throw new string("GlobalStop, time out!");
+	//}
 
 	if(is_bool_sel){  //If the select is boolean
 		if(with_size == 0 && suchThatSize == 0 && patternSize == 0){
@@ -831,6 +831,7 @@ void QueryEvaluator::evalParent(int star, vector<std::vector<int> >& result, con
 			vector<int> tmp1;
 			if(star == NOSTAR) mPKBObject->ast_GetChild(tmp1, in1);
 			else getChildStar(DOWN, tmp1, in1);
+			cout << "HERE" << endl;
 			if(tmp1[0] == -1) continue;    //continue this loop without eva this iteration
 			for(int i = 0; i < (int)para2.size(); i++)
 			{
@@ -1332,6 +1333,9 @@ void QueryEvaluator::getPattern_PQLAssign(vector<int>& result, string patternLef
 }
 
 void QueryEvaluator::getPattern_PQLCond(vector<int>& result, int type, string patternCond){
+	if(patternCond.compare("_") == 0)
+		return;
+
 	vector<int> tmp;
 	for(int i = 0; i < (int)result.size(); i++){
 		if(type == mQueryTree->getIndex("if")){

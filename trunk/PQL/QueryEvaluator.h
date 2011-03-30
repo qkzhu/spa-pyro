@@ -4,7 +4,7 @@
 #include <map>
 #include <algorithm>
 
-#include "AbstractWrapper.h"
+//#include "AbstractWrapper.h"
 #include "PqlPreprocessor.h"
 #include "PKB.h"
 #include "QueryResult.h"
