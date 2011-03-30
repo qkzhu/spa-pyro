@@ -57,7 +57,7 @@ public:
 
 private:
 	hash_map<int, Node*>	astList;					// procedure list, it stores the root of each procedure.
-	hash_map<int, Node*> StatNumAndNodeList;			// StatNumAndNodeList stores the relation between statement number and node.
+	hash_map<int, Node*>	StatNumAndNodeList;			// StatNumAndNodeList stores the relation between statement number and node.
 	hash_map<Node*, int>	NodeAndStatNumList;			// NodeAndStatNumList stores the relation between node and statement number.
 
 	void AST::getAllType(Node::NodeType nt, vector<int>& result);	// Return all statement number with the given node type.
