@@ -3,16 +3,16 @@
 
 
 TokenList *qu;
-int userdefine=PqlParser::USERDEFINED;
+int static userdefine=PqlParser::USERDEFINED;
 bool selectBool;
 /*
 given table and string, parse the string s and put the parse result into the table
 */
 void PqlParser::parser(string s,QueryTable *table) {
-	 
+  userdefine=PqlParser::USERDEFINED;
   selectBool=true;	
   qu=new TokenList(s);
-  qu->showTokenList();
+  //qu->showTokenList();
 
   Convertor::update();
   
@@ -111,6 +111,8 @@ void PqlParser::parser(string s,QueryTable *table) {
 }
 if (semi==false) throw new string("missing S_COLON in the end \n");
 if(selectBool==true) throw new string("missing select clause\n");
+//userdefine=PqlParser::USERDEFINED;//initial the userdefine;
+
 return;
 }
 
@@ -255,6 +257,7 @@ string PqlParser::selectParser(int type,TokenList *quPointer,QueryTable *tablePo
 					}
 					else
 					{
+						cout<<"this is the wrong index and should not appear here"<<index<<endl;
 						throw new string(pch+"should not apear in the select or select should not empty\n");
 					}
 					

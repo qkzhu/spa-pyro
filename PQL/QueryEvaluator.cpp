@@ -198,9 +198,9 @@ void QueryEvaluator::evaluate()
 	}//while: With clause evaluation End
 
 	//AutoTester Collaborative
-	//if(AbstractWrapper::GlobalStop){
-	//	throw new string("GlobalStop, time out!");
-	//}
+	if(AbstractWrapper::GlobalStop){
+		throw new string("GlobalStop, time out!");
+	}
 	
 
 	//Pattern_PQL Evaluation Start
@@ -283,9 +283,9 @@ void QueryEvaluator::evaluate()
 	}//Pattern_PQL Evaluation Finish
 
 	//AutoTester Collaborative
-	//if(AbstractWrapper::GlobalStop){
-	//	throw new string("GlobalStop, time out!");
-	//}
+	if(AbstractWrapper::GlobalStop){
+		throw new string("GlobalStop, time out!");
+	}
 	
 	//Start evaluating SuchThat clauses
 	int suchThatSize = mQueryTree->suchThatSize();
@@ -507,9 +507,9 @@ void QueryEvaluator::evaluate()
 	}//while: such that evaluation END
 
 	//AutoTester Collaborative
-	//if(AbstractWrapper::GlobalStop){
-	//	throw new string("GlobalStop, time out!");
-	//}
+	if(AbstractWrapper::GlobalStop){
+		throw new string("GlobalStop, time out!");
+	}
 
 	if(is_bool_sel){  //If the select is boolean
 		if(with_size == 0 && suchThatSize == 0 && patternSize == 0){
