@@ -508,7 +508,7 @@ none
 102
 stmt s, s1;
 select s such that parent (s, s1) with s1.stmt# = 12;
-none
+10
 5000
 103
 stmt s;
