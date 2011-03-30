@@ -22,7 +22,8 @@ while i {
 	x = z*3 + 2*y;
 	call q2;
 	while x {
-		x = x + 1}
+		x = x + 1;
+	}
 	i = i - 1; 
 }
 z = z + x + i; 
