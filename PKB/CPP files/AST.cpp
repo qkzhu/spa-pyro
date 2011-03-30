@@ -39,7 +39,7 @@ Node* AST::getNodeByProcdureIndex(int procIndex){
 
 void AST::getChild(int stmtNum, vector<int>& result)
 {
-	if(stmtNum <= 0)
+	if(stmtNum <= 0 || stmtNum > getMaxStmtNum())
 		result.push_back(-1);
 
 	Node* currNode = getNodeByStatementNum(stmtNum);
@@ -62,7 +62,7 @@ Node* AST::getParent(Node* d)
 int AST::getParent(int stmtNum)
 {
 	
-	if(stmtNum <= 0) throw new string("AST::getParent - Invalid procedure index.");;
+	if(stmtNum <= 0 || stmtNum > getMaxStmtNum()) throw new string("AST::getParent - Invalid procedure index.");
 	
 	int result;
 	Node* currNode = getNodeByStatementNum(stmtNum);
