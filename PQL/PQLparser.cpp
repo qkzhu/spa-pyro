@@ -12,7 +12,7 @@ void PqlParser::parser(string s,QueryTable *table) {
   userdefine=PqlParser::USERDEFINED;
   selectBool=true;	
   qu=new TokenList(s);
-  //qu->showTokenList();
+  qu->showTokenList();
 
   Convertor::update();
   
