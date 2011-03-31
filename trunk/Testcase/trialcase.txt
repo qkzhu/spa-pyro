@@ -1,4 +1,4 @@
-156
+174
 cat: follows
 1
 stmt s;
@@ -780,3 +780,98 @@ assign a;
 select a pattern a("x",_"x+y*z}"_);
 none
 5000
+157
+stmt s1, s2; prog_line p1,p2;
+select p1.value with p1.value=3;
+3
+5000
+158
+stmt s1, s2; prog_line p1,p2;
+select p1.value with p1.value=s1.stmt# and p2.value=s2.stmt# such that next(p1,p2) and affects(s1,s2);
+1,2,11,24
+5000
+159
+stmt s1, s2; prog_line p1,p2; while w; assign a;
+select w such that parent(w,s1);
+8,20,17
+5000
+160
+stmt s1, s2; prog_line p1,p2; while w; assign a;
+select w such that parent(w,s1) and affects(s1,11);
+none
+5000
+161
+stmt s1, s2; prog_line p1,p2; while w; assign a;
+select w such that parent(w,s1) and affects(s1,12);
+none
+5000
+162
+stmt s1, s2; prog_line p1,p2; while w; assign a;
+select w such that parent*(w,s1) and modifies(s1,"x");
+8,20,17
+5000
+163
+stmt s1, s2; prog_line p1,p2; while w; assign a;
+select w such that parent*(w,s1) and modifies(s1,"i");
+8,17
+5000
+164
+stmt s1, s2; prog_line p1,p2; while w; assign a;
+select w such that parent*(w,s1) and affects(s1,23);
+none
+5000
+165
+stmt s1, s2; prog_line p1,p2; while w; assign a;
+select <w,s1,a> such that parent*(w,s1) and affects(s1,a);
+8 11 13
+5000
+166
+stmt s1, s2; prog_line p1,p2; while w; assign a;
+select <s2,s1,a> such that parent*(s2,s1) and affects(s1,a);
+8 11 13,10 11 13
+5000
+167
+stmt s1, s2; prog_line p1,p2; while w; assign a;
+select <s2,s1,a> such that parent*(s2,s1) and affects(s1,a) pattern a(_,_);
+8 11 13, 10 11 13
+5000
+168
+constant c;stmt s1, s2; prog_line p1,p2; while w; assign a;
+select <s1,a,s2> such that follows*(s1,a) and follows(a,s2) with a.stmt#=c.value;
+1 2 3,2 3 4 ,1 3 4
+5000
+169
+constant c;stmt s1, s2; prog_line p1,p2; while w; assign a;
+select <s1,a,s2> such that follows(s1,a) and follows(w,s2) with a.stmt#=c.value;
+1 2 16 1 2 22, 1 2 23, 2 3 16, 2 3 22, 2 3 23
+5000
+170
+constant c;stmt s1, s2, s3, s4, s5,s6; prog_line p1,p2; while w; assign a;
+select <s1,a,s4> such that follows(s1,s2) and follows(s2,s3) and follows(s3, s4) and follows(s4,a) with s4.stmt#=c.value;
+none
+5000
+171
+constant c;stmt s1, s2, s3, s4, s5,s6; prog_line p1,p2; while w; assign a;
+select <s1,s5,a> such that follows(s1,s2) and follows(s2,s3) and follows(s3, s4) and follows(s4,s5) and follows(s5, a) with s1.stmt#=c.value;
+2 6 7
+5000
+172
+constant c;stmt s1, s2, s3, s4, s5,s6; prog_line p1,p2; while w; assign a;
+select <s1,s5,a> such that follows(s1,s2) and follows(s2,s3) and follows(s3, s4) and follows(s4,s5) and follows(s5, a) with s1.stmt#=1;
+none
+5000
+173
+constant c;stmt s1, s2, s3, s4, s5,s6; prog_line p1,p2; while w; assign a;
+select <a,s1> such that affects(s1,a) pattern a(_,"z+x"); 
+24 25
+5000
+174
+constant c;stmt s1, s2, s3, s4, s5,s6; prog_line p1,p2; while w; assign a;
+select <s1,a> such that affects(s1,a); 
+1 2, 2 3, 5 13, 5 15,24 25, 11 13
+5000
+
+
+
+
+
