@@ -1,0 +1,15 @@
+procedure test
+{
+	if x then {
+		x = 3;
+		y = 4;
+		z = q;
+	} else {
+		L = m;
+		m = o;
+	}
+	while m {
+		L = M;
+		T = K;
+	}
+}

@@ -1,0 +1,14 @@
+procedure test {
+1       if x then {
+2               x = 3;
+3               y = 4;
+4               z = q;
+        }  else {
+5               L = m;
+6               m = o;
+        }
+7       while m {
+8               L = M;
+9               T = K;
+        }
+}
