@@ -41,15 +41,17 @@ public:
 	Node*		ast_getParent(Node* n);
 	int			ast_getStmtNum(Node* n);
 	bool		ast_hasStmt(int stmtNum);   
-	int			ast_getMaxStmtNum();				// For Query Evaluator 
-	void		ast_GetAllAssign(vector<int>&);		// For Query Evaluator
-	void		ast_GetAllWhile(vector<int>&);		// For Query Evaluator
-	void		ast_GetAllIf(vector<int>&);			// For Query Evaluator
-	void		ast_GetAllCall(vector<int>&);		// For Query Evaluator
-	bool		ast_IsIf(int stmt);					// For Query Evaluator
-	bool		ast_IsWhile(int stmt);				// For Query Evaluator
-	bool		ast_IsAssign(int stmt);				// For Query Evaluator
-	bool		ast_IsCall(int stmt);				// For Query Evaluator
+	int			ast_getMaxStmtNum();							// For Query Evaluator 
+	void		ast_GetAllAssign(vector<int>&);					// For Query Evaluator
+	void		ast_GetAllWhile(vector<int>&);					// For Query Evaluator
+	void		ast_GetAllIf(vector<int>&);						// For Query Evaluator
+	void		ast_GetAllCall(vector<int>&);					// For Query Evaluator
+	bool		ast_IsIf(int stmt);								// For Query Evaluator
+	bool		ast_IsWhile(int stmt);							// For Query Evaluator
+	bool		ast_IsAssign(int stmt);							// For Query Evaluator
+	bool		ast_IsCall(int stmt);							// For Query Evaluator
+	bool		ast_IsInsideIf(int ifStmt, int target);			// For Query Evaluator
+	bool		ast_IsInsideWhile(int whileStmt, int target);	// For Query Evaluator
 	
 	vector<Node*> ast_GetAllProc(); //For CFG
 	vector<Node*> ast_GetDown(Node* n); //For CFG
@@ -146,6 +148,8 @@ private:
 	Pattern pattern;
 	void convertSetToVector(set<int>&, vector<int>&);
 	void convertSetToVector(set<string>&, vector<string>&);
+
+	bool ast_IsInside(int ifStmt, int target);	// For Query Evaluator
 };
 
 #endif

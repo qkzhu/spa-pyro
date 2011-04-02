@@ -128,6 +128,26 @@ bool PKB::ast_IsCall(int stmt){
 	return ast->isCall(stmt);
 }
 
+bool PKB::ast_IsInside(int stmt, int target){
+	if(stmt <= 0 || target <= 0 ||  target < stmt || 
+		stmt == target || stmt >= ast_getMaxStmtNum()) return false;
+
+	vector<int> result; 
+	this->ast_GetChild(result, stmt);
+	if(*(result.begin()) != -1 && target <= *(--result.end())) return true;
+	else return false;
+}
+
+bool PKB::ast_IsInsideIf(int ifStmt, int target){
+	if(!ast_IsIf(ifStmt)) return false;
+	return ast_IsInside(ifStmt, target);
+}
+
+bool PKB::ast_IsInsideWhile(int whileStmt, int target){
+	if(!ast_IsWhile(whileStmt)) return false;
+	return ast_IsInside(whileStmt, target);
+}
+
 /**
  * VarTable Part
  */
