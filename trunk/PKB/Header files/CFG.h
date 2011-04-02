@@ -18,9 +18,9 @@ public:
 	void getNextUp(vector<int>& theNextUp, int stmt, AST* ast);	//(for different nodes, insert a -1 inside.)
 
 	//For debugging
-	hash_map<int, set<int>> CFG::getForwardMap();
-	hash_map<int, set<int>> CFG::getReverseMap();
-	void CFG::prtMap(hash_map<int, set<int>> &currMap);
+	hash_map<int, set<int>> CFG::getForwardMap(AST* ast);
+	hash_map<int, set<int>> CFG::getReverseMap(AST* ast);
+	void prtMap(hash_map<int, set<int>> &currMap);
 
 private:
 	void CFG::getNextLink(vector<int>& theNext, int stmt, hash_map<int, set<int> >& theMap);

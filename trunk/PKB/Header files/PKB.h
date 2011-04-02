@@ -131,6 +131,7 @@ public:
 	Modifies* getModifyTable();
 	void printVectorInt(vector<int>);
 	string intToString(int i);
+	void printCFG();
 
 private:
 	AST*			ast;

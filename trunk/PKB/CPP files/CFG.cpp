@@ -204,8 +204,24 @@ void CFG::reverseVec(vector<int>& vec){
 }
 
 //For debugging
-hash_map<int, set<int>> CFG::getForwardMap(){ return this->forwardMap; }
-hash_map<int, set<int>> CFG::getReverseMap(){ return this->reverseMap; }
+hash_map<int, set<int>> CFG::getForwardMap(AST* ast)
+{ 
+	if (mAst == NULL)
+	{
+		mAst = ast;
+		generateCFG();
+	}
+	return this->forwardMap; 
+}
+hash_map<int, set<int>> CFG::getReverseMap(AST* ast)
+{ 
+	if (mAst == NULL)
+	{
+		mAst = ast;
+		generateCFG();
+	}
+	return this->reverseMap; 
+}
 
 //For debugging:
 void CFG::prtMap(hash_map<int, set<int>> &currMap){
