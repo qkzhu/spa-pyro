@@ -751,8 +751,7 @@ void Parser::checkValidName(string var_name)
 		{
 			if (strcmp(var_name.c_str(), mKeyWords[i].c_str()) == 0)
 			{
-				throw new string("Parser: Cannot use \"" + var_name + "\" as a variable. " +
-					" (line " + intToString(mLineNum) + ")");
+				throw new string("Parser: Error at line " + intToString(mLineNum) +  ": Cannot use \"" + var_name + "\" as a variable/procedure name. ");
 
 				//cout << "Cannot use \"" << var_name << "\" as a variable. " <<
 				//	" (line " << mLineNum << ")" << endl;

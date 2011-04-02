@@ -129,8 +129,8 @@ bool PKB::ast_IsCall(int stmt){
 }
 
 bool PKB::ast_IsInside(int stmt, int target){
-	if(stmt <= 0 || target <= 0 ||  target < stmt || 
-		stmt == target || stmt >= ast_getMaxStmtNum()) return false;
+	if(stmt <= 0 || target <= 0 ||  target <= stmt || 
+		stmt >= ast_getMaxStmtNum()) return false;
 
 	vector<int> result; 
 	this->ast_GetChild(result, stmt);
