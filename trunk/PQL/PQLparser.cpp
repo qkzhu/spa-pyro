@@ -189,13 +189,19 @@ string PqlParser::selectParser(int type,TokenList *quPointer,QueryTable *tablePo
 						
 						content.push_back(index);
 
+						pch=qu->getNextToken();
+
+						index=Convertor::getIndex(pch);
+
 						if(index==DOT)
 						{
 							content.push_back(index);
 							pch=qu->getNextToken();
 						    index=Convertor::getIndex(pch);
-							if(index!=-1)
+							if(index==-1) throw new string("the symbol"+pch+"should not after DOT");
 							content.push_back(index);
+						    pch=qu->getNextToken();
+					        index=Convertor::getIndex(pch);
 						}
 
 						table->addClause(SELECT,content);
@@ -209,10 +215,9 @@ string PqlParser::selectParser(int type,TokenList *quPointer,QueryTable *tablePo
 					{
 						throw new string(pch+"should not apear in the select or select should not empty\n");
 					}
-					pch=qu->getNextToken();
-					index=Convertor::getIndex(pch);
+
 				  }while(index==COMMA);
-				 if(index!=R_ARROW) throw new string("missing R_ARROW");
+				 if(index!=R_ARROW) { cout<<index; throw new string("missing R_ARROW");}
 				 pch=qu->getNextToken();
 	             index=Convertor::getIndex(pch);
 	  }
