@@ -393,6 +393,14 @@ void PKB::cfg_getNextUp(vector<int>& theNextUp, int stmt)
 	else cfg->getNextUp(theNextUp, stmt, ast);
 }
 
+void PKB::printCFG()
+{
+	cout << "Forward map:" << endl;
+	cfg->prtMap(cfg->getForwardMap(ast));
+	cout << "Reverse map:" << endl;
+	cfg->prtMap(cfg->getReverseMap(ast));
+}
+
 //return the condition variable 		of the while stmt in its code
 int PKB::condWhile(int stmtNum)
 {
