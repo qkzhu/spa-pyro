@@ -13,12 +13,15 @@ select p1.value with p1.value=s1.stmt# and p2.value=s2.stmt# such that next(p1,p
 stmt s1, s2; prog_line p1,p2; while w; assign a;
 select p1.value with p1.value=s1.stmt# and p2.value=s2.stmt# such that next(p1,p2) and modifies(s1,"i") pattern a("i",_"x"_);
 
+(FIXED)
 error
 
 stmt s1, s2; prog_line p1,p2; while w; assign a;
 select p1.value such that parent(w,s1) with s1.stmt#=p1.value;
 
-error throw by zs in with
+9,10,13,14,15,18,19,20,22,21
+
+error throw by zs in with   (Fixed)
 
 
 stmt s1, s2; prog_line p1,p2; while w; assign a;
@@ -29,26 +32,26 @@ select w such that parent(w,s1);
 stmt s1, s2; prog_line p1,p2; while w; assign a;
 select w such that parent(w,s1) and affects(s1,11);
 
-NUll but i think should be 8
+NUll but i think should be 8  (FIXED)
 
 stmt s1, s2; prog_line p1,p2; while w; assign a;
 select w such that parent(w,s1) and affects(s1,12);
 
 
-NULL but i think should be 8
+NULL but i think should be 8  (FIXED)
 
 
 stmt s1, s2; prog_line p1,p2; while w; assign a;
 select w such that parent*(w,s1) and affects*(s1,12);
 
-error is thrown
+error is thrown (FIEXD) 8
 
 
 stmt s1, s2; prog_line p1,p2; while w; assign a;
 select w such that parent*(w,s1) and affects*(s1,s2);
 
 
-error is thrown
+error is thrown(FIED) 8,17,20
 
 
 stmt s1, s2; prog_line p1,p2; while w; assign a;
@@ -98,7 +101,7 @@ constant c;stmt s1, s2; prog_line p1,p2; while w; assign a;
 select <s1,a,s2,c.value> such that follows*(s1,a) and follows*(a,s2) with a.stmt#=c.value;
 
 
-MIssing R_ARRO error of feifei
+MIssing R_ARRO error of feifei (Fixed)
 
 
 constant c;stmt s1, s2; prog_line p1,p2; while w; assign a;
@@ -147,7 +150,7 @@ constant c;stmt s1, s2, s3, s4, s5,s6; prog_line p1,p2; while w; assign a;
 select <a,s1> such that affects(s1,a) pattern a(_,"z+x"); 
 
 
-24 25 doubts here 9 11, 9 12
+24 25 doubts here 9 12(FIED)
 
 
 constant c;stmt s1, s2, s3, s4, s5,s6; prog_line p1,p2; while w; assign a;
@@ -161,6 +164,16 @@ select <s1,a> such that affects(s1,a);
 constant c;stmt s1, s2, s3, s4, s5,s6; prog_line p1,p2; while w; assign a;
 
 select BOOLEAN such that affects(15,8); 
+
+false(Fixed)
+
+
+constant c;stmt s1, s2, s3, s4, s5,s6; prog_line p1,p2; while w; assign a; variable v;
+
+select BOOLEAN such that uses(15,v); 
+
+
+error by zs(FIED) true
 
 
 
