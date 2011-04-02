@@ -16,34 +16,52 @@
 class QueryEvaluator{
 	
 private:
-	PKB *mPKBObject;  //Connect to PKB side
-	PqlPreprocessor *mQueryTree;   //Connect to PQL parser side
-	QueryResult mResult;  //The final result in QueryResult.
-	std::vector<int> mgTupleIndexing; //The global indexing for tuple evaluation, corresponding to the current tuple result
-	
-	//for use when in with clause, there is sth like v.varName = p.varName
-	//it contains only the pair of variable codes, prefixed with the variable type
-	vector<int> equal_vars;
+	PKB *mPKBObject; 
+	PqlPreprocessor *mQueryTree;   
+
+	//The final result in QueryResult.
+	QueryResult mResult;  
+
+	//The global indexing for tuple evaluation, corresponding to the current tuple result
+	std::vector<int> mgTupleIndexing; 
+	bool isBoolSel;
+	int varCodeEnding;
+
+	//evaluation tuple, this is the final and medium evaluation tuple
+	vector<vector<int> > evalTuple; 
+
+	//for use when in with clause, there is sth like v.varName = p.varName. NO NEED FOR TYPE
+	map<int, int> equalVars;
 
 	//maps the variable to the value assigned in With clause, attr 1 is the variable string in its code
 	//the value must have the constant type indicated
-	map<int, vector<int> > var_value_table;
+	map<int, vector<int> > varValueTable;
 
-	//maps the variable and the pattern evaluated candidates.
-	//the value must have the constant type indicated in the beginning of the vector
-	map<int, vector<int> > pattern_var_candidates;
+	//maps the variable and the pattern evaluated candidates. NO NEED FOR TYPE
+	map<int, vector<int> > patternVarCandidates;
+
+
+	//Evaluation main body
+	void evaluateWith();
+	void evaluatePattern();
+	void evaluateSuchThat(bool related);
+
+	void generateResult(vector<int>& select);
+
+
+	void removeInequal(vector<vector<int> >& tuple); //remove inequal vectors and remove second column
 
 
 	//Evaluating query functions
 
 	//returned result will not be very large
-	void evalWith(vector<vector<int> >& result, vector<int>& equal_var, vector<int>& var_value_table);
+	void evalWith(vector<vector<int> >& result, vector<int>& equal_var, vector<int>& varValueTable);
 	
 	//The result_tuple is passed down for optimisation purpose, result is initially empty
 	void evalPattern_PQL(vector<vector<int> >& result_tuple, vector<int>& result, int var, int var_type, int pattern1, int pattern2);
 
 	//read such that clause, deal with _ specifically
-	void underScore(int rel, vector<int> clause, int& para1, int& para1_type, int& para2, int& para2_type, int& var_code_ending);
+	void underScore(int rel, vector<int> clause, int& para1, int& para1_type, int& para2, int& para2_type, int& varCodeEnding);
 	//
 	void joinTuples(vector<vector<int> >& result, vector<vector<int> >& pre_tuple, int commonNum, int same1Tuple1, int same2Tuple1, int first_time);
 	

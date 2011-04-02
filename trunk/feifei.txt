@@ -138,7 +138,7 @@ constant c;stmt s1, s2, s3, s4, s5,s6; prog_line p1,p2; while w; assign a;
 select <s1,s5,a> such that follows(s1,s2) and follows(s2,s3) and follows(s3, s4) and follows(s4,s5) and follows(s5, a) with s1.stmt#=1;
 
 
-NULL
+none
 
 
 
