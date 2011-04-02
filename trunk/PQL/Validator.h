@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <vector>
 #include "QueryTable.h"
@@ -13,11 +14,10 @@ using namespace std;
 class Validator{
 public:
 
-	void populateTable(); //read data from file and add them into suchThatTable<vector>
-	void fillTable(vector <vector<int>> &table, string fileName);
+	Validator();	
+
 	void displayTable(vector<vector<int>> table);  // display table for debug
 
-	vector<int> getIndex(vector<vector<int>> table,int name); // get a vector of index if name = nameInsideTable
 	
 	void checkResults(QueryTable &table);  // show checking result as whole
 	void checkSelect(QueryTable &table); // check select clause
@@ -33,9 +33,13 @@ public:
 	void fillAssignVector(const string &str, vector<int> &expression, vector<int> &separatorPostion, vector<vector<int>> &varOfSimple);
 	
 
+	//get validation table
+	void getValidTable(int relationType, vector<vector<int>> &validationTable);
+	//get key word
+	void getKeyWord(int type, string &relationType);
 
-	vector<vector<int>>  getsuchThatTable();
-	vector<vector<int>>  getwithTable();
+
+
 
 	
 	//QueryTable preValidate(QueryTable table); // used to preprocess the table to make table driven more efficient
@@ -44,8 +48,7 @@ public:
 	string getString(int index);
 
 private:
-	vector< vector<int> > suchThatTable;
-	vector< vector<int> > withTable;
+	dataBase validTable;
 };
 
 

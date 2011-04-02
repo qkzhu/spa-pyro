@@ -5,6 +5,7 @@
 #include <iostream>
 #include <utility>
 #include "DataStucture.h"
+#include "dataBase.h"
 
 
 using namespace std;
@@ -15,9 +16,6 @@ class QueryTable{
 public: 
 	//QueryTable();
 	void addClause(int type, vector<int> content); // add query to the data structure
-	
-	vector < SuchThat > getSuchThatClauseV(); //return suchThatClauseValid for validator performing validation
-	vector<With> getWithClauseV(); //return withClauseValid for validator performing validation
 
 	int selectSize(); // return the number of result variables
 	void selectAt(vector<int> &tupleTemp, int index); //take an index and return the result variable at index
@@ -48,23 +46,19 @@ private:
 	vector<int> queryVector;
 
 	//"select-clause"  
-	vector < Select > selectClause;
-	vector < Select > selectClauseValid;
+	vector < Select > selectClause;	
 	vector <int> selectVector;
 
 	//"such that-clause"
 	vector < SuchThat > suchThatClause;
-	vector < SuchThat > suchThatClauseValid;
 	vector <int> suchThatVector;
 
 	//"with-clause"
 	vector < With > withClause;
-	vector < With > withClauseValid;
 	vector <int> withVector;
 
 	//"pattern-clause"
 	vector < Pattern_PQL > patternClause;
-	vector < Pattern_PQL > patternClauseValid;
 	vector <int> patternVector;
 
 
