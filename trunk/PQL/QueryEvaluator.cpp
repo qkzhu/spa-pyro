@@ -23,6 +23,7 @@ QueryEvaluator::QueryEvaluator(PKB *p, PqlPreprocessor *q)
 	mQueryTree = q;
 	varCodeEnding = ENCODE_ENDING+1;
 	isBoolSelected = false;
+	initialAffectsTable();
 }
 
 //*********Noting before coding*****************
@@ -482,18 +483,13 @@ void QueryEvaluator::evaluateSuchThat(bool& unrelated_finish, int& last_point, i
 			evalNext(STAR, relResult, para1_collection, para2_collection);
 		}else if(rel==mQueryTree->getIndex("affects")){
 			//Check whether the parameters are assign
-			vector<int> assigns;
-			mPKBObject->ast_GetAllAssign(assigns);
-			for(int i = 0; i< (int)para1_collection.size(); ){
-				int ele = para1_collection[i];
-				int found = find_ele(assigns, ele);
-				if(found == (int)assigns.size()){
+			for(int i = 0; i< (int)para1_collection.size();){
+				if(!mPKBObject->ast_IsAssign(para1_collection[i])){
 					para1_collection.erase(para1_collection.begin() + i);
 				}else i++;
 			}
 			for(int i = 0; i< (int)para2_collection.size();){
-				int found = find_ele(assigns, para2_collection[i]);
-				if(found == (int)assigns.size()){
+				if(!mPKBObject->ast_IsAssign(para2_collection[i])){
 					para2_collection.erase(para2_collection.begin() + i);
 				}else i++;
 			}
@@ -501,17 +497,13 @@ void QueryEvaluator::evaluateSuchThat(bool& unrelated_finish, int& last_point, i
 			evalAffects(relResult, para1_collection, para2_collection);
 		}else if(rel==mQueryTree->getIndex("affects*")){
 			//Check whether the parameters are assign
-			vector<int> assigns;
-			mPKBObject->ast_GetAllAssign(assigns);
 			for(int i = 0; i< (int)para1_collection.size();){
-				int found = find_ele(assigns, para1_collection[i]);
-				if(found == (int)assigns.size()){
+				if(!mPKBObject->ast_IsAssign(para1_collection[i])){
 					para1_collection.erase(para1_collection.begin() + i);
 				}else i++;
 			}
 			for(int i = 0; i< (int)para2_collection.size();){
-				int found = find_ele(assigns, para2_collection[i]);
-				if(found == (int)assigns.size()){
+				if(!mPKBObject->ast_IsAssign(para2_collection[i])){
 					para2_collection.erase(para2_collection.begin() + i);
 				}else i++;
 			}
@@ -877,6 +869,43 @@ void QueryEvaluator::generateResult(){
 }
 
 
+void QueryEvaluator::initialAffectsTable(){
+	//int affects_num = mQueryTree->affectsSize();
+	//int affects_star_num = mQueryTree->affectsStarSize();
+	//if(affects_num >= 3 || affects_star_num > 0)
+		affectsTable.is_affects_table_built = true;
+	//else affectsTable.is_affects_table_built = false;
+	if(affectsTable.is_affects_table_built){
+		vector<int> assigns;
+		mPKBObject->ast_GetAllAssign(assigns);
+		for(int i =0 ; i < (int)assigns.size(); i++){
+			int stmt = assigns[i];
+			if(i == 0) affectsTable.initial_stmt = stmt;
+			vector<int> affects;
+			vector<int> mods;
+			mPKBObject->mTable_getModifiedVar(mods, stmt);
+			if(mods.empty() || mods[0] == -1) throw new string("QueryEvaluator::buildAffectsTable, shit! This should never happen!");
+			int mod = mods[0];
+			bool find_final;
+			nonModPath(stmt, mod, -1, affects, true);
+			affectsTable.affects_index_down.insert(pair<int, int>(stmt, i));
+			affectsTable.table_body_down.push_back(affects);
+			for(int j = 0;  j < (int)affects.size(); j++){
+				pair<map<int,int>::iterator, bool> tmp = affectsTable.affects_index_up.insert(pair<int, int>(affects[j], (int)affectsTable.table_body_up.size()));
+				if(tmp.second){
+					vector<int> affects_up;
+					affects_up.push_back(stmt);
+					affectsTable.table_body_up.push_back(affects_up);
+				}else{
+					int index = affectsTable.affects_index_up[affects[j]];
+					affectsTable.table_body_up[index].push_back(stmt);
+				}
+			}
+		}
+	}
+	cout << endl;
+}
+
 void QueryEvaluator::underScore(int rel, vector<int> clause, int& para1, int& para1_type, int& para2, int& para2_type, int& varCodeEnding){
 	int next_indx = 0;
 	if(clause[1] == mQueryTree->getIndex("_"))// if the first para is _
@@ -1019,6 +1048,8 @@ void QueryEvaluator::printResult(){
 }
 	
 void QueryEvaluator::evalParent(int star, vector<std::vector<int> >& result, const vector<int>& para1, const vector<int>& para2){
+	if(para1.empty() || para2.empty())
+		return;
 	if(para1.size() < para2.size()){
 		for(int l = 0; l < (int)para1.size(); l++){
 			int in1 = para1[l];
@@ -1088,6 +1119,8 @@ void QueryEvaluator::getChildStar(int up, vector<int>& result, int stmtN){
 }
 
 void QueryEvaluator::evalFollows(int star, vector<std::vector<int> >& result, const vector<int>& para1, const vector<int>& para2){
+	if(para1.empty() || para2.empty())
+		return;
 	if(para1.size() < para2.size()){
 		for(int l = 0; l < (int)para1.size(); l++){
 			int in1 = para1[l];
@@ -1150,6 +1183,9 @@ void QueryEvaluator::getFollowsStar(int up, vector<int>& result, int stmtN){
 }
 
 void QueryEvaluator::evalCalls(int star, vector<std::vector<int> >& result, const vector<int>& para1, const vector<int>& para2){
+	if(para1.empty() || para2.empty())
+		return;
+
 	if(para1.size() < para2.size()){
 		for(int l = 0; l < (int)para1.size(); l++){
 			int in1 = para1[l];
@@ -1220,7 +1256,9 @@ void QueryEvaluator::getCallsStar(int up, vector<int>& result, int procNameCode)
 	}else throw new string("QueryEvaluator::getCallsStar, no such up type.");
 }
 
-void QueryEvaluator::evalMU(int modOrUse, vector<vector<int> >& result, int type1, const vector<int>& para1, const vector<int>& para2){	
+void QueryEvaluator::evalMU(int modOrUse, vector<vector<int> >& result, int type1, const vector<int>& para1, const vector<int>& para2){	if(para1.empty() || para2.empty())
+		return;
+
 	if(para1.size() <= para2.size()){
 		for(int i = 0; i < (int)para1.size(); i++){
 			int in1 = para1[i];
@@ -1301,6 +1339,9 @@ void QueryEvaluator::evalMU(int modOrUse, vector<vector<int> >& result, int type
 }//evalMU finish
 
 void QueryEvaluator::evalNext(int star, vector<vector<int> >& result, const vector<int>& para1, const vector<int>& para2){
+	if(para1.empty() || para2.empty())
+		return;
+
 	if(para1.size() <= para2.size()){
 		for(int l = 0; l < (int)para1.size(); l++){
 			int stmtN = para1[l];
@@ -1383,16 +1424,71 @@ void QueryEvaluator::getNextPure(int up, vector<int>& result, int para){
 }
 
 //The para passed inside is checked to be assign
-void QueryEvaluator::evalAffects(vector<vector<int> >& result, const vector<int>& para1, const vector<int>& para2){
-	for(int i = 0; i < (int)para1.size(); i++){
-		int in1 = para1[i];
-		for(int p = 0; p < (int)para2.size(); p++){
-			int in2 = para2[p];
-			if(affects(in1, in2)){
-				int tmp[4] = {mQueryTree->getIndex("integer"), in1, mQueryTree->getIndex("integer"), in2};
-				vector<int> entry;
-				entry.insert(entry.end(), tmp, tmp+4);
-				result.push_back(entry);
+void QueryEvaluator::evalAffects(vector<vector<int> >& result, const vector<int>& para1, const vector<int>&  para2){
+	if(para1.empty() || para2.empty())
+		return;
+
+	if(affectsTable.is_affects_table_built){
+		if(para1.size() <= para2.size()){
+			for(int i = 0; i < (int)para1.size(); i++){
+				int in1 = para1[i];
+				vector<int> affected_para1;
+				int stmt_index = affectsTable.affects_index_down[in1];
+				affected_para1 = affectsTable.table_body_down[stmt_index];
+				for(int k = 0; k < (int)affected_para1.size(); k++){
+					for(int p = 0; p < (int)para2.size(); p++){
+						if(affected_para1[k] == para2[p]){
+							int tmp[4] = {mQueryTree->getIndex("integer"), in1, mQueryTree->getIndex("integer"), para2[p]};
+							vector<int> entry;
+							entry.insert(entry.end(), tmp, tmp+4);
+							result.push_back(entry);
+							break;
+						}
+					}
+				}
+			}
+		}else{
+			for(int i = 0; i < (int)para2.size(); i++){
+				int in2 = para2[i];
+				vector<int> affected_up_para2;
+				int stmt_index = affectsTable.affects_index_up[in2];
+				affected_up_para2 = affectsTable.table_body_up[stmt_index];
+				for(int k = 0; k < (int)affected_up_para2.size(); k++){
+					for(int p = 0; p < (int)para1.size(); p++){
+						if(affected_up_para2[k] == para1[p]){
+							int tmp[4] = {mQueryTree->getIndex("integer"), para1[p], mQueryTree->getIndex("integer"), in2};
+							vector<int> entry;
+							entry.insert(entry.end(), tmp, tmp+4);
+							result.push_back(entry);
+							break;
+						}
+					}
+				}
+			}
+			cout << endl;
+		}
+	}else{
+		for(int i = 0; i < (int)para1.size(); i++){
+			int in1 = para1[i];
+			vector<int> affected_para1;
+
+			vector<int> modifies;
+			mPKBObject->mTable_getModifiedVar(modifies, in1);
+			if(modifies.empty() || modifies[0]==-1) throw new string("QueryEvaluator::evalAffects, shit! This should never happen!");
+			int mod = modifies[0];
+			bool find_final;
+			nonModPath(in1, mod, -1, affected_para1, true);
+
+			for(int k = 0; k < (int)affected_para1.size(); k++){
+				for(int p = 0; p < (int)para2.size(); p++){
+					if(affected_para1[k] == para2[p]){
+						int tmp[4] = {mQueryTree->getIndex("integer"), in1, mQueryTree->getIndex("integer"), para2[p]};
+						vector<int> entry;
+						entry.insert(entry.end(), tmp, tmp+4);
+						result.push_back(entry);
+						break;
+					}
+				}
 			}
 		}
 	}
@@ -1400,8 +1496,10 @@ void QueryEvaluator::evalAffects(vector<vector<int> >& result, const vector<int>
 
 //The para passed inside is checked to be assign
 void QueryEvaluator::evalAffectsStar(vector<vector<int> >& result, const vector<int>& para1, const vector<int>& para2){
-	//The second case is not implemented well, skipt first
-	if(true){
+	if(para1.empty() || para2.empty())
+		return;
+	if(!affectsTable.is_affects_table_built) throw new string("QueryEvaluator::evalAffectsStar, shit! How can table not built yet!");
+	if(para1.size() <= para2.size()){
 		for(int i = 0; i < (int)para1.size(); i++){
 			int in1 = para1[i];
 			vector<int> affectsStar;
@@ -1436,85 +1534,23 @@ void QueryEvaluator::evalAffectsStar(vector<vector<int> >& result, const vector<
 	}
 }
 
-//If no affectsStar exists, return original result vector.
 void QueryEvaluator::getAffectsStar(int up, vector<int>& result, int para){
-	getAffects(up, result, para);
-	for(int i = 0; i< (int)result.size(); i++){
-		int next = result[i];
-		getAffects(up, result, next);
+	if(up == DOWN){
+		int para_index = affectsTable.affects_index_down[para];
+		result = affectsTable.table_body_down[para_index];
+		for(int i = 0; i < (int)result.size(); i++){
+			vector<int> affects = affectsTable.table_body_down[result[i]];
+			result.insert(result.end(), affects.begin(), affects.end());
+		}
+	}else{
+		int para_index = affectsTable.affects_index_up[para];
+		result = affectsTable.table_body_up[para_index];
+		for(int i = 0; i < (int)result.size(); i++){
+			vector<int> affects = affectsTable.table_body_up[result[i]];
+			result.insert(result.end(), affects.begin(), affects.end());
+		}
 	}
 }
-
-//If no affects exists, return the original result vector
-//before checking, filter the candidates in result by 
-void QueryEvaluator::getAffects(int up, vector<int>& result, int para){
-	if(up == DOWN){
-		vector<int> tmp;
-		mPKBObject->mTable_getModifiedVar(tmp, para);
-		int modified = tmp[0];
-		vector<int> used;
-		mPKBObject->uTable_getStmtUses(used, modified);
-		if(used[0] != -1){
-			for(int i = 0 ; i< (int) used.size(); i++){
-				int next = used[i];
-				//Check next is assign or not
-				vector<int> assigns;
-				mPKBObject->ast_GetAllAssign(assigns);
-				int found_assign = find_ele(assigns, next);
-
-				int found = find_ele(result, next);
-				if(found_assign != (int)assigns.size() && found == (int)result.size())
-					if(affects(para, next))
-						result.push_back(next);
-			}
-		}
-	}else if(up == UP){
-		//The UP one has some problem , not completed
-		//The used has many vairables , no time to correct it
-		vector<int> tmp;
-		mPKBObject->uTable_getUsedVar(tmp, para);
-		int modified = tmp[0];
-		vector<int> used;
-		mPKBObject->uTable_getStmtUses(used, modified);
-		if(used[0] != -1){
-			for(int i = 0 ; i< (int) used.size(); i++){
-				int next = used[i];
-				//Check next is assign or not
-				vector<int> assigns;
-				mPKBObject->ast_GetAllAssign(assigns);
-				int found_assign = find_ele(assigns, next);
-
-				int found = find_ele(result, next);
-				if(found_assign != (int)assigns.size() && found == (int)result.size())
-					if(affects(next, para))
-						result.push_back(next);
-			}
-		}
-	}else throw new string("QueryEvaluator::getAffects, No such up type!");
-}
-
-
-bool QueryEvaluator::affects(int stmt1, int stmt2){
-	//check the modifies var of stmt1 is in the used var of stmt2
-	vector<int> tmp;
-	mPKBObject->mTable_getModifiedVar(tmp, stmt1);
-	int modified = tmp[0];
-	vector<int> used;
-	mPKBObject->uTable_getUsedVar(used, stmt2);
-	int found1 = find_ele(used, modified);
-
-	//Check next relation
-	vector<int> nexts;
-	getNextStar(DOWN, nexts, stmt1);
-	int found2 = find_ele(nexts, stmt2);
-
-	if(found1 != (int)used.size() && found2 != (int)nexts.size()){
-		bool find_dest = false;
-		bool has_non_mod_path = nonModPath(stmt1, modified, stmt2, stmt2, find_dest, true);
-		if(has_non_mod_path) return true;
-		else return false;
-	}else return false;
-}//affects END;
 
 void QueryEvaluator::getPattern_PQLAssign(vector<int>& result, string patternLeft, string patternRight){
 	vector<int> tmp;
@@ -1601,104 +1637,38 @@ int QueryEvaluator::find_ele(const vector<int>& in, const int ele){
 	return (int)in.size();
 }
 
-
-bool QueryEvaluator::isIf(int stmt){
-	vector<int> ifs;
-	mPKBObject->ast_GetAllIf(ifs);
-	int found = find_ele(ifs, stmt);
-	if(found == (int)ifs.size())
-		return false;
-	else return true;
-}
-
-bool QueryEvaluator::isWhile(int stmt){
-	vector<int> ws;
-	mPKBObject->ast_GetAllWhile(ws);
-	int found = find_ele(ws, stmt);
-	if(found == (int)ws.size())
-		return false;
-	else return true;
-}
-
-bool QueryEvaluator::isInsideWhile(int w, int stmt){
-	vector<int> descadent;
-	getChildStar(DOWN, descadent, w);
-	int found = find_ele(descadent, stmt);
-	if(found == (int)descadent.size())
-		return false;
-	else return true;
-}
-
-bool QueryEvaluator::isInsideIf(int ifstat, int stmt){
-	vector<int> descadent;
-	getChildStar(DOWN, descadent, ifstat);
-	int found = find_ele(descadent, stmt);
-	if(found == (int)descadent.size())
-		return false;
-	else return true;
-
-}
-
 //Check whether there is a non-mod path for variable mod in the stmt
-bool QueryEvaluator::nonModPath(int s, int mod, int dest, int final, bool& find_dest, bool init){
-	find_dest = false;
-
+bool QueryEvaluator::nonModPath(int s, int mod, int dest, vector<int>& affect_result, bool init){
 	int next = s;
 	if(s <= 0)
 		return true;
-	
+
 	if(!init){
-		if(next == final) {
-			find_dest = true;
+		if(next == dest){
 			return true;
 		}
-		if(s == dest) return true;
 	}
-
-	bool is_if = isIf(next);
-	bool is_while = isWhile(next);
+	bool l = mPKBObject->ast_IsInsideWhile(8, 15);
+	bool is_if = mPKBObject->ast_IsIf(next);
+	bool is_while = mPKBObject->ast_IsWhile(next);
 	if(is_if){
 		vector<int> tmp_nexts;
 		getNextPure(DOWN, tmp_nexts, next);
 		int thenC = tmp_nexts[0];
 		int elseC = tmp_nexts[1];
 		
-		bool is_in_if = isInsideIf(next, final);
 		int joint_node = mPKBObject->ast_GetFollowingStatementNum(s);
 		bool find_dest1;
 		bool find_dest2;
 		bool non_mod_path1;
 		bool non_mod_path2;
 
-		if((!is_in_if) || is_in_if && joint_node != -1){
-			non_mod_path1 = nonModPath(thenC, mod, joint_node, final, find_dest1, false);
-			non_mod_path2 = nonModPath(elseC, mod, joint_node, final, find_dest2, false);
-		}else{
-			non_mod_path1 = nonModPath(thenC, mod, final, final, find_dest1, false);
-			non_mod_path2 = nonModPath(elseC, mod, final, final, find_dest2, false);
-			if(find_dest1){
-				find_dest = true;
-				return non_mod_path1;
-			}
-			if(find_dest2){
-				find_dest = true;
-				return non_mod_path2;
-			}
-			throw new string("QueryEvaluator::nonModPath, either find_dest1 or find_dest2 is true, inconsistency!");
-		}
+		non_mod_path1 = nonModPath(thenC, mod, joint_node, affect_result, false);
+		non_mod_path2 = nonModPath(elseC, mod, joint_node, affect_result, false);
 
-		if(find_dest1 && !find_dest2) {
-			find_dest = true;
-			return non_mod_path1;
-		}
-		if(find_dest2){
-			find_dest = true;
-			return non_mod_path2;
-		}
 		if(!non_mod_path1 && !non_mod_path2) return false;
-		else return nonModPath(joint_node, mod, dest, final, find_dest, false);
+		else return nonModPath(joint_node, mod, dest, affect_result, false);
 	}else if(is_while){
-		bool is_in_while = isInsideWhile(next, dest);
 		vector<int> tmp_nexts;
 		getNextPure(DOWN, tmp_nexts, next);
 		int size = tmp_nexts.size();
@@ -1708,29 +1678,35 @@ bool QueryEvaluator::nonModPath(int s, int mod, int dest, int final, bool& find_
 			outer = tmp_nexts[0];
 			inner = tmp_nexts[1];
 		}else inner = tmp_nexts[0];
-	
-		if(is_in_while)
-			return nonModPath(inner, mod, dest, final, find_dest, false);
-		else if(size == 2) return nonModPath(outer, mod, dest, final, find_dest, false);
-		else return true;
-	}else{
-		vector<int> modifies;
-		vector<int> tmp_nexts;
-		int found;
 
+		nonModPath(inner, mod, next, affect_result, false);
+		nonModPath(outer, mod, dest, affect_result, false);
+	}else{
+		vector<int> tmp_nexts;
+		
 		if(init){
 			getNextPure(DOWN, tmp_nexts, next);
 			next = tmp_nexts[0];
-			return nonModPath(next, mod, dest, final, find_dest, false);
-		}else{
-			mPKBObject->mTable_getModifiedVar(modifies, next); 
-			found = find_ele(modifies, mod);
-			getNextPure(DOWN, tmp_nexts, next);
-			next = tmp_nexts[0];
-		}		
+			return nonModPath(next, mod, dest, affect_result, false);
+		}
+
+		vector<int> uses;
+		mPKBObject->uTable_getUsedVar(uses, next);
+		int found_uses = find_ele(uses, mod);
+		if(found_uses != (int)uses.size())
+			if(mPKBObject->ast_IsAssign(next))
+				affect_result.push_back(next);
+
+		vector<int> modifies;
+		int found;
+		mPKBObject->mTable_getModifiedVar(modifies, next); 
+		found = find_ele(modifies, mod);
+		getNextPure(DOWN, tmp_nexts, next);
+		next = tmp_nexts[0];
 		if(found != (int)modifies.size())
 			return false;
-		else return nonModPath(tmp_nexts[0], mod, dest, final, find_dest, false);
+		else return nonModPath(next, mod, dest, affect_result, false);	
+		
 	}
 	return true;
 }

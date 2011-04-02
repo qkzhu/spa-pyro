@@ -1,0 +1,84 @@
+procedure First {
+     x = 1;
+      y = x;
+    z = y;
+     call Second;
+    i = x;
+    call Fifth;
+    x = z;
+     while i {
+        x = x - 1;
+        if x then {
+            x = x+1; 
+
+   		 }else {
+
+            y = z+x; 
+
+		}
+
+         z = z + x + i;
+         call Seventh;
+         i = i - 1; 
+
+}
+
+     call Sixth;
+}
+procedure  Second{
+    while i {
+        x = z*3 + 2*y;
+        call Third;
+        while x {
+             x = x + 1;}
+         i = i - 1;
+
+}
+
+     z = z + x + i;
+}
+procedure Third {
+     z = x + 1;
+     x = z + x;
+}
+procedure Fourth{
+     if i then {
+        z = x + 1; }
+
+else {
+
+        call Fifth;
+         x = z + x; 
+
+} 
+
+}
+procedure Fifth{
+    call Sixth;
+}
+
+procedure Sixth{
+    while x{
+        if i then{
+            x = 10;
+            while z {
+                if p then{
+                    p = 100;
+                }else{
+                    d = 10;
+                }
+            }
+        }else{
+            call Seventh;
+        }
+
+	}
+}
+
+procedure Seventh{
+    p = 100;
+    while z{
+        t = 10;
+        n = 200;
+    }
+}

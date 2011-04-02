@@ -12,6 +12,21 @@
 
 #define ENCODE_ENDING 500  //I need to use it when I meet '_' and constant in relation to create new variable for join
 
+typedef struct{
+
+		int initial_stmt;
+
+		bool is_affects_table_built;
+
+		//affects table
+		vector<vector<int> > table_body_down;
+		vector<vector<int> > table_body_up;
+
+		//map for assign stmt# to index in affects table
+		map<int, int> affects_index_down;
+		map<int, int> affects_index_up;
+
+} affectsTableStructure;
 
 class QueryEvaluator{
 	
@@ -38,6 +53,13 @@ private:
 	//map<int, vector<int> > patternVarCandidates;
 
 
+	//////////////////////////affects initialization related////////////////
+	affectsTableStructure affectsTable;
+
+	//check affects in the whole query and build affects table dependently
+	void initialAffectsTable();
+	////////////////////////////////////////////////////////////////////////
+
 	//Evaluating query functions
 	void initialize();
 
@@ -47,8 +69,12 @@ private:
 
 	void evaluateSuchThat(bool& unrelated_finish, int& last_point, int threshold);
 
+	//generate result based on selection elements and evaluation result
 	void generateResult();
 
+
+
+	//remove unpaired tuple in relation result when the relation of same parameter, like ***(a, a), is evaluated
 	void removeInequal(vector<vector<int> >& tuple);
 	
 	//The result_tuple is passed down for optimisation purpose, result is initially empty
@@ -62,14 +88,13 @@ private:
 	//Deal with no selected elements in the result_tuple and patial case
 	void transform(vector<vector<int> >& pre_tuple, vector<vector<int> >& candidates, vector<int> non_evaled_selects);
 	
+	//load candidates for relation evaluation. candidates needs no type.
 	void checkCandidates(int var, int var_type, vector<int>& candidates);
 
 
 	//Functions for evaluating such that relations
 	
 	//For function with star, if star == NOSTAR, means no star; if star == STAR, means eval star.
-	//I should think about collect all relation evaluation into this format. Don't forget
-	//Iteration 2
 	void evalNext(int star, std::vector<std::vector<int> >& result, const std::vector<int>& para1, const std::vector<int>& para2);
 	//If up == UP, means search from down to up
 	void getNextStar(int up, std::vector<int>& result, int para);
@@ -82,7 +107,6 @@ private:
 	//If up == UP, means search from down to up
 	void getAffectsStar(int up, std::vector<int>& result, int para);
 	void getAffects(int up, std::vector<int>& result, int para);
-	bool affects(int stmt1, int stmt2);
 
 	//For evaluating pattern
 	//result passed in is initially filled with all candidates ///////////////IMPORTANT
@@ -113,15 +137,11 @@ private:
 
 	void getAllType(vector<int>& result, int type);
 
-	bool isIf(int stmt);
-	
-	bool isWhile(int stmt);
-	bool isInsideWhile(int parent, int stmt); //check if this stmt is inside the while loop
-	bool isInsideIf(int ifstat, int stmt);
+	//If the element is found in the vector, return its index; otherwise return the size of the vector.
+	int find_ele(const vector<int>& in, const int ele);
 
-	int find_ele(const vector<int>& in, const int ele);//If the element is found in the vector, return its index; otherwise return the size of the vector.
-
-	bool nonModPath(int s, int mod, int dest, int final, bool& find_dest, bool init); //Check whether there is a non-mod path for variable mod in the stmt
+	//get all the affected stmts from s
+	bool nonModPath(int s, int mod, int dest, vector<int>& affect_result, bool init); 
 
 
 public:
