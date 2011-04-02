@@ -1,0 +1,14 @@
+procedure Example {             
+	  x = x - 2 ;     
+	  y = x ;   
+	  z = y - 4 * n ;
+	  i = x ;
+	  x = z ;
+	  while i {
+	    x = x - 1 ;
+	    if x then {
+		x = ( x + 1 ) * 5 ;}
+else {
+		y = z + ( x - 3 ) ;}     
+	    z = z + ( x ) * i ;
+	  i = ( i ) - 1 ; }}    

@@ -1,0 +1,17 @@
+procedure Example {
+1       x = x-2;
+2       y = x;
+3       z = y-4*n;
+4       i = x;
+5       x = z;
+6       while i {
+7               x = x-1;
+8               if x then {
+9                       x = (x+1)*5;
+                }  else {
+10                      y = z+(x-3);
+                }
+11              z = z+x*i;
+12              i = i-1;
+        }
+}

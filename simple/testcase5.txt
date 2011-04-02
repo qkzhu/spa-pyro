@@ -1,0 +1,15 @@
+procedure WhileLoop      {    
+	  while i {
+	    x = z+3;
+	    while j {
+	      x = z+3;
+	      if k then {
+		   x = z+3;}
+else {
+			x = z+3;}
+	      while m {
+	        x = z+3;
+	m = m-1;}
+	j = j-1;}
+	i = i-1;} 
+   x = z+3;}
