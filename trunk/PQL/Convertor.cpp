@@ -2,6 +2,7 @@
 
 
  map<int,string> Convertor::indexToKeyword;
+ map<int,string>::iterator it;
  map<string,int> Convertor::keywordToIndex;
  
  map<string, string> Convertor::shortcutToContent;//s->stmt;
@@ -57,6 +58,18 @@ int Convertor::update()
   return 0;
 }
 
+
+void Convertor::getAllIndex(vector<int> &indexlist)
+{
+	int index;
+	for ( it=indexToKeyword.begin() ; it != indexToKeyword.end(); it++ )
+	{
+		index=(*it).first;
+		if(index>300)
+		indexlist.push_back(index);
+    cout << (*it).first << " => " << (*it).second << endl;
+	}
+}
  bool Convertor::isDeclared(string token)
  {
 	 bool flag;
