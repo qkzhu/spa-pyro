@@ -129,7 +129,7 @@ bool QueryResult::myCompare(vector<int> v1, vector<int> v2){
 		if(v1[i] < v2[i]) return true;
 		else if(v1[i] > v2[i]) return false;
 	}
-	return true;
+	return false; //this has to be false, otherwise will be assertion failure, weird
 }
 
 bool QueryResult::equalityCompare(vector<int> v1, vector<int> v2){
