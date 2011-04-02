@@ -40,16 +40,19 @@ void dataBase::populateModifiesTables(){
 void dataBase::populateCallsTables(){
 	vector<int> table;
 	table.push_back(PROCEDURE);		table.push_back(PROCEDURE); callsTable.push_back(table); table.clear();
-	table.push_back(PROCNAME);		table.push_back(PROCEDURE); callsTable.push_back(table); table.clear();
+	table.push_back(PROCOFSIMPLE);	table.push_back(PROCEDURE); callsTable.push_back(table); table.clear();
 	table.push_back(UNDERSCORE);	table.push_back(PROCEDURE); callsTable.push_back(table); table.clear();
 
-	table.push_back(PROCEDURE);		table.push_back(PROCNAME); callsTable.push_back(table); table.clear();
-	table.push_back(PROCNAME);		table.push_back(PROCNAME); callsTable.push_back(table); table.clear();
-	table.push_back(UNDERSCORE);	table.push_back(PROCNAME); callsTable.push_back(table); table.clear();
+	table.push_back(PROCEDURE);		table.push_back(PROCOFSIMPLE); callsTable.push_back(table); table.clear();
+	table.push_back(PROCOFSIMPLE);	table.push_back(PROCOFSIMPLE); callsTable.push_back(table); table.clear();
+	table.push_back(UNDERSCORE);	table.push_back(PROCOFSIMPLE); callsTable.push_back(table); table.clear();
 
 	table.push_back(PROCEDURE);		table.push_back(UNDERSCORE); callsTable.push_back(table); table.clear();
-	table.push_back(PROCNAME);		table.push_back(UNDERSCORE); callsTable.push_back(table); table.clear();
+	table.push_back(PROCOFSIMPLE);	table.push_back(UNDERSCORE); callsTable.push_back(table); table.clear();
 	table.push_back(UNDERSCORE);	table.push_back(UNDERSCORE); callsTable.push_back(table); table.clear();
+
+
+	
 
 }
 
