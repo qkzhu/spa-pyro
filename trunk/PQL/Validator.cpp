@@ -194,7 +194,7 @@ void Validator::getKeyWord(int type, string &relationType){
 		relationType = "Uses* ";
 		break;
 	case MODIFIES:
-		relationType = "Uses* ";
+		relationType = "Modifies* ";
 		break;		
 	default:
 		throw new string ("undefined relation type! -- throw by Validator::getKeyWord ");
@@ -215,6 +215,8 @@ void Validator::checkSuchThat(QueryTable &table){
 		//vector<int> index;
 		suchThat = table.getSuchThatClause().at(i).relCond;	
 		
+		//cout<<"suchThat[0] "<<suchThat[0]<<endl;
+
 		string relationType;
 		getKeyWord(suchThat[0], relationType);
 		string functionName = " -- throw by Validator::checkSuchThat";
@@ -282,6 +284,7 @@ void Validator::checkSuchThat(QueryTable &table){
 		{
 			if(suchThat.size() == 5)
 			{
+				//cout<<validationTables[k][0]<<endl;
 
 				if( (suchThat.at(1) == validationTables[k][0]) && (suchThat.at(3) == validationTables[k][1]) )
 				{
@@ -293,7 +296,7 @@ void Validator::checkSuchThat(QueryTable &table){
 			{
 				if(  (suchThat.at(1) == validationTables[k][0] && (suchThat.at(2) == validationTables[k][1])) || (suchThat.at(1) == validationTables[k][0]) && (suchThat.at(3) == validationTables[k][1]) ) 
 				{
-
+					
 					noError = true;
 				}
 			}
@@ -302,15 +305,18 @@ void Validator::checkSuchThat(QueryTable &table){
 				//relation USES and MODIFIES do not have such case
 				if(suchThat.at(0) == USES || suchThat.at(0) == MODIFIES)
 				{
+					
 					continue;
 				}
 				else if((suchThat.at(1) == UNDERSCORE) && (suchThat.at(2) == UNDERSCORE))
-				{
+				{	
+					
 					noError = true;
 				}
 			}
 		
 		}
+		//cout<<"relationType: " <<relationType<<endl;
 		if(!noError)
 		{
 			throw new string("Error Occurs at relation: "+ relationType + functionName);
@@ -475,7 +481,7 @@ void Validator::checkPattern_PQL(QueryTable &table){
 			else if(int(pattern.size()) == 7)
 			{
 				
-					if( pattern.at(2) != PATTERNOFSIMPLE || pattern.at(4) != COMMA || pattern.at(5) != PATTERNOFSIMPLE) // assign("x", "x+y") ->  ASSIGN 301 PATTERNOFSIMPLE 301 COMMA PATTERNOFSIMPLE 302
+					if( !(pattern.at(2) == PATTERNOFSIMPLE || pattern.at(2) == VAROFSIMPLE) || pattern.at(4) != COMMA || pattern.at(5) != PATTERNOFSIMPLE) // assign("x", "x+y") ->  ASSIGN 301 PATTERNOFSIMPLE 301 COMMA PATTERNOFSIMPLE 302
 					{
 						throw new string("argument error inside pattern clause! -- throw by Validator::checkPattern_PQL - pattern size 7");
 					}
