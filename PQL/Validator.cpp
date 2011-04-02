@@ -191,7 +191,7 @@ void Validator::getKeyWord(int type, string &relationType){
 		relationType = "Affects* ";
 		break;
 	case USES:
-		relationType = "Uses* ";
+		relationType = "Uses ";
 		break;
 	case MODIFIES:
 		relationType = "Modifies* ";
