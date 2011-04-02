@@ -74,7 +74,7 @@ void QueryResult::addInType(int type)
 
 void QueryResult::addInTuple(vector<int> concat)
 {
-	cout << "Inserting " << mTupleResult.size() << endl;;
+	//cout << "Inserting " << mTupleResult.size() << endl;;
 	mTupleResult.push_back(concat);
 }
 
@@ -109,15 +109,15 @@ void QueryResult::resultSort(){
 	equilities.push_back(0);
 	for(int i = 1; i < (int)mTupleResult.size(); i++){
 		if(equalityCompare(mTupleResult[i-1], mTupleResult[i])){
-			if(i == mTupleResult.size() -1) 
-				tmp_store.push_back(mTupleResult[i]);
 			equilities.push_back(i);
-		}else{
 			if(i == mTupleResult.size() -1) 
 				tmp_store.push_back(mTupleResult[i]);
+		}else{
 			tmp_store.push_back(mTupleResult[equilities[0]]);
 			equilities.clear();
 			equilities.push_back(i);
+			if(i == mTupleResult.size() -1) 
+				tmp_store.push_back(mTupleResult[i]);
 		}
 	}
 	mTupleResult = tmp_store;
@@ -125,7 +125,11 @@ void QueryResult::resultSort(){
 
 bool QueryResult::myCompare(vector<int> v1, vector<int> v2){
 	if(v1.empty() || v2.empty()) throw new string("QueryResult::myCompare, the comparator should not take empty vector!");
-	return v1[0] < v2[0];
+	for(int i = 0; i < (int)v1.size(); i++){
+		if(v1[i] < v2[i]) return true;
+		else if(v1[i] > v2[i]) return false;
+	}
+	return true;
 }
 
 bool QueryResult::equalityCompare(vector<int> v1, vector<int> v2){
