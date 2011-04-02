@@ -194,7 +194,7 @@ void Validator::getKeyWord(int type, string &relationType){
 		relationType = "Uses ";
 		break;
 	case MODIFIES:
-		relationType = "Modifies* ";
+		relationType = "Modifies ";
 		break;		
 	default:
 		throw new string ("undefined relation type! -- throw by Validator::getKeyWord ");
