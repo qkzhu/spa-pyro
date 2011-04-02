@@ -21,22 +21,18 @@ QueryEvaluator::QueryEvaluator(PKB *p, PqlPreprocessor *q)
 {
 	mPKBObject = p;
 	mQueryTree = q;
+	varCodeEnding = ENCODE_ENDING+1;
+	isBoolSelected = false;
 }
 
 //*********Noting before coding*****************
 //In the current implementation, I just have basic evaluator. Evaluate one clause after one. No complex optimization.
 //For relational linking, it's to be implemented after the basic one.
-void QueryEvaluator::evaluate()
-{
-	//evaluation tuple, this is the final and medium evaluation tuple
-	vector<vector<int> > eva_tuple;   
-
-	int var_code_ending = ENCODE_ENDING+1; //I need to use it when I meet '_' in relation to create new variable
-
+void QueryEvaluator::evaluate(){
 	vector<int> select;
 	mQueryTree->selectAt(select, 0);  //Elements to be selected
-	bool is_bool_sel = false;
-	if(select[0] == mQueryTree->getIndex("BOOLEAN")) is_bool_sel = true;
+	
+	if(select[0] == mQueryTree->getIndex("BOOLEAN")) isBoolSelected = true;
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////FOR DEBUGGING
 	cout<< "PQL parser checking"<< endl;
@@ -71,12 +67,102 @@ void QueryEvaluator::evaluate()
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	//QE evaluate the With clause, then pattern clause, and in the end Such That clause.
+	bool unrelated_finish = false;
+	int with_size; //= mQueryTree->withUnrelatedSize();
+	int pattern_size; //= mQueryTree->patternUnrelatedSize();
+	int suchthat_size; //= mQueryTree->suchThatUnrelatedSize();
+	int with_point = 0;
+	int pattern_point = 0;
+	int suchthat_point = 0;
 
-	//Start evaluating With clauses                                  
-	int with_size = mQueryTree->withSize();
-	for(int i = 0; i<with_size; i++){
+	/*while(!unrelated_finish){
+		initialize();
+
+		evaluateWith(unrelated_finish, with_point, with_size);
+		if(mResult.isEmptyResult() || mResult.isBoolSet())
+			return;
+		//AutoTester Collaborative
+		//if(AbstractWrapper::GlobalStop){
+		//	throw new string("GlobalStop, time out!");
+		//}
+	
+		evaluatePattern(unrelated_finish, pattern_point, pattern_size);
+		if(mResult.isEmptyResult() || mResult.isBoolSet())
+			return;
+		//AutoTester Collaborative
+		//if(AbstractWrapper::GlobalStop){
+		//	throw new string("GlobalStop, time out!");
+		//}
+	
+	
+		evaluateSuchThat(unrelated_finish, suchthat_point, suchthat_size);
+		if(mResult.isEmptyResult() || mResult.isBoolSet())
+			return;
+		//AutoTester Collaborative
+		//if(AbstractWrapper::GlobalStop){
+		//	throw new string("GlobalStop, time out!");
+		//}
+	}*/
+	unrelated_finish = true; //temporary use
+
+	initialize();
+
+	with_size = mQueryTree->withSize();
+	pattern_size = mQueryTree->patternSize();
+	suchthat_size = mQueryTree->suchThatSize();
+
+	int last_point = 0;
+	evaluateWith(unrelated_finish, last_point, with_size);
+	if(mResult.isEmptyResult() || mResult.isBoolSet())
+		return;
+	//AutoTester Collaborative
+	//if(AbstractWrapper::GlobalStop){
+	//	throw new string("GlobalStop, time out!");
+	//}
+	
+	last_point = 0;
+	evaluatePattern(unrelated_finish, last_point, pattern_size);
+	if(mResult.isEmptyResult() || mResult.isBoolSet())
+		return;
+	//AutoTester Collaborative
+	//if(AbstractWrapper::GlobalStop){
+	//	throw new string("GlobalStop, time out!");
+	//}
+	
+	last_point = 0;
+	evaluateSuchThat(unrelated_finish, last_point, suchthat_size);
+	if(mResult.isEmptyResult() || mResult.isBoolSet())
+		return;
+	//AutoTester Collaborative
+	//if(AbstractWrapper::GlobalStop){
+	//	throw new string("GlobalStop, time out!");
+	//}
+
+	
+	generateResult();
+	if(mResult.isEmptyResult() || mResult.isBoolSet())
+		return;
+
+	//Sort and condense the result
+	mResult.resultSort();
+
+}//End of evaluate
+
+void QueryEvaluator::evaluateWith(bool& unrelated_finish, int& last_point, int threshold){
+	//Start evaluating With clauses 
+	int start = 0;
+	for(; last_point < threshold; last_point++){
 		vector<int> clause;
-		mQueryTree->withAt(clause, i);
+		//if(!unrelated_finish)
+			//mQueryTree->withUnrelatedAt(clause, last_point);
+		 mQueryTree->withAt(clause, last_point);
+
+		if(clause[0] == -1){
+			break;
+		}else if(clause[0] == -2){
+			break;
+		}
+
 		int clause_size = (int)clause.size();
 		int ref = clause.back();
 
@@ -101,42 +187,38 @@ void QueryEvaluator::evaluate()
 		int p1_name = part1.at(1);
 		int p2_type ;
 		int p2_name ;
-		if(part2_size == 2)  //Variable 
-		{
+		if(part2_size == 2) { //
 			p2_type = part2.at(0);
-			p2_name = var_code_ending++;
-		}
-		//For the case when a.stmt# = b.stmt#
-		else if((int)part1.size() == part2_size)
-		{
+			p2_name = varCodeEnding++;
+		}else if((int)part1.size() == part2_size){ //For the case when a.stmt# = b.stmt#
 			p2_type = part2.at(0);
 			p2_name = part2.at(1);
 		}	
 		vector<vector<int> > with_result;
 		vector<int> tmp;
-		if(p1_type == mQueryTree->getIndex("integer")||p1_type == mQueryTree->getIndex("procOfSimpl") || p1_type == mQueryTree->getIndex("varOfSimpl"))
-			throw new string("QueryEvaluator, getAllType function can not take constant type!");
-		else getAllType(tmp, p1_type);
+		getAllType(tmp, p1_type);
 		
 		vector<int> tmp2;
 		if(p2_type == mQueryTree->getIndex("integer")) tmp2.push_back(part2.at(1));
-		else if(p2_type == mQueryTree->getIndex("varOfSimpl")) {
+		else if(p2_type == mQueryTree->getIndex("varOfSimpl")){
 			int tmp_code = PKB_varEncode(PQL_varDecode(part2.at(1)));
 			if(tmp_code == -1) {
-				mResult.addInType(-1);
+				if(isBoolSelected)
+					mResult.setBoolValue(false);
+				else mResult.addInType(-1);
 				return;
 			}
 			tmp2.push_back(tmp_code);
-		}
-		else if(p2_type == mQueryTree->getIndex("procOfSimpl")) {
+		}else if(p2_type == mQueryTree->getIndex("procOfSimpl")){
 			int tmp_code = PKB_procEncode(PQL_procDecode(part2.at(1)));
 			if(tmp_code == -1){
-				mResult.addInType(-1);
+				if(isBoolSelected)
+					mResult.setBoolValue(false);
+				else mResult.addInType(-1);
 				return;
 			}
 			tmp2.push_back(tmp_code);
-		}
-		else if(p2_type == mQueryTree->getIndex("integer")||p2_type == mQueryTree->getIndex("procOfSimpl") || p2_type == mQueryTree->getIndex("varOfSimpl"))
+		}else if(p2_type == mQueryTree->getIndex("integer")||p2_type == mQueryTree->getIndex("procOfSimpl") || p2_type == mQueryTree->getIndex("varOfSimpl"))
 			throw new string("QueryEvaluator, getAllType function can not take constant type!");
 		else getAllType(tmp2, p2_type);
 		
@@ -177,7 +259,7 @@ void QueryEvaluator::evaluate()
 		it = find(mgTupleIndexing.begin(), mgTupleIndexing.end(), p2_name);
 		if(it == mgTupleIndexing.end())
 			if(p2_type == mQueryTree->getIndex("integer") || p2_type == mQueryTree->getIndex("varOfSimpl") || p2_type == mQueryTree->getIndex("varOfSimpl"))
-				mgTupleIndexing.push_back(var_code_ending++);
+				mgTupleIndexing.push_back(varCodeEnding++);
 			else mgTupleIndexing.push_back(p2_name);
 		else
 		{
@@ -188,26 +270,38 @@ void QueryEvaluator::evaluate()
 		}
 
 		if(with_result.empty()){
-			if(is_bool_sel)
+			if(isBoolSelected)
 				mResult.setBoolValue(false);
 			else mResult.addInType(-1);
 			return;
 		}
 
-		joinTuples(eva_tuple, with_result, numOfCommonElement, same1Tuple1, same2Tuple1, i);
+		joinTuples(evalTuple, with_result, numOfCommonElement, same1Tuple1, same2Tuple1, start);
+		start++;
+
+		if(evalTuple.empty()){
+			if(isBoolSelected)
+				mResult.setBoolValue(false);
+			else mResult.addInType(-1);
+		}
 	}//while: With clause evaluation End
+}
 
-	//AutoTester Collaborative
-	//if(AbstractWrapper::GlobalStop){
-	//	throw new string("GlobalStop, time out!");
-	//}
-	
-
+void QueryEvaluator::evaluatePattern(bool& unrelated_finish, int& last_point, int threshold){
 	//Pattern_PQL Evaluation Start
-	int patternSize = mQueryTree->patternSize();
-	for(int i = 0; i < patternSize; i++){
+	int start = 0;
+	for(last_point = 0; last_point < threshold; last_point++){
 		vector<int> clause;
-		mQueryTree->patternAt(clause, i);
+		//if(!unrelated_finish)
+		//	mQueryTree->patternUnrelatedAt(clause, last_point);
+		 mQueryTree->patternAt(clause, last_point);
+
+		if(clause[0] == -1){
+			return;
+		}else if(clause[0] == -2){
+			return;
+		}
+
 		int var_type = clause[0];
 		int var = clause[1];
 		int pattern1_type;
@@ -245,15 +339,22 @@ void QueryEvaluator::evaluate()
 		//pattern clause read-in finish//
       
 		vector<int> pattern_result;
-		evalPattern_PQL(eva_tuple, pattern_result, var, var_type, pattern1, pattern2);
-	
+		evalPattern_PQL(evalTuple, pattern_result, var, var_type, pattern1, pattern2);
+		
+		if(pattern_result.empty()){
+			if(isBoolSelected)
+				mResult.setBoolValue(false);
+			else mResult.addInType(-1);
+			return;
+		}
+
 		if(mgTupleIndexing.size() == 0){
 			mgTupleIndexing.push_back(var);
 			for(int i = 0; i < (int)pattern_result.size(); i++){
 				vector<int> tmp_insertion;
 				tmp_insertion.push_back(mQueryTree->getIndex("integer"));
 				tmp_insertion.push_back(pattern_result[i]);
-				eva_tuple.push_back(tmp_insertion);
+				evalTuple.push_back(tmp_insertion);
 			}
 		}
 		else{
@@ -261,118 +362,96 @@ void QueryEvaluator::evaluate()
 			if(it == (int)mgTupleIndexing.size()){
 				mgTupleIndexing.push_back(var);
 				vector<vector<int> > new_tmp_eva_tuple;
-				for(int row = 0; row < (int)eva_tuple.size(); row++){
+				for(int row = 0; row < (int)evalTuple.size(); row++){
 					for(int indx = 0; indx < (int)pattern_result.size(); indx++){
 						vector<int> tmp_pattern_vector;
-						tmp_pattern_vector.insert(tmp_pattern_vector.end(), eva_tuple[row].begin(), eva_tuple[row].end());
+						tmp_pattern_vector.insert(tmp_pattern_vector.end(), evalTuple[row].begin(), evalTuple[row].end());
 						tmp_pattern_vector.push_back(mQueryTree->getIndex("integer"));
 						tmp_pattern_vector.push_back(pattern_result[indx]);
 						new_tmp_eva_tuple.push_back(tmp_pattern_vector);
 					}
 				}
-				eva_tuple = new_tmp_eva_tuple;
+				evalTuple = new_tmp_eva_tuple;
 			}else{
-				for(int row = 0; row < (int)eva_tuple.size(); row++){
-					int entry = eva_tuple[row][it];
+				for(int row = 0; row < (int)evalTuple.size(); row++){
+					int entry = evalTuple[row][it];
 					int found = find_ele(pattern_result, entry);
 					if(found == (int)pattern_result.size())
-						eva_tuple.erase(eva_tuple.begin() + row);
+						evalTuple.erase(evalTuple.begin() + row);
 				}
 			}
 		}
-	}//Pattern_PQL Evaluation Finish
+		start++;
 
-	//AutoTester Collaborative
-	//if(AbstractWrapper::GlobalStop){
-	//	throw new string("GlobalStop, time out!");
-	//}
-	
+		if(evalTuple.empty()){
+			if(isBoolSelected)
+				mResult.setBoolValue(false);
+			else mResult.addInType(-1);
+		}
+	}//Pattern_PQL Evaluation Finish
+}
+
+void QueryEvaluator::evaluateSuchThat(bool& unrelated_finish, int& last_point, int threshold){
 	//Start evaluating SuchThat clauses
-	int suchThatSize = mQueryTree->suchThatSize();
-	for(int i= 0; i<suchThatSize; i++)
+	int start = 0;
+	for(last_point = 0; last_point < threshold; last_point++)
 	{
 		vector<int> clause;
-		mQueryTree->suchThatAt(clause, i);
+		//if(!unrelated_finish)
+		//	mQueryTree->suchThatUnrelatedAt(clause, last_point);
+		 mQueryTree->suchThatAt(clause, last_point);
+
+		if(last_point == threshold - 1) unrelated_finish = true;
+		if(clause[0] == -1){
+			return;
+		}else if(clause[0] == -2){
+			return;
+		}
+
 		int rel = clause[0];
-		int para1Type;
+		int para1_type;
 		int para1;
-		int para2Type;
+		int para2_type;
 		int para2;
 
 		
-		underScore(rel, clause, para1, para1Type, para2, para2Type, var_code_ending);
+		underScore(rel, clause, para1, para1_type, para2, para2_type, varCodeEnding);
 
 		/*
 		///////////////////////////////////////////TESTING//////////////////////////////////////////////////
 		cout << "underScore check:" << endl;
 		cout << para1 << endl;
-		cout << para1Type << endl;
+		cout << para1_type << endl;
 		cout << para2 << endl;
-		cout << para2Type << endl;
+		cout << para2_type << endl;
 		cout << "underScore check finish" << endl;
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		*/
 
-		//Evaluating Relation
-		vector<vector<int> > relResult;
-		map<int,vector<int> >::iterator it1 = var_value_table.find(para1);
-		map<int,vector<int> >::iterator it2 = var_value_table.find(para2);
-
-		//If this variable is assigned with a value in with clause, do the substitution.
-		if(it1 != var_value_table.end()){
-			para1Type = (it1->second).at(0);
-			para1 = (it1->second).at(1);
-		}
-		if(it2 != var_value_table.end()){
-			para2Type = (it2->second).at(0);
-			para2 = (it2->second).at(1);
-		}
-
-		
 		//Convert all "a", "b", "c" 's code from PQL code to PKB code
-		if(para1Type == mQueryTree->getIndex("varOfSimpl")) para1 = PKB_varEncode(PQL_varDecode(para1));
-		else if(para1Type == mQueryTree->getIndex("procOfSimpl")) para1 = PKB_procEncode(PQL_procDecode(para1));
+		if(para1_type == mQueryTree->getIndex("varOfSimpl")) para1 = PKB_varEncode(PQL_varDecode(para1));
+		else if(para1_type == mQueryTree->getIndex("procOfSimpl")) para1 = PKB_procEncode(PQL_procDecode(para1));
 
-		if(para2Type == mQueryTree->getIndex("varOfSimpl")) para2 = PKB_varEncode(PQL_varDecode(para2));
-		else if(para2Type == mQueryTree->getIndex("procOfSimpl")) para2 = PKB_procEncode(PQL_procDecode(para2));
+		if(para2_type == mQueryTree->getIndex("varOfSimpl")) para2 = PKB_varEncode(PQL_varDecode(para2));
+		else if(para2_type == mQueryTree->getIndex("procOfSimpl")) para2 = PKB_procEncode(PQL_procDecode(para2));
 	
 		//When the parameter of relation is not in simple, the query just evaluate to null
 		if(para1 == -1 || para2 == -1){
-			if(is_bool_sel)
+			if(isBoolSelected)
 				mResult.setBoolValue(false);
 			else mResult.addInType(-1);
 			return;
 		}
 
 		//Check the input argument candidates
+		vector<vector<int> > relResult;
 		vector<int> para1_collection;
 		vector<int> para2_collection;
-		
-		if(para1Type == mQueryTree->getIndex("integer")) para1_collection.push_back(para1);
-		else if(para1Type == mQueryTree->getIndex("procOfSimpl")) para1_collection.push_back(para1);
-		else if(para1Type == mQueryTree->getIndex("varOfSimpl")) para1_collection.push_back(para1);
-		else getAllType(para1_collection, para1Type);
 
-		if(para2Type == mQueryTree->getIndex("integer")) para2_collection.push_back(para2);
-		else if(para2Type == mQueryTree->getIndex("procOfSimpl")) para2_collection.push_back(para2);
-		else if(para2Type == mQueryTree->getIndex("varOfSimpl")) para2_collection.push_back(para2);
-		else getAllType(para2_collection, para2Type);
+		checkCandidates(para1, para1_type, para1_collection);
+		checkCandidates(para2, para2_type, para2_collection);
 		
 
-		/*
-		//////////////////////////////////////TESTING /////////////////////////////////////////////////////////
-		cout << "para1_collection = " << endl;
-		for(int p = 0; p < (int)para1_collection.size(); p++){
-			cout << para1_collection.at(p) << " ";
-		}
-		cout << endl;
-		cout << "para2_collection = " << endl;
-		for(int p = 0; p < (int)para2_collection.size(); p++){
-			cout << para2_collection.at(p) << " ";
-		}
-		cout << endl;
-		/////////////////////////////////////////////////////////////////////////////////////////////////////////
-		*/
 		if(rel == mQueryTree->getIndex("parent")){	
 			evalParent(NOSTAR, relResult, para1_collection, para2_collection);
 		}else if(rel==mQueryTree->getIndex("parent*")){
@@ -382,15 +461,15 @@ void QueryEvaluator::evaluate()
 		}else if(rel==mQueryTree->getIndex("follows*")){
 			evalFollows(STAR, relResult, para1_collection, para2_collection);
 		}else if(rel==mQueryTree->getIndex("uses")){
-			if(para1Type == mQueryTree->getIndex("procedure") || para1Type == mQueryTree->getIndex("procOfSimpl"))
+			if(para1_type == mQueryTree->getIndex("procedure") || para1_type == mQueryTree->getIndex("procOfSimpl"))
 				evalMU(USE, relResult, mQueryTree->getIndex("procOfSimpl"), para1_collection, para2_collection);
-			else if(para1Type == mQueryTree->getIndex("stmt") || para1Type == mQueryTree->getIndex("assign")|| para1Type == mQueryTree->getIndex("if")|| para1Type == mQueryTree->getIndex("while")|| para1Type == mQueryTree->getIndex("call")||para1Type == mQueryTree->getIndex("integer"))
+			else if(para1_type == mQueryTree->getIndex("stmt") || para1_type == mQueryTree->getIndex("assign")|| para1_type == mQueryTree->getIndex("if")|| para1_type == mQueryTree->getIndex("while")|| para1_type == mQueryTree->getIndex("call")||para1_type == mQueryTree->getIndex("integer"))
 				evalMU(USE, relResult, mQueryTree->getIndex("integer"), para1_collection, para2_collection);
 			else throw new string("QueryEvaluator::evaluate, for evaluating uses, no such para type");
 		}else if(rel==mQueryTree->getIndex("modifies")){
-			if(para1Type == mQueryTree->getIndex("procedure") || para1Type == mQueryTree->getIndex("procOfSimpl"))
+			if(para1_type == mQueryTree->getIndex("procedure") || para1_type == mQueryTree->getIndex("procOfSimpl"))
 				evalMU(MOD, relResult, mQueryTree->getIndex("procOfSimpl"), para1_collection, para2_collection);
-			else if(para1Type == mQueryTree->getIndex("stmt") || para1Type == mQueryTree->getIndex("assign")|| para1Type == mQueryTree->getIndex("if")|| para1Type == mQueryTree->getIndex("while")|| para1Type == mQueryTree->getIndex("call")||para1Type == mQueryTree->getIndex("integer"))
+			else if(para1_type == mQueryTree->getIndex("stmt") || para1_type == mQueryTree->getIndex("assign")|| para1_type == mQueryTree->getIndex("if")|| para1_type == mQueryTree->getIndex("while")|| para1_type == mQueryTree->getIndex("call")||para1_type == mQueryTree->getIndex("integer"))
 				evalMU(MOD, relResult, mQueryTree->getIndex("integer"), para1_collection, para2_collection);
 			else throw new string("QueryEvaluator::evaluate, for evaluating modifies, no such para type");
 		}else if(rel==mQueryTree->getIndex("calls")){
@@ -441,63 +520,77 @@ void QueryEvaluator::evaluate()
 		}else throw new string("Relation not exists");
 		
 		if(relResult.empty()){
-			if(is_bool_sel)
+			if(isBoolSelected)
 				mResult.setBoolValue(false);
 			else mResult.addInType(-1);
 			return;
 		}
 
 		//Manipulation of indexing issue, adjust the mgTupleIndexing and find common index to pass
-		int it = find_ele(mgTupleIndexing, para1);
+		int it;
 		int same1Tuple1 = 0;
 		int same2Tuple1 = 0;
 		int numOfCommonElement = 0;
-		if(it == (int)mgTupleIndexing.size())
-			if(para1Type == mQueryTree->getIndex("integer") || para1Type == mQueryTree->getIndex("varOfSimpl") || para1Type == mQueryTree->getIndex("procOfSimpl"))
-				mgTupleIndexing.push_back(var_code_ending++);
-			else mgTupleIndexing.push_back(para1);
-		else
-		{
-			for(int i = 0; i<=it; i++){
-				same1Tuple1++;
+		if(!mgTupleIndexing.empty()){
+			it = find_ele(mgTupleIndexing, para1);
+			if(it == (int)mgTupleIndexing.size())
+				if(para1_type == mQueryTree->getIndex("integer") || para1_type == mQueryTree->getIndex("varOfSimpl") || para1_type == mQueryTree->getIndex("procOfSimpl"))
+					mgTupleIndexing.push_back(varCodeEnding++);
+				else mgTupleIndexing.push_back(para1);
+			else
+			{
+				for(int i = 0; i<=it; i++){
+					same1Tuple1++;
+				}
+				numOfCommonElement = 2;
 			}
-			numOfCommonElement = 2;
+			it = find_ele(mgTupleIndexing, para2);
+			if(it == (int)mgTupleIndexing.size())
+				if(para2_type == mQueryTree->getIndex("integer") || para2_type == mQueryTree->getIndex("varOfSimpl") || para2_type == mQueryTree->getIndex("procOfSimpl"))
+					mgTupleIndexing.push_back(varCodeEnding++);
+				else mgTupleIndexing.push_back(para2);
+			else
+			{
+				for(int i = 0; i<=it; i++){
+					same2Tuple1++;
+				}
+				numOfCommonElement = numOfCommonElement+2;
+			}
+		}else{
+			numOfCommonElement = 0;
+			mgTupleIndexing.push_back(para1);
+			mgTupleIndexing.push_back(para2);
 		}
-		it = find_ele(mgTupleIndexing, para2);
-		if(it == (int)mgTupleIndexing.size())
-			if(para2Type == mQueryTree->getIndex("integer") || para2Type == mQueryTree->getIndex("varOfSimpl") || para2Type == mQueryTree->getIndex("procOfSimpl"))
-				mgTupleIndexing.push_back(var_code_ending++);
-			else mgTupleIndexing.push_back(para2);
-		else
-		{
-			for(int i = 0; i<=it; i++){
-				same2Tuple1++;
+
+		if(para1 == para2){
+			removeInequal(relResult);
+			if(numOfCommonElement == 2)
+				numOfCommonElement = 1;
+			else{
+				if(mgTupleIndexing.empty())
+					mgTupleIndexing.push_back(para1);
+				else
+					mgTupleIndexing.pop_back();
 			}
-			numOfCommonElement = numOfCommonElement+2;
 		}
 		
-		/*cout << "relResult = " << endl;
-		for(int p = 0; p < (int)relResult.size(); p++){
-			vector<int> tmp_store = relResult[p];
-			for(int j = 0; j < (int)tmp_store.size(); j++){
-				cout << tmp_store.at(j) << " ";
-			}
-			cout << endl;
+		if(relResult.empty()){
+			if(isBoolSelected)
+				mResult.setBoolValue(false);
+			else mResult.addInType(-1);
 		}
 
-		cout << "Checking mgTupleIndexing: " << endl;
-		for(int k = 0; k < (int)mgTupleIndexing.size(); k++){
-			cout << mgTupleIndexing[k] << " ";
+		joinTuples(evalTuple, relResult, numOfCommonElement, same1Tuple1, same2Tuple1, last_point);
+
+		if(evalTuple.empty()){
+			if(isBoolSelected)
+				mResult.setBoolValue(false);
+			else mResult.addInType(-1);
+			return;
 		}
-		cout << endl;
-		cout << numOfCommonElement <<" "<< same1Tuple1 << " " <<  same2Tuple1 << endl;*/
-
-		joinTuples(eva_tuple, relResult, numOfCommonElement, same1Tuple1, same2Tuple1, i);
-
-		
-		/*cout << "eva_tuple = " << endl;
-		for(int p = 0; p < (int)eva_tuple.size(); p++){
-			vector<int> tmp_store = eva_tuple[p];
+		/*cout << "evalTuple = " << endl;
+		for(int p = 0; p < (int)evalTuple.size(); p++){
+			vector<int> tmp_store = evalTuple[p];
 			for(int j = 0; j < (int)tmp_store.size(); j++){
 				cout << tmp_store.at(j) << " ";
 			}
@@ -505,23 +598,164 @@ void QueryEvaluator::evaluate()
 		}*/
 
 	}//while: such that evaluation END
+}
 
-	//AutoTester Collaborative
-	//if(AbstractWrapper::GlobalStop){
-	//	throw new string("GlobalStop, time out!");
-	//}
 
-	if(is_bool_sel){  //If the select is boolean
-		if(with_size == 0 && suchThatSize == 0 && patternSize == 0){
+void QueryEvaluator::initialize(){
+	mgTupleIndexing.clear();
+	evalTuple.clear();
+}
+
+void QueryEvaluator::removeInequal(vector<vector<int> >& tuple){
+	for(int i = 0; i < (int)tuple.size(); ){
+		int value1_type = tuple[i][0];
+		int value1 = tuple[i][1];
+		int value2_type = tuple[i][2];
+		int value2 = tuple[i][3];
+		if(value1 != value2)
+			tuple.erase(tuple.begin() + i);
+		else{
+			tuple[i].clear();
+			tuple[i].push_back(value1_type);
+			tuple[i].push_back(value1);
+			i++;
+		}
+	}
+}
+
+void QueryEvaluator::checkCandidates(int para, int para_type, vector<int>& candidates){
+	bool found = false;
+	for(int i = 0; i < (int)mgTupleIndexing.size(); i++){
+		if(para == mgTupleIndexing[i]){
+			for(int j = 0; j < (int)evalTuple.size(); j++){
+				candidates.push_back(evalTuple[j][2*i+1]);
+			}
+			found = true;
+			break;
+		}
+	}
+
+	if(para_type == mQueryTree->getIndex("integer")) candidates.push_back(para);
+	else if(para_type == mQueryTree->getIndex("procOfSimpl")) candidates.push_back(para);
+	else if(para_type == mQueryTree->getIndex("varOfSimpl")) candidates.push_back(para);
+	else getAllType(candidates, para_type);
+}
+
+
+void QueryEvaluator::transform(vector<vector<int> >& pre_tuple, vector<vector<int> >& candidates, vector<int> non_evaled_selects){
+	int size = candidates.size();
+	vector<vector<int> > tmp_result;
+	if(candidates.empty()) return;
+	if(pre_tuple.empty()){
+		for(int k = 0; k < (int)candidates[0].size(); k++){
+			vector<int> join_entry;
+			for(int i = 0; i < (int)candidates.size(); i++){
+				join_entry.push_back(candidates[i][k]);
+			}
+			tmp_result.push_back(join_entry);
+		}
+	}else{	
+		for(int i = 0; i< (int)pre_tuple.size(); i++){
+			for(int j = 0; j < (int)candidates[0].size(); j++){
+				vector<int> join_entry;
+				join_entry.insert(join_entry.end(), pre_tuple[i].begin(), pre_tuple[i].end());
+				for(int k = 0; k< (int)candidates.size(); k++){
+					int insert_element = candidates[k][j];
+					int insert_place = non_evaled_selects[k];
+					join_entry.insert(join_entry.begin()+insert_place, insert_element);
+				}
+				tmp_result.push_back(join_entry);
+			}
+		}
+	}
+	pre_tuple = tmp_result;
+}
+
+void QueryEvaluator::generateResult(){
+	vector<vector<int> > final_result;
+
+	int with_size = mQueryTree->withSize();
+	int pattern_size = mQueryTree->patternSize();
+	int suchthat_size = mQueryTree->suchThatSize();
+
+	if(isBoolSelected){  //If the select is boolean
+		if(with_size == 0 && suchthat_size == 0 && pattern_size == 0){
 			mResult.setBoolValue(true);
 			return;
 		}
 
-		if(mgTupleIndexing.empty()) mResult.setBoolValue(false);
-		else mResult.setBoolValue(true);
+		//if(mgTupleIndexing.empty()) mResult.setBoolValue(false); //this case should be filtered by previous evaluation already
+		mResult.setBoolValue(true);
 		return;
 	}
 
+
+	//find which of the selected elements are inside the evaluated result tuple
+	//1. no select element is in the result tuple, the non_evaluted element may happend to be inside with or pattern
+	//2. partial select elements are in the result tuple, the non_evaluted element may happend to be inside with or pattern
+	//3.. all select elements are in the result tuple
+	vector<vector<int> > selection_candidates;
+	vector<vector<int> > suchthat_result;
+	vector<int> non_evaled_selects;
+	for(int i = 0; i < mQueryTree->selectSize(); i++){
+			vector<int> tmp_selected;
+			mQueryTree->selectAt(tmp_selected, i);
+			vector<int> tmp;
+			int select_type = tmp_selected[0];
+			int selected = tmp_selected[1];
+
+			bool selected_in_st = false;
+
+			for(int index = 0; index < (int)mgTupleIndexing.size(); index++){
+				if(selected == mgTupleIndexing[index]){
+					for(int eva_ind = 0; eva_ind < (int)evalTuple.size(); eva_ind++){
+						tmp.push_back(evalTuple[eva_ind][index*2+1]);
+					}
+					selected_in_st = true;
+					suchthat_result.push_back(tmp);
+					break;
+				}
+			}
+
+			if(!selected_in_st){
+				getAllType(tmp, select_type);
+				selection_candidates.push_back(tmp);
+				non_evaled_selects.push_back(i);
+			}
+		
+			if(select_type == mQueryTree->getIndex("procedure"))
+				mResult.addInType(mQueryTree->getIndex("procOfSimpl"));
+			else if(select_type == mQueryTree->getIndex("variable"))
+				mResult.addInType(mQueryTree->getIndex("varOfSimpl"));
+			else mResult.addInType(mQueryTree->getIndex("integer")); 
+	}
+
+	//Join all the variable candidates
+	if(!suchthat_result.empty()){
+		int size = suchthat_result[0].size();
+		for(int ind = 0; ind < size; ind++){
+			vector<int> tmp_result;
+			for(int ind2 = 0; ind2 < (int)suchthat_result.size(); ind2++){
+				tmp_result.push_back(suchthat_result[ind2][ind]);
+			}
+			final_result.push_back(tmp_result);
+		}
+	}
+
+	//both tuple should have their type removed
+	transform(final_result, selection_candidates, non_evaled_selects);
+
+	for(int i = 0; i < (int)final_result.size(); i++){
+		vector<int> new_tuple_tmp;
+		int size = final_result[i].size();
+		for(int k = 0; k < size; k++){
+			new_tuple_tmp.push_back(final_result[i][k]);
+		}
+		mResult.addInTuple(new_tuple_tmp);
+	}
+
+
+	/*
 	//find which of the selected elements are inside the evaluated result tuple
 	//1. no select element is in the result tuple
 	//2. partial select elements are in the result tuple
@@ -543,23 +777,22 @@ void QueryEvaluator::evaluate()
 
 	/*
 	cout << "eval_tuple check:" << endl;
-	for(int i = 0; i < (int)eva_tuple.size(); i++){
-		vector<int> ele = eva_tuple.at(i);
+	for(int i = 0; i < (int)evalTuple.size(); i++){
+		vector<int> ele = evalTuple.at(i);
 		for(int p = 0; p < (int)ele.size(); p++){
 			cout << ele[p] << " ";
 		}
 		cout << endl;
 	}
 	cout << "Checking finish" << endl;
-	*/
 
 
 	//if no with and such that clause, just return;
 	//Or if the selected element is not inside evaluated result tuple, depend on the tuple
-	if((with_size == 0 && suchThatSize == 0 && patternSize == 0) || ((int)mgTupleIndexing.size()!=0 && !is_selected)){
+	if((with_size == 0 && suchthat_size == 0 && pattern_size == 0) || ((int)mgTupleIndexing.size()!=0 && !is_selected)){
 		//if the selected element is not inside evaluated result tuple and result tuple is null
 		if((int)mgTupleIndexing.size() != 0){
-			if(eva_tuple.empty()) {
+			if(evalTuple.empty()) {
 				mResult.addInType(-1);
 				return;
 			}
@@ -583,7 +816,7 @@ void QueryEvaluator::evaluate()
 			else mResult.addInType(mQueryTree->getIndex("integer")); 
 		}
 
-		/*///////////////////////////////////////////////////////////////TESTING ///////////////////////////
+		///////////////////////////////////////////////////////////////TESTING ///////////////////////////
 		cout << "selection_candidate check" << endl;
 		for(int i = 0; i < (int)selection_candidates.size(); i++){
 			vector<int> tmp_sto = selection_candidates[i];
@@ -592,12 +825,12 @@ void QueryEvaluator::evaluate()
 			}
 			cout << endl;
 		}
-		cout << "Checking finish!!!" << endl;*/
+		cout << "Checking finish!!!" << endl;
 		
 
 		//Join all the variable candidates
 		vector<vector<int> > final_result;
-		joinSelection(final_result, selection_candidates);
+		transform(final_result, selection_candidates);
 		
 		/* //////////////////////////////////////////////////TESTING/////////////////////////////////////
 		cout << "Final_result check: " << endl;
@@ -608,7 +841,7 @@ void QueryEvaluator::evaluate()
 			}
 			cout << endl;
 		}
-		cout << "Checking FINISH!!!" << endl;*/
+		cout << "Checking FINISH!!!" << endl;
 
 		for(int i = 0; i < (int)final_result.size(); i++){
 			vector<int> new_tuple_tmp;
@@ -621,69 +854,30 @@ void QueryEvaluator::evaluate()
 		//mResult.print();   // TESTING
 		//candidates join finishes
 	}else{
-		if(eva_tuple.size() == 0){
+		if(evalTuple.size() == 0){
 			mResult.addInType(-1);
 			return;
 		}
 		
-		int size = eva_tuple[0].size();
+		int size = evalTuple[0].size();
 		for(int i = 0; i < (int)indexes.size(); i++){
-			int type = eva_tuple[0][indexes[i]*2];
+			int type = evalTuple[0][indexes[i]*2];
 			mResult.addInType(type);
 		}
 		
-		for(int i = 0; i< (int)eva_tuple.size(); i++){
+		for(int i = 0; i< (int)evalTuple.size(); i++){
 			vector<int> tmp_entry;
 			for(int j = 0; j < (int)mQueryTree->selectSize(); j++){
-				int v = eva_tuple[i][indexes[j]*2+1];
+				int v = evalTuple[i][indexes[j]*2+1];
 				tmp_entry.push_back(v);
 			}
 			mResult.addInTuple(tmp_entry);
 		}	
-	}
-
-	//In case the returned mResult is empty, then insert -1 to the result.
-	vector<int> resultType = mResult.getTypes();
-	if(resultType.empty()) mResult.addInType(-1);
-
-
-	//Sort and condense the result
-	mResult.resultSort();
-
-}//End of evaluate
-
-
-void QueryEvaluator::joinSelection(vector<vector<int> >& pre_tuple, vector<vector<int> >& candidates){
-	int size = candidates.size();
-	for(int i = 0; i < size; i++){
-		int type = mResult.getTypeAt(i);
-		vector<int> tmp_tuple = candidates.at(i);
-		vector<vector<int> > new_tuple;
-		for(int j = 0; j < (int)tmp_tuple.size(); j++){
-			vector<int> tmp;
-			tmp.push_back(type);
-			tmp.push_back(tmp_tuple.at(j));
-			new_tuple.push_back(tmp);
-		}
-		
-		vector<vector<int> > tmp_result;
-		if(pre_tuple.empty())
-			pre_tuple = new_tuple;
-		else{
-			for(int i = 0; i< (int)pre_tuple.size(); i++){
-				for(int k = 0; k< (int)new_tuple.size(); k++){
-					vector<int> join_entry;
-					join_entry.insert(join_entry.end(), pre_tuple[i].begin(), pre_tuple[i].end());
-					join_entry.insert(join_entry.end(), new_tuple[k].begin(), new_tuple[k].end());
-					tmp_result.push_back(join_entry);
-				}
-			}
-			pre_tuple = tmp_result;
-		}
-	}
+	}*/
 }
 
-void QueryEvaluator::underScore(int rel, vector<int> clause, int& para1, int& para1_type, int& para2, int& para2_type, int& var_code_ending){
+
+void QueryEvaluator::underScore(int rel, vector<int> clause, int& para1, int& para1_type, int& para2, int& para2_type, int& varCodeEnding){
 	int next_indx = 0;
 	if(clause[1] == mQueryTree->getIndex("_"))// if the first para is _
 	{ 
@@ -710,26 +904,26 @@ void QueryEvaluator::underScore(int rel, vector<int> clause, int& para1, int& pa
 	{
 		if(para1 == mQueryTree->getIndex("_")){  //If _ , then replace with (stmt newest)
 			para1_type = mQueryTree->getIndex("stmt");
-			para1 = var_code_ending++;
+			para1 = varCodeEnding++;
 		}if(para2 == mQueryTree->getIndex("_")){
 			para2_type = mQueryTree->getIndex("stmt");
-			para2 = var_code_ending++;
+			para2 = varCodeEnding++;
 		}
 	}
 	else if(rel == mQueryTree->getIndex("uses") || rel == mQueryTree->getIndex("modifies")) // uses and modifies
 	{		
 		if(para2 == mQueryTree->getIndex("_")){ //replace with (variable newest)
 			para2_type = mQueryTree->getIndex("variable");
-			para2 = var_code_ending++;
+			para2 = varCodeEnding++;
 		}
 	}
 	else if(rel == mQueryTree->getIndex("calls") || rel == mQueryTree->getIndex("calls*")) //relation is calls, calls*
 	{
 		if(para1 == mQueryTree->getIndex("_")){ //replace with (proc newest)
 			para1_type = mQueryTree->getIndex("procedure");
-			para1 = var_code_ending++;
+			para1 = varCodeEnding++;
 		}if(para2 == mQueryTree->getIndex("_")){
-			para2 = var_code_ending++;
+			para2 = varCodeEnding++;
 			para2_type = mQueryTree->getIndex("procedure");
 		}
 	}else throw new string("QueryEvaluator::underScore, no such relation type!");  //do nothing 
@@ -761,26 +955,26 @@ void QueryEvaluator::evalPattern_PQL(vector<vector<int> >& result_tuple, vector<
 	cout << endl;
 }
 
-void QueryEvaluator::joinTuples(vector<vector<int> >& eva_tuple, vector<vector<int> >& pre_tuple, int common_num, int same1_tuple1, int same2_tuple1, int first_time){
+void QueryEvaluator::joinTuples(vector<vector<int> >& evalTuple, vector<vector<int> >& pre_tuple, int common_num, int same1_tuple1, int same2_tuple1, int first_time){
 		if(common_num == 2){
 			if(same1_tuple1 != 0)
-				eva_tuple = TupleOperations::tupleJoinOneC(same1_tuple1, 0, eva_tuple, pre_tuple);
-			else eva_tuple = TupleOperations::tupleJoinOneC(same2_tuple1, 1, eva_tuple, pre_tuple);
+				evalTuple = TupleOperations::tupleJoinOneC(same1_tuple1, 0, evalTuple, pre_tuple);
+			else evalTuple = TupleOperations::tupleJoinOneC(same2_tuple1, 1, evalTuple, pre_tuple);
 		}else if(common_num == 4){
-			eva_tuple = TupleOperations::tupleJoinTwoC(same1_tuple1, same2_tuple1, eva_tuple, pre_tuple);
-		}else if((int) eva_tuple.size() == 0){
+			evalTuple = TupleOperations::tupleJoinTwoC(same1_tuple1, same2_tuple1, evalTuple, pre_tuple);
+		}else if((int) evalTuple.size() == 0){
 			if(first_time == 0)
-				eva_tuple = pre_tuple;
+				evalTuple = pre_tuple;
 		}else{
 			vector<vector<int> > tmp_store;
-			for(vector<vector<int> >::iterator i = eva_tuple.begin(); i<eva_tuple.end(); i++)
+			for(vector<vector<int> >::iterator i = evalTuple.begin(); i<evalTuple.end(); i++)
 				for(vector<vector<int> >::iterator k = pre_tuple.begin(); k<pre_tuple.end(); k++){
 					vector<int> join_entry;
 					join_entry.insert(join_entry.end(), (*i).begin(), (*i).end());
 					join_entry.insert(join_entry.end(), (*k).begin(), (*k).end());
 					tmp_store.push_back(join_entry);
 				}				
-			eva_tuple = tmp_store;
+			evalTuple = tmp_store;
 		}
 }
 
@@ -1252,6 +1446,7 @@ void QueryEvaluator::getAffectsStar(int up, vector<int>& result, int para){
 }
 
 //If no affects exists, return the original result vector
+//before checking, filter the candidates in result by 
 void QueryEvaluator::getAffects(int up, vector<int>& result, int para){
 	if(up == DOWN){
 		vector<int> tmp;
