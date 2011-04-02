@@ -18,7 +18,7 @@ int main(int argc, char* argv[]){
 
 	   string query_file;
 	   cout << "Please enter the query file location: " << endl;
-	   query_file = "query.txt";
+	   query_file = "feifeiscase.txt";
 	   //cin >> query_file;
 	   ifstream qrFile (query_file, ifstream::in);
 

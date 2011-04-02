@@ -1,5 +1,2 @@
-constant c;stmt s1, s2, s3, s4, s5,s6; prog_line p1,p2; while w; assign a;
-
-select BOOLEAN such that affects(15,8); 
-
-
+stmt s1, s2; prog_line p1,p2; while w; assign a;
+select w such that parent*(w,s1) and affects*(s1,s2);
