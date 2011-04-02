@@ -233,7 +233,7 @@ void AST::printTree(ProcTable &procTable, VarTable &varTable)
 bool AST::isType(int stmt, Node::NodeType nt){
 
 	if(stmt == 0 || stmt > getMaxStmtNum()) return false;
-	Node* tt = StatNumAndNodeList[stmt];
+
 	return (StatNumAndNodeList[stmt]->type == nt);
 
 }
