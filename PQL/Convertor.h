@@ -23,6 +23,7 @@ private:
 	static map<string, string> shortcutToContent;//s->stmt;
 	static bool isPatterned(string s);
 public:
+	static void getAllIndex(vector<int> &indexlist);
 	static void showIndexTable();
 	static const int QUATEDSTRING=400;
 	static const int PATTERNSTRING=500;
