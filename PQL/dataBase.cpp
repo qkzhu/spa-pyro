@@ -13,15 +13,15 @@ void dataBase::populateModifiesTables(){
 	table.push_back(CALL);		table.push_back(VARIABLE); modifyTable.push_back(table); table.clear();
 	table.push_back(PROG_L);	table.push_back(VARIABLE); modifyTable.push_back(table); table.clear();
 
-	table.push_back(PROCEDURE); table.push_back(VARNAME); modifyTable.push_back(table); table.clear();
-	table.push_back(PROCNAME);  table.push_back(VARNAME); modifyTable.push_back(table); table.clear();
-	table.push_back(STMT);		table.push_back(VARNAME); modifyTable.push_back(table); table.clear();
-	table.push_back(INT);		table.push_back(VARNAME); modifyTable.push_back(table); table.clear();
-	table.push_back(IF);		table.push_back(VARNAME); modifyTable.push_back(table); table.clear();
-	table.push_back(WHILE);		table.push_back(VARNAME); modifyTable.push_back(table); table.clear();
-	table.push_back(ASSIGN);	table.push_back(VARNAME); modifyTable.push_back(table); table.clear();
-	table.push_back(CALL);		table.push_back(VARNAME); modifyTable.push_back(table); table.clear();
-	table.push_back(PROG_L);	table.push_back(VARNAME); modifyTable.push_back(table); table.clear();
+	table.push_back(PROCEDURE); table.push_back(VAROFSIMPLE); modifyTable.push_back(table); table.clear();
+	table.push_back(PROCNAME);  table.push_back(VAROFSIMPLE); modifyTable.push_back(table); table.clear();
+	table.push_back(STMT);		table.push_back(VAROFSIMPLE); modifyTable.push_back(table); table.clear();
+	table.push_back(INT);		table.push_back(VAROFSIMPLE); modifyTable.push_back(table); table.clear();
+	table.push_back(IF);		table.push_back(VAROFSIMPLE); modifyTable.push_back(table); table.clear();
+	table.push_back(WHILE);		table.push_back(VAROFSIMPLE); modifyTable.push_back(table); table.clear();
+	table.push_back(ASSIGN);	table.push_back(VAROFSIMPLE); modifyTable.push_back(table); table.clear();
+	table.push_back(CALL);		table.push_back(VAROFSIMPLE); modifyTable.push_back(table); table.clear();
+	table.push_back(PROG_L);	table.push_back(VAROFSIMPLE); modifyTable.push_back(table); table.clear();
 
 	table.push_back(PROCEDURE); table.push_back(UNDERSCORE); modifyTable.push_back(table); table.clear();
 	table.push_back(PROCNAME);  table.push_back(UNDERSCORE); modifyTable.push_back(table); table.clear();
@@ -65,15 +65,15 @@ void dataBase::populateUseTables(){
 	table.push_back(CALL);		table.push_back(VARIABLE); useTable.push_back(table); table.clear();
 	table.push_back(PROG_L);	table.push_back(VARIABLE); useTable.push_back(table); table.clear();
 
-	table.push_back(PROCEDURE); table.push_back(VARNAME); useTable.push_back(table); table.clear();
-	table.push_back(PROCNAME);  table.push_back(VARNAME); useTable.push_back(table); table.clear();
-	table.push_back(STMT);		table.push_back(VARNAME); useTable.push_back(table); table.clear();
-	table.push_back(INT);		table.push_back(VARNAME); useTable.push_back(table); table.clear();
-	table.push_back(IF);		table.push_back(VARNAME); useTable.push_back(table); table.clear();
-	table.push_back(WHILE);		table.push_back(VARNAME); useTable.push_back(table); table.clear();
-	table.push_back(ASSIGN);	table.push_back(VARNAME); useTable.push_back(table); table.clear();
-	table.push_back(CALL);		table.push_back(VARNAME); useTable.push_back(table); table.clear();
-	table.push_back(PROG_L);	table.push_back(VARNAME); useTable.push_back(table); table.clear();
+	table.push_back(PROCEDURE); table.push_back(VAROFSIMPLE); useTable.push_back(table); table.clear();
+	table.push_back(PROCNAME);  table.push_back(VAROFSIMPLE); useTable.push_back(table); table.clear();
+	table.push_back(STMT);		table.push_back(VAROFSIMPLE); useTable.push_back(table); table.clear();
+	table.push_back(INT);		table.push_back(VAROFSIMPLE); useTable.push_back(table); table.clear();
+	table.push_back(IF);		table.push_back(VAROFSIMPLE); useTable.push_back(table); table.clear();
+	table.push_back(WHILE);		table.push_back(VAROFSIMPLE); useTable.push_back(table); table.clear();
+	table.push_back(ASSIGN);	table.push_back(VAROFSIMPLE); useTable.push_back(table); table.clear();
+	table.push_back(CALL);		table.push_back(VAROFSIMPLE); useTable.push_back(table); table.clear();
+	table.push_back(PROG_L);	table.push_back(VAROFSIMPLE); useTable.push_back(table); table.clear();
 
 	table.push_back(PROCEDURE); table.push_back(UNDERSCORE); useTable.push_back(table); table.clear();
 	table.push_back(PROCNAME);  table.push_back(UNDERSCORE); useTable.push_back(table); table.clear();
