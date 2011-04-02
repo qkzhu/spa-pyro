@@ -11,10 +11,13 @@ private:
 	bool mBoolResult;
 	std::vector<std::vector<int> > mTupleResult;
 	std::vector<int> mTupleType;
+	bool nullResult;
 
 public:
 	QueryResult();
 	QueryResult(bool);
+
+	bool isEmptyResult();
 
 	bool isTupleInserted(std::vector<int> v); //whether the v is inserted inside Tuple result already
 	bool isBoolSet();

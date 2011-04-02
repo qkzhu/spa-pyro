@@ -6,6 +6,7 @@ using namespace std;
 QueryResult::QueryResult()
 {	
 	mBoolSet = false;
+	nullResult = false;
 }
 
 
@@ -13,6 +14,11 @@ QueryResult::QueryResult(bool b)
 {
 	mBoolSet = true;
 	mBoolResult = b;
+	nullResult = false;
+}
+
+bool QueryResult::isEmptyResult(){
+	return nullResult;
 }
 
 bool QueryResult::isBoolSet()
@@ -61,6 +67,8 @@ bool QueryResult::isTupleInserted(vector<int> v){
 
 void QueryResult::addInType(int type)
 {
+	if(type == -1)
+		nullResult = true;
 	mTupleType.push_back(type);
 }
 
