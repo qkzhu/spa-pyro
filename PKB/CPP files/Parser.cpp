@@ -289,6 +289,10 @@ void Parser::parseProgram()
 	while(hasToken())
 		parseProcedure();
 
+	//check for empty program file
+	if (mPkb.ast_GetAllProc().size() == 0)
+		throw new string("Parser: Simple program must have at least one procedure.");
+
 	//post-processing
 	processCalls();
 	processModifyUse();
@@ -300,10 +304,14 @@ void Parser::parseProcedure()
 
 	string proc_name = getToken();
 	checkValidName(proc_name);
+
+	//check that no existing variable names has this name already.
+	if (mPkb.vTable_IsVarNameExist(proc_name))
+		throw new string("Parser: Error at line " + intToString(mLineNum) + ": Declaration of procedure name using existing variable name - " + proc_name);
 	
 	//procedure names must be unique
 	if (mPkb.pTable_isProcNameExist(proc_name))
-		throw new string("Parser: Redeclaration of procedure: " + proc_name);
+		throw new string("Parser: Error at line " + intToString(mLineNum) + ": Redeclaration of procedure: " + proc_name);
 
 	//inserts procedure name into proc table
 	mPkb.pTable_InsertProc(proc_name); 
@@ -352,7 +360,7 @@ Node *Parser::parseStmtList(Node* parentNode)
 	}
 
 	if (prev_node == NULL)
-		throw new string("Parser: There must be at least a statement within the braces. (Line " + intToString(mLineNum) + ")");
+		throw new string("Parser: Error at line " + intToString(mLineNum) + ": There must be at least a statement within the braces.");
 	
 	return stmt_list;
 }
@@ -465,7 +473,7 @@ Node *Parser::parseCall(Node* parentNode)
 
 	//recursive calls are not allowed
 	if (proc_index == mCurrProcIndex)
-		throw new string("Recursive calls in " + proc_name + " are not allowed.");
+		throw new string("Parser: Error at line " + intToString(mLineNum) + ": Recursive calls in " + proc_name + " are not allowed.");
 
 	Node* curr = mPkb.ast_CreateNode(Node::CALL, mStatNum++, proc_index);
 
@@ -560,6 +568,10 @@ Node *Parser::parseAssignment(Node* parentNode)
 {
 	string var_name = getToken();
 	checkValidName(var_name);
+
+	//check that no procedures has this name
+	if (mPkb.pTable_isProcNameExist(var_name))
+		throw new string("Parser: Error at line " + intToString(mLineNum) + ": Declaration of variable with existing procedure name - " + var_name);
 	
 	Node *assign = mPkb.ast_CreateNode(Node::ASSIGN, mStatNum, -1);
 
@@ -600,8 +612,13 @@ Node *Parser::parseAssignment(Node* parentNode)
 
 		else if (isValidName(next))
 		{
+			//prevent variables with same name as an existing procedure name.
+			if (mPkb.pTable_isProcNameExist(next))
+				throw new string("Parser: Error at line " + intToString(mLineNum) + ": Declaration of variable with existing procedure name - " + var_name);
+
 			if (!isExistingVariable(next))
 				mPkb.vTable_InsertVar(next);
+
 			int var_index = mPkb.vTable_GetVarIndex(next);
 			curr = mPkb.ast_CreateNode(Node::VAR, mStatNum, var_index);
 			result.push_back(curr);
@@ -621,7 +638,7 @@ Node *Parser::parseAssignment(Node* parentNode)
 			while (ops.size() > 0  && curr_priority <= getPriority(ops.top()))
 			{
 				if (result.size() < 2)
-					throw new string("Parser: Error in expression.");
+					throw new string("Parser: Error at line " + intToString(mLineNum) + ": Invalid mathematical expression");
 				
 				//adds the operator to the result tree
 				addOperator(result, ops.top());
@@ -649,7 +666,7 @@ Node *Parser::parseAssignment(Node* parentNode)
 				}
 
 				if (ops.size() == 0 || ops.top() != "(")
-					throw string("Parser: No corresponding '(' for ')'");
+					throw string("Parser: Error at line " + intToString(mLineNum) + ": No corresponding '(' for ')'");
 
 				ops.pop();
 			} //end else
