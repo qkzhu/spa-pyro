@@ -20,37 +20,51 @@ private:
 	PqlPreprocessor *mQueryTree;   //Connect to PQL parser side
 	QueryResult mResult;  //The final result in QueryResult.
 	std::vector<int> mgTupleIndexing; //The global indexing for tuple evaluation, corresponding to the current tuple result
-	
+	int varCodeEnding;  //use it when meet '_' or constant in relation to create new variable
+	vector<vector<int> > evalTuple; //evaluation tuple, this is the final and medium evaluation tuple
+	bool isBoolSelected;
+
 	//for use when in with clause, there is sth like v.varName = p.varName
 	//it contains only the pair of variable codes, prefixed with the variable type
-	vector<int> equal_vars;
+	//vector<int> equal_vars; 
+	//this method is not good, can not use
 
 	//maps the variable to the value assigned in With clause, attr 1 is the variable string in its code
 	//the value must have the constant type indicated
-	map<int, vector<int> > var_value_table;
+	//map<int, vector<int> > varValueTable;
 
 	//maps the variable and the pattern evaluated candidates.
 	//the value must have the constant type indicated in the beginning of the vector
-	map<int, vector<int> > pattern_var_candidates;
+	//map<int, vector<int> > patternVarCandidates;
 
 
 	//Evaluating query functions
+	void initialize();
 
-	//returned result will not be very large
-	void evalWith(vector<vector<int> >& result, vector<int>& equal_var, vector<int>& var_value_table);
+	void evaluateWith(bool& unrelated_finish, int& last_point, int threshold);
+
+	void evaluatePattern(bool& unrelated_finish, int& last_point, int threshold);
+
+	void evaluateSuchThat(bool& unrelated_finish, int& last_point, int threshold);
+
+	void generateResult();
+
+	void removeInequal(vector<vector<int> >& tuple);
 	
 	//The result_tuple is passed down for optimisation purpose, result is initially empty
 	void evalPattern_PQL(vector<vector<int> >& result_tuple, vector<int>& result, int var, int var_type, int pattern1, int pattern2);
 
 	//read such that clause, deal with _ specifically
-	void underScore(int rel, vector<int> clause, int& para1, int& para1_type, int& para2, int& para2_type, int& var_code_ending);
+	void underScore(int rel, vector<int> clause, int& para1, int& para1_type, int& para2, int& para2_type, int& varCodeEnding);
 	//
 	void joinTuples(vector<vector<int> >& result, vector<vector<int> >& pre_tuple, int commonNum, int same1Tuple1, int same2Tuple1, int first_time);
 	
 	//Deal with no selected elements in the result_tuple and patial case
-	void joinSelection(vector<vector<int> >& pre_tuple, vector<vector<int> >& candidates);
+	void transform(vector<vector<int> >& pre_tuple, vector<vector<int> >& candidates, vector<int> non_evaled_selects);
 	
-	
+	void checkCandidates(int var, int var_type, vector<int>& candidates);
+
+
 	//Functions for evaluating such that relations
 	
 	//For function with star, if star == NOSTAR, means no star; if star == STAR, means eval star.
