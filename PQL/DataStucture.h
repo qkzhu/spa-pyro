@@ -1,5 +1,5 @@
-#ifndef DATASTRUCTURE_H
-#define DATASTRUCTURE_H
+#ifndef DATASTUCTURE_H
+#define DATASTUCTURE_H
 
 #include <vector>
 
@@ -88,4 +88,4 @@ enum KEYWORD
 	PATTERNOFSIMPLE =	205
   };
 
-#endif //DATASTRUCTURE_H
+#endif //DATASTUCTURE_H

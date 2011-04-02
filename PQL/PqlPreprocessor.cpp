@@ -4,7 +4,13 @@
 PqlPreprocessor::PqlPreprocessor(string query){
 	PqlParser::parser(query, &qt);
 	qt.showTable();
+	vector<vector<int>> tables;
 	validator.checkResults(qt);
+
+	//validator.getValidTable(USES,tables);
+	//validator.displayTable(tables);
+
+	
 }
 
 QueryTable PqlPreprocessor::getTable(){

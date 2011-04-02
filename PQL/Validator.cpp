@@ -1,42 +1,21 @@
 #include "Validator.h"
+#include "dataBase.h"
 #include "Tokenizer.h"
 
-/////////////////////////////////////////////Populate Checking Table Start////////////////////////////////////////////////////
-void Validator::fillTable(vector <vector<int>> &table, string fileName){
-	Tokenizer str;
+///////////////////////////////////////////// Constructor Start///////////////////////////////////////////////////////////
+Validator::Validator(){
+	validTable.populateAllTables();
 
-	ifstream suchThatFile;
-	suchThatFile.open(fileName);
-	string line;
-	string token;
+	//vector<vector<int>> tables;
 
-    if (suchThatFile.is_open())
-    {
-		while (!suchThatFile.eof())
-		{
-			getline(suchThatFile,line);
-			str.set(line);
-			int tempHolder;
-			vector<int> rows;
-			while((token = str.next()) != "")
-			{	
-				tempHolder = atoi(token.c_str());
-				rows.push_back(tempHolder);
-			}
-			if(!rows.empty())
-				table.push_back(rows);
+	//validTable.getAffectsTable(tables);
 
-		}
-		suchThatFile.close();
-	}
+	//validTable.displayTable(tables);
 }
 
-void Validator::populateTable(){
-	fillTable(suchThatTable,"DesignModel.txt");
-	cout<<"suchThatTable size  in populate table "<< suchThatTable.size()<<endl;
-	fillTable(withTable,"withTable.txt");
-}
-///////////////////////////////////////////// Populate Checking Table End////////////////////////////////////////////////////
+
+///////////////////////////////////////////// Constructor End ///////////////////////////////////////////////////////////
+
 
 ///////////////////////////////////////////// Check Select Start////////////////////////////////////////////////////
 void Validator::checkSelect(QueryTable &table){
@@ -66,7 +45,7 @@ void Validator::checkSelect(QueryTable &table){
 			{
 				throw new string ("short of DOT ! -- throw by Validator::checkSelect -- size = 4");
 			}
-			//stmt, call, assign, while, if -- attrName: ‘stmt#?
+			//stmt, call, assign, while, if -- attrName: stmt#?
 			if (table.getSelectClause().at(i).tuple.at(0) == 51 || table.getSelectClause().at(i).tuple.at(0) == 53 || table.getSelectClause().at(i).tuple.at(0) == 54 || table.getSelectClause().at(i).tuple.at(0) == 55 || table.getSelectClause().at(i).tuple.at(0) == 59)
 			{
 				if(table.getSelectClause().at(i).tuple.at(3)!=104)
@@ -92,7 +71,7 @@ void Validator::checkSelect(QueryTable &table){
 				}
 		
 			}
-			//procedure  --- attrName: ‘procName?
+			//procedure  --- attrName: ProcName 
 			else if (table.getSelectClause().at(i).tuple.at(0) == 58)
 			{
 				if(table.getSelectClause().at(i).tuple.at(3)!=103)
@@ -133,91 +112,158 @@ void Validator::checkSelect(QueryTable &table){
 }
 ///////////////////////////////////////////// Check Select End////////////////////////////////////////////////////
 
-///////////////////////////////////////////// Check Such That Start////////////////////////////////////////////////////
-vector<int> Validator::getIndex(vector<vector<int>> table, int name){
 
-	vector<int> index;
-	if((int)table.size() == 0)
-	{
-		throw "Query Validation Table is empty!  -- throw by Validator::getIndex()";
+
+///////////////////////////////////////////// Check Such That Start////////////////////////////////////////////////////
+
+/********    New Method       *********/
+void  Validator::getValidTable(int relationType, vector<vector<int>> &validationTable){
+
+	switch (relationType){
+
+	case PARENT:
+	case PARENT_T:
+		validTable.getParentTable(validationTable);
+		break;
+	case FOLLOWS:
+	case FOLLOWS_T:
+		validTable.getFollowsTable(validationTable);
+		break;
+	case CALLS:
+	case CALLS_T:
+		validTable.getCallsTable(validationTable);
+		break;
+	case NEXT:
+	case NEXT_T:
+		validTable.getNextTable(validationTable);
+		break;
+	case AFFECTS:
+	case AFFECTS_T:
+		validTable.getAffectsTable(validationTable);
+		break;
+	case USES:
+		validTable.getUseTable(validationTable);
+		break;
+	case MODIFIES:
+		validTable.getModifyTable(validationTable);
+		break;
+	case WITH:
+		validTable.getWithTable(validationTable);
+		break;
+	default:
+		throw new string ("undefined relation or with type! -- throw by Validator::getValidTable ");
 	}
-	//cout<<suchThatTable[77][0]<<" getIndex"<<endl;
-	
-	//int counter = 0;
-	//cout<<table.size()<<endl;
-	for(int i=0;i<int(table.size());i++)
-	{
-		//cout<<table[i][0]<<"   "<<name<<endl;
-		if(table[i][0] == name)
-		{
-			index.push_back(i);
-		}
+
+}
+
+void Validator::getKeyWord(int type, string &relationType){
+
+	switch (type){
+
+	case PARENT:
+		relationType = "Parent ";
+		break;
+	case PARENT_T:
+		relationType = "Parent* ";
+		break;
+	case FOLLOWS:
+		relationType = "Follows ";
+		break;
+	case FOLLOWS_T:
+		relationType = "Follows* ";
+		break;
+	case CALLS:
+		relationType = "Calls ";
+		break;
+	case CALLS_T:
+		relationType = "Calls* ";
+		break;
+	case NEXT:
+		relationType = "Next ";
+		break;
+	case NEXT_T:
+		relationType = "Next* ";
+		break;
+	case AFFECTS:
+		relationType = "Affects ";
+		break;
+	case AFFECTS_T:
+		relationType = "Affects* ";
+		break;
+	case USES:
+		relationType = "Uses* ";
+		break;
+	case MODIFIES:
+		relationType = "Uses* ";
+		break;		
+	default:
+		throw new string ("undefined relation type! -- throw by Validator::getKeyWord ");
 	}
-	return index;
+
 }
 
 void Validator::checkSuchThat(QueryTable &table){
 	
-	bool noError = true;
-	int size = (int) table.getSuchThatClauseV().size();
-	//cout<<"hahahh"<<size<<endl;
-
-	//suchThat =table.suchThatAt(0);
-	//cout<<suchThat[0];
-	//index = getIndex(suchThatTable, suchThat[0]);
-
+	int size = (int) table.getSuchThatClause().size();
 	
 	for(int i=0; i<size; i++)
 	{
-		bool tempNoError = false;
-		//cout<<"====="<<table.getSuchThatClauseV().at(i).argumentNoCorrect<<endl;
-		// to check with the argument is correct of not
-		
-		if(table.getSuchThatClauseV().at(i).argumentNoCorrect == false)
-		{
-			noError = tempNoError && noError;
-			break;
-		}
+		//to check against table, if it has a entry, it will not throw error
+		bool noError = false;
+
 		vector<int> suchThat;
-		vector<int> index;
-		suchThat =table.getSuchThatClauseV().at(i).relCond;	
+		//vector<int> index;
+		suchThat = table.getSuchThatClause().at(i).relCond;	
+		
+		string relationType;
+		getKeyWord(suchThat[0], relationType);
+		string functionName = " -- throw by Validator::checkSuchThat";
+		
+		if(table.getSuchThatClause().at(i).argumentNoCorrect == false)
+		{
+			throw new string("Argument number is wrong in relation " + relationType + functionName);
+		}
+
 
 		//check for empty string for varOfSimple and procOfSimple
 		for(int j=0;j<int(suchThat.size());j++)
 		{
-			if(suchThat.at(j) == 202 ||suchThat.at(j) == 203)
+			
+
+			if(suchThat.at(j) == VAROFSIMPLE ||suchThat.at(j) == PROCOFSIMPLE)
 			{
 				if((j+1)<int(suchThat.size()))
 				{
 					string tempString = Convertor::getKeyword(suchThat.at(j+1));
 					//cout<<"tempString "<<tempString<<endl;
+
 					if(int(tempString.size())<2)
 					{
-						if(suchThat.at(j) == 202)
+						if(suchThat.at(j) == VAROFSIMPLE)
 						{
-							throw new string("varOfSimple size is wrong -- throw by Validator::checkSuchThat");
+							throw new string("varOfSimple size is wrong in relation " + relationType + functionName);
 						}
-						else if(suchThat.at(j) == 203)
+						else if(suchThat.at(j) == PROCOFSIMPLE)
 						{
-							throw new string("procOfSimple size is wrong -- throw by Validator::checkSuchThat");
+							throw new string("procOfSimple size is wrong in relation" + relationType + functionName);
 						}
 					}
 					if(tempString == "\"\"")
 					{
-						throw new string("nothing inside the double quotes -- throw by Validator::checkSuchThat");
+						throw new string("nothing inside the double quotes in relation "+ relationType + functionName);
 					}
 					else
 					{
 						if(tempString.at(0) != '\"' || tempString.at(int(tempString.size())-1) !='\"')
 						{
-							throw new string("format error in first argument -- throw by Validator::checkSuchThat");
+							throw new string("format error in first argument in relation "+ relationType + functionName);
 						}
 					}
 					
 				}
 				else
 				{
-					throw new string("no parameter after prefix! -- throw by Validator::checkSuchThat");
+					throw new string("no parameter after prefix in relation "+ relationType + functionName);
 				}
 			
 			}
@@ -225,100 +271,87 @@ void Validator::checkSuchThat(QueryTable &table){
 		}
 		
 		
-		//cout<<"haha "<<suchThat[0]<<endl;
-		//cout<<"suchThatTable size "<<suchThatTable.size()<<endl;
-		index = getIndex(suchThatTable, suchThat[0]);
-		/* for debug***
-		for(int i=0;i<suchThat.size();i++)
-		{
-			cout<<suchThat.at(i)<<" "<<endl;
-		}
-		cout<<endl;
-		*/
-		//cout<<"index "<<index.size()<<endl;
 
-		/*
-		for(int i=0;i<index.size();i++)
-		{
-			cout<<index.at(i)<<" "<<endl;
-		}
-		cout<<endl;
-		*/
-		vector<int>::iterator it;
-		for(it = index.begin();it<index.end();it++)
+		//fill up the validation according to the relation type
+		vector<vector<int>> validationTables;
+		getValidTable(suchThat[0],validationTables);
+		cout<<"validationTable size "<<validationTables.size()<<endl;
+		cout<<"suchThat size "<<suchThat.size()<<endl;
+		
+		for(int k = 0;k<int(validationTables.size());k++)
 		{
 			if(suchThat.size() == 5)
 			{
-				//cout<<"index 1 in query  "<<suchThat.at(1)<<"   index  1 in table"<<suchThatTable[*it][1]<<endl;
-				//cout<<"index 3 in query  "<<suchThat.at(3)<<"   index  2 in table"<<suchThatTable[*it][2]<<endl;
-				if((suchThat.at(1) == suchThatTable[*it][1]) && (suchThat.at(3) == suchThatTable[*it][2]))
+
+				if( (suchThat.at(1) == validationTables[k][0]) && (suchThat.at(3) == validationTables[k][1]) )
 				{
-					tempNoError = true;
+					
+					noError = true;
 				}
 			}
 			else if(suchThat.size() == 4)
 			{
-				if((suchThat.at(1) == suchThatTable[*it][1] && (suchThat.at(2) == suchThatTable[*it][2])) || (suchThat.at(1) == suchThatTable[*it][1]) && (suchThat.at(3) == suchThatTable[*it][2]))
+				if(  (suchThat.at(1) == validationTables[k][0] && (suchThat.at(2) == validationTables[k][1])) || (suchThat.at(1) == validationTables[k][0]) && (suchThat.at(3) == validationTables[k][1]) ) 
 				{
-					tempNoError = true;
+
+					noError = true;
 				}
 			}
 			else if(suchThat.size() == 3)
 			{
-				if(suchThat.at(0) == 9 || suchThat.at(0) == 10)
+				//relation USES and MODIFIES do not have such case
+				if(suchThat.at(0) == USES || suchThat.at(0) == MODIFIES)
 				{
 					continue;
 				}
-				if((suchThat.at(1) == 157) && (suchThat.at(2) == 157))
+				else if((suchThat.at(1) == UNDERSCORE) && (suchThat.at(2) == UNDERSCORE))
 				{
-					tempNoError = true;
+					noError = true;
 				}
 			}
 		
 		}
-		//cout<<tempNoError<<" inside checkSuchThat "<<endl;
-		noError = tempNoError && noError;
-	}
-	//cout<<size<<endl;;
-
-	if (!noError)
-	{
-		throw new string("argument error inside SuchThat clause! -- throw by Validator::checkSuchThat ");
+		if(!noError)
+		{
+			throw new string("Error Occurs at relation: "+ relationType + functionName);
+		}
 	}
 }
 ///////////////////////////////////////////// Check Such That End////////////////////////////////////////////////////
 
-///////////////////////////////////////////// Check With Start////////////////////////////////////////////////////
+///////////////////////////////////////////// Check With Start//////////////////////////////////////////////////////
 void Validator::checkWith(QueryTable &table){
-	bool noError = true;
-	int size = (int) table.getWithClauseV().size();
 
+	int size = (int) table.getWithClause().size();
+	vector<vector<int>> validationTables;
+	getValidTable(WITH,validationTables);
+	string functionName =" -- throw by Validator::checkWith";
 	//cout<<"with size is " <<size<<endl;
-
 
 	for(int i=0; i<size;i++)
 	{
-		bool tempNoError = false;
+		bool noError = false;
+		vector<int> with;
+		string number;  
+		std::stringstream out;
+		out << i+1;
+		number = out.str();
+
 		//cout<<"argumentNoCorrect "<<table.getWithClause().at(i).argumentNoCorrect<<endl;
 		// to check with the argument is correct of not
-		if(!table.getWithClauseV().at(i).argumentNoCorrect)
+		if(!table.getWithClause().at(i).argumentNoCorrect)
 		{
-			noError = tempNoError && noError;
-
-			break;
+			throw new string("format (length) error in with condition No. "+ number + functionName);
 		}
 		
-		vector<int> with;
-		vector<int> index;
-	
-
-		with =  table.getWithClauseV().at(i).attrCond;
+		with =  table.getWithClause().at(i).attrCond;
 		//cout<<"with[0] is "<<with[0]<<endl;
-		index = getIndex(withTable, with[0]);
 
-				for(int j=0;j<int(with.size());j++)
+
+		//check the whether there are invalid procOfSimple or varOfSimple
+		for(int j=0;j<int(with.size());j++)
 		{
-			if(with.at(j) == 202 ||with.at(j) == 203)
+			if(with.at(j) == VAROFSIMPLE ||with.at(j) == PROCOFSIMPLE)
 			{
 				if((j+1)<int(with.size()))
 				{
@@ -326,68 +359,69 @@ void Validator::checkWith(QueryTable &table){
 					//cout<<"tempString "<<tempString<<endl;
 					if(int(tempString.size())<2)
 					{
-						if(with.at(j) == 202)
+						if(with.at(j) == VAROFSIMPLE)
 						{
-							throw new string("varOfSimple size is wrong -- throw by Validator::checkWith");
+							throw new string("varOfSimple size is wrong in with condition No. "+ number + functionName);
 						}
-						else if(with.at(j) == 203)
+						else if(with.at(j) == PROCOFSIMPLE)
 						{
-							throw new string("procOfSimple size is wrong -- throw by Validator::checkWith");
+							throw new string("procOfSimple size is wrong in with condition No. "+ number + functionName);
 						}
 					}
 					if(tempString == "\"\"")
 					{
-						throw new string("nothing inside the double quotes -- throw by Validator::checkWith");
+						throw new string("nothing inside the double quotes in with condition No. "+ number + functionName);
 					}
 					else
 					{
 						if(tempString.at(0) != '\"' || tempString.at(int(tempString.size())-1) !='\"')
 						{
-							throw new string("format error in first argument -- throw by Validator::checkWith");
+							throw new string("format error in first argument in with condition No. "+ number + functionName);
 						}
 					}
 					
 				}
 				else
 				{
-					throw new string("no parameter after prefix! -- throw by Validator::checkWith");
+					throw new string("no parameter after prefix! in with condition No. "+ number + functionName);
 				}
 			
 			}
 		
 		}
-
-
-		//cout<<"index size is "<<index.size()<<endl; 
-		for(int it = 0;it<(int) index.size();it++)
+		
+		//Check against Table
+		for(int k=0; k<int(validationTables.size());k++)
 		{
-			//cout<<"with size is 1 "<<with.size()<<endl;
 			if(with.size() == 7)
 			{
 				//cout<<"with size is "<<with.size()<<endl;
-				if((with[0] == withTable[index[it]][0]) && (with[3] == withTable[index[it]][1]) && (with[5] == withTable[index[it]][2]))
+				if((with[0] == validationTables[k][0]) && (with[3] == validationTables[k][1]) && (with[5] == validationTables[k][2]))
 				{
-					tempNoError = true;
+					noError = true;
 				}
 			
 			}
+
 			if(with.size() == 9)
 			{
-				if((with[0] == withTable[index[it]][0]) && (with[3] == withTable[index[it]][1]) && (with[5] == withTable[index[it]][2]) && (with[8] == withTable[index[it]][3]))
+				if((with[0] == validationTables[k][0]) && (with[3] == validationTables[k][1]) && (with[5] == validationTables[k][2]) && (with[8] == validationTables[k][3]))
 				{
-					tempNoError = true;
+					noError = true;
 				}
 							
 			}
-
+		
 		}
+
 		//cout<<tempNoError<<" inside checkWith "<<endl;
-		noError = tempNoError && noError;
+		if (!noError)
+		{
+			throw new string("format error in with condition No. "+ number + functionName);
+		}
+		
 	}
-	if (!noError)
-	{
-		throw new string("argument error inside With clause! -- throw by Validator::checkWith ");
-	}
+
 }
 ///////////////////////////////////////////// Check With Start////////////////////////////////////////////////////
 
@@ -427,7 +461,7 @@ void Validator::checkPattern_PQL(QueryTable &table){
 					if( pattern.at(3) != COMMA || pattern.at(4) != PATTERNOFSIMPLE )
 						throw new string("argument error inside pattern clause! -- throw by Validator::checkPattern_PQL - pattern size 6");
 				}
-				else if(pattern.at(2) == PATTERNOFSIMPLE) // pattern("x", _) ASSIGN 301 PATTERNOFSIMPLE 301 COMMA UNDERCORE
+				else if(pattern.at(2) == PATTERNOFSIMPLE || pattern.at(2) == VAROFSIMPLE || pattern.at(2) == VARIABLE) // pattern("x", _) ASSIGN 301 PATTERNOFSIMPLE(or VARIABLE) 301 COMMA UNDERCORE
 				{
 					if( pattern.at(4) != COMMA || pattern.at(5) != UNDERSCORE )
 						throw new string("argument error inside pattern clause! -- throw by Validator::checkPattern_PQL - pattern size 6");
@@ -459,9 +493,9 @@ void Validator::checkPattern_PQL(QueryTable &table){
 				if( pattern.at(3) != COMMA || pattern.at(4) != UNDERSCORE ) // while(_,_) WHILE 301 UNDERSCORE COMMA UNDERSCORE
 					throw new string("argument error inside pattern clause! -- throw by Validator::checkPattern_PQL -  WHILE - size 5");
 			}
-			else if(pattern.at(2) == PATTERNOFSIMPLE)
+			else if(pattern.at(2) == PATTERNOFSIMPLE || pattern.at(2) == VAROFSIMPLE || pattern.at(2) == VARIABLE)
 			{
-				if( pattern.at(4) != COMMA || pattern.at(5) != UNDERSCORE ) // while("x",_) WHILE 301 PATTERNOFSIMPLE 301 COMMA UNDERSCORE
+				if( pattern.at(4) != COMMA || pattern.at(5) != UNDERSCORE ) // while("x",_) WHILE 301 PATTERNOFSIMPLE (or VARIABLE) 301 COMMA UNDERSCORE
 					throw new string("argument error inside pattern clause! -- throw by Validator::checkPattern_PQL -  WHILE - size 6");
 			}
 			else
@@ -476,9 +510,9 @@ void Validator::checkPattern_PQL(QueryTable &table){
 				if( pattern.at(3) != COMMA || pattern.at(4) != UNDERSCORE || pattern.at(5) != COMMA || pattern.at(6) != UNDERSCORE ) // if(_,_,_) IF UNDERSCORE COMMA UNDERSCORE COMMA UNDERSCORE
 					throw new string("argument error inside pattern clause! -- throw by Validator::checkPattern_PQL -  IF - size 6 ");
 			}
-			else if(pattern.at(2) == PATTERNOFSIMPLE)
+			else if(pattern.at(2) == PATTERNOFSIMPLE || pattern.at(2) == VAROFSIMPLE || pattern.at(2) == VARIABLE)
 			{
-				if( pattern.at(4) != COMMA || pattern.at(5) != UNDERSCORE || pattern.at(6) != COMMA || pattern.at(7) != UNDERSCORE ) // if("x",_,_) WHILE PATTERNOFSIMPLE 301 COMMA UNDERSCORE COMMA UNDERSCORE
+				if( pattern.at(4) != COMMA || pattern.at(5) != UNDERSCORE || pattern.at(6) != COMMA || pattern.at(7) != UNDERSCORE ) // if("x",_,_) WHILE PATTERNOFSIMPLE (or VARIABLE) 301 COMMA UNDERSCORE COMMA UNDERSCORE
 					throw new string("argument error inside pattern clause! -- throw by Validator::checkPattern_PQL -  IF - size 7");
 			}
 			else
@@ -747,7 +781,7 @@ void Validator::fillAssignVector(const string &str, vector<int> &expression, vec
 
 ///////////////////////////////////////////// Check ALL Start////////////////////////////////////////////////////
 void Validator::checkResults(QueryTable &table){
-	populateTable();
+	
 	checkSelect(table);
 	checkSuchThat(table);
 	checkWith(table);
@@ -757,6 +791,9 @@ void Validator::checkResults(QueryTable &table){
 
 /******************************************** FOR DEGUGGING START ********************************************/
 void Validator::displayTable(vector<vector<int>> table){
+
+	cout<<"No of Rows "<< table.size()<<endl;
+
 	/* //////////////////testing getIndex()/////////////////
 	vector<int> index;
 	index = getIndex(table, 10);
@@ -804,14 +841,3 @@ string Validator::getString(int index){
 }
 /******************************************** FOR DEGUGGING END ********************************************/
 
-/******************************************** ACCESSOR START ************************************************/
-vector<vector<int>> Validator::getsuchThatTable(){
-
-	return suchThatTable;
-
-}
-vector<vector<int>>  Validator::getwithTable(){
-
-	return withTable;
-}
-/******************************************** ACCESSOR END ************************************************/

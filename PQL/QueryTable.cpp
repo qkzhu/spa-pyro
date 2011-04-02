@@ -7,26 +7,30 @@ void QueryTable::addClause(int type, vector<int> content){
 
 	if(type == 1) // select
 	{
+		//for display -- debugging******
 		if(selectVector.empty())
 		{
-			
 			selectVector.push_back(1);
 		}
 
+		Select selectTemp;
 		if(content.front() == 60) // content is boolean
 		{
-			Select selectTemp;
+			
 			selectTemp.tuple = content;
+
 			selectClause.push_back(selectTemp);
+			
+			//for display -- debugging******
 			selectVector.push_back(content.front());
 		}
 		else  //content is tuple
 		{   
-			Select selectTemp;
 			selectTemp.tuple = content;
 			selectClause.push_back(selectTemp);
 			
-			//for display
+
+			//for display -- debugging******
 			if(selectVector.size()>1)
 			{
 				selectVector.push_back(-1);
@@ -46,6 +50,7 @@ void QueryTable::addClause(int type, vector<int> content){
 
 		SuchThatTemp.relCond = content;
 		SuchThatTemp.argumentNoCorrect = false;
+
 		if((int)SuchThatTemp.relCond.size() == 5)
 		{
 			SuchThatTemp.argumentNoCorrect = true;
@@ -53,38 +58,25 @@ void QueryTable::addClause(int type, vector<int> content){
 		else if(SuchThatTemp.relCond.size() == 4)
 		{
 			
-			if((SuchThatTemp.relCond[1] == 157 && SuchThatTemp.relCond[2]!=157) || (SuchThatTemp.relCond[1] != 157 && SuchThatTemp.relCond[3] ==157))
+			if( (SuchThatTemp.relCond[1] == UNDERSCORE && SuchThatTemp.relCond[2]!= UNDERSCORE) || (SuchThatTemp.relCond[1] != UNDERSCORE && SuchThatTemp.relCond[3] == UNDERSCORE) )
 			{
 				SuchThatTemp.argumentNoCorrect = true;
 			}
 		}
 		else if(SuchThatTemp.relCond.size() == 3)
 		{
-			if(SuchThatTemp.relCond[1] == 157 && SuchThatTemp.relCond[2]==157)
+			if(SuchThatTemp.relCond[1] == UNDERSCORE && SuchThatTemp.relCond[2] == UNDERSCORE)
 			{
 				SuchThatTemp.argumentNoCorrect = true;
 			}
 		}
+
 		suchThatClause.push_back(SuchThatTemp);
 
-		//add the content to the withVector for display
+		/*
 		for(int i = 0; i<(int) content.size();i++)
 		{
-
-			//cout<<content[i]<<" ///////////////BEFORE CHANGE"<<endl;
-			if(content[i] == 8) // make "follow*" to be "follow"
-			{
-				validTemp.relCond.push_back(7);
-			}
-			else if(content[i] == 6) // make "parent*" to be "parent"
-			{
-				validTemp.relCond.push_back(5);
-			}
-			else if(content[i] == 12) // make "calls*" to be "calls"
-			{
-				validTemp.relCond.push_back(11);
-			}
-			else if(content[i] == 53 || content[i] == 54 || content[i] == 55) // make "assign", "while", "if" to be "stmt" 
+			if(content[i] == 53 || content[i] == 54 || content[i] == 55) // make "assign", "while", "if" to be "stmt" 
 			{
 				//cout<<" I am inside this 53 54 55!"<<endl;
 				if(content.at(0) == 15 || content.at(0) == 16)
@@ -101,7 +93,7 @@ void QueryTable::addClause(int type, vector<int> content){
 		}
 		validTemp.argumentNoCorrect = SuchThatTemp.argumentNoCorrect;
 		suchThatClauseValid.push_back(validTemp);
-
+		*/
 
 		/*
 		cout<<SuchThatTemp.relCond[0]<<" ";
@@ -133,7 +125,7 @@ void QueryTable::addClause(int type, vector<int> content){
 	else if(type == 3) // with
 	{
 		With withTemp;
-		With validTemp;
+		
 		if((int) content.size() == 7 || (int) content.size() == 9)
 		{
 			withTemp.argumentNoCorrect = true;
@@ -145,25 +137,6 @@ void QueryTable::addClause(int type, vector<int> content){
 		withTemp.attrCond = content;
 		withClause.push_back(withTemp);
 
-		//add data for validation
-		for(int i = 0; i< (int) content.size();i++)
-		{
-
-			//cout<<content[i]<<" ///////////////BEFORE CHANGE"<<endl;
-			if(content[i] == 53 || content[i] == 54 || content[i] == 55) // make "assign", "while", "if" to be "stmt" 
-			{
-				//cout<<" I am inside this 53 54 55!"<<endl;
-				validTemp.attrCond.push_back(51);
-			}
-			else
-			{
-				validTemp.attrCond.push_back(content[i]);
-			}
-			//cout<<validTemp.attrCond[i]<<" ###########AFTER CHANGE"<<endl;
-			
-		}
-		validTemp.argumentNoCorrect = withTemp.argumentNoCorrect;
-		withClauseValid.push_back(validTemp);
 		
 		//add the content to the withVector for display
 		if(withVector.empty() == true)
@@ -402,16 +375,6 @@ vector < Pattern_PQL > QueryTable::getPattern_PQLClause(){
 }
 /////////////////////////Get Clause --- Start ///////////////////////////
 
-//////////////////////// Get Validation Clause --- Start/////////////////
-vector < SuchThat >  QueryTable::getSuchThatClauseV(){
-
-	return suchThatClauseValid;
-}
-
-vector < With >  QueryTable::getWithClauseV(){
-	return withClauseValid;
-}
-//////////////////////// Get Validation Clause --- End/////////////////
 
 /////////////////////////Get Clause --- End ///////////////////////////
 
