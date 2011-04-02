@@ -112,6 +112,22 @@ vector<Node*> PKB::ast_GetDown(Node* n){
 	return ast->getAllDown(n);
 }
 
+bool PKB::ast_IsIf(int stmt){
+	return ast->isIf(stmt);
+}
+
+bool PKB::ast_IsWhile(int stmt){
+	return ast->isWhile(stmt);
+}
+
+bool PKB::ast_IsAssign(int stmt){
+	return ast->isAssign(stmt);
+}
+
+bool PKB::ast_IsCall(int stmt){
+	return ast->isCall(stmt);
+}
+
 /**
  * VarTable Part
  */
