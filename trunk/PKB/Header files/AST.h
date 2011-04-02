@@ -46,6 +46,11 @@ public:
 	void getAllIf(vector<int>&);
 	void getAllCall(vector<int>&);
 
+	bool isIf(int stmt);
+	bool isWhile(int stmt);
+	bool isAssign(int stmt);
+	bool isCall(int stmt);
+
 	//for CFG
 	vector<Node*> getAllProc();
 	vector<Node*> getAllDown(Node* n);
@@ -61,6 +66,7 @@ private:
 	hash_map<Node*, int>	NodeAndStatNumList;			// NodeAndStatNumList stores the relation between node and statement number.
 
 	void AST::getAllType(Node::NodeType nt, vector<int>& result);	// Return all statement number with the given node type.
+	bool isType(int stmt, Node::NodeType nt);						// Check if the given stmt index is the given Node type
 };	
 
 #endif

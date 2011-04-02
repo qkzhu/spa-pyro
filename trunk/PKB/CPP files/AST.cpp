@@ -229,3 +229,24 @@ void AST::printTree(ProcTable &procTable, VarTable &varTable)
 	for (unsigned int i = 0; i < astList.size(); i++)
 		printNode(astList[i], 0, procTable, varTable);
 }
+
+bool AST::isType(int stmt, Node::NodeType nt){
+
+	if(stmt == 0 || stmt > getMaxStmtNum()) return false;
+
+	return (StatNumAndNodeList[stmt]->type == nt);
+
+}
+
+bool AST::isIf(int stmt){
+	return this->isType(stmt, Node::IF);
+}
+bool AST::isWhile(int stmt){
+	return this->isType(stmt, Node::WHILE);
+}
+bool AST::isAssign(int stmt){
+	return this->isType(stmt, Node::ASSIGN);
+}
+bool AST::isCall(int stmt){
+	return this->isType(stmt, Node::CALL);
+}

@@ -46,6 +46,10 @@ public:
 	void		ast_GetAllWhile(vector<int>&);		// For Query Evaluator
 	void		ast_GetAllIf(vector<int>&);			// For Query Evaluator
 	void		ast_GetAllCall(vector<int>&);		// For Query Evaluator
+	bool		ast_IsIf(int stmt);					// For Query Evaluator
+	bool		ast_IsWhile(int stmt);				// For Query Evaluator
+	bool		ast_IsAssign(int stmt);				// For Query Evaluator
+	bool		ast_IsCall(int stmt);				// For Query Evaluator
 	
 	vector<Node*> ast_GetAllProc(); //For CFG
 	vector<Node*> ast_GetDown(Node* n); //For CFG
@@ -55,7 +59,7 @@ public:
 	void			vTable_InsertVar(string var);
 	string			vTable_GetVarName(int index);			// For Query Evaluator
 	int				vTable_GetVarIndex(string var);			// For Query Evaluator
-	int				vTable_GetVarTableSize(); 
+	int				vTable_GetVarTableSize();
 	bool			vTable_IsVarNameExist(string var);		// For Query Evaluator
 	bool			vTable_IsVarIndexExist(int varIndex);	// For Query Evaluator
 	int				vTable_GetAllVar();						// For Query Evaluator
