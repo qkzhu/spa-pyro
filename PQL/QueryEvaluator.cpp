@@ -12,10 +12,6 @@ int const NOSTAR = 0;
 int const MOD = 1;
 int const USE = 0;
 
-int const PROC = 1;
-int const STMT_QE = 0;
-
-
 //Controller passes the PKB and Query Parser to evaluator, and trigger evaluator to start.
 QueryEvaluator::QueryEvaluator(PKB *p, PqlPreprocessor *q)
 {
@@ -26,9 +22,6 @@ QueryEvaluator::QueryEvaluator(PKB *p, PqlPreprocessor *q)
 	initialAffectsTable();
 }
 
-//*********Noting before coding*****************
-//In the current implementation, I just have basic evaluator. Evaluate one clause after one. No complex optimization.
-//For relational linking, it's to be implemented after the basic one.
 void QueryEvaluator::evaluate(){
 	vector<int> select;
 	mQueryTree->selectAt(select, 0);  //Elements to be selected
@@ -616,21 +609,19 @@ void QueryEvaluator::removeInequal(vector<vector<int> >& tuple){
 }
 
 void QueryEvaluator::checkCandidates(int para, int para_type, vector<int>& candidates){
-	bool found = false;
+	if(para_type == mQueryTree->getIndex("integer")) {candidates.push_back(para); return;}
+	else if(para_type == mQueryTree->getIndex("procOfSimpl")) {candidates.push_back(para); return;}
+	else if(para_type == mQueryTree->getIndex("varOfSimpl")) {candidates.push_back(para); return;}
+
 	for(int i = 0; i < (int)mgTupleIndexing.size(); i++){
 		if(para == mgTupleIndexing[i]){
 			for(int j = 0; j < (int)evalTuple.size(); j++){
 				candidates.push_back(evalTuple[j][2*i+1]);
 			}
-			found = true;
-			break;
+			return;
 		}
 	}
-
-	if(para_type == mQueryTree->getIndex("integer")) candidates.push_back(para);
-	else if(para_type == mQueryTree->getIndex("procOfSimpl")) candidates.push_back(para);
-	else if(para_type == mQueryTree->getIndex("varOfSimpl")) candidates.push_back(para);
-	else getAllType(candidates, para_type);
+	getAllType(candidates, para_type);
 }
 
 
@@ -782,7 +773,6 @@ void QueryEvaluator::initialAffectsTable(){
 			}
 		}
 	}
-	cout << endl;
 }
 
 void QueryEvaluator::underScore(int rel, vector<int> clause, int& para1, int& para1_type, int& para2, int& para2_type, int& varCodeEnding){
@@ -860,7 +850,6 @@ void QueryEvaluator::evalPattern_PQL(vector<vector<int> >& result_tuple, vector<
 		getPattern_PQLCond(result, var_type, PQL_varDecode(pattern1));
 	}else 
 		throw new string("QueryEvaluator::evalPattern_PQL, no such variable type!");
-	cout << endl;
 }
 
 void QueryEvaluator::joinTuples(vector<vector<int> >& evalTuple, vector<vector<int> >& pre_tuple, int common_num, int same1_tuple1, int same2_tuple1, int first_time){
@@ -1516,7 +1505,6 @@ int QueryEvaluator::find_ele(const vector<int>& in, const int ele){
 	return (int)in.size();
 }
 
-//Check whether there is a non-mod path for variable mod in the stmt
 bool QueryEvaluator::nonModPath(int s, int mod, int dest, vector<int>& affect_result, bool init){
 	int next = s;
 	if(s <= 0)
