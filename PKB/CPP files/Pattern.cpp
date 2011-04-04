@@ -200,52 +200,95 @@ bool Pattern::patternAssign(int stmtNum, string patternLeft, string patternRight
 	if(patternRight.size() == 0)
 		throw new string("Pattern: Empty expression passed.");
 
-	Node* input = generateNode(patternRight, ast, varTable);
-	Node* existing = bottomNodes[1];
+	string input = stringToPrefix(patternRight);
+	string existing = nodeToPrefix(bottomNodes[1], ast, varTable);
 
 	return match(input, existing, matchFront, matchEnd);
 }
 
-bool Pattern::match(Node* input, Node* existing, bool matchFront, bool matchEnd)
+
+
+//matches input and existing string using postfix.
+bool Pattern::match(const string& input, const string& existing, bool matchFront, bool matchEnd)
 {
-	//either trees are null, return false
-	if (input == NULL || existing == NULL)
-		return false;
+	//exact match
+	if (matchFront && matchEnd)
+		return input == existing;
 
-	//if both expression trees match, no questions asked.
-	if (matchTree(input, existing))
-		return true;
-
-	if (matchFront)
+	//match from middle, ensuring that all characters before first the operator that matches
+	//with the input are all operators themselves
+	else if (matchFront)
 	{
-		//match front and left tree matches input
-		if (existing->bottomNodeList.size() == 1 && 
-			matchTree(input, existing->bottomNodeList[0]))
-			return true;
-
-		//match front and right tree matches input
-		if (existing->bottomNodeList.size() == 2 && 
-			matchTree(input, existing->bottomNodeList[1]))
-			return false;
-	}
-
-	if (matchEnd)
-	{
-		//match end and right tree matches input
-		if (existing->bottomNodeList.size() == 2 && 
-				matchTree(input, existing->bottomNodeList[1]))
+		for (unsigned int i = 0; i < existing.size() && existing.size() - i >= input.size(); i++)
+		{
+			if (existing.substr(i, input.size()) == input)
 				return true;
 
-		//match end and left tree matches input
-		if (existing->bottomNodeList.size() >= 1 &&
-			matchTree(input, existing->bottomNodeList[0]))
-				return false;
+			if (!isOperator(existing[i]))
+				break;
+		}
+		return false;
 	}
 
-	//match the subtrees recursively
-	return (existing->bottomNodeList.size() > 0 && match(input, existing->bottomNodeList[0], matchFront, matchEnd)) ||
-		(existing->bottomNodeList.size() > 1 && match(input, existing->bottomNodeList[1], matchFront, matchEnd));
+	//match the prefix substring from behind
+	else if (matchEnd)
+	{
+		int i = existing.size();
+		int j = input.size();
+		while (j-- && i --)
+			if (existing[i] != input[j])
+				break;
+
+		return input.size() > 0 && j < 0;
+	}
+
+	//input must be a substring of existing
+	else
+		return existing.find(input) != string::npos;;
+
+	//won't reach here.
 }
+
+//bool Pattern::match(Node* input, Node* existing, bool matchFront, bool matchEnd)
+//{
+//	//either trees are null, return false
+//	if (input == NULL || existing == NULL)
+//		return false;
+//
+//	//if both expression trees match, no questions asked.
+//	if (matchTree(input, existing))
+//		return true;
+//
+//	if (matchFront)
+//	{
+//		//match front and left tree matches input
+//		if (existing->bottomNodeList.size() == 1 && 
+//			matchTree(input, existing->bottomNodeList[0]))
+//			return true;
+//
+//		//match front and right tree matches input
+//		if (existing->bottomNodeList.size() == 2 && 
+//			matchTree(input, existing->bottomNodeList[1]))
+//			return false;
+//	}
+//
+//	if (matchEnd)
+//	{
+//		//match end and right tree matches input
+//		if (existing->bottomNodeList.size() == 2 && 
+//				matchTree(input, existing->bottomNodeList[1]))
+//				return true;
+//
+//		//match end and left tree matches input
+//		if (existing->bottomNodeList.size() >= 1 &&
+//			matchTree(input, existing->bottomNodeList[0]))
+//				return false;
+//	}
+//
+//	//match the subtrees recursively
+//	return (existing->bottomNodeList.size() > 0 && match(input, existing->bottomNodeList[0], matchFront, matchEnd)) ||
+//		(existing->bottomNodeList.size() > 1 && match(input, existing->bottomNodeList[1], matchFront, matchEnd));
+//}
 
 //matches input and existing string using prefix.
 bool Pattern::matchUsingPrefix(const string& input, const string& existing, bool matchFront, bool matchEnd)
