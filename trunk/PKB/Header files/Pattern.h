@@ -16,7 +16,10 @@ public:
 
 	//matching	
 	bool patternAssign(int stmtNum, string patternLeft, string patternRight, AST& ast, VarTable& varTable);
-	bool match(Node* input, Node* existing, bool matchFront, bool matchEnd);
+
+	bool match(const string& input, const string& existing, bool matchFront, bool matchEnd);
+
+	//bool match(Node* input, Node* existing, bool matchFront, bool matchEnd);
 	bool matchUsingPrefix(const string& input, const string& existing, bool matchFront, bool matchEnd);
 	
 	//conversion to prefix for matching
