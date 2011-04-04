@@ -1301,8 +1301,12 @@ void QueryEvaluator::evalAffects(vector<vector<int> >& result, const vector<int>
 			for(int i = 0; i < (int)para1.size(); i++){
 				int in1 = para1[i];
 				vector<int> affected_para1;
-				int stmt_index = affectsTable.affects_index_down[in1];
-				affected_para1 = affectsTable.table_body_down[stmt_index];
+				int stmt_index;
+				int found = affectsTable.affects_index_down.count(in1);
+				if(found > 0){
+					stmt_index = affectsTable.affects_index_down[in1];
+					affected_para1 = affectsTable.table_body_down[stmt_index];
+				}
 				for(int k = 0; k < (int)affected_para1.size(); k++){
 					for(int p = 0; p < (int)para2.size(); p++){
 						if(affected_para1[k] == para2[p]){
@@ -1319,8 +1323,12 @@ void QueryEvaluator::evalAffects(vector<vector<int> >& result, const vector<int>
 			for(int i = 0; i < (int)para2.size(); i++){
 				int in2 = para2[i];
 				vector<int> affected_up_para2;
-				int stmt_index = affectsTable.affects_index_up[in2];
-				affected_up_para2 = affectsTable.table_body_up[stmt_index];
+				int found = affectsTable.affects_index_up.count(in2);
+				int stmt_index = -1;
+				if(found > 0){
+					stmt_index = affectsTable.affects_index_up[in2];
+					affected_up_para2 = affectsTable.table_body_up[stmt_index];
+				}
 				for(int k = 0; k < (int)affected_up_para2.size(); k++){
 					for(int p = 0; p < (int)para1.size(); p++){
 						if(affected_up_para2[k] == para1[p]){
@@ -1333,7 +1341,6 @@ void QueryEvaluator::evalAffects(vector<vector<int> >& result, const vector<int>
 					}
 				}
 			}
-			cout << endl;
 		}
 	}else{
 		for(int i = 0; i < (int)para1.size(); i++){
@@ -1404,15 +1411,23 @@ void QueryEvaluator::evalAffectsStar(vector<vector<int> >& result, const vector<
 
 void QueryEvaluator::getAffectsStar(int up, vector<int>& result, int para){
 	if(up == DOWN){
-		int para_index = affectsTable.affects_index_down[para];
-		result = affectsTable.table_body_down[para_index];
+		int found = affectsTable.affects_index_down.count(para);
+		int para_index;
+		if(found > 0){
+			para_index = affectsTable.affects_index_down[para];
+			result = affectsTable.table_body_down[para_index];
+		}
 		for(int i = 0; i < (int)result.size(); i++){
 			vector<int> affects = affectsTable.table_body_down[result[i]];
 			result.insert(result.end(), affects.begin(), affects.end());
 		}
 	}else{
-		int para_index = affectsTable.affects_index_up[para];
-		result = affectsTable.table_body_up[para_index];
+		int found = affectsTable.affects_index_up.count(para);
+		int para_index;
+		if(found > 0){
+			para_index = affectsTable.affects_index_up[para];
+			result = affectsTable.table_body_up[para_index];
+		}
 		for(int i = 0; i < (int)result.size(); i++){
 			vector<int> affects = affectsTable.table_body_up[result[i]];
 			result.insert(result.end(), affects.begin(), affects.end());
