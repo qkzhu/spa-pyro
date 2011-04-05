@@ -161,10 +161,8 @@ int Convertor::getIndex(string token)//given a token, looking up for the coressp
 			//cout<<token<<endl;
 			int index=-1;
 			int num;
-			char buffer[33];
 			num=atoi(token.c_str());
 		    int a=ToIndexCount(token);
-			//cout<<a;
 			if (a==1)
 				index=ToIndexFind(token);
 			else if(isPureNum(token))
@@ -177,7 +175,7 @@ int Convertor::getIndex(string token)//given a token, looking up for the coressp
 				
 				insertIndex(++u ,token);
 				insertShortcut(token,"patternOfSimpl");
-				index=keywordToIndex.find(token)->second;
+				index=declarationToIndex.find(token)->second;
 			}
 			else
 			{
@@ -245,6 +243,8 @@ void Convertor::showIndexTable()
 		b=declarationToIndex.count(token);
 		if(a==1||b==1)
 			return 1;
+		else
+			return a;
 	}
 
 	int Convertor::ToIndexFind(string token)
@@ -268,9 +268,13 @@ void Convertor::showIndexTable()
 
 string Convertor::stringToLower(string strToConvert)
 {//change each element of the string to lower case
+	string a= string();
    for(unsigned int i=0;i<strToConvert.length();i++)
    {
-      strToConvert[i] = tolower(strToConvert[i]);
+	   char b=strToConvert[i];
+	  
+	   a.push_back(tolower(b));
    }
-   return strToConvert;//return the converted string
+
+   return a;//return the converted string
 }
