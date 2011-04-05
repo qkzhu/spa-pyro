@@ -1,5 +1,0 @@
-stmt s, s1; assign a; while w; if ifstat;
-<<<<<<< .mine
-select a such that uses(_ , _);=======
-select a pattern a( "x", _);
->>>>>>> .r258

@@ -757,7 +757,11 @@ void QueryEvaluator::initialAffectsTable(){
 			if(mods.empty() || mods[0] == -1) throw new string("QueryEvaluator::buildAffectsTable, shit! This should never happen!");
 			int mod = mods[0];
 			bool find_final;
-			nonModPath(stmt, mod, -1, affects, true);
+			
+			vector<int> old_path;
+			vector<bool> path_result;
+			nonModPath(stmt, mod, -1, affects, old_path, path_result, true);
+
 			affectsTable.affects_index_down.insert(pair<int, int>(stmt, i));
 			affectsTable.table_body_down.push_back(affects);
 			for(int j = 0;  j < (int)affects.size(); j++){
@@ -773,6 +777,7 @@ void QueryEvaluator::initialAffectsTable(){
 			}
 		}
 	}
+	cout << endl;
 }
 
 void QueryEvaluator::underScore(int rel, vector<int> clause, int& para1, int& para1_type, int& para2, int& para2_type, int& varCodeEnding){
@@ -1352,7 +1357,9 @@ void QueryEvaluator::evalAffects(vector<vector<int> >& result, const vector<int>
 			if(modifies.empty() || modifies[0]==-1) throw new string("QueryEvaluator::evalAffects, shit! This should never happen!");
 			int mod = modifies[0];
 			bool find_final;
-			nonModPath(in1, mod, -1, affected_para1, true);
+			vector<int> old_path;
+			vector<bool> path_result;
+			nonModPath(in1, mod, -1, affected_para1, old_path, path_result, true);
 
 			for(int k = 0; k < (int)affected_para1.size(); k++){
 				for(int p = 0; p < (int)para2.size(); p++){
@@ -1520,7 +1527,7 @@ int QueryEvaluator::find_ele(const vector<int>& in, const int ele){
 	return (int)in.size();
 }
 
-bool QueryEvaluator::nonModPath(int s, int mod, int dest, vector<int>& affect_result, bool init){
+bool QueryEvaluator::nonModPath(int s, int mod, int dest, vector<int>& affect_result, vector<int>& old_path, vector<bool>& path_result, bool init){
 	int next = s;
 	if(s <= 0)
 		return true;
@@ -1530,26 +1537,45 @@ bool QueryEvaluator::nonModPath(int s, int mod, int dest, vector<int>& affect_re
 			return true;
 		}
 	}
-	bool l = mPKBObject->ast_IsInsideWhile(8, 15);
 	bool is_if = mPKBObject->ast_IsIf(next);
 	bool is_while = mPKBObject->ast_IsWhile(next);
 	if(is_if){
 		vector<int> tmp_nexts;
 		getNextPure(DOWN, tmp_nexts, next);
-		int thenC = tmp_nexts[0];
-		int elseC = tmp_nexts[1];
+		int thenC = tmp_nexts[1];
+		int elseC = tmp_nexts[0];
+		int joint_node = nextOfIf(thenC);
+		int find_then = find_ele(old_path, thenC);
+		int find_else = find_ele(old_path, elseC);
+		int find_join = find_ele(old_path, joint_node);
 		
-		int joint_node = mPKBObject->ast_GetFollowingStatementNum(s);
+		if(find_then != (int)old_path.size() && find_else != (int)old_path.size()){
+			bool result1 = path_result[find_then];
+			bool result2 = path_result[find_else];
+			bool join = path_result[find_join];
+			if(!result1 && !result2) return false;
+			else return join;
+		}
+
+		
 		bool find_dest1;
 		bool find_dest2;
 		bool non_mod_path1;
 		bool non_mod_path2;
+		bool join_result;
 
-		non_mod_path1 = nonModPath(thenC, mod, joint_node, affect_result, false);
-		non_mod_path2 = nonModPath(elseC, mod, joint_node, affect_result, false);
+		non_mod_path1 = nonModPath(thenC, mod, joint_node, affect_result, old_path, path_result, false);
+		non_mod_path2 = nonModPath(elseC, mod, joint_node, affect_result, old_path, path_result, false);
+		old_path.push_back(thenC);
+		old_path.push_back(elseC);
+		path_result.push_back(non_mod_path1);
+		path_result.push_back(non_mod_path2);
 
-		if(!non_mod_path1 && !non_mod_path2) return false;
-		else return nonModPath(joint_node, mod, dest, affect_result, false);
+		if(!non_mod_path1 && !non_mod_path2) join_result =  false;
+		else join_result = nonModPath(joint_node, mod, dest, affect_result, old_path, path_result, false);
+		old_path.push_back(joint_node);
+		path_result.push_back(join_result);
+		return join_result;
 	}else if(is_while){
 		vector<int> tmp_nexts;
 		getNextPure(DOWN, tmp_nexts, next);
@@ -1559,17 +1585,31 @@ bool QueryEvaluator::nonModPath(int s, int mod, int dest, vector<int>& affect_re
 		if(size == 2){
 			outer = tmp_nexts[0];
 			inner = tmp_nexts[1];
-		}else inner = tmp_nexts[0];
-
-		nonModPath(inner, mod, next, affect_result, false);
-		nonModPath(outer, mod, dest, affect_result, false);
+			int find_out = find_ele(old_path, outer);
+			int find_inner = find_ele(old_path, inner);
+			if(find_inner == (int)old_path.size()) {
+				old_path.push_back(inner);
+				path_result.push_back(nonModPath(inner, mod, next, affect_result, old_path, path_result, false));
+			}
+			if(find_out == (int) old_path.size()) {
+				old_path.push_back(outer);
+				path_result.push_back(nonModPath(outer, mod, dest, affect_result, old_path, path_result, false));	
+			}
+		}else {
+			inner = tmp_nexts[0];
+			int find_inner = find_ele(old_path, inner);
+			if(find_inner == (int)old_path.size()) {
+				old_path.push_back(inner);
+				path_result.push_back(nonModPath(inner, mod, next, affect_result, old_path, path_result, false));	
+			}
+		}
 	}else{
 		vector<int> tmp_nexts;
 		
 		if(init){
 			getNextPure(DOWN, tmp_nexts, next);
 			next = tmp_nexts[0];
-			return nonModPath(next, mod, dest, affect_result, false);
+			return nonModPath(next, mod, dest, affect_result, old_path, path_result, false);
 		}
 
 		vector<int> uses;
@@ -1587,10 +1627,23 @@ bool QueryEvaluator::nonModPath(int s, int mod, int dest, vector<int>& affect_re
 		next = tmp_nexts[0];
 		if(found != (int)modifies.size())
 			return false;
-		else return nonModPath(next, mod, dest, affect_result, false);	
+		else return nonModPath(next, mod, dest, affect_result, old_path, path_result, false);	
 		
 	}
 	return true;
+}
+
+int QueryEvaluator::nextOfIf(int first){
+	int follows = first;
+	int end;
+	while(true){
+		int next = mPKBObject->ast_GetFollowingStatementNum(follows);
+		if(next == -1) {end = follows; break; }
+		follows = next;
+	}
+	vector<int> nexts;
+	getNextPure(DOWN, nexts, end);
+	return nexts[0];
 }
 
 void QueryEvaluator::getAllType(vector<int>& result, int type){

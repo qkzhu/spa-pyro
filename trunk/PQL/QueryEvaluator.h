@@ -140,8 +140,11 @@ private:
 	//If the element is found in the vector, return its index; otherwise return the size of the vector.
 	int find_ele(const vector<int>& in, const int ele);
 
+	//find the next stmt of the if stmt's ending of then, notice this is not the last stmt
+	int nextOfIf(int first);
+
 	//get all the affected stmts from s
-	bool nonModPath(int s, int mod, int dest, vector<int>& affect_result, bool init); 
+	bool nonModPath(int s, int mod, int dest, vector<int>& affect_result, vector<int>& old_path, vector<bool>& path_result, bool init); 
 
 
 public:
