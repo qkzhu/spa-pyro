@@ -66,14 +66,14 @@ _           157
 
 value     101
 
-varName   102
+varname   102
 
-procName    103
+procname    103
 
 integer     201
 
-varOfSimpl      202
+varofsimpl      202
 
-procOfSimpl       203
+procofsimpl       203
 
-patternOfSimpl    205
+patternofsimpl    205
