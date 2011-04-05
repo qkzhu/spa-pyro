@@ -2,7 +2,7 @@ procedure First {
 x = 1;
 y = x;
 z = y;
-call Fifth;
+call Ninth;
 i = x;
 call Sixth;
 x = z;
@@ -26,6 +26,7 @@ while x {
 			p = p - 1;
 		}
 	}
+	call Tenth;
 	if x then{
 		while y {
 			p = 10;
@@ -68,6 +69,7 @@ while x {
 			}
 		}
 	}else{
+		call Fifth;
 		l = 100;
 		if x then{
 			while y {
@@ -116,6 +118,153 @@ while x {
 		}
 	}
 }
+
+
+	if i then{
+		x = x - 1;
+		if x then {
+			x = x+1; 
+		}else{
+			y = z+x; 
+			if i then{
+				x = x - 1;
+				if x then {
+					x = x+1; 
+				}else{
+					y = z+x; 
+					x = x + 100 + y + z;
+					y = 200 + 100 - y - z;
+					l = 200*2 + 2*y + x;
+				}
+				z = z + x + i;
+				call Third;
+				i = i - 1; 
+			}else{
+				x = 100;
+			}
+			if i then{
+				x = x - 1;
+				if x then {
+					x = x+1; 
+				}else{
+					y = z+x; 
+				}
+				z = z + x + i;
+				call Third;
+				i = i - 1; 
+			}else{
+				x = 100;
+			}
+		}
+		z = z + x + i;
+		call Third;
+		i = i - 1; 
+	}else{
+		x = 100;
+	}
+	
+	
+	
+	x = x + 100 + y + z;
+	y = 200 + 100 - y - z;
+	l = 200*2 + 2*y + x;
+	if i then{
+		x = x - 1;
+		if x then {
+			x = x+1; 
+		}else{
+			y = z+x; 
+		}
+		z = z + x + i;
+		call Third;
+		i = i - 1; 
+	}else{
+		x = 100;
+	}
+	
+	x = x + 100 + y + z;
+	y = 200 + 100 - y - z;
+	l = 200*2 + 2*y + x;
+	if i then{
+		x = x - 1;
+		if x then {
+			x = x+1; 
+		}else{
+			y = z+x; 
+		}
+		z = z + x + i;
+		call Third;
+		i = i - 1; 
+	}else{
+		x = 100;
+	}
+	x = x + 100 + y + z;
+	y = 200 + 100 - y - z;
+	l = 200*2 + 2*y + x;
+	if i then{
+		x = x - 1;
+		if x then {
+			x = x+1; 
+		}else{
+			y = z+x; 
+		}
+		z = z + x + i;
+		call Third;
+		i = i - 1; 
+	}else{
+		x = 100;
+	}
+	x = x + 100 + y + z;
+	y = 200 + 100 - y - z;
+	l = 200*2 + 2*y + x;
+	if i then{
+		x = x - 1;
+		if x then {
+			x = x+1; 
+		}else{
+			y = z+x; 
+		}
+		z = z + x + i;
+		call Third;
+		i = i - 1; 
+	}else{
+		x = 100;
+	}
+	x = x + 100 + y + z;
+	y = 200 + 100 - y - z;
+	l = 200*2 + 2*y + x;
+	if i then{
+		x = x - 1;
+		if x then {
+			x = x+1; 
+		}else{
+			y = z+x; 
+		}
+		z = z + x + i;
+		call Third;
+		i = i - 1; 
+	}else{
+		x = 100;
+	}
+	x = x + 100 + y + z;
+	y = 200 + 100 - y - z;
+	l = 200*2 + 2*y + x;
+	if i then{
+		x = x - 1;
+		if x then {
+			x = x+1; 
+		}else{
+			y = z+x; 
+		}
+		z = z + x + i;
+		call Third;
+		i = i - 1; 
+	}else{
+		x = 100;
+	}
+	x = x + 100 + y + z;
+	y = 200 + 100 - y - z;
+	l = 200*2 + 2*y + x;
 }
 procedure Second {
 while i {
@@ -182,6 +331,42 @@ if x then{
 				p = p + 10;
 			}else{
 				y = 100;
+				if x then{
+					l = l - 200;
+					while l {
+						p = 10;
+						x = 0;
+						y = y - 1;
+						if z then{
+							z = y + x + 10;
+						}else{
+							while i{
+								if z then{
+									z = y + x + 10;
+								}else{
+									while i{
+										z = 0;
+									}
+									if p then{
+										p = p + 10;
+									}else{
+										y = 100;
+									}
+									z = z*2 + y*3 + x + 2 + p;
+								}
+								z = 0;
+							}
+							if p then{
+								p = p + 10;
+						}else{
+							y = 100;
+						}
+							z = z*2 + y*3 + x + 2 + p;
+						}
+					}
+				}else{
+					l = 100;
+				}
 			}
 			z = z*2 + y*3 + x + 2 + p;
 		}
@@ -199,7 +384,7 @@ while i {
 		y = z+x; 
 	}
 	z = z + x + i;
-	call Third;
+	call Seventh;
 	i = i - 1; 
 }
 while i {
@@ -210,7 +395,7 @@ while i {
 		y = z+x; 
 	}
 	z = z + x + i;
-	call Third;
+	call Eighth;
 	i = i - 1; 
 }
 while i {
@@ -221,7 +406,7 @@ while i {
 		y = z+x; 
 	}
 	z = z + x + i;
-	call Third;
+	call Fifth;
 	i = i - 1; 
 }
 call Third;
@@ -258,6 +443,7 @@ call First;
 procedure Fifth{
 	if i then{
 		x = x - 1;
+		call Sixth;
 		if x then {
 			x = x+1; 
 		}else{
@@ -307,6 +493,294 @@ procedure Eighth{
 	y = 200 + 100 - y - z;
 	l = 200*2 + 2*y + x;
 	call Second;
+	x = x + 100 + y + z;
+	y = 200 + 100 - y - z;
+	l = 200*2 + 2*y + x;
+	if i then{
+		x = x - 1;
+		if x then {
+			x = x+1; 
+		}else{
+			y = z+x; 
+		}
+		z = z + x + i;
+		call Third;
+		i = i - 1; 
+	}else{
+		x = 100;
+	}
+	x = x + 100 + y + z;
+	y = 200 + 100 - y - z;
+	l = 200*2 + 2*y + x;
+	if i then{
+		x = x - 1;
+		if x then {
+			x = x+1; 
+		}else{
+			y = z+x; 
+		}
+		z = z + x + i;
+		call Third;
+		i = i - 1; 
+	}else{
+		x = 100;
+	}
+	x = x + 100 + y + z;
+	y = 200 + 100 - y - z;
+	l = 200*2 + 2*y + x;
+	if i then{
+		x = x - 1;
+		if x then {
+			x = x+1; 
+		}else{
+			y = z+x; 
+		}
+		z = z + x + i;
+		call Third;
+		i = i - 1; 
+	}else{
+		x = 100;
+	}
+	x = x + 100 + y + z;
+	y = 200 + 100 - y - z;
+	l = 200*2 + 2*y + x;
+	if i then{
+		x = x - 1;
+		if x then {
+			x = x+1; 
+		}else{
+			y = z+x; 
+		}
+		z = z + x + i;
+		call Third;
+		i = i - 1; 
+	}else{
+		x = 100;
+	}
+	
+	x = x + 100 + y + z;
+	y = 200 + 100 - y - z;
+	l = 200*2 + 2*y + x;
+	if i then{
+		x = x - 1;
+		if x then {
+			x = x+1; 
+		}else{
+			y = z+x; 
+		}
+		z = z + x + i;
+		call Third;
+		i = i - 1; 
+	}else{
+		x = 100;
+	}
+	x = x + 100 + y + z;
+	y = 200 + 100 - y - z;
+	l = 200*2 + 2*y + x;
+	if i then{
+		x = x - 1;
+		if x then {
+			x = x+1; 
+		}else{
+			y = z+x; 
+		}
+		z = z + x + i;
+		call Third;
+		i = i - 1; 
+	}else{
+		x = 100;
+	}
+	x = x + 100 + y + z;
+	y = 200 + 100 - y - z;
+	l = 200*2 + 2*y + x;
+	if i then{
+		x = x - 1;
+		if x then {
+			x = x+1; 
+		}else{
+			y = z+x; 
+		}
+		z = z + x + i;
+		call Third;
+		i = i - 1; 
+	}else{
+		x = 100;
+	}
+	x = x + 100 + y + z;
+	y = 200 + 100 - y - z;
+	l = 200*2 + 2*y + x;
+	if i then{
+		x = x - 1;
+		if x then {
+			x = x+1; 
+		}else{
+			y = z+x; 
+		}
+		z = z + x + i;
+		call Third;
+		i = i - 1; 
+	}else{
+		x = 100;
+	}
+	x = x + 100 + y + z;
+	y = 200 + 100 - y - z;
+	l = 200*2 + 2*y + x;
+	if i then{
+		x = x - 1;
+		if x then {
+			x = x+1; 
+		}else{
+			y = z+x; 
+		}
+		z = z + x + i;
+		call Third;
+		i = i - 1; 
+	}else{
+		x = 100;
+	}
+	x = x + 100 + y + z;
+	y = 200 + 100 - y - z;
+	l = 200*2 + 2*y + x;
+}
+
+procedure Ninth{
+	z = z + 78;
+}
+
+procedure Tenth{
+	x = x + 100 + y + z;
+	y = 200 + 100 - y - z;
+	l = 200*2 + 2*y + x;
+	call Second;
+	x = x + 100 + y + z;
+	y = 200 + 100 - y - z;
+	l = 200*2 + 2*y + x;
+	if i then{
+		x = x - 1;
+		if x then {
+			x = x+1; 
+		}else{
+			y = z+x; 
+		}
+		z = z + x + i;
+		call Third;
+		i = i - 1; 
+	}else{
+		x = 100;
+	}
+	x = x + 100 + y + z;
+	y = 200 + 100 - y - z;
+	l = 200*2 + 2*y + x;
+	if i then{
+		x = x - 1;
+		if x then {
+			x = x+1; 
+		}else{
+			y = z+x; 
+		}
+		z = z + x + i;
+		call Third;
+		i = i - 1; 
+	}else{
+		x = 100;
+	}
+	x = x + 100 + y + z;
+	y = 200 + 100 - y - z;
+	l = 200*2 + 2*y + x;
+	if i then{
+		x = x - 1;
+		if x then {
+			x = x+1; 
+		}else{
+			y = z+x; 
+		}
+		z = z + x + i;
+		call Third;
+		i = i - 1; 
+	}else{
+		x = 100;
+	}
+	x = x + 100 + y + z;
+	y = 200 + 100 - y - z;
+	l = 200*2 + 2*y + x;
+	if i then{
+		x = x - 1;
+		if x then {
+			x = x+1; 
+		}else{
+			y = z+x; 
+		}
+		z = z + x + i;
+		call Third;
+		i = i - 1; 
+	}else{
+		x = 100;
+	}
+	
+	x = x + 100 + y + z;
+	y = 200 + 100 - y - z;
+	l = 200*2 + 2*y + x;
+	if i then{
+		x = x - 1;
+		if x then {
+			x = x+1; 
+		}else{
+			y = z+x; 
+		}
+		z = z + x + i;
+		call Third;
+		i = i - 1; 
+	}else{
+		x = 100;
+	}
+	x = x + 100 + y + z;
+	y = 200 + 100 - y - z;
+	l = 200*2 + 2*y + x;
+	if i then{
+		x = x - 1;
+		if x then {
+			x = x+1; 
+		}else{
+			y = z+x; 
+		}
+		z = z + x + i;
+		call Third;
+		i = i - 1; 
+	}else{
+		x = 100;
+	}
+	x = x + 100 + y + z;
+	y = 200 + 100 - y - z;
+	l = 200*2 + 2*y + x;
+	if i then{
+		x = x - 1;
+		if x then {
+			x = x+1; 
+		}else{
+			y = z+x; 
+		}
+		z = z + x + i;
+		call Third;
+		i = i - 1; 
+	}else{
+		x = 100;
+	}
+	x = x + 100 + y + z;
+	y = 200 + 100 - y - z;
+	l = 200*2 + 2*y + x;
+	if i then{
+		x = x - 1;
+		if x then {
+			x = x+1; 
+		}else{
+			y = z+x; 
+		}
+		z = z + x + i;
+		call Third;
+		i = i - 1; 
+	}else{
+		x = 100;
+	}
 	x = x + 100 + y + z;
 	y = 200 + 100 - y - z;
 	l = 200*2 + 2*y + x;
