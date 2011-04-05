@@ -39,7 +39,7 @@ procedure   58
 
 call        59
 
-BOOLEAN     60
+boolean     60
 
 
 , 151
