@@ -8,11 +8,11 @@ bool selectBool;
 /*
 given table and string, parse the string s and put the parse result into the table
 */
-void PqlParser::parser(string s,QueryTable *table) {
+void PqlParser::parser(string s,QueryTable *table){
   userdefine=PqlParser::USERDEFINED;
   selectBool=true;	
   qu=new TokenList(s);
-  qu->showTokenList();
+  //qu->showTokenList();
 
   Convertor::update();
   
