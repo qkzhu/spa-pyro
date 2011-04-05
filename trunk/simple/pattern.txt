@@ -1,0 +1,50 @@
+procedure Example      {             
+	x = x -2;     
+	y =		   x;   
+	z = y - 4*n;
+	call q1;
+	i = (x);
+	call q2;
+	x = z;
+	while i {
+	x = x - 1;
+	if x then {
+	x = (x+1)*5; }
+else {
+	y = z+(  x- 3   )  ; }     
+	z = z + (x) * i;
+	call q1;
+	i = (i) - 1; }
+	call p; }    
+procedure p {
+	while i {
+	x = z*    3 + 2*y;
+	call q2;
+	i = i - 1 ; }
+	z = z + x + i; }
+
+procedure q1 {
+	z = x + 1;
+	x = z + x; }
+
+procedure q2 {
+	if i then {
+	z = x + 1; }
+else {
+	x = z + x; }           }
+
+procedure q3 {
+	if x12 then {
+	z = x + 1; }
+else {
+	x = z + x; }           }
+
+procedure q4 {
+	while x12 {
+	z = x + 1;
+	x = z + x; } }
+
+procedure q5 {
+	while x {
+	z = x + 1;
+	x = z + x; } }

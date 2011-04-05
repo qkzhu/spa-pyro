@@ -1,0 +1,6 @@
+1
+cat: SrcProgram.txt
+1
+select BOOLEAN;
+none
+5000
