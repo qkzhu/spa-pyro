@@ -40,6 +40,8 @@ public:
 	//match trees inside AST
 	bool matchTree(Node* first, Node* second);
 
+	void checkValidName(string& var_name);
+
 private:
 	bool isConstant(string tok);
 	bool isOperator(char c);
