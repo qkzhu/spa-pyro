@@ -4,13 +4,16 @@
  map<int,string> Convertor::indexToKeyword;
  map<int,string>::iterator it;
  map<string,int> Convertor::keywordToIndex;
- 
+ map<int,string> Convertor::indexToDeclaration;
+ map<string,int> Convertor::declarationToIndex;
  map<string, string> Convertor::shortcutToContent;//s->stmt;
  //Tokenizer keywordToken;
  int u=Convertor::QUATEDSTRING;
- int w=Convertor::PATTERNSTRING;
+
 int Convertor::update()
 {
+	indexToDeclaration.clear();
+	declarationToIndex.clear();
 	indexToKeyword.clear();
 	keywordToIndex.clear();
 	shortcutToContent.clear();
@@ -62,11 +65,13 @@ int Convertor::update()
 void Convertor::getAllIndex(vector<int> &indexlist)
 {
 	int index;
-	for ( it=indexToKeyword.begin() ; it != indexToKeyword.end(); it++ )
+	for ( it=indexToDeclaration.begin() ; it != indexToDeclaration.end(); it++ )
 	{
 		index=(*it).first;
 		if(index>300)
 		indexlist.push_back(index);
+		else
+		throw new string("all the index inside the indexToDeclaration should be lager than 300");
     cout << (*it).first << " => " << (*it).second << endl;
 	}
 }
@@ -158,10 +163,10 @@ int Convertor::getIndex(string token)//given a token, looking up for the coressp
 			int num;
 			char buffer[33];
 			num=atoi(token.c_str());
-		    int a=keywordToIndex.count(token);
+		    int a=ToIndexCount(token);
 			//cout<<a;
 			if (a==1)
-				index=keywordToIndex.find(token)->second;
+				index=ToIndexFind(token);
 			else if(isPureNum(token))
 			{
 				index=num;
@@ -188,7 +193,9 @@ string Convertor:: getKeyword(int index)//given a index, looking for the coressp
 	string keyword;
 	if(indexToKeyword.count(index)==1)
 
-				keyword=indexToKeyword.find(index)->second;
+		keyword=indexToKeyword.find(index)->second;
+	else if(indexToDeclaration.count(index)==1)
+		keyword=indexToDeclaration.find(index)->second;
 	else
 				keyword="NULL";
 			return keyword;
@@ -217,8 +224,8 @@ string Convertor::getContent(string shortcut)
 }
 void Convertor::insertIndex(int i,string s)
 {
-	indexToKeyword[i]=s;
-	keywordToIndex[s]=i;
+	indexToDeclaration[i]=s;
+	declarationToIndex[s]=i;
 }
 void Convertor::insertShortcut(string s,string content)
 {
@@ -228,4 +235,42 @@ void Convertor::showIndexTable()
 {
 
 	cout<<indexToKeyword.size()<<"compared with"<<indexToKeyword.max_size()<<endl;
+}
+
+
+	int Convertor:: ToIndexCount(string token)
+	{
+		int a,b;
+		a=keywordToIndex.count(stringToLower(token));
+		b=declarationToIndex.count(token);
+		if(a==1||b==1)
+			return 1;
+	}
+
+	int Convertor::ToIndexFind(string token)
+	{
+		int a,b;
+		if(keywordToIndex.count(stringToLower(token))==1)
+		{
+			a=keywordToIndex.find(stringToLower(token))->second;
+		    return a;
+		}
+		else if(declarationToIndex.count(token)==1)
+		{
+			b=declarationToIndex.find(token)->second;
+			return b;
+		}
+		else
+        throw new string("Convertor::find(): "+token+" should have been predefined ");
+		
+	}
+
+
+string Convertor::stringToLower(string strToConvert)
+{//change each element of the string to lower case
+   for(unsigned int i=0;i<strToConvert.length();i++)
+   {
+      strToConvert[i] = tolower(strToConvert[i]);
+   }
+   return strToConvert;//return the converted string
 }

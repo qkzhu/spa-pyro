@@ -1,6 +1,6 @@
 #ifndef CONVERTOR_H
 #define CONVERTOR_H
-
+/*keyword 0-300; userdefined variable 301-400; pattern in the simple 401-500*/
 
 //this class will mainly validate the pqlquery and index it; 
 #include<fstream>
@@ -21,12 +21,16 @@ private:
 	static map<int,string> indexToKeyword;//map the index with the keyword; index->keyword
 	static map<string, int> keywordToIndex;//map the keyword with the index; keyword->index
 	static map<string, string> shortcutToContent;//s->stmt;
+	static map<int, string> indexToDeclaration;
+	static map<string,int> declarationToIndex;
 	static bool isPatterned(string s);
+	static int ToIndexCount(string token);
+	static int ToIndexFind(string token);
+    static string stringToLower(string strToConvert);
 public:
 	static void getAllIndex(vector<int> &indexlist);
 	static void showIndexTable();
 	static const int QUATEDSTRING=400;
-	static const int PATTERNSTRING=500;
 	static bool isQuated(string s);
 	static bool isDeclared(string token);
 	static int update();//everytime try to update before using it;
