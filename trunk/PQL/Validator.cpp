@@ -544,15 +544,24 @@ void Validator::checkPattern_PQLOne(const string &str)
 	
 	fillAssignVector(str, expression, separatorPostion, varOfSimple);
 
+
+	//cout<<"hahahahhahahahhahhahaha:    "<<str.front()<<" "<<str.back()<<endl;
 	
+	
+
 	//validation
 	//cout<<int(varOfSimple.size())<<endl;
+	//cout<<varOfSimple.size()<<endl;
+	
 	for(int i = 0; i< int(varOfSimple.size());i++)
 	{
+		
 		checkFisrstCharacter(varOfSimple,i);
+
 		//check all other possibilities
 		for(int j = 0; j<int(varOfSimple.at(i).size());j++)
 		{
+			//cout<<varOfSimple.at(i).at(j)<<endl;
 			//cout<<varOfSimple.at(i).at(j)<<" ";
 			if( !( (varOfSimple.at(i).at(j) >= 65 && varOfSimple.at(i).at(j) <= 97) || (varOfSimple.at(i).at(j) >= 97 && varOfSimple.at(i).at(j) <= 122) || (varOfSimple.at(i).at(j) >= 48 && varOfSimple.at(i).at(j) <= 57) || (varOfSimple.at(i).at(j) == 32) ) )
 			{
@@ -750,6 +759,12 @@ void Validator::fillAssignVector(const string &str, vector<int> &expression, vec
 
 	bool flag = false;
 	vector<int> tempHolder;
+
+
+	if(int(str.front()) == 42 || int(str.front()) == 43 || int(str.front()) == 45 || int(str.back()) == 42 || int(str.back()) == 43 || int(str.back()) == 45)
+	{
+		throw new string("the operator(+,-,*) cannot appear in front or back -- throw by Validator::fillAssignVector");
+	}
 
 	for(int i=0;i<int(str.length());i++)
 	{
