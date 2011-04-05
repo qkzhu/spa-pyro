@@ -28,7 +28,7 @@ void QueryEvaluator::evaluate(){
 	
 	if(select[0] == mQueryTree->getIndex("BOOLEAN")) isBoolSelected = true;
 
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////FOR DEBUGGING
+	/*//////////////////////////////////////////////////////////////////////////////////////////////////////////FOR DEBUGGING
 	cout<< "PQL parser checking"<< endl;
 	cout << "Pattern_PQL clauses: " << endl;
 	for(int i=0; i< mQueryTree->patternSize(); i++){
@@ -58,7 +58,7 @@ void QueryEvaluator::evaluate(){
 		cout << endl;
 	}
 	cout << "PQL PARSER checking FINISH." << endl;
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 
 	//QE evaluate the With clause, then pattern clause, and in the end Such That clause.
 	bool unrelated_finish = false;
@@ -777,7 +777,7 @@ void QueryEvaluator::initialAffectsTable(){
 			}
 		}
 	}
-	cout << endl;
+	//cout << endl;
 }
 
 void QueryEvaluator::underScore(int rel, vector<int> clause, int& para1, int& para1_type, int& para2, int& para2_type, int& varCodeEnding){
@@ -929,7 +929,6 @@ void QueryEvaluator::evalParent(int star, vector<std::vector<int> >& result, con
 			vector<int> tmp1;
 			if(star == NOSTAR) mPKBObject->ast_GetChild(tmp1, in1);
 			else getChildStar(DOWN, tmp1, in1);
-			cout << "HERE" << endl;
 			if(tmp1[0] == -1) continue;    //continue this loop without eva this iteration
 			for(int i = 0; i < (int)para2.size(); i++)
 			{
