@@ -170,8 +170,14 @@ bool Pattern::patternAssign(int stmtNum, string patternLeft, string patternRight
 
 	//check that the modified variable corresponds to the pattern on the left
 	int var_index = varTable.getVarIndex(patternLeft);
-	if (patternLeft != "_" && var_index != bottomNodes[0]->id)
-		return false;
+
+	if (patternLeft != "_")
+	{
+		checkValidName(patternLeft);
+
+		if (var_index != bottomNodes[0]->id)
+			return false;
+	}
 
 	//check the pattern on the right.
 	if (patternRight.size() == 0)
@@ -199,6 +205,9 @@ bool Pattern::patternAssign(int stmtNum, string patternLeft, string patternRight
 
 	if(patternRight.size() == 0)
 		throw new string("Pattern: Empty expression passed.");
+
+	//building a tree to test whether patternRight is correct.
+	Node* node = generateNode(patternRight, ast, varTable);
 
 	string input = stringToPrefix(patternRight);
 	string existing = nodeToPrefix(bottomNodes[1], ast, varTable);
@@ -667,4 +676,12 @@ bool Pattern::matchTree(Node* first, Node* second)
 
 	//pass all checks - must be true.
 	return true;
+}
+
+void Pattern::checkValidName(string& var_name)
+{
+	static regex exp("[A-Za-z][A-Za-z0-9]*");
+	
+	if (!regex_match(var_name.begin(), var_name.end(), exp))
+		throw new string("Pattern: Invalid left pattern");
 }
