@@ -1,0 +1,329 @@
+procedure First {
+x = 1;
+y = x;
+z = y;
+call Fifth;
+i = x;
+call Sixth;
+x = z;
+while i {
+	x = x - 1;
+	if x then {
+		x = x+1; 
+	}else{
+		y = z+x; 
+	}
+	z = z + x + i;
+	call Third;
+	i = i - 1; 
+}
+call Sixth; 
+while x {
+	while z {
+		if z then{
+			p = p + 100;
+		}else{
+			p = p - 1;
+		}
+	}
+	if x then{
+		while y {
+			p = 10;
+			x = 0;
+			y = y - 1;
+			if z then{
+				z = y + x + 10;
+				if x then{
+					while y {
+						p = 10;
+						x = 0;
+						y = y - 1;
+						if z then{
+							z = y + x + 10;
+						}else{
+							while i{
+								z = 0;
+							}
+							if p then{
+								p = p + 10;
+							}else{
+								y = 100;
+							}
+							z = z + y + x + 2 + p;
+						}
+					}
+				}else{
+					l = 100;
+				}
+			}else{
+				while i{
+					z = 0;
+				}
+				if p then{
+					p = p + 10;
+				}else{
+					y = 100;
+				}
+				z = z + y + x + 2 + p;
+			}
+		}
+	}else{
+		l = 100;
+		if x then{
+			while y {
+				p = 10;
+				x = 0;
+				y = y - 1;
+				if z then{
+					z = y + x + 10;
+				}else{
+					while i{
+						z = l;
+					}
+					if p then{
+						p = p + 10;
+					}else{
+						y = 100;
+					}
+					z = z + y + x + 2 + p;
+				}
+			}
+		}else{
+			l = 100;
+		}
+	}
+	while z {
+		if z then{
+			p = p + 100;
+		}else{
+			p = p - 1;
+		}
+	}
+	while z {
+		if z then{
+			p = p + 100;
+		}else{
+			p = p - 1;
+		}
+	}
+	while z {
+		call Fifth;
+		if z then{
+			p = p + 100;
+		}else{
+			p = p - 1;
+			call Sixth;
+		}
+	}
+}
+}
+procedure Second {
+while i {
+	x = z*3 + 2*y;
+	call Third;
+	while x {
+		x = x + 1;
+	}
+	i = i - 1; 
+	while i {
+		x = x - 1;
+		if x then {
+			x = x+1; 
+		}else{
+			y = z+x; 
+			while i {
+				x = x - 1;
+				if x then {
+					x = x+1; 
+				}else{
+					y = z+x; 
+					while i {
+						x = x - 1;
+						if x then {
+							x = x+1; 
+						}else{
+							y = z+x; 
+						}	
+						z = z + x + i;
+						call Third;
+						i = i - 1; 
+					}
+				}
+				z = z + x + i;
+				call Third;
+				i = i - 1; 
+			}
+		}
+		z = z + x + i;
+		call Third;
+		i = i - 1; 
+	}
+}
+z = z + x + i; 
+}
+procedure Third {
+call Second;
+z = x + 1;
+x = z + x; 
+l = 200;
+if x then{
+	l = l - 200;
+	while l {
+		p = 10;
+		x = 0;
+		y = y - 1;
+		if z then{
+			z = y + x + 10;
+		}else{
+			while i{
+				z = 0;
+			}
+			if p then{
+				p = p + 10;
+			}else{
+				y = 100;
+			}
+			z = z*2 + y*3 + x + 2 + p;
+		}
+	}
+}else{
+	l = 100;
+}
+}
+procedure Fourth {
+while i {
+	x = x - 1;
+	if x then {
+		x = x+1; 
+	}else{
+		y = z+x; 
+	}
+	z = z + x + i;
+	call Third;
+	i = i - 1; 
+}
+while i {
+	x = x - 1;
+	if x then {
+		x = x+1; 
+	}else{
+		y = z+x; 
+	}
+	z = z + x + i;
+	call Third;
+	i = i - 1; 
+}
+while i {
+	x = x - 1;
+	if x then {
+		x = x+1; 
+	}else{
+		y = z+x; 
+	}
+	z = z + x + i;
+	call Third;
+	i = i - 1; 
+}
+call Third;
+if i then {
+	z = x + 1; 
+	while i {
+		x = x - 1;
+		if x then {
+			x = x+1; 
+		}else{
+			y = z+x; 
+			while i {
+				x = x - 1;
+				if x then {
+					x = x+1; 
+				}else{
+					y = z+x; 
+				}
+				z = z + x + i;
+				call Third;
+				i = i - 1; 
+			}
+		}
+		z = z + x + i;
+		call Third;
+		i = i - 1; 
+	}
+}else {
+	x = z + x; 
+} 
+call First;	
+}
+
+procedure Fifth{
+	if i then{
+		x = x - 1;
+		if x then {
+			x = x+1; 
+		}else{
+			y = z+x; 
+		}
+		z = z + x + i;
+		call Third;
+		i = i - 1; 
+	}else{
+		x = 100;
+	}
+	x = x + 100 + y + z;
+	y = 200 + 100 - y - z;
+	l = 200*2 + 2*y + x;
+}
+
+procedure Sixth{
+	y = x;
+	p = 100 + x;
+	l = 200 + p;
+	x = p + l + 2*y;
+	call Seventh;
+}
+
+procedure Seventh{
+	call Eighth;
+	if i then{
+		x = x - 1;
+		if x then {
+			x = x+1; 
+		}else{
+			y = z+x; 
+		}
+		z = z + x + i;
+		call Third;
+		i = i - 1; 
+	}else{
+		x = 100;
+	}
+	x = x + 100 + y + z;
+	y = 200 + 100 - y - z;
+	l = 200*2 + 2*y + x;
+}
+
+procedure Eighth{
+	x = x + 100 + y + z;
+	y = 200 + 100 - y - z;
+	l = 200*2 + 2*y + x;
+	call Second;
+	x = x + 100 + y + z;
+	y = 200 + 100 - y - z;
+	l = 200*2 + 2*y + x;
+	if i then{
+		x = x - 1;
+		if x then {
+			x = x+1; 
+		}else{
+			y = z+x; 
+		}
+		z = z + x + i;
+		call Third;
+		i = i - 1; 
+	}else{
+		x = 100;
+	}
+	x = x + 100 + y + z;
+	y = 200 + 100 - y - z;
+	l = 200*2 + 2*y + x;
+}
