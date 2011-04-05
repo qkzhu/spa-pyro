@@ -30,6 +30,9 @@ int main(int argc, char* argv[]){
 	   }
 	   PqlPreprocessor pql (query);
 	   
+	   vector<int> indexlist;
+	   Convertor::getAllIndex(indexlist);
+
 	   QueryEvaluator bqe (&pkb, &pql);
 	   bqe.evaluate();
 	   bqe.printResult();
