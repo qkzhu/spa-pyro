@@ -1,4 +1,4 @@
-174
+173
 cat: follows
 1
 stmt s;
@@ -798,12 +798,12 @@ select w such that parent(w,s1);
 160
 stmt s1, s2; prog_line p1,p2; while w; assign a;
 select w such that parent(w,s1) and affects(s1,11);
-none
+8
 5000
 161
 stmt s1, s2; prog_line p1,p2; while w; assign a;
 select w such that parent(w,s1) and affects(s1,12);
-none
+8
 5000
 162
 stmt s1, s2; prog_line p1,p2; while w; assign a;
@@ -823,17 +823,17 @@ none
 165
 stmt s1, s2; prog_line p1,p2; while w; assign a;
 select <w,s1,a> such that parent*(w,s1) and affects(s1,a);
-8 11 13
+8 11 13, 17 21 21,20 21 21,8 15 13,8 15 15,8 9 11,8 9 12,8 9 13
 5000
 166
 stmt s1, s2; prog_line p1,p2; while w; assign a;
 select <s2,s1,a> such that parent*(s2,s1) and affects(s1,a);
-8 11 13,10 11 13
+8 11 13,10 11 13, 17 21 21,20 21 21,8 15 13,8 15 15,8 9 11,8 9 12,8 9 13
 5000
 167
 stmt s1, s2; prog_line p1,p2; while w; assign a;
 select <s2,s1,a> such that parent*(s2,s1) and affects(s1,a) pattern a(_,_);
-8 11 13, 10 11 13
+8 11 13, 10 11 13, 17 21 21,20 21 21,8 15 13,8 15 15,8 9 11,8 9 12,8 9 13
 5000
 168
 constant c;stmt s1, s2; prog_line p1,p2; while w; assign a;
@@ -843,7 +843,7 @@ select <s1,a,s2> such that follows*(s1,a) and follows(a,s2) with a.stmt#=c.value
 169
 constant c;stmt s1, s2; prog_line p1,p2; while w; assign a;
 select <s1,a,s2> such that follows(s1,a) and follows(w,s2) with a.stmt#=c.value;
-1 2 16 1 2 22, 1 2 23, 2 3 16, 2 3 22, 2 3 23
+1 2 16, 1 2 22, 1 2 23, 2 3 16, 2 3 22, 2 3 23
 5000
 170
 constant c;stmt s1, s2, s3, s4, s5,s6; prog_line p1,p2; while w; assign a;
@@ -862,16 +862,6 @@ none
 5000
 173
 constant c;stmt s1, s2, s3, s4, s5,s6; prog_line p1,p2; while w; assign a;
-select <a,s1> such that affects(s1,a) pattern a(_,"z+x"); 
-24 25
+select <s1,a> such that affects(s1,a) pattern a(_,"z+x"); 
+24 25, 9 12
 5000
-174
-constant c;stmt s1, s2, s3, s4, s5,s6; prog_line p1,p2; while w; assign a;
-select <s1,a> such that affects(s1,a); 
-1 2, 2 3, 5 13, 5 15,24 25, 11 13
-5000
-
-
-
-
-
