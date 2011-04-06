@@ -241,9 +241,10 @@ string PqlParser::selectParser(int type,TokenList *quPointer,QueryTable *tablePo
 							
 							content.push_back(index);
 							pch=qu->getNextToken();
-						    cout<<index<<pch<<endl;
+						    
 							index=Convertor::getIndex(pch);
-							if(index!=-1)
+							//cout<<index<<pch<<endl;
+							if(index==-1) throw new string(pch+"should not follow the DoT in select clause");
 							   content.push_back(index);
 						//	content.push_back(index);
 							pch=qu->getNextToken();
