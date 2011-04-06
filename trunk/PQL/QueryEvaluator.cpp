@@ -457,15 +457,13 @@ void QueryEvaluator::evaluateSuchThat(bool& unrelated_finish, int& last_point, i
 		}else if(rel==mQueryTree->getIndex("uses")){
 			if(para1_type == mQueryTree->getIndex("procedure") || para1_type == mQueryTree->getIndex("procOfSimpl"))
 				evalMU(USE, relResult, mQueryTree->getIndex("procOfSimpl"), para1_collection, para2_collection);
-			else if(para1_type == mQueryTree->getIndex("stmt") || para1_type == mQueryTree->getIndex("assign")|| para1_type == mQueryTree->getIndex("if")|| para1_type == mQueryTree->getIndex("while")|| para1_type == mQueryTree->getIndex("call")||para1_type == mQueryTree->getIndex("integer"))
+			else 
 				evalMU(USE, relResult, mQueryTree->getIndex("integer"), para1_collection, para2_collection);
-			else throw new string("QueryEvaluator::evaluate, for evaluating uses, no such para type");
 		}else if(rel==mQueryTree->getIndex("modifies")){
 			if(para1_type == mQueryTree->getIndex("procedure") || para1_type == mQueryTree->getIndex("procOfSimpl"))
 				evalMU(MOD, relResult, mQueryTree->getIndex("procOfSimpl"), para1_collection, para2_collection);
-			else if(para1_type == mQueryTree->getIndex("stmt") || para1_type == mQueryTree->getIndex("assign")|| para1_type == mQueryTree->getIndex("if")|| para1_type == mQueryTree->getIndex("while")|| para1_type == mQueryTree->getIndex("call")||para1_type == mQueryTree->getIndex("integer"))
+			else 
 				evalMU(MOD, relResult, mQueryTree->getIndex("integer"), para1_collection, para2_collection);
-			else throw new string("QueryEvaluator::evaluate, for evaluating modifies, no such para type");
 		}else if(rel==mQueryTree->getIndex("calls")){
 			evalCalls(NOSTAR, relResult, para1_collection, para2_collection);
 		}else if(rel==mQueryTree->getIndex("calls*")){
@@ -618,10 +616,36 @@ void QueryEvaluator::checkCandidates(int para, int para_type, vector<int>& candi
 			for(int j = 0; j < (int)evalTuple.size(); j++){
 				candidates.push_back(evalTuple[j][2*i+1]);
 			}
+			removeDuplicates(candidates);
 			return;
 		}
 	}
 	getAllType(candidates, para_type);
+}
+
+void QueryEvaluator::removeDuplicates(vector<int>& v){
+	if(v.empty() || (int)v.size() == 1) return;
+
+	sort(v.begin(), v.end());
+
+	//Eliminate duplicates
+	vector<int> tmp_store;
+	vector<int> equilities; //keeps equal tuples' indexes
+	equilities.push_back(0);
+	for(int i = 1; i < (int)v.size(); i++){
+		if(v[i-1] == v[i]){
+			equilities.push_back(i);
+			if(i == v.size() -1) 
+				tmp_store.push_back(v[i]);
+		}else{
+			tmp_store.push_back(v[equilities[0]]);
+			equilities.clear();
+			equilities.push_back(i);
+			if(i == v.size() -1) 
+				tmp_store.push_back(v[i]);
+		}
+	}
+	v = tmp_store;
 }
 
 
@@ -743,7 +767,7 @@ void QueryEvaluator::initialAffectsTable(){
 	//int affects_num = mQueryTree->affectsSize();
 	//int affects_star_num = mQueryTree->affectsStarSize();
 	//if(affects_num >= 3 || affects_star_num > 0)
-		affectsTable.is_affects_table_built = false;
+		affectsTable.is_affects_table_built = true;
 	//else affectsTable.is_affects_table_built = false;
 	if(affectsTable.is_affects_table_built){
 		vector<int> assigns;
@@ -756,7 +780,6 @@ void QueryEvaluator::initialAffectsTable(){
 			mPKBObject->mTable_getModifiedVar(mods, stmt);
 			if(mods.empty() || mods[0] == -1) throw new string("QueryEvaluator::buildAffectsTable, shit! This should never happen!");
 			int mod = mods[0];
-			bool find_final;
 			
 			vector<int> old_path;
 			vector<bool> path_result;
@@ -777,7 +800,6 @@ void QueryEvaluator::initialAffectsTable(){
 			}
 		}
 	}
-	//cout << endl;
 }
 
 void QueryEvaluator::underScore(int rel, vector<int> clause, int& para1, int& para1_type, int& para2, int& para2_type, int& varCodeEnding){
@@ -1424,8 +1446,14 @@ void QueryEvaluator::getAffectsStar(int up, vector<int>& result, int para){
 			result = affectsTable.table_body_down[para_index];
 		}
 		for(int i = 0; i < (int)result.size(); i++){
-			vector<int> affects = affectsTable.table_body_down[result[i]];
-			result.insert(result.end(), affects.begin(), affects.end());
+			int next_stmt = result[i];
+			int next_index = affectsTable.affects_index_down[next_stmt];
+			vector<int> affects = affectsTable.table_body_down[next_index];
+			for(int j = 0; j < (int)affects.size(); j++){
+				int found = find_ele(result, affects[j]);
+				if(found == (int)result.size())
+					result.push_back(affects[j]);
+			}
 		}
 	}else{
 		int found = affectsTable.affects_index_up.count(para);
@@ -1435,8 +1463,14 @@ void QueryEvaluator::getAffectsStar(int up, vector<int>& result, int para){
 			result = affectsTable.table_body_up[para_index];
 		}
 		for(int i = 0; i < (int)result.size(); i++){
-			vector<int> affects = affectsTable.table_body_up[result[i]];
-			result.insert(result.end(), affects.begin(), affects.end());
+			int next_stmt = result[i];
+			int next_index = affectsTable.affects_index_up[next_stmt];
+			vector<int> affects = affectsTable.table_body_up[next_index];
+			for(int j = 0; j < (int)affects.size(); j++){
+				int found = find_ele(result, affects[j]);
+				if(found == (int)result.size())
+					result.push_back(affects[j]);
+			}
 		}
 	}
 }
@@ -1556,9 +1590,6 @@ bool QueryEvaluator::nonModPath(int s, int mod, int dest, vector<int>& affect_re
 			else return join;
 		}
 
-		
-		bool find_dest1;
-		bool find_dest2;
 		bool non_mod_path1;
 		bool non_mod_path2;
 		bool join_result;

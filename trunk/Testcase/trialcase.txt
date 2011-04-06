@@ -818,7 +818,7 @@ select w such that parent*(w,s1) and modifies(s1,"i");
 164
 stmt s1, s2; prog_line p1,p2; while w; assign a;
 select w such that parent*(w,s1) and affects(s1,23);
-none
+17, 20
 5000
 165
 stmt s1, s2; prog_line p1,p2; while w; assign a;
