@@ -423,7 +423,8 @@ string PqlParser::suchThatParser(int type,TokenList *quPointer,QueryTable *table
 
 
 		pch=qu->getNextToken();
-				if(pch!="that") throw new string("miss that after such\n");
+
+				if(Convertor::stringToLower(pch)!="that") throw new string("miss that after such\n");
 				pch=qu->getNextToken();
 				//cout<<pch<<endl;
 				do{// this do loop is for the and clause inside the suchthat;
