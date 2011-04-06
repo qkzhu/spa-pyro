@@ -26,8 +26,9 @@ private:
 	static bool isPatterned(string s);
 	static int ToIndexCount(string token);
 	static int ToIndexFind(string token);
-    static string stringToLower(string strToConvert);
+   
 public:
+	static string stringToLower(string strToConvert);
 	static void getAllIndex(vector<int> &indexlist);
 	static void showIndexTable();
 	static const int QUATEDSTRING=400;
