@@ -1,0 +1,687 @@
+25
+cat: All Category
+1
+while w;
+Select w such that Parent(w, 7);
+none
+5000
+2
+if ifs;
+Select ifs such that Follows(5, ifs);
+6
+5000
+3
+assign a;
+Select a such that Parent*(4, a);
+5, 7, 8, 9, 11
+5000
+4
+call c;
+Select c such that Follows*(1, c);
+12
+5000
+5
+stmt s;
+Select s such that Modifies(s, "i");
+3, 4, 11, 12, 13, 14, 17
+5000
+6
+variable v;
+Select v such that Uses("p", v);
+i, x, y, z
+5000
+7
+procedure p;
+Select p such that Calls(p, "q");
+Example, p
+5000
+8
+procedure p;
+Select p such that Calls*("Example", p);
+p, q
+5000
+9
+prog_line n;
+Select n such that Next(4, n);
+5, 12
+5000
+10
+prog_line n;
+Select n such that Next*(n, 4);
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
+5000
+11
+assign a;
+Select a such that Affects(a, 9);
+2, 3, 5, 7, 11
+5000
+12
+assign a;
+Select a such that Affects*(11, a);
+9, 11
+5000
+13
+assign a;
+Select a pattern a("z", _"x+i");
+none
+5000
+14
+assign a;
+Select a pattern a(_, _"x + 1"_);
+7, 18, 23
+5000
+15
+assign a;
+Select a pattern a(_, " 3  +  2 ");
+none
+5000
+17
+while w; variable v;
+Select w such that Modifies(w, v) with v.varName = "x";
+4, 14
+5000
+17
+if ifs; variable v;
+Select v such that Uses(ifs, v) with ifs.stmt# = 22;
+x, z
+5000
+18
+procedure p, q;
+Select BOOLEAN such that Calls(p, q) with q.procName = "p" and p.procName = "Example";
+true
+5000
+19
+if ifs; assign a1, a2; variable v1, v2;
+Select ifs such that Follows*(a1, ifs) and Follows*(ifs, a2) and Modifies(ifs, v1) and Uses(ifs, v2) with v1.varName = v2.varName;
+6
+5000
+20
+prog_line n; stmt s;
+Select s such that Next*(16, n) and Parent*(s, n);
+13, 14
+5000
+21
+prog_line n; assign a;
+Select a such that Affects*(a, n) and Next*(13, n);
+17, 18, 19, 20
+5000
+22
+procedure p, q; variable v;
+Select <p, q, v> such that Modifies(p, v) and Calls(p, q);
+Example p i, Example p x, Example p y, Example p z, Example q i, Example q x, Example q y, Example q z, p q i, p q x, p q z
+5000
+23
+call c; assign a1, a2;
+Select BOOLEAN such that Follows*(_, c) and Affects(a1, a2) and Uses(a2, _);
+true
+5000
+24
+assign a1, a2; variable v;
+Select v pattern a1(v, _) such that Affects*(a1, a2) and Uses(a2, v);
+i, x, z
+5000
+25
+prog_line n1, n2; variable v; call c;
+Select c such that Next*(n1, n2) and Modifies(n1, v) and Uses(n2, v) and Modifies(c, v);
+10, 12, 16
+5000
+26
+stmt s, s1;
+Select s such that Parent (s, s1) with s1.stmt#=3;
+none
+100
+27
+stmt s, s1;
+Select s such that Parent (s, s1) with s1.stmt#=6;
+4
+100
+28
+stmt s, s1;
+Select s such that Parent (s, s1) with s1.stmt#=16;
+14
+100
+29
+stmt s, s1;
+Select s such that Parent (s, s1) with s1.stmt#=19;
+13
+100
+30
+stmt s;
+Select s such that Parent(s, 3);
+none
+50
+31
+stmt s;
+Select s such that Parent(s, 6);
+4
+50
+32
+stmt s;
+Select s such that Parent(s, 16);
+14
+50
+33
+stmt s;
+Select s such that Parent(s, 19);
+13
+50
+34
+stmt s;
+Select s such that Parent(3, s);
+none
+50
+35
+stmt s;
+Select s such that Parent(6, s);
+7, 8
+50
+36
+stmt s;
+Select s such that Parent(16, s);
+none
+50
+37
+stmt s;
+Select s such that Parent(19, s);
+none
+50
+38
+while w;
+Select w such that Parent(w, 3);
+none
+50
+39
+while w;
+Select w such that Parent(w, 7);
+none
+50
+40
+while w;
+Select w such that Parent(w, 10);
+4
+50
+41
+while w;
+Select w such that Parent(w, 20);
+none
+50
+42
+while w;
+Select w such that Parent*(w, 5);
+4
+50
+43
+while w;
+Select w such that Parent*(w, 7);
+4
+50
+44
+while w;
+Select w such that Parent*(w, 17);
+14
+50
+45
+while w;
+Select w such that Parent*(w, 20);
+none
+50
+46
+stmt s;
+Select s such that Follows (s, 1);
+none
+50
+47
+stmt s;
+Select s such that Follows (s, 4);
+3
+50
+48
+stmt s;
+Select s such that Follows (s, 7);
+none
+50
+49
+stmt s;
+Select s such that Follows (s, 10);
+9
+50
+50
+assign a;
+Select a such that Follows (a, 1);
+none
+50
+51
+assign a;
+Select a such that Follows (a, 4);
+3
+50
+52
+assign a;
+Select a such that Follows (a, 6);
+5
+50
+53
+assign a;
+Select a such that Follows (a, 10);
+9
+50
+54
+while w;
+Select w such that Follows(2, w);
+none
+50
+55
+while w;
+Select w such that Follows(3, w);
+4
+50
+56
+while w;
+Select w such that Follows(10, w);
+none
+50
+57
+while w;
+Select w such that Follows(13, w);
+none
+50
+58
+stmt s;
+Select s such that Follows* (s, 1);
+none
+50
+59
+stmt s;
+Select s such that Follows* (s, 10);
+5, 6, 9
+50
+60
+stmt s;
+Select s such that Follows* (s, 11);
+5, 6, 9, 10
+50
+61
+stmt s;
+Select s such that Follows* (s, 12);
+1, 2, 3, 4
+50
+61
+if ifs;
+Select ifs such that Follows* (ifs, 4);
+none
+50
+62
+if ifs;
+Select ifs such that Follows* (ifs, 10);
+6
+50
+63
+if ifs;
+Select ifs such that Follows* (ifs, 16);
+none
+50
+64
+if ifs;
+Select ifs such that Follows* (ifs, 21);
+13
+50
+65
+assign a;
+Select a such that Follows* (a, 5);
+none
+50
+66
+assign a;
+Select a such that Follows* (a, 9);
+5
+50
+67
+assign a;
+Select a such that Follows* (a, 12);
+1, 2, 3
+50
+68
+assign a;
+Select a such that Follows* (a, 21);
+none
+50
+69
+assign a;
+Select a pattern a("x", _);
+1, 5, 15, 18, 24
+50
+70
+assign a;
+Select a pattern a("x", _"2*y");
+15
+50
+71
+assign a; while w;
+Select a pattern a("x", _) such that Follows(w, a);
+18
+50
+72
+
+Select BOOLEAN such that Next(1,2);
+true
+50
+73
+
+Select BOOLEAN such that Next(4,12);
+true
+50
+74
+
+Select BOOLEAN such that Next(7,8);
+false
+50
+75
+
+Select BOOLEAN such that Next(10,13);
+false
+50
+76
+prog_line n;
+Select n such that Next(n, 3);
+2
+50
+77
+prog_line n;
+Select n such that Next(n, 8);
+6
+50
+78
+prog_line n;
+Select n such that Next(n, 9);
+7, 8
+50
+79
+prog_line n;
+Select n such that Next(n, 13);
+none
+50
+80
+prog_line n;
+Select n such that Next(4, n);
+5, 12
+50
+81
+prog_line n;
+Select n such that Next(6, n);
+7, 8
+50
+82
+prog_line n;
+Select n such that Next(10, n);
+11
+50
+83
+prog_line n;
+Select n such that Next(11, n);
+4
+50
+84
+assign a;
+Select a such that Modifies(a, "i");
+3, 11, 17
+50
+85
+assign a;
+Select a such that Modifies(a, "x");
+1, 5, 15, 18, 24
+50
+86
+assign a;
+Select a such that Modifies(a, "y");
+8
+50
+87
+assign a;
+Select a such that Modifies(a, "z");
+2, 7, 9, 19, 20, 21, 23
+50
+88
+while w;
+Select w such that Modifies(w, "i");
+4, 14
+50
+89
+while w;
+Select w such that Modifies(w, "x");
+4, 14
+50
+90
+while w;
+Select w such that Modifies(w, "y");
+4
+50
+91
+while w;
+Select w such that Modifies(w, "z");
+4, 14
+50
+92
+assign a;
+Select a such that Uses(a, "i");
+9, 11, 17, 21
+50
+93
+assign a;
+Select a such that Uses(a, "x");
+5, 7, 8, 9, 18, 19, 21, 23, 24
+50
+94
+assign a;
+Select a such that Uses(a, "y");
+15
+50
+95
+assign a;
+Select a such that Uses(a, "z");
+8, 9, 15, 19, 21, 24
+50
+96
+variable v;
+Select v such that Uses(4, v);
+i, x, z
+50
+97
+variable v;
+Select v such that Uses(6, v);
+x, z
+50
+98
+variable v;
+Select v such that Uses(15, v);
+z, y
+50
+99
+variable v;
+Select v such that Uses(20, v);
+none
+50
+100
+assign a; variable v;
+Select v such that Uses(a, v);
+i, x, y, z
+50
+101
+assign a;
+Select a such that Modifies(a, "i") and Uses(a, "i");
+11, 17
+50
+102
+assign a;
+Select a such that Modifies(a, "x") and Uses(a, "x");
+5, 18, 24
+50
+103
+assign a;
+Select a such that Modifies(a, "y") and Uses(a, "y");
+none
+50
+104
+assign a;
+Select a such that Modifies(a, "z") and Uses(a, "z");
+9, 19, 21
+50
+105
+assign a; while w;
+Select a such that Modifies(a, "x") and Parent(w, a);
+5, 15
+50
+106
+assign a;
+Select a such that Affects(a, 5);
+1
+50
+107
+assign a;
+Select a such that Affects(a, 8);
+2, 5
+50
+108
+assign a;
+Select a such that Affects(a, 9);
+2, 3, 5, 7, 11
+50
+109
+assign a;
+Select a such that Affects(a, 11);
+3, 11
+50
+110
+assign a;
+Select a such that Affects(5, a);
+7, 8, 9
+50
+111
+assign a;
+Select a such that Affects(11, a);
+9, 11
+50
+112
+assign a;
+Select a such that Affects(15, a);
+none
+50
+113
+assign a;
+Select a such that Affects(18, a);
+19, 21
+50
+114
+assign a;
+Select a such that Affects*(a, 5);
+1
+50
+115
+assign a;
+Select a such that Affects*(a, 9);
+1, 2, 3, 5, 7, 11
+50
+116
+assign a;
+Select a such that Affects*(a, 15);
+none
+50
+117
+assign a;
+Select a such that Affects*(a, 18);
+none
+50
+118
+assign a;
+Select a such that Affects*(5, a);
+7, 8, 9
+50
+119
+assign a;
+Select a such that Affects*(9, a);
+none
+50
+120
+assign a;
+Select a such that Affects*(11, a);
+9, 11
+50
+121
+assign a;
+Select a such that Affects*(15, a);
+none
+50
+122
+assign a; while w;
+Select a such that Parent(w, a) and Modifies(a, "x");
+5, 15
+50
+123
+assign a;
+Select a pattern a("x", _"3+2"_);
+none
+50
+124
+assign a;
+Select a pattern a("x", _"z*3"_);
+15
+50
+125
+assign a;
+Select a pattern a("x", "z*3"_);
+15
+50
+126
+assign a;
+Select a pattern a("x", _"z*3");
+none
+50
+127
+assign a;
+Select a pattern a("x", _"z*3+2*y"_);
+15
+50
+128
+assign a;
+Select a pattern a("x", _"2*y"_);
+15
+50
+129
+assign a;
+Select a pattern a("x", "2*y"_);
+none
+50
+130
+assign a;
+Select a pattern a("x", _"2*y");
+15
+50
+131
+assign a;
+Select a pattern a("x", _"3+2*y"_);
+none
+50
+132
+constant c;
+Select c;
+1, 2, 3, 5
+50
+133
+variable v;
+Select v;
+x, y, z, i
+50
+134
+procedure p;
+Select p;
+Example, p, q
+50
+135
+call c;
+Select c;
+10, 12, 16
+50
+136
+
+Select BOOLEAN;
+true
+50

@@ -1,0 +1,57 @@
+50
+cat: all category
+1
+assign a, a1; stmt s; 
+select a such that follows(a, a1) and affects(a1, s) with s.stmt# = a.stmt#;
+
+5000
+2
+assign a, a1; stmt s; variable v; procedure p; constant c;
+select <s, c> such that follows*(a, s) and calls(p, "Third") and modifies(p, v) and modifies(a, v) and affects(s, a) with a.stmt# = c.value;
+
+5000
+3
+assign a, a1; stmt s; variable v; procedure p; constant c;
+select <p, v> such that uses(p, v) and calls(p, "Fifth") and modifies("Fifth", "l") with p.procName = "Second";
+
+5000
+4
+assign a, a1; stmt s; variable v; procedure p; constant c; prog_line pl1, pl2;
+select <pl1, s, v> such that next(pl1, pl2) and affects(a, s) and modifies(a, v) with pl1.value=a.stmt# and pl2.value=s.stmt# with s.stmt#=20;
+
+5000
+5
+assign a, a1; stmt s; variable v; procedure p; constant c; prog_line pl1, pl2; while w;
+select v such that parent(s, w) and uses(w, v) with v.varName = "x";
+
+5000
+6
+assign a, a1; stmt s; variable v; procedure p; constant c; prog_line pl1, pl2; if ifs; while w;
+select ifs such that parent(w, ifs) and follows(w, _) pattern w("i", _);
+
+5000
+7
+assign a, a1; stmt s; variable v; procedure p; constant c; prog_line pl1, pl2;
+select c such that affects(s, a) with a.stmt# = c.value and a.stmt# = c.value;
+
+5000
+8
+assign a, a1; stmt s; variable v; procedure p; constant c; prog_line pl1, pl2;
+select p such that aFFeCtS*(s, a) with a.stmt# = c.value and a.stmt# = c.value;
+
+5000
+9
+assign a, a1; stmt s; variable v; procedure p; constant c; prog_line pl1, pl2;
+select pl1.value such that modifies(pl1, v) such that uses(pl1, v) and parent(_, pl1);
+
+5000
+10
+assign a, a1; stmt s; variable v; procedure p; constant c; prog_line pl1, pl2;
+select pl1.value such that affects(_, pl1) and modifies(pl1, "x");
+
+5000
+11
+
+
+
+

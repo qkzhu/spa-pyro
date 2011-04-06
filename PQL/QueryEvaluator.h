@@ -135,6 +135,8 @@ private:
 	string PQL_varDecode(int);
 	int PQL_varEncode(string);
 
+	void removeDuplicates(vector<int>& v);
+
 	void getAllType(vector<int>& result, int type);
 
 	//If the element is found in the vector, return its index; otherwise return the size of the vector.
