@@ -520,6 +520,7 @@ string PqlParser::withParser(int type,TokenList *quPointer,QueryTable *tablePoin
 		 	string pch;
 	int index;
 	int prefix;
+	int indicator=VARNAME;
 //	int suchthatclause;
 	vector<int> content;
 	QueryTable *table;
@@ -546,7 +547,11 @@ string PqlParser::withParser(int type,TokenList *quPointer,QueryTable *tablePoin
 						 pch=qu->getNextToken();
 						 index=Convertor::getIndex(pch);
 						 if (index!=-1&&index!=EQUAL)
-                         content.push_back(index);
+                         {
+							  if(index==PROCNAME||index==VARNAME)
+								 indicator=index;
+							 content.push_back(index);
+						 }
 						 else
 						 {
 							 throw new string ("undentified symbol "+pch+" after DOT \n");
@@ -565,8 +570,12 @@ string PqlParser::withParser(int type,TokenList *quPointer,QueryTable *tablePoin
 						 index=Convertor::getIndex(pch);
 						 prefix=PqlParser::prefix(pch);
 						 if (index>Convertor::QUATEDSTRING&&prefix!=INT)
-						 Convertor::insertShortcut(pch,"varOfSimpl");
-						 prefix=PqlParser::prefix(pch);
+						 {   if(indicator==VARNAME)
+							 Convertor::insertShortcut(pch,"varofsimpl");
+							else if(indicator==PROCNAME)
+                             Convertor::insertShortcut(pch,"procofsimpl");
+						 }
+							 prefix=PqlParser::prefix(pch);
 
 
 						 if(index!=-1||prefix==INT)
