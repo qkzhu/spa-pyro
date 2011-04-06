@@ -1377,7 +1377,6 @@ void QueryEvaluator::evalAffects(vector<vector<int> >& result, const vector<int>
 			mPKBObject->mTable_getModifiedVar(modifies, in1);
 			if(modifies.empty() || modifies[0]==-1) throw new string("QueryEvaluator::evalAffects, shit! This should never happen!");
 			int mod = modifies[0];
-			bool find_final;
 			vector<int> old_path;
 			vector<bool> path_result;
 			nonModPath(in1, mod, -1, affected_para1, old_path, path_result, true);
