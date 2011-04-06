@@ -743,7 +743,7 @@ void QueryEvaluator::initialAffectsTable(){
 	//int affects_num = mQueryTree->affectsSize();
 	//int affects_star_num = mQueryTree->affectsStarSize();
 	//if(affects_num >= 3 || affects_star_num > 0)
-		affectsTable.is_affects_table_built = true;
+		affectsTable.is_affects_table_built = false;
 	//else affectsTable.is_affects_table_built = false;
 	if(affectsTable.is_affects_table_built){
 		vector<int> assigns;
@@ -1584,12 +1584,13 @@ bool QueryEvaluator::nonModPath(int s, int mod, int dest, vector<int>& affect_re
 		if(size == 2){
 			outer = tmp_nexts[0];
 			inner = tmp_nexts[1];
-			int find_out = find_ele(old_path, outer);
+			
 			int find_inner = find_ele(old_path, inner);
 			if(find_inner == (int)old_path.size()) {
 				old_path.push_back(inner);
 				path_result.push_back(nonModPath(inner, mod, next, affect_result, old_path, path_result, false));
 			}
+			int find_out = find_ele(old_path, outer);
 			if(find_out == (int) old_path.size()) {
 				old_path.push_back(outer);
 				path_result.push_back(nonModPath(outer, mod, dest, affect_result, old_path, path_result, false));	
