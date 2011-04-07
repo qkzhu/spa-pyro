@@ -543,12 +543,6 @@ void Validator::checkPattern_PQLOne(const string &str)
 	vector<vector<int>> varOfSimple;
 	
 	fillAssignVector(str, expression, separatorPostion, varOfSimple);
-
-
-	//cout<<"hahahahhahahahhahhahaha:    "<<str.front()<<" "<<str.back()<<endl;
-	
-	
-
 	//validation
 	//cout<<int(varOfSimple.size())<<endl;
 	//cout<<varOfSimple.size()<<endl;

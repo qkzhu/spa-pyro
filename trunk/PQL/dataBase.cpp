@@ -58,35 +58,35 @@ void dataBase::populateCallsTables(){
 
 void dataBase::populateUseTables(){
 	vector<int> table;
-	table.push_back(PROCEDURE); table.push_back(VARIABLE); useTable.push_back(table); table.clear();
-	table.push_back(PROCNAME);  table.push_back(VARIABLE); useTable.push_back(table); table.clear();
-	table.push_back(STMT);		table.push_back(VARIABLE); useTable.push_back(table); table.clear();
-	table.push_back(INT);		table.push_back(VARIABLE); useTable.push_back(table); table.clear();
-	table.push_back(IF);		table.push_back(VARIABLE); useTable.push_back(table); table.clear();
-	table.push_back(WHILE);		table.push_back(VARIABLE); useTable.push_back(table); table.clear();
-	table.push_back(ASSIGN);	table.push_back(VARIABLE); useTable.push_back(table); table.clear();
-	table.push_back(CALL);		table.push_back(VARIABLE); useTable.push_back(table); table.clear();
-	table.push_back(PROG_L);	table.push_back(VARIABLE); useTable.push_back(table); table.clear();
+	table.push_back(PROCEDURE);		table.push_back(VARIABLE); useTable.push_back(table); table.clear();
+	table.push_back(PROCOFSIMPLE);  table.push_back(VARIABLE); useTable.push_back(table); table.clear();
+	table.push_back(STMT);			table.push_back(VARIABLE); useTable.push_back(table); table.clear();
+	table.push_back(INT);			table.push_back(VARIABLE); useTable.push_back(table); table.clear();
+	table.push_back(IF);			table.push_back(VARIABLE); useTable.push_back(table); table.clear();
+	table.push_back(WHILE);			table.push_back(VARIABLE); useTable.push_back(table); table.clear();
+	table.push_back(ASSIGN);		table.push_back(VARIABLE); useTable.push_back(table); table.clear();
+	table.push_back(CALL);			table.push_back(VARIABLE); useTable.push_back(table); table.clear();
+	table.push_back(PROG_L);		table.push_back(VARIABLE); useTable.push_back(table); table.clear();
 
-	table.push_back(PROCEDURE); table.push_back(VAROFSIMPLE); useTable.push_back(table); table.clear();
-	table.push_back(PROCNAME);  table.push_back(VAROFSIMPLE); useTable.push_back(table); table.clear();
-	table.push_back(STMT);		table.push_back(VAROFSIMPLE); useTable.push_back(table); table.clear();
-	table.push_back(INT);		table.push_back(VAROFSIMPLE); useTable.push_back(table); table.clear();
-	table.push_back(IF);		table.push_back(VAROFSIMPLE); useTable.push_back(table); table.clear();
-	table.push_back(WHILE);		table.push_back(VAROFSIMPLE); useTable.push_back(table); table.clear();
-	table.push_back(ASSIGN);	table.push_back(VAROFSIMPLE); useTable.push_back(table); table.clear();
-	table.push_back(CALL);		table.push_back(VAROFSIMPLE); useTable.push_back(table); table.clear();
-	table.push_back(PROG_L);	table.push_back(VAROFSIMPLE); useTable.push_back(table); table.clear();
+	table.push_back(PROCEDURE);		table.push_back(VAROFSIMPLE); useTable.push_back(table); table.clear();
+	table.push_back(PROCOFSIMPLE);	table.push_back(VAROFSIMPLE); useTable.push_back(table); table.clear();
+	table.push_back(STMT);			table.push_back(VAROFSIMPLE); useTable.push_back(table); table.clear();
+	table.push_back(INT);			table.push_back(VAROFSIMPLE); useTable.push_back(table); table.clear();
+	table.push_back(IF);			table.push_back(VAROFSIMPLE); useTable.push_back(table); table.clear();
+	table.push_back(WHILE);			table.push_back(VAROFSIMPLE); useTable.push_back(table); table.clear();
+	table.push_back(ASSIGN);		table.push_back(VAROFSIMPLE); useTable.push_back(table); table.clear();
+	table.push_back(CALL);			table.push_back(VAROFSIMPLE); useTable.push_back(table); table.clear();
+	table.push_back(PROG_L);		table.push_back(VAROFSIMPLE); useTable.push_back(table); table.clear();
 
-	table.push_back(PROCEDURE); table.push_back(UNDERSCORE); useTable.push_back(table); table.clear();
-	table.push_back(PROCNAME);  table.push_back(UNDERSCORE); useTable.push_back(table); table.clear();
-	table.push_back(STMT);		table.push_back(UNDERSCORE); useTable.push_back(table); table.clear();
-	table.push_back(INT);		table.push_back(UNDERSCORE); useTable.push_back(table); table.clear();
-	table.push_back(IF);		table.push_back(UNDERSCORE); useTable.push_back(table); table.clear();
-	table.push_back(WHILE);		table.push_back(UNDERSCORE); useTable.push_back(table); table.clear();
-	table.push_back(ASSIGN);	table.push_back(UNDERSCORE); useTable.push_back(table); table.clear();
-	table.push_back(CALL);		table.push_back(UNDERSCORE); useTable.push_back(table); table.clear();
-	table.push_back(PROG_L);	table.push_back(UNDERSCORE); useTable.push_back(table); table.clear();
+	table.push_back(PROCEDURE);		table.push_back(UNDERSCORE); useTable.push_back(table); table.clear();
+	table.push_back(PROCOFSIMPLE);	table.push_back(UNDERSCORE); useTable.push_back(table); table.clear();
+	table.push_back(STMT);			table.push_back(UNDERSCORE); useTable.push_back(table); table.clear();
+	table.push_back(INT);			table.push_back(UNDERSCORE); useTable.push_back(table); table.clear();
+	table.push_back(IF);			table.push_back(UNDERSCORE); useTable.push_back(table); table.clear();
+	table.push_back(WHILE);			table.push_back(UNDERSCORE); useTable.push_back(table); table.clear();
+	table.push_back(ASSIGN);		table.push_back(UNDERSCORE); useTable.push_back(table); table.clear();
+	table.push_back(CALL);			table.push_back(UNDERSCORE); useTable.push_back(table); table.clear();
+	table.push_back(PROG_L);		table.push_back(UNDERSCORE); useTable.push_back(table); table.clear();
 }
 
 void dataBase::populateParentTables(){
@@ -98,6 +98,7 @@ void dataBase::populateParentTables(){
 	table.push_back(UNDERSCORE);	table.push_back(STMT); parentTable.push_back(table); table.clear();
 	table.push_back(INT);			table.push_back(STMT); parentTable.push_back(table); table.clear();
 	table.push_back(PROG_L);		table.push_back(STMT); parentTable.push_back(table); table.clear();
+
 
 	table.push_back(STMT);			table.push_back(IF); parentTable.push_back(table); table.clear();
 	table.push_back(IF);			table.push_back(IF); parentTable.push_back(table); table.clear();
@@ -146,6 +147,14 @@ void dataBase::populateParentTables(){
 	table.push_back(UNDERSCORE);	table.push_back(PROG_L); parentTable.push_back(table); table.clear();
 	table.push_back(INT);			table.push_back(PROG_L); parentTable.push_back(table); table.clear();
 	table.push_back(PROG_L);		table.push_back(PROG_L); parentTable.push_back(table); table.clear();
+
+	table.push_back(STMT);			table.push_back(CALL); parentTable.push_back(table); table.clear();
+	table.push_back(IF);			table.push_back(CALL); parentTable.push_back(table); table.clear();
+	table.push_back(WHILE);			table.push_back(CALL); parentTable.push_back(table); table.clear();
+	table.push_back(ASSIGN);		table.push_back(CALL); parentTable.push_back(table); table.clear();
+	table.push_back(UNDERSCORE);	table.push_back(CALL); parentTable.push_back(table); table.clear();
+	table.push_back(INT);			table.push_back(CALL); parentTable.push_back(table); table.clear();
+	table.push_back(PROG_L);		table.push_back(CALL); parentTable.push_back(table); table.clear();
 
 
 }
