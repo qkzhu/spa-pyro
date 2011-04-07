@@ -68,7 +68,7 @@ enum KEYWORD
 	VARNAME			=	102,
 	PROCNAME        =	103,
 	STMT_NUM        =	104,	
-
+	PROG_LINE_NUM   =   105,
 
 	//punctuations
 	COMMA			=	151,

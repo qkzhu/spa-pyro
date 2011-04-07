@@ -19,7 +19,6 @@
  affects*           16
 
 
-stmt#     104
 stmt 51
 assign 53
 
@@ -69,6 +68,10 @@ value     101
 varname   102
 
 procname    103
+
+stmt#     104
+
+prog_line#   105
 
 integer     201
 
