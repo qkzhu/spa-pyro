@@ -333,7 +333,7 @@ void QueryEvaluator::evaluatePattern(bool& unrelated_finish, int& last_point, in
 		//pattern clause read-in finish//
       
 		vector<int> pattern_result;
-		evalPattern_PQL(evalTuple, pattern_result, var, var_type, pattern1, pattern2);
+		evalPattern_PQL(evalTuple, pattern_result, var, var_type, pattern1_type, pattern1, pattern2);
 		
 		if(pattern_result.empty()){
 			if(isBoolSelected)
@@ -854,7 +854,7 @@ void QueryEvaluator::underScore(int rel, vector<int> clause, int& para1, int& pa
 	}else throw new string("QueryEvaluator::underScore, no such relation type!");  //do nothing 
 }
 
-void QueryEvaluator::evalPattern_PQL(vector<vector<int> >& result_tuple, vector<int>& result, int var, int var_type, int pattern1, int pattern2){
+void QueryEvaluator::evalPattern_PQL(vector<vector<int> >& result_tuple, vector<int>& result, int var, int var_type, int pattern1_type, int pattern1, int pattern2){
 	int indx = find_ele(mgTupleIndexing, var);
 	int found = 0;
 	if(indx != (int)mgTupleIndexing.size()){
@@ -864,17 +864,26 @@ void QueryEvaluator::evalPattern_PQL(vector<vector<int> >& result_tuple, vector<
 		}
 	}
 
+	vector<int> pattern1_candidates;
+	if(pattern1_type == mQueryTree->getIndex("variable"))
+		getAllVar(pattern1_candidates);
+	else pattern1_candidates.push_back(PKB_varEncode(PQL_varDecode(pattern1)));
+
 	if(var_type == mQueryTree->getIndex("assign")){
 		if(found == 0)
 			mPKBObject->ast_GetAllAssign(result);
-		getPattern_PQLAssign(result, PQL_varDecode(pattern1), mQueryTree->getContent(pattern2));
+		//vector<int> candidates = result;
+		for(int i = 0; i < (int)pattern1_candidates.size(); i++){
+			getPattern_PQLAssign(result, PKB_varDecode(pattern1), mQueryTree->getContent(pattern2));
+		}
 	}else if(var_type == mQueryTree->getIndex("if") || var_type == mQueryTree->getIndex("while")){
 		if(found == 0)
 			if(var_type == mQueryTree->getIndex("if"))
 				mPKBObject->ast_GetAllIf(result);
 			else if(var_type == mQueryTree->getIndex("while"))
 				mPKBObject->ast_GetAllWhile(result);
-		getPattern_PQLCond(result, var_type, PQL_varDecode(pattern1));
+		for(int i = 0; i < (int)pattern1_candidates.size(); i++)
+			getPattern_PQLCond(result, var_type, PKB_varDecode(pattern1));
 	}else 
 		throw new string("QueryEvaluator::evalPattern_PQL, no such variable type!");
 }
