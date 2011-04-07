@@ -78,7 +78,7 @@ private:
 	void removeInequal(vector<vector<int> >& tuple);
 	
 	//The result_tuple is passed down for optimisation purpose, result is initially empty
-	void evalPattern_PQL(vector<vector<int> >& result_tuple, vector<int>& result, int var, int var_type, int pattern1, int pattern2);
+	void evalPattern_PQL(vector<vector<int> >& result_tuple, vector<int>& result, int var, int var_type, int pattern1_type, int pattern1, int pattern2);
 
 	//read such that clause, deal with _ specifically
 	void underScore(int rel, vector<int> clause, int& para1, int& para1_type, int& para2, int& para2_type, int& varCodeEnding);

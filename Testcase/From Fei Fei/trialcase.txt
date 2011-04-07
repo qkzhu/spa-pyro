@@ -1,0 +1,182 @@
+36
+cat: All Category
+1
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
+select P Such That parent(w1,w1) pattern W("a",_)  Such That parent(w1,w2);
+none
+5000
+2
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
+select P Such That modifies(P,"x") and modifies(P,"a") and modifies(P,"i") and Uses(P,"z");
+Example, q1,q3,q4,q7
+5000
+3
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
+select P Such That calls*(P,"q1") ;
+Exmaple,q1,q3,q4,q7
+5000
+4
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
+select P Such That calls*(P,"q1") and Modifies(P,"z") and Uses(P,"z") and Uses(P,"a") and Modifies(P,"a");
+Exmaple,q1,q3,q4,q7
+5000
+5
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
+select BOOLEAN Such That affects(a1,a2) pattern a1("x","x+1") and a2("x","x+1") such that uses("Example",a1) and uses("Example",a2);
+none
+5000
+6
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
+select BOOLEAN Such That affects(a1,a2) pattern a1("x","x+1") and a2("x","x+1");
+true
+5000
+7
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
+select <a1,a2> Such That affects(a1,a2) pattern a1("x","x+1") and a2("x","x+1");
+21 21
+5000
+8
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
+select <a1,a2> Such That affects(a1,a2) pattern a1("x","x+1") and a2("x","x+1") such that parent(w1,a1) with w1.stmt#=8;
+none
+5000
+9
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
+select <a1,a2> Such That affects(a1,a2) pattern a1("x",_) and a2("x",_) such that parent(w1,a1) with w1.stmt#=8;
+9,11
+5000
+10
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,f2,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
+select F ;
+10,27,31,38,48,59,63,65
+5000
+11
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,f2,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
+select F such that parent(F,w1) and parent(w1,f1) and parent(f1,f2) and parent(f2,_);
+59
+5000
+12
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,f2,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
+select P such that calls*(P,"Example") and parent(_,s1);
+q7
+5000
+13
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,f2,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
+select <P,p1> such that calls*(P,"Example") and parent(P,p1);
+none
+5000
+14
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,f2,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
+select <P,p1> such that calls*(P,"Example") and calls*(p1,P);
+none
+5000
+15
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,f2,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
+select p1 such that calls*("Example",p1);
+p,q1,q2,q3,q4,q5,q6
+5000
+16
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,f2,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
+select p1 such that calls*(p2,p1) with p2.procName="q2";
+none
+5000
+17
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,f2,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
+select s such that affect*(s1,s) such that parent(w,s1) pattern w("a",_) and pattern w1("a",_) such that parent(w1,w);
+none
+5000
+18
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,f2,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
+select s such that affect*(s1,s) such that parent(w,s1) pattern w("a",_) and pattern w1("a",_) such that parent(w1,w);
+none
+5000
+19
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,f2,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
+select Boolean such that affect(26,26);
+true
+5000
+20
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,f2,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
+select s1 such that parent*(s1,a1) pattern a1(_,_"b+c+d+e+z"_) and pattern A1("a",_);
+56,57
+5000
+21
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,f2,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
+select P such that modifies(P,"a") and calls*(P,"Example") with p1.ProcName=q and p2.ProcName="Example";
+q7
+5000
+22
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,f2,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
+select <a1,s1> pattern a1(_"z"_,_"z+1"_) and a1(_"z","z+1") such that affects*(a1,s1);
+30,41
+5000
+23
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,f2,F,F2;Variable v1,v2,v3; prog_line proc1,proc2; constant const;
+select s1 such that affects*(s2,s1) with s2.stmt#=const.value;
+2,3
+5000
+24
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,f2,F,F2;Variable v1,v2,v3; prog_line proc1,proc2; constant const;
+Select <Boolean,Boolean>;
+none
+5000
+25
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,f2,F,F2;Variable v1,v2,v3; prog_line proc1,proc2; constant const;
+selecT s with follows(1,s) and follows(s,C);
+none
+5000
+26
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
+select P Such That parent(w1,w1) pattern W(_"a"_,_)  Such That parent(w1,C);
+none
+5000 
+27
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
+select P Such That parent(w1,w1) pattern if(_"a"_,_)  Such That parent(w1,C);
+none
+5000
+28
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
+select P such that calls*(P,p1) and calls(p1,P);
+1,3,4
+5000
+29
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
+select s1 Such That parent("q5",s1) and modifies(s1,"a");
+none
+5000
+30
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
+select P such that Parent*(P,"q7") with P.Procname="_0_";
+none
+5000
+31
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
+select <s1,s2,s3> such that Next*(s1,s2) and Next*(s2,s3) and Next*(s3,s1) and affects*(s2,s1);
+none
+5000
+32
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
+select w1 such that parent(w,c1) pattern w("x",_) with c1.stmt#=62;
+61
+5000
+33
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
+select boolean pattern a1("b","b+1") and a2("c","e+x") such that follows*(a1,a2);
+false
+5000
+34
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
+select P such that uses(P,"a");
+q1,Example,q3,q4,q5,q6,q7
+5000
+35
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
+select a1 pattern a1(_,"1");
+1
+5000
+36
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
+select s1 pattern a1(_,"Z*3+2*y") and affect*(a1,s1);
+none
+5000
