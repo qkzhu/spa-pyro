@@ -110,9 +110,9 @@ void QueryEvaluator::evaluate(){
 	if(mResult.isEmptyResult() || mResult.isBoolSet())
 		return;
 	//AutoTester Collaborative
-	//if(AbstractWrapper::GlobalStop){
-	//	throw new string("GlobalStop, time out!");
-	//}
+	if(AbstractWrapper::GlobalStop){
+		throw new string("GlobalStop, time out!");
+	}
 	
 	last_point = 0;
 	evaluatePattern(unrelated_finish, last_point, pattern_size);
