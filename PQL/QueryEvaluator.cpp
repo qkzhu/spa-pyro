@@ -110,9 +110,9 @@ void QueryEvaluator::evaluate(){
 	if(mResult.isEmptyResult() || mResult.isBoolSet())
 		return;
 	//AutoTester Collaborative
-	if(AbstractWrapper::GlobalStop){
-		throw new string("GlobalStop, time out!");
-	}
+	//if(AbstractWrapper::GlobalStop){
+	//	throw new string("GlobalStop, time out!");
+	//}
 	
 	last_point = 0;
 	evaluatePattern(unrelated_finish, last_point, pattern_size);
@@ -865,7 +865,7 @@ void QueryEvaluator::evalPattern_PQL(vector<vector<int> >& result_tuple, vector<
 	vector<int> pattern1_candidates;
 	if(pattern1_type == mQueryTree->getIndex("variable")){
 		checkCandidates(pattern1, pattern1_type, pattern1_candidates);
-	}else{
+	}else if(pattern1_type != mQueryTree->getIndex("_")){
 		pattern1_candidates.push_back(PKB_varEncode(PQL_varDecode(pattern1)));
 	}
 
@@ -875,9 +875,17 @@ void QueryEvaluator::evalPattern_PQL(vector<vector<int> >& result_tuple, vector<
 		if(pattern1_type == mQueryTree->getIndex("_"))
 			getPattern_PQLAssign(result, "_", mQueryTree->getContent(pattern2));
 		else{ 
+			vector<int> current_result;
 			for(int i = 0; i < (int)pattern1_candidates.size(); i++){
-				getPattern_PQLAssign(result, PKB_varDecode(pattern1_candidates[i]), mQueryTree->getContent(pattern2));
+				vector<int> tmp_result = result;
+				getPattern_PQLAssign(tmp_result, PKB_varDecode(pattern1_candidates[i]), mQueryTree->getContent(pattern2));
+				for(int k = 0; k < (int)tmp_result.size(); k++){
+					int found_ele = find_ele(current_result, tmp_result[k]);
+					if(found_ele == (int)current_result.size())
+						current_result.push_back(tmp_result[k]);
+				}
 			}
+			result = current_result;
 		}
 	}else if(var_type == mQueryTree->getIndex("if") || var_type == mQueryTree->getIndex("while")){
 		if(found == 0)
@@ -885,8 +893,22 @@ void QueryEvaluator::evalPattern_PQL(vector<vector<int> >& result_tuple, vector<
 				mPKBObject->ast_GetAllIf(result);
 			else if(var_type == mQueryTree->getIndex("while"))
 				mPKBObject->ast_GetAllWhile(result);
-		for(int i = 0; i < (int)pattern1_candidates.size(); i++)
-			getPattern_PQLCond(result, var_type, PKB_varDecode(pattern1_candidates[i]));
+		
+		if(var_type == mQueryTree->getIndex("_"))
+			getPattern_PQLCond(result, var_type, "_");
+		else{
+			vector<int> current_result;
+			for(int i = 0; i < (int)pattern1_candidates.size(); i++){
+				vector<int> tmp_result = result;
+				getPattern_PQLCond(tmp_result, var_type, PKB_varDecode(pattern1_candidates[i]));
+				for(int k = 0; k < (int)tmp_result.size(); k++){
+					int found_ele = find_ele(current_result, tmp_result[k]);
+					if(found_ele == (int)current_result.size())
+						current_result.push_back(tmp_result[k]);
+				}
+			}
+			result = current_result;
+		}
 	}else 
 		throw new string("QueryEvaluator::evalPattern_PQL, no such variable type!");
 }
@@ -1581,6 +1603,11 @@ int QueryEvaluator::find_ele(const vector<int>& in, const int ele){
 }
 
 bool QueryEvaluator::nonModPath(int s, int mod, int dest, vector<int>& affect_result, vector<int>& old_path, vector<bool>& path_result, bool init){
+	//AutoTester Collaborative
+	//if(AbstractWrapper::GlobalStop){
+	//	throw new string("GlobalStop, time out!");
+	//}
+
 	int next = s;
 	if(s <= 0)
 		return true;
