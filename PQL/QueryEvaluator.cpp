@@ -181,7 +181,7 @@ void QueryEvaluator::evaluateWith(bool& unrelated_finish, int& last_point, int t
 		int p1_name = part1.at(1);
 		int p2_type ;
 		int p2_name ;
-		if(part2_size == 2) { //
+		if(part2_size == 2) { 
 			p2_type = part2.at(0);
 			p2_name = varCodeEnding++;
 		}else if((int)part1.size() == part2_size){ //For the case when a.stmt# = b.stmt#
@@ -255,8 +255,7 @@ void QueryEvaluator::evaluateWith(bool& unrelated_finish, int& last_point, int t
 			if(p2_type == mQueryTree->getIndex("integer") || p2_type == mQueryTree->getIndex("varOfSimpl") || p2_type == mQueryTree->getIndex("varOfSimpl"))
 				mgTupleIndexing.push_back(varCodeEnding++);
 			else mgTupleIndexing.push_back(p2_name);
-		else
-		{
+		else{
 			for(vector<int>::iterator i = mgTupleIndexing.begin(); i<=it; i++){
 				same2Tuple1++;
 			}
@@ -350,8 +349,7 @@ void QueryEvaluator::evaluatePattern(bool& unrelated_finish, int& last_point, in
 				tmp_insertion.push_back(pattern_result[i]);
 				evalTuple.push_back(tmp_insertion);
 			}
-		}
-		else{
+		}else{
 			int it = find_ele(mgTupleIndexing, var);
 			if(it == (int)mgTupleIndexing.size()){
 				mgTupleIndexing.push_back(var);
@@ -368,7 +366,7 @@ void QueryEvaluator::evaluatePattern(bool& unrelated_finish, int& last_point, in
 				evalTuple = new_tmp_eva_tuple;
 			}else{
 				for(int row = 0; row < (int)evalTuple.size(); row++){
-					int entry = evalTuple[row][it];
+					int entry = evalTuple[row][2*it+1];
 					int found = find_ele(pattern_result, entry);
 					if(found == (int)pattern_result.size())
 						evalTuple.erase(evalTuple.begin() + row);
@@ -865,16 +863,21 @@ void QueryEvaluator::evalPattern_PQL(vector<vector<int> >& result_tuple, vector<
 	}
 
 	vector<int> pattern1_candidates;
-	if(pattern1_type == mQueryTree->getIndex("variable"))
-		getAllVar(pattern1_candidates);
-	else pattern1_candidates.push_back(PKB_varEncode(PQL_varDecode(pattern1)));
+	if(pattern1_type == mQueryTree->getIndex("variable")){
+		checkCandidates(pattern1, pattern1_type, pattern1_candidates);
+	}else{
+		pattern1_candidates.push_back(PKB_varEncode(PQL_varDecode(pattern1)));
+	}
 
 	if(var_type == mQueryTree->getIndex("assign")){
 		if(found == 0)
 			mPKBObject->ast_GetAllAssign(result);
-		//vector<int> candidates = result;
-		for(int i = 0; i < (int)pattern1_candidates.size(); i++){
-			getPattern_PQLAssign(result, PKB_varDecode(pattern1), mQueryTree->getContent(pattern2));
+		if(pattern1_type == mQueryTree->getIndex("_"))
+			getPattern_PQLAssign(result, "_", mQueryTree->getContent(pattern2));
+		else{ 
+			for(int i = 0; i < (int)pattern1_candidates.size(); i++){
+				getPattern_PQLAssign(result, PKB_varDecode(pattern1_candidates[i]), mQueryTree->getContent(pattern2));
+			}
 		}
 	}else if(var_type == mQueryTree->getIndex("if") || var_type == mQueryTree->getIndex("while")){
 		if(found == 0)
@@ -883,7 +886,7 @@ void QueryEvaluator::evalPattern_PQL(vector<vector<int> >& result_tuple, vector<
 			else if(var_type == mQueryTree->getIndex("while"))
 				mPKBObject->ast_GetAllWhile(result);
 		for(int i = 0; i < (int)pattern1_candidates.size(); i++)
-			getPattern_PQLCond(result, var_type, PKB_varDecode(pattern1));
+			getPattern_PQLCond(result, var_type, PKB_varDecode(pattern1_candidates[i]));
 	}else 
 		throw new string("QueryEvaluator::evalPattern_PQL, no such variable type!");
 }
@@ -1486,7 +1489,6 @@ void QueryEvaluator::getAffectsStar(int up, vector<int>& result, int para){
 void QueryEvaluator::getPattern_PQLAssign(vector<int>& result, string patternLeft, string patternRight){
 	vector<int> tmp;
 	for(int i = 0; i < (int)result.size(); i++){
-		cout << result[i] << endl;
 		if(mPKBObject->patternAssign(result[i], patternLeft, patternRight))
 			tmp.push_back(result[i]);
 	}

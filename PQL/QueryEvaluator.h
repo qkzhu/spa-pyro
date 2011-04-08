@@ -3,12 +3,14 @@
 
 #include <map>
 #include <algorithm>
+#include <cstring>
 
 //#include "AbstractWrapper.h"
 #include "PqlPreprocessor.h"
 #include "PKB.h"
 #include "QueryResult.h"
 #include "TupleOperations.h"
+
 
 #define ENCODE_ENDING 500  //I need to use it when I meet '_' and constant in relation to create new variable for join
 
