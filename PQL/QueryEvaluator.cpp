@@ -1458,8 +1458,13 @@ void QueryEvaluator::getAffectsStar(int up, vector<int>& result, int para){
 		}
 		for(int i = 0; i < (int)result.size(); i++){
 			int next_stmt = result[i];
-			int next_index = affectsTable.affects_index_down[next_stmt];
-			vector<int> affects = affectsTable.table_body_down[next_index];
+			found = affectsTable.affects_index_down.count(next_stmt);
+			int next_index;
+			vector<int> affects;
+			if(found > 0){
+				next_index = affectsTable.affects_index_down[next_stmt];
+				affects = affectsTable.table_body_down[next_index];
+			}
 			for(int j = 0; j < (int)affects.size(); j++){
 				int found = find_ele(result, affects[j]);
 				if(found == (int)result.size())
@@ -1475,8 +1480,13 @@ void QueryEvaluator::getAffectsStar(int up, vector<int>& result, int para){
 		}
 		for(int i = 0; i < (int)result.size(); i++){
 			int next_stmt = result[i];
-			int next_index = affectsTable.affects_index_up[next_stmt];
-			vector<int> affects = affectsTable.table_body_up[next_index];
+			found = affectsTable.affects_index_up.count(next_stmt);
+			int next_index;
+			vector<int> affects;
+			if(found > 0){
+				next_index = affectsTable.affects_index_up[next_stmt];
+				affects = affectsTable.table_body_up[next_index];
+			}
 			for(int j = 0; j < (int)affects.size(); j++){
 				int found = find_ele(result, affects[j]);
 				if(found == (int)result.size())
