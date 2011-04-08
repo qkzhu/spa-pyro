@@ -1,0 +1,87 @@
+1000
+cat: follows
+1
+stmt s;
+Select s such that affects*(s, 13);
+none
+5000
+2
+stmt s1, s2, s3, s4, s5, s6;
+Select s1 such that parent(s1, s2) and parent(s2, s3) and parent(s3, s4) and parent(s4, s5) and affects(s5, s6);
+16
+5000
+3
+stmt s; variable v; procedure p;
+Select s such that Modifies(s, v) and Uses(s, v) and calls*(p, p);
+13,15,16,17,18,19,23,4,5,7,9,3
+5000
+4
+if f; assign a;
+Select f pattern a(_, "a*b");
+9
+5000
+5
+assign a;
+Select a pattern a("x", _);
+none
+5000
+6
+assign a; while w1, w2, w3, w4;
+Select a pattern a(_, _) such that Parent*(w1, w2) and Parent*(w2, w3) and Parent*(w3, w4) and Parent*(w4, a);
+20,21,22
+5000
+7
+while w1, w2, w3, w4;
+Select w1 such that Parent*(w1, w2) and Parent*(w2, w3) and Parent*(w3, w4);
+16
+5000
+8
+if f; assign a;
+Select a pattern a(_, _"a*b"_) such that Parent(f, a) pattern a(_, "a * b"_);
+10
+5000
+9
+if f; assign a;
+Select a pattern a(_, _"u*v"_) pattern a(_, "u * v"_) pattern a(_, _"u*v");
+6
+5000
+10
+stmt s;
+select a such that affects*(a, 22);
+20
+5000
+11
+procedure p1, p2, p3;
+select p1 such that calls*(p1, p2) and calls*(p2, p3) and calls*(p3, p1) with p2.procName = "r";
+p,q,r
+5000
+12
+while w; assign a; stmt s; if ifstat;
+select a pattern a("y", _) such that parent*(w, a) and follows(ifstat, w);
+14
+5000
+13
+variable v; stmt s; while w;
+select v such that parent(w, s) and modifies(s, v) and uses(s, v);
+y,d,b,a,j,x,g,u,c
+5000
+14
+prog_line pl1;
+select pl1 such that modifies(pl1, "j") and uses(pl1, "j") with pl1.progline#=3;
+3
+5000
+15
+prog_line pl2;
+select pl2 with pl2.progline# = 3;
+3
+5000
+16
+stmt s; procedure p1; variable v;
+select <s, p1, v> with s.stmt# = 1 with p1.procName = "r" with v.varName = "y";
+1 r y
+5000
+17
+call c; procedure p, r;
+select c with c.procName = "r";
+none
+5000
