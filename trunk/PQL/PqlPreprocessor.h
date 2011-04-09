@@ -16,11 +16,25 @@ public:
 	int selectSize(); //return the number of result variables
 	void selectAt(vector<int> &tupleTemp, int index); //take an index and return the result variable at index indx.
 	int suchThatSize(); //return the number of such that conditions in such that clause
-	void suchThatAt(vector<int> &relCondTemp, int index); //take an indx and return the such that condition in 				index indx
+	void suchThatAt(vector<int> &relCondTemp, int index); //take an indx and return the such that condition in index indx
 	int withSize(); //return the number of with conditions in the with clause
 	void withAt(vector<int> &attrCondTemp,int index);//take an indx and return the with condition in index indx
 	int patternSize(); //return the number of pattern expressions in the pattern clause
 	void patternAt(vector<int> &expression, int index); ////take an indx and return the pattern expression in index.
+	
+
+	int withUnrelatedSize();  
+	void withUnrelatedAt(vector<int> &attrCondTemp, int index);
+
+	int patternUnrelatedSize();
+	void patternUnrelatedAt(vector<int> &expression, int index);
+
+	int suchThatUnrelatedSize();
+	void suchThatUnrelatedAt(vector<int> &relCondTemp, int index);
+
+	int affectsStarSize(); //return the number of affects* clauses in the whole query
+	int affectsSize(); //return the number of affects clauses in the whole query
+	
 
 	//int varNum(); //return the number of all query variables
 	//int varType(int var); //take an integer form of a query variable and return its type in integer
