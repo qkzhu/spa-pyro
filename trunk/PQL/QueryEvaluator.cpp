@@ -152,8 +152,10 @@ void QueryEvaluator::evaluateWith(bool& unrelated_finish, int& last_point, int t
 		else mQueryTree->withAt(clause, last_point);
 
 		if(clause[0] == -1){
+			last_point++;
 			return;
 		}else if(clause[0] == -2){
+			last_point++;
 			return;
 		}
 
@@ -284,15 +286,17 @@ void QueryEvaluator::evaluateWith(bool& unrelated_finish, int& last_point, int t
 void QueryEvaluator::evaluatePattern(bool& unrelated_finish, int& last_point, int threshold){
 	//Pattern_PQL Evaluation Start
 	int start = 0;
-	for(last_point = 0; last_point < threshold; last_point++){
+	for(; last_point < threshold; last_point++){
 		vector<int> clause;
 		if(!unrelated_finish)
 			mQueryTree->patternUnrelatedAt(clause, last_point);
 		else mQueryTree->patternAt(clause, last_point);
 
 		if(clause[0] == -1){
+			last_point++;
 			return;
 		}else if(clause[0] == -2){
+			last_point++;
 			return;
 		}
 
@@ -388,7 +392,7 @@ void QueryEvaluator::evaluateSuchThat(bool& unrelated_finish, int& last_point, i
 	//Start evaluating SuchThat clauses
 	int start = 0;
 	if(last_point == threshold) unrelated_finish = true;
-	for(last_point = 0; last_point < threshold; last_point++)
+	for(; last_point < threshold; last_point++)
 	{
 		vector<int> clause;
 		if(!unrelated_finish)
@@ -397,8 +401,10 @@ void QueryEvaluator::evaluateSuchThat(bool& unrelated_finish, int& last_point, i
 
 		if(last_point == threshold - 1) unrelated_finish = true;
 		if(clause[0] == -1){
+			last_point++;
 			return;
 		}else if(clause[0] == -2){
+			last_point++;
 			return;
 		}
 
