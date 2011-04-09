@@ -685,3 +685,9 @@ Select c;
 Select BOOLEAN;
 true
 50
+137
+assign a; variable v;
+select a pattern a(v, _) with v.varName = "i";
+3, 11, 17
+50
+
