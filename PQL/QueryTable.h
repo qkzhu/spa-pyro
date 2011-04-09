@@ -41,16 +41,14 @@ public:
 	
 
 	int withUnrelatedSize();  
-	void withUnrelatedAt(vector<int> &unrelatedW, int index);
+	void withUnrelatedAt(vector<int> &attrCondTemp, int index);
 
 	int patternUnrelatedSize();
-	void patternUnrelatedAt(vector<int> &unrelatedPat, int index);
+	void patternUnrelatedAt(vector<int> &expression, int index);
 
 	int suchThatUnrelatedSize();
-	void suchThatUnrelatedAt(vector<int> &unrelatedST, int index);
+	void suchThatUnrelatedAt(vector<int> &relCondTemp, int index);
 
-	int relatedRelationSize();
-	void relatedRelationAt(vector<int> &relations, int index); 
 
 
 
