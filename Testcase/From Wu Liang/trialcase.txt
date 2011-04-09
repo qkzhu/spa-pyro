@@ -23,7 +23,7 @@ Select f pattern a(_, "a*b");
 5
 assign a;
 Select a pattern a("x", _);
-none
+5
 5000
 6
 assign a; while w1, w2, w3, w4;
@@ -67,12 +67,12 @@ y,d,b,a,j,x,g,u,c
 5000
 14
 prog_line pl1;
-select pl1 such that modifies(pl1, "j") and uses(pl1, "j") with pl1.progline#=3;
+select pl1 such that modifies(pl1, "j") and uses(pl1, "j") with pl1.prog_line#=3;
 3
 5000
 15
 prog_line pl2;
-select pl2 with pl2.progline# = 3;
+select pl2 with pl2.prog_line# = 3;
 3
 5000
 16
