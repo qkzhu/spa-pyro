@@ -280,8 +280,8 @@ void Validator::checkSuchThat(QueryTable &table){
 		//fill up the validation according to the relation type
 		vector<vector<int>> validationTables;
 		getValidTable(suchThat[0],validationTables);
-		cout<<"validationTable size "<<validationTables.size()<<endl;
-		cout<<"suchThat size "<<suchThat.size()<<endl;
+		//cout<<"validationTable size "<<validationTables.size()<<endl;
+		//cout<<"suchThat size "<<suchThat.size()<<endl;
 		
 		for(int k = 0;k<int(validationTables.size());k++)
 		{

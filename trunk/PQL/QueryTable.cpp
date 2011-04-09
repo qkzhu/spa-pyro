@@ -1071,10 +1071,10 @@ void QueryTable::findPartition(){
 	//add to teh related table
 	addToRelatedTable();
 
-	cout<<endl<<endl;
+	//cout<<endl<<endl;
 	
 
-	displayAll();
+	//displayAll();
 	//display the node list
 	//displayNodeList();
 
