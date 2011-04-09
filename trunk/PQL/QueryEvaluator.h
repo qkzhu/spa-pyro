@@ -74,6 +74,8 @@ private:
 	//generate result based on selection elements and evaluation result
 	void generateResult();
 
+	//after a partition's evaluation, check whether it's null
+	void checkValid();
 
 
 	//remove unpaired tuple in relation result when the relation of same parameter, like ***(a, a), is evaluated
