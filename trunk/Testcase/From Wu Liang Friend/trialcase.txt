@@ -136,13 +136,13 @@ select a such that Follows*(a,4);
 1,2,3
 5000
 28
-stmt s; 
-select s such that Next(11,s);
+prog_line p; 
+select p such that Next(11,p);
 12, 13
 5000
 29
-stmt s; 
-select s such that Next*(s,9);
+prog_line p; 
+select p such that Next*(p,9);
 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
 5000
 30
