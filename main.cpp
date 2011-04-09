@@ -10,7 +10,7 @@ int main(int argc, char* argv[]){
    {
 	   string simple;
 	   cout << "Please enter the simple file location: " << endl;
-	   simple = "simple.txt";
+	   simple = "simple_feifei.txt";
 	   //cin >> simple;
 	   PKB pkb;
 	   Parser p (pkb, simple);
@@ -18,7 +18,7 @@ int main(int argc, char* argv[]){
 
 	   string query_file;
 	   cout << "Please enter the query file location: " << endl;
-	   query_file = "query.txt";
+	   query_file = "query_feifei.txt";
 	   //cin >> query_file;
 	   ifstream qrFile (query_file, ifstream::in);
 
@@ -31,7 +31,7 @@ int main(int argc, char* argv[]){
 	   PqlPreprocessor pql (query);
 	   
 	   vector<int> indexlist;
-	   Convertor::getAllIndex(indexlist);
+	   //Convertor::getAllIndex(indexlist);
 
 	   QueryEvaluator bqe (&pkb, &pql);
 	   bqe.evaluate();
