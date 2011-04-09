@@ -1,7 +1,7 @@
 44
 cat: All Category
 1
-Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
+Stmt s1,s2,s3,s4,s5,S;  Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
 select P Such That parent(w1,w1) pattern W("a",_)  Such That parent(w1,w2);
 none
 500
