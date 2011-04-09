@@ -62,14 +62,14 @@ void QueryEvaluator::evaluate(){
 
 	//QE evaluate the With clause, then pattern clause, and in the end Such That clause.
 	bool unrelated_finish = false;
-	int with_size; //= mQueryTree->withUnrelatedSize();
-	int pattern_size; //= mQueryTree->patternUnrelatedSize();
-	int suchthat_size; //= mQueryTree->suchThatUnrelatedSize();
+	int with_size = mQueryTree->withUnrelatedSize();
+	int pattern_size = mQueryTree->patternUnrelatedSize();
+	int suchthat_size = mQueryTree->suchThatUnrelatedSize();
 	int with_point = 0;
 	int pattern_point = 0;
 	int suchthat_point = 0;
 
-	/*while(!unrelated_finish){
+	while(!unrelated_finish){
 		initialize();
 
 		evaluateWith(unrelated_finish, with_point, with_size);
@@ -96,8 +96,8 @@ void QueryEvaluator::evaluate(){
 		//if(AbstractWrapper::GlobalStop){
 		//	throw new string("GlobalStop, time out!");
 		//}
-	}*/
-	unrelated_finish = true; //temporary use
+	}
+	//unrelated_finish = true; //temporary use
 
 	initialize();
 
@@ -147,14 +147,14 @@ void QueryEvaluator::evaluateWith(bool& unrelated_finish, int& last_point, int t
 	int start = 0;
 	for(; last_point < threshold; last_point++){
 		vector<int> clause;
-		//if(!unrelated_finish)
-			//mQueryTree->withUnrelatedAt(clause, last_point);
-		 mQueryTree->withAt(clause, last_point);
+		if(!unrelated_finish)
+			mQueryTree->withUnrelatedAt(clause, last_point);
+		else mQueryTree->withAt(clause, last_point);
 
 		if(clause[0] == -1){
-			break;
+			return;
 		}else if(clause[0] == -2){
-			break;
+			return;
 		}
 
 		int clause_size = (int)clause.size();
@@ -276,6 +276,7 @@ void QueryEvaluator::evaluateWith(bool& unrelated_finish, int& last_point, int t
 			if(isBoolSelected)
 				mResult.setBoolValue(false);
 			else mResult.addInType(-1);
+			return;
 		}
 	}//while: With clause evaluation End
 }
@@ -285,9 +286,9 @@ void QueryEvaluator::evaluatePattern(bool& unrelated_finish, int& last_point, in
 	int start = 0;
 	for(last_point = 0; last_point < threshold; last_point++){
 		vector<int> clause;
-		//if(!unrelated_finish)
-		//	mQueryTree->patternUnrelatedAt(clause, last_point);
-		 mQueryTree->patternAt(clause, last_point);
+		if(!unrelated_finish)
+			mQueryTree->patternUnrelatedAt(clause, last_point);
+		else mQueryTree->patternAt(clause, last_point);
 
 		if(clause[0] == -1){
 			return;
@@ -386,12 +387,13 @@ void QueryEvaluator::evaluatePattern(bool& unrelated_finish, int& last_point, in
 void QueryEvaluator::evaluateSuchThat(bool& unrelated_finish, int& last_point, int threshold){
 	//Start evaluating SuchThat clauses
 	int start = 0;
+	if(last_point == threshold) unrelated_finish = true;
 	for(last_point = 0; last_point < threshold; last_point++)
 	{
 		vector<int> clause;
-		//if(!unrelated_finish)
-		//	mQueryTree->suchThatUnrelatedAt(clause, last_point);
-		 mQueryTree->suchThatAt(clause, last_point);
+		if(!unrelated_finish)
+			mQueryTree->suchThatUnrelatedAt(clause, last_point);
+		else mQueryTree->suchThatAt(clause, last_point);
 
 		if(last_point == threshold - 1) unrelated_finish = true;
 		if(clause[0] == -1){
@@ -676,6 +678,19 @@ void QueryEvaluator::transform(vector<vector<int> >& pre_tuple, vector<vector<in
 	pre_tuple = tmp_result;
 }
 
+void QueryEvaluator::checkValid(){
+	bool isNull = false;
+	if(evalTuple.empty()) isNull == true;
+	if(!isNull){
+		if(isBoolSelected){
+			mResult.setBoolValue(false);
+		}else{
+			mResult.addInType(-1);
+		}
+		return;
+	}
+}
+
 void QueryEvaluator::generateResult(){
 	vector<vector<int> > final_result;
 
@@ -762,21 +777,22 @@ void QueryEvaluator::generateResult(){
 
 
 void QueryEvaluator::initialAffectsTable(){
-	//int affects_num = mQueryTree->affectsSize();
-	//int affects_star_num = mQueryTree->affectsStarSize();
-	//if(affects_num >= 3 || affects_star_num > 0)
+	int affects_num = mQueryTree->affectsSize();
+	int affects_star_num = mQueryTree->affectsStarSize();
+	if(affects_num >= 3 || affects_star_num > 0)
 		affectsTable.is_affects_table_built = true;
-	//else affectsTable.is_affects_table_built = false;
+	else affectsTable.is_affects_table_built = false;
 	if(affectsTable.is_affects_table_built){
 		vector<int> assigns;
 		mPKBObject->ast_GetAllAssign(assigns);
 		for(int i =0 ; i < (int)assigns.size(); i++){
-			int stmt = 29;
+			int stmt = assigns[i];
 			if(i == 0) affectsTable.initial_stmt = stmt;
 			vector<int> affects;
 			vector<int> mods;
 			mPKBObject->mTable_getModifiedVar(mods, stmt);
-			if(mods.empty() || mods[0] == -1) throw new string("QueryEvaluator::buildAffectsTable, shit! This should never happen!");
+			if(mods.empty() || mods[0] == -1) 
+				throw new string("QueryEvaluator::buildAffectsTable, shit! This should never happen!");
 			int mod = mods[0];
 			
 			vector<int> old_path;
@@ -1435,7 +1451,7 @@ void QueryEvaluator::evalAffects(vector<vector<int> >& result, const vector<int>
 void QueryEvaluator::evalAffectsStar(vector<vector<int> >& result, const vector<int>& para1, const vector<int>& para2){
 	if(para1.empty() || para2.empty())
 		return;
-	if(!affectsTable.is_affects_table_built) throw new string("QueryEvaluator::evalAffectsStar, shit! How can table not built yet!");
+	//if(!affectsTable.is_affects_table_built) throw new string("QueryEvaluator::evalAffectsStar, shit! How can table not built yet!");
 	if(para1.size() <= para2.size()){
 		for(int i = 0; i < (int)para1.size(); i++){
 			int in1 = para1[i];
