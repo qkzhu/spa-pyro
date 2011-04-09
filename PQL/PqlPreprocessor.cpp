@@ -4,6 +4,21 @@
 PqlPreprocessor::PqlPreprocessor(string query){
 	PqlParser::parser(query, &qt);
 	qt.showTable();
+
+	qt.findPartition();
+	
+	
+
+	//cout<<"+++++++++++++++++++++++++++++++++++++++++++++++++++++++++"<<endl;
+	//qt.tryHashMap();
+	//qt.displayNodeList();
+	//qt.findPartitionOne();
+	//qt.findPartitionTwo();
+	//qt.findPartitionFour();
+	//cout<<endl<<endl;
+	//qt.displayNodeList();
+	
+
 	vector<vector<int>> tables;
 	validator.checkResults(qt);
 
