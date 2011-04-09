@@ -16,7 +16,8 @@ struct SuchThat{
 
 struct With{
 	bool argumentNoCorrect;
-	vector <int> attrCond; 
+	vector <int> attrCond;
+
 };
 
 struct Declaration{
@@ -28,6 +29,35 @@ struct Pattern_PQL{
 	int patternStringNo;
 	vector<int> expression;
 };
+
+//*************** For Optimizer Start ****************//
+struct QueryNode{
+	int type;
+	int prefix1;
+	int argument1;
+	int prefix2;
+	int argument2;
+	int ranking;
+	int id;
+};
+
+struct SelectNode{
+	int prefix;
+	int argument;
+};
+
+struct Partitions{
+	vector<QueryNode> partition;
+	int noOfConstants;
+	int noOfStars;
+	int noOfUnderscores;
+	int noOfRelations;
+	int noOfPatterns;
+	int totalMarks;
+
+};
+//*************** For Optimizer End ****************//
+
 
 enum KEYWORD
   {
@@ -89,7 +119,9 @@ enum KEYWORD
 
 
 
-	NONEXIST		=	-10
+	NONEXIST		=	-10,
+	WITHCOUNTER		=	0,
+	PATTERNCOUNTER	=	5000,
   };
 
 #endif //DATASTUCTURE_H
