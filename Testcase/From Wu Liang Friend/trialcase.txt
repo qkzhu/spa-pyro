@@ -1,0 +1,192 @@
+1000
+cat: my friend's test cases
+1
+stmt s;
+select BOOLEAN;
+true
+5000
+2
+procedure p;
+select p;
+Example ,p ,q1 ,q2
+5000
+3
+assign a;
+select a;
+1,2,3,5,6,8,10,12,13,14,16,19,21,22,23,24,26,27
+5000
+4
+constant c; 
+select c;
+1,2,3,4,7,8
+5000
+5
+procedure p, q;
+select p with p.procName = q.procName;
+Example,p,q1,q2
+5000
+6
+variable v; 
+select BOOLEAN with v.varName = "x";
+true
+5000
+7
+variable v; 
+select v such that Modifies("Example", v);
+i,x,y,z
+5000
+8
+stmt s; 
+select s such that Modifies(s, "x");
+1,4,6,7,8,9,10,11,12,15,17,18,19,20,24,25,27
+5000
+9
+call c; 
+select c such that Modifies(c,"x");
+4,7,15,17,20
+5000
+10
+procedure p; 
+select p such that Uses(p,"f");
+Example,q1
+5000
+11
+if i;  
+select i such that Uses(i, "x");
+11,25
+5000
+12
+call c; 
+select c such that Uses(c,"y");
+17
+5000
+13
+stmt s; 
+select s such that Parent(s,13);
+11
+5000
+14
+if i; 
+select i such that Parent(i,13);
+11
+5000
+15
+while w; 
+select w such that Parent(w,10);
+9
+5000
+16
+stmt s; 
+select s such that Parent*(s,13);
+9,11
+5000
+17
+assign a; 
+select a such that Parent*(9,a);
+10,12,13,14,16
+5000
+18
+stmt s;
+select BOOLEAN such that Parent*(9,13);
+true
+5000
+19
+stmt s; 
+select s such that Follows(11,s);
+14
+5000
+20
+call c; 
+select c such that Follows(9,c);
+17
+5000
+21
+assign a; 
+select a such that Parent*(9,a);
+10,12,13,14,16
+5000
+22
+stmt s;
+select BOOLEAN such that Parent*(9,13);
+true
+5000
+23
+stmt s; 
+select s such that Follows(11,s);
+14
+5000
+24
+call c; 
+select c such that Follows(9,c);
+17
+5000
+25
+assign a; 
+select a such that Follows(a,4);
+3
+5000
+26
+stmt s; 
+select s such that Follows*(8,s);
+9,17
+5000
+27
+assign a; 
+select a such that Follows*(a,4);
+1,2,3
+5000
+28
+stmt s; 
+select s such that Next(11,s);
+12, 13
+5000
+29
+stmt s; 
+select s such that Next*(s,9);
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
+5000
+30
+stmt s;
+select BOOLEAN such that next*(1,17);
+true
+5000
+31
+assign a; 
+select a such that affects(a,14);
+5,10,12,16
+5000
+32
+stmt s; 
+select s such that affects*(s,14);
+5,8,10,12,16
+5000
+33
+assign a; 
+select a pattern a("i",_"x+3");
+5
+5000
+34
+assign a; 
+select a pattern a("z", "x+1");
+23,26
+5000
+35
+if i; 
+select i pattern i(_,_,_);
+11, 25
+5000
+36
+if ifs; assign a1, a2; variable v1, v2;
+Select ifs such that Follows*(a1, ifs) and Follows*(ifs, a2) and Modifies(ifs, v1) and Uses(ifs, v2) with v1.varName = v2.varName;
+11
+5000
+37
+Stmt s1,s2;
+select <s1,s2> such that follows(s1,s2);
+1 2, 2 3, 3 4, 4 5, 5 6, 6 7, 7 8, 8 9, 9 17, 10 11, 11 14, 14 15, 15 16, 18 22, 19 20, 20 21, 23 24
+5000
+38
+Stmt s1,s2;
+select <s1,s2> such that parent*(s1,s2);
+9 10,9 11,9 12,9 13,9 14,9 15,9 16,11 12,11 13,18 19,18 20,18 21,25 26,25 27
+5000
