@@ -125,8 +125,5 @@ void TokenList::showTokenList()
  {
 	 return fullVector.size();
  }
- void destruc()
- {
-
- }
+ 
  

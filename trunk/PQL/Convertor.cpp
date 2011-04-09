@@ -7,11 +7,11 @@
  map<int,string> Convertor::indexToDeclaration;
  map<string,int> Convertor::declarationToIndex;
  map<string, string> Convertor::shortcutToContent;//s->stmt;
- //Tokenizer keywordToken;
  int u=Convertor::QUATEDSTRING;
 
 int Convertor::update()
 {
+	//empty the maps and initialise the varable;
 	indexToDeclaration.clear();
 	declarationToIndex.clear();
 	indexToKeyword.clear();
@@ -26,33 +26,31 @@ int Convertor::update()
   {
     while ( grammerfile.good() )
     {
-      getline (grammerfile,line);
+		getline (grammerfile,line);
 	 
 	   
-  cstr = new char [line.size()+1];
-  strcpy (cstr, line.c_str());
-	  //cout<<line<<endl;
-	  p=strtok(cstr," ");
+		cstr = new char [line.size()+1];
+		strcpy (cstr, line.c_str());
+	  
+		p=strtok(cstr," ");
 	  
         if(p !=NULL)
 		{
-		string keyword=p;
-		//cout<<p<<endl;
-		 p=strtok(NULL," ");
+			string keyword=p;
+	
+			 p=strtok(NULL," ");
 		 
 		if (p!=NULL)
 		{
-		int index=atoi(p);//be careful about the error;
-		//cout<<index<<"............"<<keyword<<endl;	
-		Convertor::indexToKeyword[index]=keyword;
-		Convertor::keywordToIndex[keyword]=index;
-		//cout<<indexToKeyword[index]<<"-----"<<keywordToIndex[keyword]<<endl;
-		//pch = strtok (NULL, " ;");
+			int index=atoi(p);
+		
+			Convertor::indexToKeyword[index]=keyword;
+			Convertor::keywordToIndex[keyword]=index;
+	
 		}
-		//pch=keywordToken.next();
+		
 	  }
 	}
-	//cout<<"the line is" <<i<<endl;
     grammerfile.close();
   }
 
@@ -81,7 +79,6 @@ void Convertor::getAllIndex(vector<int> &indexlist)
 	 int i;
 	 
 	 i=getIndex(token);
-	 //cout<<i<<"-------------"<<token<<"\n";
 	 if (i>50&&i<150&&i!=60)
 		 flag=true;
 	 else
@@ -198,16 +195,7 @@ string Convertor:: getKeyword(int index)//given a index, looking for the coressp
 				keyword="NULL";
 			return keyword;
 }
-string Convertor::getShortCut(string content)
-{
-	string shortcut;
-	if(shortcutToContent.count(content)==1)
 
-				shortcut=shortcutToContent.find(content)->second;
-			else
-				shortcut="NULL";
-	return shortcut;
-}
 string Convertor::getContent(string shortcut)
 {
 	string content;

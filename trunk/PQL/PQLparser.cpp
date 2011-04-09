@@ -1,82 +1,67 @@
 #include"PqlParser.h"
 
-
-
 TokenList *qu;
-int static userdefine=PqlParser::USERDEFINED;
-bool selectBool;
+int static userdefine=PqlParser::USERDEFINED;//The index of symbol that declared in the declaration will starting from this;
+bool selectBool;//to indicate there is only one select clause;
 /*
 given table and string, parse the string s and put the parse result into the table
 */
 void PqlParser::parser(string s,QueryTable *table){
-  userdefine=PqlParser::USERDEFINED;
-  selectBool=true;	
-  qu=new TokenList(s);
-  //qu->showTokenList();
+	userdefine=PqlParser::USERDEFINED;
+	selectBool=true;	
+	qu=new TokenList(s);
+	//qu->showTokenList();
 
-  Convertor::update();
+	Convertor::update();
   
-  
- // int g=PqlParser::GRAMMERDEFINED;
-  
-  int i=0;
-  int count=0;
-  string pch="";
- // int p;//swither
-   int type;//the clause type when add into the table;
-//   int patterntype;//the type follows pattern;
-   int index;
-//   int prefix;
-//   int suchthatclause;
-   string declar,temp2;
-   pch=(*qu).getNextToken();
-  // if(pch=="NULL") throw new string("the first token is NULL \n");
- 
-   bool semi=false;
-   //temp store the clause content;
-  while(pch!="NULL"&&i<100)
-  {       i++;
-        if(i==99) throw new string("infinite loop !");
+	int i=0;//this is the safty triger once the loop go into infinite loop, stop the loop;
+	int count=0;
+	string pch="";
+	int type;//the clause type when add into the table;
+	int index;
+	string declar,temp2;
+	pch=(*qu).getNextToken();
+	bool semi=false;//indicate whether end of semi is there;
+
+	while(pch!="NULL"&&i<1000)
+	{       
+		i++;
+        if(i==999) throw new string("infinite loop !");
 
      
       	if(Convertor::isDeclared(pch))
 			{   
 				declar=pch;//temporally store the Content of shortcut;
-			
 				pch=declarParser(declar,qu,table);
 			}
 			else 
 			{
 				
-			 index=Convertor::getIndex(pch);
-			 //cout<<pch<<"--------------";
-			 
-			 switch(index)
-			 {
-				case SELECT:
-					
-
-				type=SELECT;
+				index=Convertor::getIndex(pch);
 			
-				pch=selectParser(type,qu,table);
-				  //table->addClause(SELECT,content);
+				switch(index)
+				{
+					case SELECT:
+					
 
-				  break;
-					
-				case SUCH_THAT:
-				//cout<<type<<"shuaigevs lianghongge";
-					
-				type=SUCH_THAT;
-				//content.clear();
-				pch=suchThatParser(type,qu,table);
-				        break;
-				case WITH:
-					 type=WITH;
-					 pch=withParser(type,qu,table);
+					type=SELECT;
+			
+					pch=selectParser(type,qu,table);
+				  
 
 					break;
+					
+					case SUCH_THAT:
+			
+					
+					type=SUCH_THAT;
+					pch=suchThatParser(type,qu,table);
+				    break;
+				case WITH:
+					type=WITH;
+					pch=withParser(type,qu,table);
+					break;
 				case PATTERN:
-
 					type=PATTERN;
 					
 					pch=PqlParser::patternParser(type,qu,table);
@@ -85,7 +70,7 @@ void PqlParser::parser(string s,QueryTable *table){
 					break;
 
 				case S_COLON:
-					//cout<<"reaching"<<endl;
+					
 					pch=(*qu).getNextToken();
 					if(pch!="NULL") throw new string("illeagle using of S_COLON\n");
 					else
@@ -99,21 +84,17 @@ void PqlParser::parser(string s,QueryTable *table){
 					break;
 
 
-
-
-
-  }
+		   }
     
 
+		}
 
-}
+	}
+	if (semi==false) throw new string("missing S_COLON in the end \n");
+	if(selectBool==true) throw new string("missing select clause\n");
 
-}
-if (semi==false) throw new string("missing S_COLON in the end \n");
-if(selectBool==true) throw new string("missing select clause\n");
-//userdefine=PqlParser::USERDEFINED;//initial the userdefine;
 
-return;
+	return;
 }
 
 
@@ -124,10 +105,8 @@ int PqlParser:: prefix(string token)
 {
 	int index,prefix;
 	 
-
-	//vector<int> content;
 	index=Convertor::getIndex(token);
-	//cout<<"========================="<<index;
+
 	
 	if(index>=PqlParser::USERDEFINED)
 		{
@@ -135,7 +114,7 @@ int PqlParser:: prefix(string token)
 		    if(content!="NULL")
 			prefix=Convertor::getIndex(content);
 		    if(atoi(token.c_str())!=0)
-              prefix=201;
+				prefix=201;
 ;
 	   }
 	   else
@@ -160,7 +139,6 @@ string PqlParser::selectParser(int type,TokenList *quPointer,QueryTable *tablePo
 	string pch;
 	int index;
 	int prefix;
-//	int patterntype;
 	vector<int> content;
 	QueryTable *table;
 	  table=tablePointer;
@@ -181,9 +159,8 @@ string PqlParser::selectParser(int type,TokenList *quPointer,QueryTable *tablePo
 					 prefix=PqlParser::prefix(pch);
 				
 					 if (index>USERDEFINED&&index<=Convertor::QUATEDSTRING||index==BOOLEAN)
-					{   
-						//prefix=PqlParser::prefix(pch);
-						//cout<<"prefix"<<PqlParser::prefix(pch);
+					 {   
+						
 						if(prefix!=0)
 						content.push_back(prefix);
 						
@@ -216,7 +193,7 @@ string PqlParser::selectParser(int type,TokenList *quPointer,QueryTable *tablePo
 						throw new string(pch+"should not apear in the select or select should not empty\n");
 					}
 
-				  }while(index==COMMA);
+				 }while(index==COMMA);
 				 if(index!=R_ARROW) { cout<<index; throw new string("missing R_ARROW");}
 				 pch=qu->getNextToken();
 	             index=Convertor::getIndex(pch);
@@ -227,8 +204,7 @@ string PqlParser::selectParser(int type,TokenList *quPointer,QueryTable *tablePo
 				
 					 if (index>USERDEFINED&&index<=Convertor::QUATEDSTRING||index==BOOLEAN)
 					{   
-						//prefix=PqlParser::prefix(pch);
-						//cout<<"prefix"<<PqlParser::prefix(pch);
+					
 						if(prefix!=0)
 						content.push_back(prefix);
 						
@@ -243,11 +219,11 @@ string PqlParser::selectParser(int type,TokenList *quPointer,QueryTable *tablePo
 							pch=qu->getNextToken();
 						    
 							index=Convertor::getIndex(pch);
-							//cout<<index<<pch<<endl;
+							
 							if(index==-1) throw new string(pch+"should not follow the DoT in select clause");
-							   content.push_back(index);
-						//	content.push_back(index);
-							pch=qu->getNextToken();
+							    content.push_back(index);
+					
+								pch=qu->getNextToken();
 						}
 						
 						
@@ -299,7 +275,6 @@ string PqlParser::patternParser(int type,TokenList *quPointer,QueryTable *tableP
 					if(index<USERDEFINED||index>USERDEFINED+STEP) throw new string("not valid symbol "+ pch+ " after the Pattern \n");
 					prefix=PqlParser::prefix(pch);
 					
-					//cout<<"the pattern"<<pch<<"----"<<index<<"-------"<<prefix<<endl;
 
 					patterntype=prefix; //store the type of pattern
 					
@@ -321,8 +296,7 @@ string PqlParser::patternParser(int type,TokenList *quPointer,QueryTable *tableP
 						 content.push_back(prefix);//assign or while;
 						 content.push_back(index);//shortcut;
 
-						// cout<<pch<<index<<prefix<<endl;//show the content of the first part of pattern 
-						 
+						
 						 pch=qu->getNextToken();
 					     index=Convertor::getIndex(pch);
 						 if(index!=COMMA) throw new string("miss COMMA after the "+pch+" in Pattern while /n ");
@@ -375,7 +349,7 @@ string PqlParser::patternParser(int type,TokenList *quPointer,QueryTable *tableP
 						 content.push_back(prefix);
 						 content.push_back(index);
 
-	////////////////////////////////////////////*the if pattern clause*//////////////////////////////////////////////////////
+
 
 
 						 pch=qu->getNextToken();
@@ -391,12 +365,7 @@ string PqlParser::patternParser(int type,TokenList *quPointer,QueryTable *tableP
 				    pch=qu->getNextToken();
 					index=Convertor::getIndex(pch);
 					table->addClause(type,content);
-					/*
-					cout<<type<<" ";
-					for(int i=0;i<(int)content.size();i++)
-						cout<<content[i]<<" ";
-					cout<<endl;
-					*/
+					
 				    content.clear();
 					if(index!=0)
 				       break;
@@ -416,9 +385,9 @@ string PqlParser::suchThatParser(int type,TokenList *quPointer,QueryTable *table
 	int suchthatclause;
 	vector<int> content;
 	QueryTable *table;
-	 table=tablePointer;
-	 TokenList *qu;
-	  qu=quPointer;
+	table=tablePointer;
+	TokenList *qu;
+	qu=quPointer;
 
 
 
@@ -427,14 +396,14 @@ string PqlParser::suchThatParser(int type,TokenList *quPointer,QueryTable *table
 
 				if(Convertor::stringToLower(pch)!="that") throw new string("miss that after such\n");
 				pch=qu->getNextToken();
-				//cout<<pch<<endl;
-				do{// this do loop is for the and clause inside the suchthat;
+				do{
+					// this do loop is for the clause inside the suchthat;
 
 				    suchthatclause=Convertor::getIndex(pch);
 		            if(suchthatclause==-1||suchthatclause<=4||suchthatclause>=20)
 						throw new string(pch+" is undefined querycall in suchthatclause\n");
 					else
-					content.push_back(suchthatclause);
+						content.push_back(suchthatclause);
 					
 						 
 					     pch=qu->getNextToken();
@@ -457,11 +426,10 @@ string PqlParser::suchThatParser(int type,TokenList *quPointer,QueryTable *table
 
                                  Convertor::insertShortcut(pch,"procOfSimpl");
 								}	
-					     //cout<<"temp:"<<temp<<"prefix"<<prefix;
+					    
 						    }
 							prefix=PqlParser::prefix(pch);
-						 //cout<<"temp:"<<temp<<"prefix"<<prefix;
-						// int paraPosition=0;//identify the position of the parameters; 
+						
 						 if(index>=USERDEFINED||prefix==INT||index==UNDERSCORE)
                         {   
 
@@ -471,7 +439,7 @@ string PqlParser::suchThatParser(int type,TokenList *quPointer,QueryTable *table
 							 pch=qu->getNextToken();
 							
 							 index=Convertor::getIndex(pch);
-							if(index!=COMMA) throw new string("should have COMMA after "+pch+" \n"); 
+							 if(index!=COMMA) throw new string("should have COMMA after "+pch+" \n"); 
 						    
 							 pch=qu->getNextToken();
 							 index=Convertor::getIndex(pch);  
@@ -521,12 +489,12 @@ string PqlParser::withParser(int type,TokenList *quPointer,QueryTable *tablePoin
 	int index;
 	int prefix;
 	int indicator=VARNAME;
-//	int suchthatclause;
+
 	vector<int> content;
 	QueryTable *table;
-	 table=tablePointer;
-	 TokenList *qu;
-	  qu=quPointer;
+	table=tablePointer;
+	TokenList *qu;
+	qu=quPointer;
 
 
 
@@ -622,54 +590,50 @@ string PqlParser::declarParser(string type,TokenList *quPointer,QueryTable *tabl
 	string pch, temp2;
 	
 	int index;
-//	int prefix;
-//	int patterntype;
 	vector<int> content;
 
 	QueryTable *table;
-	 table=tablePointer;
-	 TokenList *qu;
-	  qu=quPointer;
+	table=tablePointer;
+	TokenList *qu;
+	qu=quPointer;
 
 	string declar=type;
 
 
 		        pch=qu->getNextToken();
 				index=Convertor::getIndex(pch);
-	          //  cout<<declar<<pch<<index<<endl;
-
-				//	cout<<"the first is :"<<index<<endl;
+	         
 				if(pch!="NULL"&&index==-1)
 				{
 					temp2=pch;
-				//	cout<<"stoppping here";
-				 do
-				 {
-					if(index==COMMA)
+		
+					do
 					{
-                      pch=qu->getNextToken();
-					  index=Convertor::getIndex(pch);
-					  if(index!=-1)
-						  throw new string("should have a undeclared symbol after the COMMA\n");
-					  temp2=pch;
-					}
-					Convertor::insertShortcut(temp2,declar);
-				    Convertor::insertIndex(++userdefine,temp2);
-					pch=qu->getNextToken();
-					index=Convertor::getIndex(pch);
-					//cout<<"feifei"<<pch<<index<<endl;
-					if (index==S_COLON)
-					{
+						if(index==COMMA)
+						{
 						pch=qu->getNextToken();
-						break;
-					}
-					else if(index==-1)
-					{
-						throw new string("unidentified symbol after the decalred symbol\n");
-					}
-				 }while(index==COMMA);
-			   }
-				else
+						index=Convertor::getIndex(pch);
+						if(index!=-1)
+							throw new string("should have a undeclared symbol after the COMMA\n");
+						temp2=pch;
+						}
+						Convertor::insertShortcut(temp2,declar);
+						Convertor::insertIndex(++userdefine,temp2);
+						pch=qu->getNextToken();
+						index=Convertor::getIndex(pch);
+					//cout<<"feifei"<<pch<<index<<endl;
+						if (index==S_COLON)
+						{
+							pch=qu->getNextToken();
+							break;
+						}
+						else if(index==-1)
+						{
+							 throw new string("unidentified symbol after the decalred symbol\n");
+						}
+					}while(index==COMMA);
+			  }
+			  else
 				{
 
 					throw new string("the first token after the declaration"+type+" should be undeclared symbol\n");
