@@ -1124,6 +1124,13 @@ void QueryTable::addToUnrelatedTable(){
 
 		for(int j=0;j<int(unrelatedGroup.at(i).partition.size());j++)
 		{
+			/*
+			cout<<"unrelatedGroup.at(i).partition.at(j).type: "<<unrelatedGroup.at(i).partition.at(j).type<<endl;
+			cout<<"unrelatedGroup.at(i).partition.at(j).prefix1 " <<unrelatedGroup.at(i).partition.at(j).prefix1<<endl;
+			cout<<"unrelatedGroup.at(i).partition.at(j).argument1 " <<unrelatedGroup.at(i).partition.at(j).argument1<<endl;
+			cout<<"unrelatedGroup.at(i).partition.at(j).prefix2 " <<unrelatedGroup.at(i).partition.at(j).prefix2<<endl;
+			cout<<"unrelatedGroup.at(i).partition.at(j).argument2 " <<unrelatedGroup.at(i).partition.at(j).argument2<<endl;*/
+			
 			//the relation is with type
 			if(unrelatedGroup.at(i).partition.at(j).type == WITH)
 			{
@@ -1154,7 +1161,7 @@ void QueryTable::addToUnrelatedTable(){
 			{
 				hasSuchThat = true;
 				//first argument is UNDERSCORE and the second is not UNDERSCORE
-				if( unrelatedGroup.at(i).partition.at(j).prefix1 == UNDERSCORE && unrelatedGroup.at(i).partition.at(j).prefix1 != UNDERSCORE)
+				if( unrelatedGroup.at(i).partition.at(j).prefix1 == UNDERSCORE && unrelatedGroup.at(i).partition.at(j).prefix2 != UNDERSCORE)
 				{
 					tempRelations.push_back( unrelatedGroup.at(i).partition.at(j).type);
 					tempRelations.push_back( unrelatedGroup.at(i).partition.at(j).argument1);
