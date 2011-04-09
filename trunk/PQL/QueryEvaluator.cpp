@@ -28,7 +28,7 @@ void QueryEvaluator::evaluate(){
 	
 	if(select[0] == mQueryTree->getIndex("BOOLEAN")) isBoolSelected = true;
 
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////FOR DEBUGGING
+	/*//////////////////////////////////////////////////////////////////////////////////////////////////////////FOR DEBUGGING
 	cout<< "PQL parser checking"<< endl;
 	cout << "Pattern_PQL clauses: " << endl;
 	for(int i=0; i< mQueryTree->patternSize(); i++){
@@ -58,7 +58,7 @@ void QueryEvaluator::evaluate(){
 		cout << endl;
 	}
 	cout << "PQL PARSER checking FINISH." << endl;
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 
 	//QE evaluate the With clause, then pattern clause, and in the end Such That clause.
 	bool unrelated_finish = false;
@@ -1451,7 +1451,7 @@ void QueryEvaluator::evalAffects(vector<vector<int> >& result, const vector<int>
 void QueryEvaluator::evalAffectsStar(vector<vector<int> >& result, const vector<int>& para1, const vector<int>& para2){
 	if(para1.empty() || para2.empty())
 		return;
-	//if(!affectsTable.is_affects_table_built) throw new string("QueryEvaluator::evalAffectsStar, shit! How can table not built yet!");
+	if(!affectsTable.is_affects_table_built) throw new string("QueryEvaluator::evalAffectsStar, shit! How can table not built yet!");
 	if(para1.size() <= para2.size()){
 		for(int i = 0; i < (int)para1.size(); i++){
 			int in1 = para1[i];
