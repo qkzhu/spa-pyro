@@ -1,0 +1,37 @@
+procedure p {
+1       y = 0;
+2       a = g;
+3       j = j;
+4       while i {
+5               x = x-3*y;
+6               g = u*v;
+7               call q;
+        }
+}
+procedure q {
+8       c = 555;
+9       if c then {
+10              g = a*b;
+11              b = 3*4+5;
+        }  else {
+12              u = g;
+        }
+13      while s {
+14              y = a*b+c;
+15              call r;
+        }
+}
+procedure r {
+16      while a {
+17              while b {
+18                      while c {
+19                              while d {
+20                                      y = i;
+21                                      d = c;
+22                                      b = y;
+                                }
+                        }
+                }
+        }
+23      call p;
+}
