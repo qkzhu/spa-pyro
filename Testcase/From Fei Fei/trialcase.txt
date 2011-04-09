@@ -156,7 +156,7 @@ select <s1,s2,s3> such that Next(s1,s2) and Next(s2,s3) and Next(s3,s1) and affe
 none
 500
 32
-Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,W; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
+Stmt s1,s2,s3,s4,s5,S; Assign a1,a2,A1,A2; While w1,w2,w; procedure p1,p2,p3,P; Call c1,c2,C; IF f1,F,F2;Variable v1,v2,v3; prog_line proc1,proc2;
 select w such that parent(w,c1) pattern w("x",_) with c1.stmt#=61;
 60
 500
@@ -183,7 +183,7 @@ none
 37
 STMT s;
 select s;
-1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,500,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67
 500
 38
 stmt s;
@@ -196,8 +196,8 @@ select v such that uses("q4",v) and modifies("q4",v);
 b,c,x,z,i,a
 500
 40
-call ca; procudure p,p1,p2; while w;
-select <p1.prog_line#,ca.progName> such that call(p,p1) with p.value="Example" with parent(w,ca);
+call ca; procedure p,p1,p2; while w;
+select <p1.prog_line#,ca.procName> such that calls(p,p1) with p.value="Example" such that parent(w,ca);
 p Example,q1 Example,q2 Exmaple,p p, q1 p,q2 p
 500
 41
@@ -207,8 +207,8 @@ none
 500
 42
 stmt s,s1; call ca,ca1;
-select <s,s1,ca> such that follows(26,s) and next(26,s1) and next(26,ca1);
-27 28 28,27 29 29,27 28 29,27 29 28
+select <s,s1,ca> such that follows(26,s) and next(26,s1) and next(27,ca);
+27 27 29,27 27 28
 500
 43
 stmt s;
@@ -216,8 +216,7 @@ select s such that follows(26,s);
 27
 500
 44
-stmt s;
-select s such that next(26,s);
+stmt s; call ca;
+select ca such that next(27,ca);
 28,29
 500
- 
