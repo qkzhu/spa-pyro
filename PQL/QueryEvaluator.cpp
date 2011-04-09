@@ -97,7 +97,6 @@ void QueryEvaluator::evaluate(){
 		//	throw new string("GlobalStop, time out!");
 		//}
 	}
-	//unrelated_finish = true; //temporary use
 
 	initialize();
 
@@ -684,19 +683,6 @@ void QueryEvaluator::transform(vector<vector<int> >& pre_tuple, vector<vector<in
 	pre_tuple = tmp_result;
 }
 
-void QueryEvaluator::checkValid(){
-	bool isNull = false;
-	if(evalTuple.empty()) isNull == true;
-	if(!isNull){
-		if(isBoolSelected){
-			mResult.setBoolValue(false);
-		}else{
-			mResult.addInType(-1);
-		}
-		return;
-	}
-}
-
 void QueryEvaluator::generateResult(){
 	vector<vector<int> > final_result;
 
@@ -911,13 +897,13 @@ void QueryEvaluator::evalPattern_PQL(vector<vector<int> >& result_tuple, vector<
 			result = current_result;
 		}
 	}else if(var_type == mQueryTree->getIndex("if") || var_type == mQueryTree->getIndex("while")){
-		if(found == 0)
+		if(found == 0){
 			if(var_type == mQueryTree->getIndex("if"))
 				mPKBObject->ast_GetAllIf(result);
 			else if(var_type == mQueryTree->getIndex("while"))
 				mPKBObject->ast_GetAllWhile(result);
-		
-		if(var_type == mQueryTree->getIndex("_"))
+		}
+		if(pattern1_type == mQueryTree->getIndex("_"))
 			getPattern_PQLCond(result, var_type, "_");
 		else{
 			vector<int> current_result;
