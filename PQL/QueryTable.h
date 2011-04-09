@@ -1,7 +1,6 @@
 #ifndef QUERYTABLE_H
 #define QUERYTABLE_H
 
-
 #include <iostream>
 #include <utility>
 #include <set>
@@ -10,10 +9,7 @@
 #include "DataStucture.h"
 #include "dataBase.h"
 
-
-
 using namespace std;
-
 
 class QueryTable{
 
@@ -23,35 +19,30 @@ public:
 	
 	void addClause(int type, vector<int> content); // add query to the data structure
 
-	int selectSize(); // return the number of result variables
-	void selectAt(vector<int> &tupleTemp, int index); //take an index and return the result variable at index
+	int selectSize(); //return the number of result variables
+	void selectAt(vector<int> &tupleTemp, int index); //take an index and return the result variable at index index
 
-	int suchThatSize(); //return the number of such that conditions in such that clause
-	void suchThatAt(vector<int> &relCondTemp, int index); //take an indx and return the such that condition in index
+	int suchThatSize(); //return the number of such that conditions in related partitions
+	void suchThatAt(vector<int> &relCondTemp, int index); //take an index and return the related such that condition 
 
-	int withSize(); //return the number of with conditions in the with clause
-	void withAt(vector<int> &attrCondTemp,int index); //take an indx and return the with condition in index.
+	int withSize(); //return the number of with conditions in the related partition
+	void withAt(vector<int> &attrCondTemp,int index);//take an index and return the related with condition 
 
-	int patternSize(); //return the number of pattern expressions in the pattern clause
-	void patternAt(vector<int> &expression, int index); ////take an indx and return the pattern expression in index.
+	int patternSize(); //return the number of pattern expressions in the related partition
+	void patternAt(vector<int> &expression, int index); //take an indx and return the related pattern expression
+	
+	int suchThatUnrelatedSize(); //return the number of such that conditions in Unrelated partitions
+	void suchThatUnrelatedAt(vector<int> &relCondTemp, int index); //take an index and return the Unrelated such that condition
 
-	// newly added
+	int withUnrelatedSize();  //return the number of with conditions in the Unrelated partition
+	void withUnrelatedAt(vector<int> &attrCondTemp, int index); //take an index and return the Unrelated with condition 
+
+	int patternUnrelatedSize(); //return the number of pattern expressions in the Unrelated partition
+	void patternUnrelatedAt(vector<int> &expression, int index); //take an indx and return the Unrelated pattern expression
+
 	int affectsStarSize(); //return the number of affects* clauses in the whole query
 	int affectsSize(); //return the number of affects clauses in the whole query
 	
-
-	int withUnrelatedSize();  
-	void withUnrelatedAt(vector<int> &attrCondTemp, int index);
-
-	int patternUnrelatedSize();
-	void patternUnrelatedAt(vector<int> &expression, int index);
-
-	int suchThatUnrelatedSize();
-	void suchThatUnrelatedAt(vector<int> &relCondTemp, int index);
-
-
-
-
 	// for internal usage
 	vector<int> getQuery();
 	vector < Select > getSelectClause();
