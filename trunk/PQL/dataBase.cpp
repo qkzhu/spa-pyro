@@ -239,23 +239,16 @@ void dataBase::populateNextTables(){
 	table.push_back(PROG_L);		table.push_back(PROG_L); nextTable.push_back(table); table.clear();
 	table.push_back(INT);			table.push_back(PROG_L); nextTable.push_back(table); table.clear();
 	table.push_back(UNDERSCORE);	table.push_back(PROG_L); nextTable.push_back(table); table.clear();
-	table.push_back(STMT);			table.push_back(PROG_L); nextTable.push_back(table); table.clear();
+	
 
 	table.push_back(PROG_L);		table.push_back(INT); nextTable.push_back(table); table.clear();
 	table.push_back(INT);			table.push_back(INT); nextTable.push_back(table); table.clear();
 	table.push_back(UNDERSCORE);	table.push_back(INT); nextTable.push_back(table); table.clear();
-	table.push_back(STMT);			table.push_back(INT); nextTable.push_back(table); table.clear();
-
+	
 	table.push_back(PROG_L);		table.push_back(UNDERSCORE); nextTable.push_back(table); table.clear();
 	table.push_back(INT);			table.push_back(UNDERSCORE); nextTable.push_back(table); table.clear();
 	table.push_back(UNDERSCORE);	table.push_back(UNDERSCORE); nextTable.push_back(table); table.clear();
-	table.push_back(STMT);			table.push_back(UNDERSCORE); nextTable.push_back(table); table.clear();
-
-	table.push_back(PROG_L);		table.push_back(STMT); nextTable.push_back(table); table.clear();
-	table.push_back(INT);			table.push_back(STMT); nextTable.push_back(table); table.clear();
-	table.push_back(UNDERSCORE);	table.push_back(STMT); nextTable.push_back(table); table.clear();
-	table.push_back(STMT);			table.push_back(STMT); nextTable.push_back(table); table.clear();
-
+	
 }
 void dataBase::populateAffectsTables(){
 	vector<int> table;
@@ -349,14 +342,6 @@ void dataBase::populateWithTables(){
 	table.push_back(PROG_L);	table.push_back(PROG_LINE_NUM);	table.push_back(CONSTANT);		table.push_back(VALUE);				withTable.push_back(table); table.clear();
 	table.push_back(CONSTANT);	table.push_back(VALUE);			table.push_back(CONSTANT);		table.push_back(VALUE);				withTable.push_back(table); table.clear();
 
-	table.push_back(STMT);		table.push_back(STMT_NUM);		table.push_back(CONSTANT);		table.push_back(VALUE);				withTable.push_back(table); table.clear();
-	table.push_back(ASSIGN);	table.push_back(STMT_NUM);		table.push_back(CONSTANT);		table.push_back(VALUE);				withTable.push_back(table); table.clear();
-	table.push_back(WHILE);		table.push_back(STMT_NUM);		table.push_back(CONSTANT);		table.push_back(VALUE);				withTable.push_back(table); table.clear();
-	table.push_back(IF);		table.push_back(STMT_NUM);		table.push_back(CONSTANT);		table.push_back(VALUE);				withTable.push_back(table); table.clear();
-	table.push_back(CALL);		table.push_back(STMT_NUM);		table.push_back(CONSTANT);		table.push_back(VALUE);				withTable.push_back(table); table.clear();
-	table.push_back(PROG_L);	table.push_back(PROG_LINE_NUM);	table.push_back(CONSTANT);		table.push_back(VALUE);				withTable.push_back(table); table.clear();
-	table.push_back(CONSTANT);	table.push_back(VALUE);			table.push_back(CONSTANT);		table.push_back(VALUE);				withTable.push_back(table); table.clear();
-
 	table.push_back(STMT);		table.push_back(STMT_NUM);		table.push_back(PROG_L);		table.push_back(PROG_LINE_NUM);				withTable.push_back(table); table.clear();
 	table.push_back(ASSIGN);	table.push_back(STMT_NUM);		table.push_back(PROG_L);		table.push_back(PROG_LINE_NUM);				withTable.push_back(table); table.clear();
 	table.push_back(WHILE);		table.push_back(STMT_NUM);		table.push_back(PROG_L);		table.push_back(PROG_LINE_NUM);				withTable.push_back(table); table.clear();
@@ -364,15 +349,6 @@ void dataBase::populateWithTables(){
 	table.push_back(CALL);		table.push_back(STMT_NUM);		table.push_back(PROG_L);		table.push_back(PROG_LINE_NUM);				withTable.push_back(table); table.clear();
 	table.push_back(PROG_L);	table.push_back(PROG_LINE_NUM);	table.push_back(PROG_L);		table.push_back(PROG_LINE_NUM);				withTable.push_back(table); table.clear();
 	table.push_back(CONSTANT);	table.push_back(VALUE);			table.push_back(PROG_L);		table.push_back(PROG_LINE_NUM);				withTable.push_back(table); table.clear();
-
-	table.push_back(STMT);		table.push_back(STMT_NUM);		table.push_back(CONSTANT);		table.push_back(VALUE);				withTable.push_back(table); table.clear();
-	table.push_back(ASSIGN);	table.push_back(STMT_NUM);		table.push_back(CONSTANT);		table.push_back(VALUE);				withTable.push_back(table); table.clear();
-	table.push_back(WHILE);		table.push_back(STMT_NUM);		table.push_back(CONSTANT);		table.push_back(VALUE);				withTable.push_back(table); table.clear();
-	table.push_back(IF);		table.push_back(STMT_NUM);		table.push_back(CONSTANT);		table.push_back(VALUE);				withTable.push_back(table); table.clear();
-	table.push_back(CALL);		table.push_back(STMT_NUM);		table.push_back(CONSTANT);		table.push_back(VALUE);				withTable.push_back(table); table.clear();
-	table.push_back(PROG_L);	table.push_back(PROG_LINE_NUM);	table.push_back(CONSTANT);		table.push_back(VALUE);				withTable.push_back(table); table.clear();
-	table.push_back(CONSTANT);	table.push_back(VALUE);			table.push_back(CONSTANT);		table.push_back(VALUE);				withTable.push_back(table); table.clear();
-
 
 	table.push_back(PROCEDURE);	table.push_back(PROCNAME);		table.push_back(VAROFSIMPLE);	table.push_back(-1);			withTable.push_back(table); table.clear();
 	table.push_back(PROCEDURE);	table.push_back(PROCNAME);		table.push_back(PROCOFSIMPLE);	table.push_back(-1);			withTable.push_back(table); table.clear();
