@@ -46,7 +46,7 @@ Select a pattern a(_, _"u*v"_) pattern a(_, "u * v"_) pattern a(_, _"u*v");
 6
 5000
 10
-stmt s;
+assign a;
 select a such that affects*(a, 22);
 20
 5000
