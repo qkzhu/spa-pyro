@@ -142,7 +142,7 @@ void QueryTable::addClause(int type, vector<int> content){
 		}
 		else if(SuchThatTemp.relCond.at(0) == AFFECTS_T)
 		{
-			affectsCounter++;
+			affectsStarCounter++;
 		}
 		
 		suchThatClause.push_back(SuchThatTemp);
