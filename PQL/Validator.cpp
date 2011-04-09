@@ -5,12 +5,6 @@
 ///////////////////////////////////////////// Constructor Start///////////////////////////////////////////////////////////
 Validator::Validator(){
 	validTable.populateAllTables();
-
-	//vector<vector<int>> tables;
-
-	//validTable.getAffectsTable(tables);
-
-	//validTable.displayTable(tables);
 }
 
 
@@ -28,7 +22,7 @@ void Validator::checkSelect(QueryTable &table){
 		throw new string("no attributes inside select clause -- throw by Validator::checkSelect ");
 	}	
 	// if BOOLEAN involved, there can only be one child in select clause
-	if(table.getSelectClause().at(0).tuple.at(0) == 60)
+	if(table.getSelectClause().at(0).tuple.at(0) == BOOLEAN)
 	{
 		if(int(table.getSelectClause().size())>1)
 		{
@@ -41,44 +35,53 @@ void Validator::checkSelect(QueryTable &table){
 		if(int(table.getSelectClause().at(i).tuple.size()) == 4)
 		{
 			//check whether the third digit is DOT or not
-			if( table.getSelectClause().at(i).tuple.at(2)!= 156)
+			if( table.getSelectClause().at(i).tuple.at(2)!= DOT)
 			{
 				throw new string ("short of DOT ! -- throw by Validator::checkSelect -- size = 4");
 			}
 			//stmt, call, assign, while, if -- attrName: stmt#?
-			if (table.getSelectClause().at(i).tuple.at(0) == 51 || table.getSelectClause().at(i).tuple.at(0) == 53 || table.getSelectClause().at(i).tuple.at(0) == 54 || table.getSelectClause().at(i).tuple.at(0) == 55 || table.getSelectClause().at(i).tuple.at(0) == 59)
+			if (table.getSelectClause().at(i).tuple.at(0) == STMT || table.getSelectClause().at(i).tuple.at(0) == ASSIGN || table.getSelectClause().at(i).tuple.at(0) == WHILE || table.getSelectClause().at(i).tuple.at(0) == IF || table.getSelectClause().at(i).tuple.at(0) == CALL)
 			{
-				if(table.getSelectClause().at(i).tuple.at(3)!=104)
+				if(table.getSelectClause().at(i).tuple.at(3)!= STMT_NUM)
 				{
-					throw new string ("attribute error in select clause! -- throw by Validator::checkSelect -- size = 4");
+					throw new string ("attribute error in select clause - stmt, call, assign, while, if ! -- throw by Validator::checkSelect -- size = 4");
 				}	
 
 			}
-			//prog_line, constant c -- attrName: ‘value?
-			else if(table.getSelectClause().at(i).tuple.at(0) == 52 || table.getSelectClause().at(i).tuple.at(0) == 56)
+			// constant c -- attrName: value?
+			else if(table.getSelectClause().at(i).tuple.at(0) == CONSTANT)
 			{
-				if(table.getSelectClause().at(i).tuple.at(3)!=101)
+				if(table.getSelectClause().at(i).tuple.at(3) != VALUE)
 				{
-					throw new string ("attribute error in select clause! -- throw by Validator::checkSelect  -- size = 4");
+					throw new string ("attribute error in select clause - constant !  -- throw by Validator::checkSelect  -- size = 4");
 				}
 			}
-			//variable  -- attrName: ‘varName?
-			else if (table.getSelectClause().at(i).tuple.at(0) == 57)
+			//prog_line
+			else if(table.getSelectClause().at(i).tuple.at(0) == PROG_L)
 			{
-				if(table.getSelectClause().at(i).tuple.at(3)!=102)
+				if(table.getSelectClause().at(i).tuple.at(3) != PROG_LINE_NUM)
 				{
-					throw new string ("attribute error in select clause! -- throw by Validator::checkSelect  -- size = 4 ");
+					throw new string ("attribute error in select clause - prog_line ! -- throw by Validator::checkSelect  -- size = 4");
+				}
+			}
+			//variable  -- attrName: varName?
+			else if (table.getSelectClause().at(i).tuple.at(0) == VARIABLE)
+			{
+				if(table.getSelectClause().at(i).tuple.at(3)!= VARNAME)
+				{
+					throw new string ("attribute error in select clause - variable ! -- throw by Validator::checkSelect  -- size = 4 ");
 				}
 		
 			}
 			//procedure  --- attrName: ProcName 
-			else if (table.getSelectClause().at(i).tuple.at(0) == 58)
+			else if (table.getSelectClause().at(i).tuple.at(0) == PROCEDURE)
 			{
-				if(table.getSelectClause().at(i).tuple.at(3)!=103)
+				if(table.getSelectClause().at(i).tuple.at(3)!=PROCNAME)
 				{
-					throw new string ("attribute error in select clause! -- throw by Validator::checkSelect");
+					throw new string ("attribute error in select clause - procedure ! -- throw by Validator::checkSelect");
 				}
 			}
+			
 			else
 			{
 				throw new string ("first prefix undefined in select clause! -- throw by Validator::checkSelect  -- size = 4");
@@ -95,7 +98,7 @@ void Validator::checkSelect(QueryTable &table){
 		}
 		else if(int(table.getSelectClause().at(i).tuple.size()) == 1)
 		{
-			if( table.getSelectClause().at(i).tuple.at(0) !=60)
+			if( table.getSelectClause().at(i).tuple.at(0) != BOOLEAN)
 			{
 				throw new string ("the prefix has to be BOOLEAN in select clause! -- throw by Validator::checkSelect -- size = 1");
 			}
