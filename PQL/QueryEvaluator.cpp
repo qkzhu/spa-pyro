@@ -28,7 +28,7 @@ void QueryEvaluator::evaluate(){
 	
 	if(select[0] == mQueryTree->getIndex("BOOLEAN")) isBoolSelected = true;
 
-	/*//////////////////////////////////////////////////////////////////////////////////////////////////////////FOR DEBUGGING
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////FOR DEBUGGING
 	cout<< "PQL parser checking"<< endl;
 	cout << "Pattern_PQL clauses: " << endl;
 	for(int i=0; i< mQueryTree->patternSize(); i++){
@@ -58,7 +58,7 @@ void QueryEvaluator::evaluate(){
 		cout << endl;
 	}
 	cout << "PQL PARSER checking FINISH." << endl;
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	//QE evaluate the With clause, then pattern clause, and in the end Such That clause.
 	bool unrelated_finish = false;
@@ -771,7 +771,7 @@ void QueryEvaluator::initialAffectsTable(){
 		vector<int> assigns;
 		mPKBObject->ast_GetAllAssign(assigns);
 		for(int i =0 ; i < (int)assigns.size(); i++){
-			int stmt = assigns[i];
+			int stmt = 29;
 			if(i == 0) affectsTable.initial_stmt = stmt;
 			vector<int> affects;
 			vector<int> mods;
@@ -798,6 +798,7 @@ void QueryEvaluator::initialAffectsTable(){
 			}
 		}
 	}
+	
 }
 
 void QueryEvaluator::underScore(int rel, vector<int> clause, int& para1, int& para1_type, int& para2, int& para2_type, int& varCodeEnding){
