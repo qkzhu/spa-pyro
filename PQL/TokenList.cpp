@@ -30,14 +30,14 @@ int TokenList::tokenList(string s)
 		{
 			temp2=tokenBy(temp1[i],a[j]);
 	        mergeVector(temp2);
-		}
+		}//end of inner for loop
 		temp1=fullVector;
 	    fullVector.clear();
 		
-	}
+	}//end of outter for loop
 	fullVector=temp1;
 	return 0;
-}
+}//end if tokenList
 vector<string> TokenList::tokenBy(string s,string deliminator)
 {
 	//cout<<"the string is "<<s<<endl;
@@ -62,7 +62,7 @@ vector<string> TokenList::tokenBy(string s,string deliminator)
       temp.push_back(deliminator);
 	
        pch=tokenizer.next();
-	}
+	}//end of while;
 
 	if(!indicatorT)
 		temp.pop_back();
@@ -81,7 +81,7 @@ vector<string> TokenList::tokenBy(string s,string deliminator)
 	}
 	
 	return temp;
-}
+}//end of tokenBy
 int TokenList::TokenListLength(vector<string> s)
 {
 	int length=0;
