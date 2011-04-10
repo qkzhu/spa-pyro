@@ -465,6 +465,7 @@ void Validator::checkPattern_PQL(QueryTable &table){
 			}
 			else if(int(pattern.size()) == 6) 
 			{
+				//cout<<pattern.at(2)<<endl;
 				if( pattern.at(2) == UNDERSCORE ) // pattern a(_, _"x+y"_ ) ASSIGN 301 UNDERSCORE COMMA PATTERNOFSIMPLE 302
 				{
 					if( pattern.at(3) != COMMA || pattern.at(4) != PATTERNOFSIMPLE )
@@ -481,13 +482,13 @@ void Validator::checkPattern_PQL(QueryTable &table){
 				}
 					
 			}
-			else if(int(pattern.size()) == 7)
+			else if(int(pattern.size()) == 7) // assign("x", "x+y") ->  ASSIGN 301 PATTERNOFSIMPLE(or VARIABLE) 301 COMMA PATTERNOFSIMPLE 302
 			{
-				
-					if( !(pattern.at(2) == PATTERNOFSIMPLE || pattern.at(2) == VAROFSIMPLE) || pattern.at(4) != COMMA || pattern.at(5) != PATTERNOFSIMPLE) // assign("x", "x+y") ->  ASSIGN 301 PATTERNOFSIMPLE 301 COMMA PATTERNOFSIMPLE 302
-					{
-						throw new string("argument error inside pattern clause! -- throw by Validator::checkPattern_PQL - pattern size 7");
-					}
+				//cout<<pattern.at(2)<<endl;
+				if( !(pattern.at(2) == PATTERNOFSIMPLE || pattern.at(2) == VAROFSIMPLE || pattern.at(2) == VARIABLE) || pattern.at(4) != COMMA || pattern.at(5) != PATTERNOFSIMPLE) 
+				{
+					throw new string("argument error inside pattern clause! -- throw by Validator::checkPattern_PQL - pattern size 7");
+				}
 			}
 			else
 			{
