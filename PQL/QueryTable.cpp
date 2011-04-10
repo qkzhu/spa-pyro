@@ -172,8 +172,12 @@ void QueryTable::addClause(int type, vector<int> content){
 	{
 		With withTemp;
 		QueryNode queryNode;
+		int id;
 		withTemp.attrCond = content;
-		withCounter = withCounter + WITHCOUNTER;
+		withCounter = withCounter + 1;
+		id = withCounter+ WITHCOUNTER;
+
+		cout<<"counter: "<<withCounter<<endl;
 
 		if((int) withTemp.attrCond.size() == 7 || (int) withTemp.attrCond.size() == 9)
 		{
@@ -185,8 +189,9 @@ void QueryTable::addClause(int type, vector<int> content){
 			queryNode.argument1 = withTemp.attrCond.at(1);
 			queryNode.prefix2 = withTemp.attrCond.at(5);
 			queryNode.argument2 = withTemp.attrCond.at(6);
-			queryNode.id = withCounter;
+			queryNode.id = id;
 			queryNode.ranking = 0;
+			//push it into map
 			withRelationMap.insert(keyContentPair(queryNode.id,withTemp.attrCond));
 
 
@@ -1446,4 +1451,10 @@ void QueryTable::displayAll(){
 		cout<<endl;
 	}
 	cout<<endl<<endl;
+
+	//cout<<"display HASH_MAP With"<<endl;
+
+	
+
+
 }
