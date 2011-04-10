@@ -84,18 +84,18 @@ void PqlParser::parser(string s,QueryTable *table){
 					break;
 
 
-		   }
+		   }//end of switch
     
 
-		}
+		}//end of if
 
-	}
+	}//end of while loop
 	if (semi==false) throw new string("missing S_COLON in the end \n");
 	if(selectBool==true) throw new string("missing select clause\n");
 
 
 	return;
-}
+}//end of parser function
 
 
 /*
@@ -179,11 +179,11 @@ string PqlParser::selectParser(int type,TokenList *quPointer,QueryTable *tablePo
 							content.push_back(index);
 						    pch=qu->getNextToken();
 					        index=Convertor::getIndex(pch);
-						}
+						}//end of inner if
 
 						table->addClause(SELECT,content);
 						content.clear();
-					}
+					}//end of if
 					else if(index==-1)
 					{
 						throw new string("undefined symbol in select\n");
@@ -193,11 +193,11 @@ string PqlParser::selectParser(int type,TokenList *quPointer,QueryTable *tablePo
 						throw new string(pch+"should not apear in the select or select should not empty\n");
 					}
 
-				 }while(index==COMMA);
+				 }while(index==COMMA);//end of do loop;
 				 if(index!=R_ARROW) { cout<<index; throw new string("missing R_ARROW");}
 				 pch=qu->getNextToken();
 	             index=Convertor::getIndex(pch);
-	  }
+	  }//end of if
 	  else
 	  {
 		  		 prefix=PqlParser::prefix(pch);
@@ -243,7 +243,7 @@ string PqlParser::selectParser(int type,TokenList *quPointer,QueryTable *tablePo
 						throw new string(pch+"should not apear in the select or select should not empty\n");
 					}
 					
-	  }
+	  }//end of else
 
 
 
@@ -360,7 +360,7 @@ string PqlParser::patternParser(int type,TokenList *quPointer,QueryTable *tableP
 
 						break;
 
-					}
+					}//end of switch
 
 				    pch=qu->getNextToken();
 					index=Convertor::getIndex(pch);
@@ -369,7 +369,7 @@ string PqlParser::patternParser(int type,TokenList *quPointer,QueryTable *tableP
 				    content.clear();
 					if(index!=0)
 				       break;
-					}while(true);
+					}while(true);//end of do loop
 
 					return pch;
 	}
@@ -425,9 +425,9 @@ string PqlParser::suchThatParser(int type,TokenList *quPointer,QueryTable *table
 								default:
 
                                  Convertor::insertShortcut(pch,"procOfSimpl");
-								}	
+								}//end of switch	
 					    
-						    }
+						    }//end of if
 							prefix=PqlParser::prefix(pch);
 						
 						 if(index>=USERDEFINED||prefix==INT||index==UNDERSCORE)
@@ -454,8 +454,8 @@ string PqlParser::suchThatParser(int type,TokenList *quPointer,QueryTable *table
 								default:
 								
 								 Convertor::insertShortcut(pch,"varOfSimpl"); break;
-						        }
-					       }
+						        }//end of switch
+					       }//end of if
 					   
 					         prefix=PqlParser::prefix(pch);
 					   	     if(prefix!=0)
@@ -467,7 +467,7 @@ string PqlParser::suchThatParser(int type,TokenList *quPointer,QueryTable *table
 							 if(index!=R_QUOT) throw new string("missing R_QUOT after " +pch+" \n");
 
 							
-				   }
+				   }//end of if
 				table->addClause(type,content);
 				content.clear();
 				 pch=qu->getNextToken();
@@ -499,7 +499,8 @@ string PqlParser::withParser(int type,TokenList *quPointer,QueryTable *tablePoin
 
 
 
-		  do{
+		  do
+		   {
 					 pch=qu->getNextToken();
 					 index=Convertor::getIndex(pch);
 					 prefix=PqlParser::prefix(pch);
@@ -526,7 +527,7 @@ string PqlParser::withParser(int type,TokenList *quPointer,QueryTable *tablePoin
 						 }
 						 pch=qu->getNextToken();
 						 index=Convertor::getIndex(pch);
-					 }
+					 }//end of if
 					 if(index!=EQUAL)
 					 {
 						 throw new string("missing EQUAL after " +pch+" \n");
@@ -574,7 +575,7 @@ string PqlParser::withParser(int type,TokenList *quPointer,QueryTable *tablePoin
 							 throw new string("undefined symbol after DOT in Withclause\n");
 						 }
 						 }
-					 }
+					 }//end of if
 				     table->addClause(type,content);
 				     content.clear();
 					 if(index!=0)
@@ -631,8 +632,8 @@ string PqlParser::declarParser(string type,TokenList *quPointer,QueryTable *tabl
 						{
 							 throw new string("unidentified symbol after the decalred symbol\n");
 						}
-					}while(index==COMMA);
-			  }
+					}while(index==COMMA);//end of do loop
+			  }//end of if
 			  else
 				{
 

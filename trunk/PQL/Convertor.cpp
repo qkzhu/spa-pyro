@@ -47,17 +47,17 @@ int Convertor::update()
 			Convertor::indexToKeyword[index]=keyword;
 			Convertor::keywordToIndex[keyword]=index;
 	
-		}
+		}//end of innner if
 		
-	  }
-	}
+	  }//end of outer if
+	}//end of while loop
     grammerfile.close();
-  }
+  }//end of if;
 
   else cout << "Unable to open file"; 
 
   return 0;
-}
+}//end of update function
 
 
 void Convertor::getAllIndex(vector<int> &indexlist)
@@ -71,8 +71,8 @@ void Convertor::getAllIndex(vector<int> &indexlist)
 		else
 		throw new string("all the index inside the indexToDeclaration should be lager than 300");
     cout << (*it).first << " => " << (*it).second << endl;
-	}
-}
+	}//end of for loop
+}//end of getAllIndex function
  bool Convertor::isDeclared(string token)
  {
 	 bool flag;
@@ -84,7 +84,7 @@ void Convertor::getAllIndex(vector<int> &indexlist)
 	 else
 		 flag=false;
 	 return flag;
- }
+ }//end of isDeclared function
 
 
  bool Convertor::isQuated(string s)
@@ -97,11 +97,11 @@ void Convertor::getAllIndex(vector<int> &indexlist)
 		 
 		 return true;
 		 
-	} 
+	}//end of if; 
 	else
 		 return false;
 
- }
+ }//end of isQuated function
  bool Convertor::isPatterned(string s)
  {
 	 string a="_\"";
@@ -116,17 +116,17 @@ void Convertor::getAllIndex(vector<int> &indexlist)
 		   return true;
 	    else
 		   return false;
-	 }
+	 }//end of if
 	 if(s.size()>=3)
 	 {
 		if(s.substr(0,2)==a||s.substr(s.size()-2,2)==b)
 		   return true;
 	    else
 		   return false;
-	 }
+	 }//end of if
 	 else
 	 return false;
- }
+ }//end of isPatterned function
 bool Convertor::isPureNum(string token)
 {
 	int num;
@@ -147,10 +147,10 @@ bool Convertor::isPureNum(string token)
                     throw new string("illegal defined symbol start with positive int\n");
 				else
 					throw new string("illegal defined symbol start with negative int\n");
-			}
+			}//end of inner if
 			else
 				return false;
-	    }
+	    }//end of outer if
 }
 int Convertor::getIndex(string token)//given a token, looking up for the coressponding index, and return it, 
 	                                   //if not in the maptable and the declarkeywordtable return -1;
@@ -181,7 +181,7 @@ int Convertor::getIndex(string token)//given a token, looking up for the coressp
 			}
 		//	cout<<token<<index<<endl;
 			return index;
-		}
+		}//end of getIndex function
 string Convertor:: getKeyword(int index)//given a index, looking for the coressponding keyword, and return it,
 	                                    //if not in the table,then return string "NULL";
 {
@@ -194,7 +194,7 @@ string Convertor:: getKeyword(int index)//given a index, looking for the coressp
 	else
 				keyword="NULL";
 			return keyword;
-}
+}//end of getKeyword function
 
 string Convertor::getContent(string shortcut)
 {
@@ -207,7 +207,7 @@ string Convertor::getContent(string shortcut)
 
 	return content;
 
-}
+}//end of getContent function
 void Convertor::insertIndex(int i,string s)
 {
 	indexToDeclaration[i]=s;
