@@ -232,11 +232,7 @@ void QueryTable::addClause(int type, vector<int> content){
 		}
 		else if(content.at(0) == ASSIGN) // assign pattern
 		{
-			if( !(int(content.size()) == 5 || int(content.size()) == 6 || int(content.size()) == 7) ) // size is 4 when first argument is _,  size is 5 when first argument is patternOfSimple
-			{
-				patternTemp.argumentNoCorrect = false;
-			}
-			else
+			if(int(content.size()) == 5)
 			{
 				patternTemp.argumentNoCorrect = true;
 				
@@ -248,8 +244,46 @@ void QueryTable::addClause(int type, vector<int> content){
 				queryNode.type = PATTERN;
 				queryNode.ranking = -10;
 				patternRelationMap.insert(keyContentPair(queryNode.id,content));
+			}
+			else if(int(content.size()) == 6)
+			{
+				patternTemp.argumentNoCorrect = true;				
+				queryNode.prefix1 = content.at(0);
+				queryNode.argument1 = content.at(1);
+				queryNode.id = id;
+				queryNode.type = PATTERN;
+				queryNode.ranking = -10;
 
+				if(content.at(2)!=UNDERSCORE)
+				{
+					queryNode.prefix2 = content.at(2);
+					queryNode.argument2 = content.at(3);		
+				}
+				else
+				{
+					queryNode.prefix2 = id;
+					queryNode.argument2 = id;	
+				}
 
+				patternRelationMap.insert(keyContentPair(queryNode.id,content));
+			
+			}
+			else if(int(content.size()) == 7)
+			{				
+				patternTemp.argumentNoCorrect = true;
+		
+				queryNode.prefix1 = content.at(0);
+				queryNode.argument1 = content.at(1);
+				queryNode.prefix2 = content.at(2);
+				queryNode.argument2 = content.at(2);
+				queryNode.id = id;
+				queryNode.type = PATTERN;
+				queryNode.ranking = -10;
+				patternRelationMap.insert(keyContentPair(queryNode.id,content));
+			}
+			else
+			{
+				patternTemp.argumentNoCorrect = false;
 			}	
 		}
 		else if(content.at(0) == WHILE) // while pattern 
@@ -1074,12 +1108,13 @@ void QueryTable::findPartition(){
 	//cout<<endl<<endl;
 	
 
-	//displayAll();
+	displayAll();
+	
 	//display the node list
 	//displayNodeList();
 
 	//display the partition
-	//displayPartitions();
+	displayPartitions();
 
 }
 
