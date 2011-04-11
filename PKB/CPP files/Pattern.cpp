@@ -209,7 +209,7 @@ bool Pattern::patternAssign(int stmtNum, string patternLeft, string patternRight
 	//building a tree to test whether patternRight is correct.
 	Node* node = generateNode(patternRight, ast, varTable);
 
-	string input = stringToPrefix(patternRight);
+	string input = nodeToPrefix(node, ast, varTable);
 	string existing = nodeToPrefix(bottomNodes[1], ast, varTable);
 
 	return match(input, existing, matchFront, matchEnd);
