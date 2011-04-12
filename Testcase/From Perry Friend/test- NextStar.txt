@@ -1,0 +1,22 @@
+4
+cat: All Category
+1
+stmt s;while w1, w2; assign a; call c;
+Select w1 such that Next* (w1, w2)
+6, 23, 27, 33
+5000
+2
+stmt s;while w1, w2; if f; assign a; call c1,c2;
+Select f such that Next* (51,f)
+45,36,17,7
+5000
+3
+stmt s;while w1, w2; if f; assign a; call c1,c2;
+Select c2 such that Next* (10,c2)
+63
+5000
+4
+stmt s;while w1, w2; if f; assign a; call c1,c2;
+Select s such that Next*(71s)
+none
+5000

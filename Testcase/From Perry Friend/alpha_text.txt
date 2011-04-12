@@ -1,0 +1,27 @@
+2
+cat: all category
+1
+program line n;
+Select n such that Next(1, n)
+2
+5000
+2
+assign a1, a2; while w;
+Select w such that Next*(1,w)
+6, 23, 27,33
+5000
+3
+while w1; if if1;
+Select <w1, if1> such that Next(w1,if1)
+33 54, 6 7
+5000
+4
+assign a1;while w1;
+Select a1 such that Next(a1, w1)
+5,22,26,32,97,100,53,58,64
+5000
+5
+stmt s;
+Select s such that Next*(1,s)
+none
+5000

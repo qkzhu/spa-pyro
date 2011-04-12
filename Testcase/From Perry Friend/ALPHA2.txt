@@ -1,0 +1,232 @@
+46
+cat: All Category
+1
+stmt s,s1;
+Select s such that Parent (s, s1) with s1.stmt#=3
+none
+5000
+2
+stmt s,s1;
+Select s such that Parent (s, s1) with s1.stmt#=6
+4
+5000
+3
+stmt s,s1;
+Select s such that Parent (s, s1) with s1.stmt#=16
+14
+5000
+4
+stmt s,s1;
+Select s such that Parent (s, s1) with s1.stmt#=19
+13
+5000
+5
+stmt s;
+Select s such that Parent (s, 3)
+none
+5000
+6
+stmt s;
+Select s such that Parent (s, 6)
+4
+5000
+7
+stmt s;
+Select s such that Parent (s, 16)
+14
+5000
+8
+stmt s;
+Select s such that Parent (s, 19)
+13 
+5000
+9
+stmt s;
+Select s such that Parent (3, s)
+none
+5000
+10
+stmt s;
+Select s such that Parent (6, s)
+7, 8
+5000
+11
+stmt s;
+Select s such that Parent (16, s)
+none
+5000
+12
+stmt s;
+Select s such that Parent (19, s)
+none
+5000
+13
+while w;
+Select w such that Parent (w, 3)
+none
+5000
+14
+while w;
+Select w such that Parent (w, 7)
+none
+5000
+15
+while w;
+Select w such that Parent (w, 10)
+4
+5000
+16
+while w;
+Select w such that Parent (w, 20)
+none
+5000
+17
+while w;
+Select w such that Parent* (w, 5)
+4
+5000
+18
+while w;
+Select w such that Parent* (w, 7)
+4
+5000
+19
+while w;
+Select w such that Parent* (w, 17)
+14
+5000
+20
+while w;
+Select w such that Parent* (w, 20)
+none
+5000
+21
+stmt s;
+Select s such that Follows (s, 1)
+none
+5000
+22
+stmt s;
+Select s such that Follows (s, 4)
+3
+5000
+23
+stmt s;
+Select s such that Follows (s, 7)
+none
+5000
+24
+stmt s;
+Select s such that Follows (s, 10)
+9
+5000
+25
+assign a;
+Select a such that Follows (a, 1)
+none
+5000
+26
+assign a;
+Select a such that Follows (a, 4)
+3
+5000
+27
+assign a;
+Select a such that Follows (a, 6)
+5
+5000
+28
+assign a;
+Select a such that Follows (a, 10)
+9
+5000
+29
+while w;
+Select w such that Follows (2, w)
+none
+5000
+30
+while w;
+Select w such that Follows (3, w)
+4
+5000
+31
+while w;
+Select w such that Follows (10, w)
+none
+5000
+32
+while w;
+Select w such that Follows (13, w)
+none
+5000
+33
+stmt s;
+Select s such that Follows* (s, 1)
+none
+5000
+34
+stmt s;
+Select s such that Follows* (s, 10)
+5,6,9
+5000
+35
+stmt s;
+Select s such that Follows* (s, 11)
+5,6,9,10
+5000
+36
+stmt s;
+Select s such that Follows* (s, 12)
+1,2,3,4
+5000
+37
+if ifs;
+Select ifs such that Follows* (ifs, 4)
+none
+5000
+38
+if ifs;
+Select ifs such that Follows* (ifs, 10)
+6
+5000
+39
+if ifs;
+Select ifs such that Follows* (ifs, 16)
+none
+5000
+40
+if ifs;
+Select ifs such that Follows* (ifs, 21)
+13
+5000
+41
+assign a;
+Select a such that Follows* (a, 5)
+none
+5000
+42
+assign a;
+Select a such that Follows* (a, 9)
+5
+5000
+43
+assign a;
+Select a such that Follows* (a, 12)
+1,2,3
+5000
+44
+assign a;
+Select a such that Follows* (a, 21)
+none
+5000
+45
+assign a;
+Select a pattern a ("x", _)
+1, 5, 15, 18, 24
+5000
+46
+assign a;
+Select a pattern a ("x", _"2*y")
+15
+5000

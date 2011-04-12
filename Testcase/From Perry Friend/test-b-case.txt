@@ -1,0 +1,77 @@
+15
+cat: all category
+1
+stmt s1,s2; 
+Select <s1,s2> such that Follows(s1,s2) and Modifies(s1, "x")	
+1 2,3 7
+5000
+2
+assign a; while w; 
+Select <w,a> such that Uses(w,"y") such that Parent(w,a)	
+4 5
+5000
+3
+if if1; variable uses1; 
+Select <if1,uses1> with if1.stmt# = 3 such that Uses(if1,uses1)	
+3 x,3 z,3 y
+5000
+4
+procedure p; procedure q; 
+Select <p,q,p> such that Calls (p,q) with p.procName = "x"	
+x p x
+5000
+5
+assign a1; constant c; 
+Select <a1,c> with a1.stmt# = c.value and c.value = 2	
+2 2
+5000
+6
+assign a1,a2; 
+Select <a1,a2> such that Follows(a1,2) and Follows(a2,10)	
+1 9
+5000
+7
+constant c; while w; assign a; 
+Select <w,a,c> such that Parent(w,a) with c.value = 5	
+4 5 5,7 8 5
+5000
+8
+procedure p1,p2; variable v; 
+Select p1 with p1.procName = v.varName and v.varName = p2.procName and p2.procName = "x"	
+x
+5000
+9
+assign a; stmt s; 
+Select <a,s> such that Modifies(a,"x") and Follows*(1,s) such that Parent*(s,a)	
+5 3
+5000
+10
+if f; assign a;
+Select <a,f> with f.stmt# = 1 such that Parent*(f,a)	
+none
+5000
+11
+assign a; 
+Select a such that Modifies(a,"x") and Modifies(a,"x") such that Modifies(a,"x")	
+1,5
+5000
+12
+procedure p; assign a; variable v; 
+Select <p,a,v> such that Calls("x",p) pattern a(_,_"z"_) such that Parent*(3,a)	
+p 5 x,p 5 y,p 5 z
+5000
+13
+variable v; assign a; 
+Select <a,v> with v.varName = "x" pattern a(v,_)	
+1 x,5 x
+5000
+14
+while w; assign a; 
+Select <w,a> such that Parent(w, a) pattern a(_, "z"_)	
+4 5,7 8
+5000
+15
+if f; assign a; variable v;
+Select <f,a,v> such that Parent*(f, a) with v.varName = "x" pattern a(v, _)	
+3 5 x
+5000

@@ -1,0 +1,1 @@
+procedure p {  x = i+1;  y = x + x;  z = x  * z;  y = y*x*  4 + z;  if yy then {    if xx then {      while ww {        w = y - 8;      }    }    else {      x = w-y*9;    }  }  else {    while ii {      ii = ii - 11;    }  }}

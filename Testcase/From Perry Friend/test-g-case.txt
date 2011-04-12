@@ -1,0 +1,47 @@
+9
+Cat: All category
+1
+procedure p; 
+Select p such that Calls*("p1",p)	
+p2,p3,p4
+5000
+2
+procedure p; 
+Select p such that Calls("p1",p)	
+p2
+5000
+3
+procedure p; 
+Select p such that Calls(p,"p3")	
+p2,p4
+5000
+4
+
+Select BOOLEAN such that Calls(_,_)	
+true
+5000
+5
+procedure p1,p2; 
+Select <p1,p2> such that Calls*(p1,p2)	
+p1 p2,p2 p4,p2 p3,p1 p4,p1 p3,p4 p3
+5000
+6
+procedure p; 
+Select BOOLEAN such that Calls(p,p)	
+false
+5000
+7
+
+Select BOOLEAN such that Calls*("p3","p1")	
+false
+5000
+8
+call c; stmt s; procedure p; 
+Select <s, c, p> such that Calls*(p, "p3") such that Parent(s,c) with c.procName = p.procName	
+3 4 p4
+5000
+9
+call c; assign a; procedure p; 
+Select <a,c,p> such that Follows*(a,c) with p.procName = c.procName such that Calls*(p,"p3") pattern a("x", _)
+1 2 p2
+5000

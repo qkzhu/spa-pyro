@@ -1,0 +1,5 @@
+1
+variable v; stmt s; 
+Select s such that Uses(s,v)	
+none
+5000
