@@ -1451,99 +1451,7 @@ void  QueryTable::addToTable(vector<Partitions> &group,vector<vector<int>> &with
 
 }
 
-void QueryTable::addToRelatedTable(){
-	
-	vector<int> tempRelations;	
-	for(int i = 0; i<int(relatedNodes.size());i++)
-	{
-		
-		hash_map<int, vector<int>>::iterator it;
-
-		for(int j=0;j<int(relatedNodes.at(i).size());j++)
-		{
-			if(relatedNodes.at(i).at(j).type == WITH)
-			{
-				
-				//get it from with hash Map
-				it = withRelationMap.find(relatedNodes.at(i).at(j).id);
-
-				tempRelations = it->second;		
-				relatedWith.push_back(tempRelations);
-				
-			}
-			//the relation is pattern 
-			else if(relatedNodes.at(i).at(j).type == PATTERN)
-			{
-				it = patternRelationMap.find(relatedNodes.at(i).at(j).id);
-
-				tempRelations = it->second;		
-				relatedPattern.push_back(tempRelations);
-			}
-			//the relation is such that relation
-			else if(relatedNodes.at(i).at(j).type >=5 && relatedNodes.at(i).at(j).type <=16)
-			{
-				//first argument is UNDERSCORE and the second is not UNDERSCORE
-				if( relatedNodes.at(i).at(j).prefix1 == UNDERSCORE && relatedNodes.at(i).at(j).prefix1 != UNDERSCORE)
-				{
-					tempRelations.push_back( relatedNodes.at(i).at(j).type);
-					tempRelations.push_back( relatedNodes.at(i).at(j).argument1);
-					tempRelations.push_back( relatedNodes.at(i).at(j).prefix2);
-					tempRelations.push_back( relatedNodes.at(i).at(j).argument2);
-
-					relatedSuchThat.push_back(tempRelations);
-					
-				}
-				//first argument is not UNDERSCORE and the second is UNDERSCORE
-				else if( relatedNodes.at(i).at(j).prefix1 != UNDERSCORE && relatedNodes.at(i).at(j).prefix2 == UNDERSCORE)
-				{
-					tempRelations.push_back( relatedNodes.at(i).at(j).type);
-					tempRelations.push_back( relatedNodes.at(i).at(j).prefix1);
-					tempRelations.push_back( relatedNodes.at(i).at(j).argument1);
-					tempRelations.push_back( relatedNodes.at(i).at(j).argument2);
-
-					relatedSuchThat.push_back(tempRelations);
-					
-				}
-				// both arguments are not UNDRESCORE
-				else if(relatedNodes.at(i).at(j).prefix1 != UNDERSCORE && relatedNodes.at(i).at(j).prefix2 != UNDERSCORE)
-				{
-					tempRelations.push_back( relatedNodes.at(i).at(j).type);
-					tempRelations.push_back( relatedNodes.at(i).at(j).prefix1);
-					tempRelations.push_back( relatedNodes.at(i).at(j).argument1);
-					tempRelations.push_back( relatedNodes.at(i).at(j).prefix2);
-					tempRelations.push_back( relatedNodes.at(i).at(j).argument2);
-
-					relatedSuchThat.push_back(tempRelations);
-					
-				}
-				else
-				{
-				
-					throw new string("no such type can be added into the unRelatedSuchThat Table --  throw by QueryTable::addToUnrelatedTable!");
-				}
-				
-			
-			}
-			else
-			{
-				throw new string("The type is undefined in relatedGroup -- throw by QueryTable::addToUnrelatedTable!");
-			
-			}
-			tempRelations.clear();
-		
-		}	
-	}
-}
-
-
 void QueryTable::filterSameRelation(){
-	/*
-	cout<<"QueryNodeList: "<<endl;
-	for(int i =0;i<int(queryNodeList.size());i++)
-	{
-		cout<<queryNodeList.at(i).type<<" "<<queryNodeList.at(i).prefix1<<" "<<queryNodeList.at(i).argument1<<" "<<queryNodeList.at(i).prefix2<<" "<<queryNodeList.at(i).argument2<<endl;
-	}
-	*/
 
 	vector<QueryNode> result = queryNodeList;
 	for(int i =0;i<int(queryNodeList.size());i++)
@@ -1561,14 +1469,7 @@ void QueryTable::filterSameRelation(){
 		}
 	}
 	queryNodeList = result;
-	/*
-	cout<<"flitered QueryNodeList: "<<endl;
 
-	for(int i =0;i<int(queryNodeList.size());i++)
-	{
-		cout<<queryNodeList.at(i).type<<" "<<queryNodeList.at(i).prefix1<<" "<<queryNodeList.at(i).argument1<<" "<<queryNodeList.at(i).prefix2<<" "<<queryNodeList.at(i).argument2<<endl;
-	}
-	*/
 
 }
 
