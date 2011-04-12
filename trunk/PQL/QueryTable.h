@@ -54,6 +54,7 @@ public:
 
 	
 	//*************** For Optimizer Start ****************//	
+
 	void displayAll();	// display all the tables
 	void displayNodeList(); // display all the node
 	void displayPartitions(); // display all the partitions
@@ -63,16 +64,16 @@ public:
 	void findPartitionTwo(); // find all related partitions
 	void findPartitionFour(); // find all unrelated partitions
 
-	void calculatedPartitionMarks(); // calculate the partition mark according to certain criteria
-
-	void calculatePartitionMark(const vector<vector<QueryNode>> &nodeList, vector<Partitions> &group);
-
+	 
+	void calculatePartitionMark(const vector<vector<QueryNode>> &nodeList, vector<Partitions> &group);// calculate the partition mark according to certain criteria
 	void putIntoPartitionGroups();	// put the partitions with total mark into the groups 
 
 	static bool myComparePartition(Partitions par1, Partitions par2); // compare function used to sort partitions in partition group
 	static bool myCompareRelation(QueryNode node1, QueryNode node2); // compare function used to sort relations within a partition
 
+	
 	void sortPartitions(vector<Partitions> &partition); // sort partition in partition group
+	void initialRelationRanking(vector<QueryNode> &queryNodes); // initial rank the relation
 	void sortRelations(vector<QueryNode> &queryNodes); // sort relations for a single partition 
 	void sortRelationsPartitions(vector<Partitions> &partition); // sort relations for all partition
 	
@@ -80,10 +81,9 @@ public:
     //	sourceExistNode is the set of Nodes for comparision
 	void findPartitionThree(set<int> &sourceExistNode, vector<QueryNode> &sourceQueryNode, vector<QueryNode> &nodeListContainer);
 
-	void addToTable(vector<Partitions> &group,vector<vector<int>> &withTable, vector<vector<int>> &patternTable, vector<vector<int>> &suchThatTable);	
-
-	void addToUnrelatedTable(); // add sorted unrelated nodes to the unrelated table
+	void addToTable(vector<Partitions> &group,vector<vector<int>> &withTable, vector<vector<int>> &patternTable, vector<vector<int>> &suchThatTable, int type);	
 	void addToRelatedTable(); // add sorted related nodes to the related table
+	
 	//*************** For Optimizer End ****************//
 
 
