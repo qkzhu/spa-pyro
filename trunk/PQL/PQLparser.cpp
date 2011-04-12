@@ -39,7 +39,7 @@ void PqlParser::parser(string s,QueryTable *table){
 			{
 				
 				index=Convertor::getIndex(pch);
-		        cout<<"---"<<pch<<index<<"---"<<endl;	
+		        	
 				switch(index)
 				{
 					case SELECT:
