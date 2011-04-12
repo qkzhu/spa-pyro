@@ -29,7 +29,12 @@ void Validator::checkSelect(QueryTable &table){
 	}
 
 	for(int i =0; i<size;i++)
-	{
+	{		
+		//cout<<"table.getSelectClause().at(i).tuple.at(1)" <<table.getSelectClause().at(i).tuple.at(1)<<endl;
+		//cout<<"table.getSelectClause().at(i).tuple.at(2)" <<table.getSelectClause().at(i).tuple.at(2)<<endl;
+		//cout<<"table.getSelectClause().at(i).tuple.at(3)" <<table.getSelectClause().at(i).tuple.at(3)<<endl;
+
+
 		if(int(table.getSelectClause().at(i).tuple.size()) == 4)
 		{
 			//check whether the third digit is DOT or not
@@ -49,7 +54,8 @@ void Validator::checkSelect(QueryTable &table){
 			//call -- attrName: stmt# and procName
 			else if(table.getSelectClause().at(i).tuple.at(0) == CALL )
 			{
-				if(table.getSelectClause().at(i).tuple.at(3)!= STMT_NUM || table.getSelectClause().at(i).tuple.at(3)!= PROCNAME)
+
+				if(table.getSelectClause().at(i).tuple.at(3)!= STMT_NUM  && table.getSelectClause().at(i).tuple.at(3)!= PROCNAME)
 				{
 					throw new string ("attribute error in select clause - call  -- throw by Validator::checkSelect -- size = 4");
 				}	
