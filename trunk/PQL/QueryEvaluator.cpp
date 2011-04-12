@@ -154,7 +154,6 @@ void QueryEvaluator::evaluate(){
 
 void QueryEvaluator::evaluateWith(bool& unrelated_finish, int& last_point, int threshold){
 	//Start evaluating With clauses 
-	int start = 0;
 	for(; last_point < threshold; last_point++){
 		vector<int> clause;
 		if(!unrelated_finish)
@@ -267,10 +266,9 @@ void QueryEvaluator::evaluateWith(bool& unrelated_finish, int& last_point, int t
 		int same1Tuple1 = 0;
 		int same2Tuple1 = 0;
 		int numOfCommonElement = 0;
-		if(it == mgTupleIndexing.end())
+		if(it == mgTupleIndexing.end()){
 			mgTupleIndexing.push_back(p1_name);
-		else
-		{
+		}else{
 			for(vector<int>::iterator count_t = mgTupleIndexing.begin(); count_t<=it; count_t++){
 				same1Tuple1++;
 			}
@@ -295,8 +293,7 @@ void QueryEvaluator::evaluateWith(bool& unrelated_finish, int& last_point, int t
 			return;
 		}
 
-		joinTuples(evalTuple, with_result, numOfCommonElement, same1Tuple1, same2Tuple1, start);
-		start++;
+		joinTuples(evalTuple, with_result, numOfCommonElement, same1Tuple1, same2Tuple1, last_point);
 
 		if(evalTuple.empty()){
 			if(isBoolSelected)
@@ -309,7 +306,6 @@ void QueryEvaluator::evaluateWith(bool& unrelated_finish, int& last_point, int t
 
 void QueryEvaluator::evaluatePattern(bool& unrelated_finish, int& last_point, int threshold){
 	//Pattern_PQL Evaluation Start
-	int start = 0;
 	for(; last_point < threshold; last_point++){
 		vector<int> clause;
 		if(!unrelated_finish)
@@ -358,8 +354,8 @@ void QueryEvaluator::evaluatePattern(bool& unrelated_finish, int& last_point, in
 			}
 		//pattern clause read-in finish//
       
-		vector<int> pattern_result;
-		evalPattern_PQL(evalTuple, pattern_result, var, var_type, pattern1_type, pattern1, pattern2);
+		vector<vector<int> > pattern_result;
+		evalPattern_PQL(pattern_result, var, var_type, pattern1_type, pattern1, pattern2);
 		
 		if(pattern_result.empty()){
 			if(isBoolSelected)
@@ -368,51 +364,52 @@ void QueryEvaluator::evaluatePattern(bool& unrelated_finish, int& last_point, in
 			return;
 		}
 
-		if(mgTupleIndexing.size() == 0){
-			mgTupleIndexing.push_back(var);
-			for(int i = 0; i < (int)pattern_result.size(); i++){
-				vector<int> tmp_insertion;
-				tmp_insertion.push_back(mQueryTree->getIndex("integer"));
-				tmp_insertion.push_back(pattern_result[i]);
-				evalTuple.push_back(tmp_insertion);
+		int it;
+		int same1Tuple1 = 0;
+		int same2Tuple1 = 0;
+		int numOfCommonElement = 0;
+		if(!mgTupleIndexing.empty()){
+			it = find_ele(mgTupleIndexing, var);
+			if(it == (int)mgTupleIndexing.size())
+				mgTupleIndexing.push_back(var);
+			else
+			{
+				same1Tuple1 = it;
+				numOfCommonElement = 2;
+			}
+			it = find_ele(mgTupleIndexing, pattern1);
+			if(it == (int)mgTupleIndexing.size()){
+				if(pattern1_type == mQueryTree->getIndex("_") || pattern1 == mQueryTree->getIndex("varOfSimpl") || pattern1 == mQueryTree->getIndex("patternofsimpl")){
+					pattern1 = varCodeEnding;
+					mgTupleIndexing.push_back(varCodeEnding++);
+				}else mgTupleIndexing.push_back(pattern1);
+			}else{
+				for(int i = 0; i<=it; i++){
+					same2Tuple1++;
+				}
+				numOfCommonElement = numOfCommonElement+2;
 			}
 		}else{
-			int it = find_ele(mgTupleIndexing, var);
-			if(it == (int)mgTupleIndexing.size()){
-				mgTupleIndexing.push_back(var);
-				vector<vector<int> > new_tmp_eva_tuple;
-				for(int row = 0; row < (int)evalTuple.size(); row++){
-					for(int indx = 0; indx < (int)pattern_result.size(); indx++){
-						vector<int> tmp_pattern_vector;
-						tmp_pattern_vector.insert(tmp_pattern_vector.end(), evalTuple[row].begin(), evalTuple[row].end());
-						tmp_pattern_vector.push_back(mQueryTree->getIndex("integer"));
-						tmp_pattern_vector.push_back(pattern_result[indx]);
-						new_tmp_eva_tuple.push_back(tmp_pattern_vector);
-					}
-				}
-				evalTuple = new_tmp_eva_tuple;
-			}else{
-				for(int row = 0; row < (int)evalTuple.size(); row++){
-					int entry = evalTuple[row][2*it+1];
-					int found = find_ele(pattern_result, entry);
-					if(found == (int)pattern_result.size())
-						evalTuple.erase(evalTuple.begin() + row);
-				}
-			}
+			numOfCommonElement = 0;
+			mgTupleIndexing.push_back(var);
+			if(pattern1_type == mQueryTree->getIndex("_") || pattern1 == mQueryTree->getIndex("varOfSimpl") || pattern1 == mQueryTree->getIndex("patternofsimpl")){
+				pattern1 = varCodeEnding;
+				mgTupleIndexing.push_back(varCodeEnding++);
+			}else mgTupleIndexing.push_back(pattern1);
 		}
-		start++;
+		
+		joinTuples(evalTuple, pattern_result, numOfCommonElement, same1Tuple1, same2Tuple1, last_point);
 
 		if(evalTuple.empty()){
 			if(isBoolSelected)
 				mResult.setBoolValue(false);
 			else mResult.addInType(-1);
-		}
+		}	
 	}//Pattern_PQL Evaluation Finish
 }
 
 void QueryEvaluator::evaluateSuchThat(bool& unrelated_finish, int& last_point, int threshold){
 	//Start evaluating SuchThat clauses
-	int start = 0;
 	if(last_point == threshold) unrelated_finish = true;
 	for(; last_point < threshold; last_point++)
 	{
@@ -548,23 +545,18 @@ void QueryEvaluator::evaluateSuchThat(bool& unrelated_finish, int& last_point, i
 				if(para1_type == mQueryTree->getIndex("integer") || para1_type == mQueryTree->getIndex("varOfSimpl") || para1_type == mQueryTree->getIndex("procOfSimpl"))
 					mgTupleIndexing.push_back(varCodeEnding++);
 				else mgTupleIndexing.push_back(para1);
-			else
-			{
-				for(int i = 0; i<=it; i++){
-					same1Tuple1++;
-				}
+			else{
+				same1Tuple1 = it;
 				numOfCommonElement = 2;
 			}
 			it = find_ele(mgTupleIndexing, para2);
 			if(it == (int)mgTupleIndexing.size())
-				if(para2_type == mQueryTree->getIndex("integer") || para2_type == mQueryTree->getIndex("varOfSimpl") || para2_type == mQueryTree->getIndex("procOfSimpl"))
+				if(para2_type == mQueryTree->getIndex("integer") || para2_type == mQueryTree->getIndex("varOfSimpl") || para2_type == mQueryTree->getIndex("procOfSimpl")){
+					para2 = varCodeEnding;
 					mgTupleIndexing.push_back(varCodeEnding++);
-				else mgTupleIndexing.push_back(para2);
-			else
-			{
-				for(int i = 0; i<=it; i++){
-					same2Tuple1++;
-				}
+				}else mgTupleIndexing.push_back(para2);
+			else{
+				same2Tuple1 = it;
 				numOfCommonElement = numOfCommonElement+2;
 			}
 
@@ -945,13 +937,14 @@ void QueryEvaluator::underScore(int rel, vector<int> clause, int& para1, int& pa
 	}else throw new string("QueryEvaluator::underScore, no such relation type!");  //do nothing 
 }
 
-void QueryEvaluator::evalPattern_PQL(vector<vector<int> >& result_tuple, vector<int>& result, int var, int var_type, int pattern1_type, int pattern1, int pattern2){
+void QueryEvaluator::evalPattern_PQL(vector<vector<int> >& result, int var, int var_type, int pattern1_type, int pattern1, int pattern2){
 	int indx = find_ele(mgTupleIndexing, var);
 	int found = 0;
+	vector<int> var_candidates;
 	if(indx != (int)mgTupleIndexing.size()){
 		found = 1;
-		for(int i = 0; i < (int)result_tuple.size(); i++){
-			result.push_back(result_tuple[i][2*indx+1]);
+		for(int i = 0; i < (int)evalTuple.size(); i++){
+			var_candidates.push_back(evalTuple[i][2*indx+1]);
 		}
 	}
 
@@ -963,46 +956,75 @@ void QueryEvaluator::evalPattern_PQL(vector<vector<int> >& result_tuple, vector<
 	}
 
 	if(var_type == mQueryTree->getIndex("assign")){
-		if(found == 0)
-			mPKBObject->ast_GetAllAssign(result);
-		if(pattern1_type == mQueryTree->getIndex("_"))
-			getPattern_PQLAssign(result, "_", mQueryTree->getContent(pattern2));
-		else{ 
-			vector<int> current_result;
-			for(int i = 0; i < (int)pattern1_candidates.size(); i++){
-				vector<int> tmp_result = result;
-				//cout << PKB_varDecode(pattern1_candidates[i]) << endl;
-				//cout << mQueryTree->getContent(pattern2) << endl;
-				getPattern_PQLAssign(tmp_result, PKB_varDecode(pattern1_candidates[i]), mQueryTree->getContent(pattern2));
-				for(int k = 0; k < (int)tmp_result.size(); k++){
-					int found_ele = find_ele(current_result, tmp_result[k]);
-					if(found_ele == (int)current_result.size())
-						current_result.push_back(tmp_result[k]);
+		if(found == 0){
+			mPKBObject->ast_GetAllAssign(var_candidates);
+		}
+		if(pattern1_type == mQueryTree->getIndex("_")){
+			for(int i = 0; i < (int)var_candidates.size(); i++){
+				if(mPKBObject->patternAssign(var_candidates[i], "_", mQueryTree->getContent(pattern2))){
+					vector<int> tmp;
+					tmp.push_back(mQueryTree->getIndex("integer"));
+					tmp.push_back(var_candidates[i]);
+					tmp.push_back(mQueryTree->getIndex("varofsimpl"));
+					tmp.push_back(pattern1_type);
+					result.push_back(tmp);
 				}
 			}
-			result = current_result;
+		}else{ 
+			vector<vector<int> > tmp_result;
+			for(int i = 0; i < (int)pattern1_candidates.size(); i++){
+				for(int k = 0; k < (int)result.size(); k++){
+					int stmt = result[k][0];
+					string pattern1_s = PKB_varDecode(pattern1_candidates[i]);
+					string pattern2_s = mQueryTree->getContent(pattern2);
+					if(mPKBObject->patternAssign(stmt, pattern1_s, pattern2_s)){
+						vector<int> tmp;
+						tmp.push_back(mQueryTree->getIndex("integer"));
+						tmp.push_back(stmt);
+						tmp.push_back(mQueryTree->getIndex("varofsimpl"));
+						tmp.push_back(pattern1_candidates[i]);
+						tmp_result.push_back(tmp);
+					}
+				}
+			}
+			result = tmp_result;
 		}
 	}else if(var_type == mQueryTree->getIndex("if") || var_type == mQueryTree->getIndex("while")){
 		if(found == 0){
 			if(var_type == mQueryTree->getIndex("if"))
-				mPKBObject->ast_GetAllIf(result);
+				mPKBObject->ast_GetAllIf(var_candidates);
 			else if(var_type == mQueryTree->getIndex("while"))
-				mPKBObject->ast_GetAllWhile(result);
+				mPKBObject->ast_GetAllWhile(var_candidates);
 		}
-		if(pattern1_type == mQueryTree->getIndex("_"))
-			getPattern_PQLCond(result, var_type, "_");
-		else{
+		if(pattern1_type == mQueryTree->getIndex("_")){
+			for(int i = 0; i < (int)var_candidates.size(); i++){
+				vector<int> tmp;
+				tmp.push_back(mQueryTree->getIndex("integer"));
+				tmp.push_back(var_candidates[i]);
+				tmp.push_back(mQueryTree->getIndex("varofsimpl"));
+				tmp.push_back(pattern1_type);
+				result.push_back(tmp);
+			}
+		}else{
 			vector<int> current_result;
 			for(int i = 0; i < (int)pattern1_candidates.size(); i++){
-				vector<int> tmp_result = result;
-				getPattern_PQLCond(tmp_result, var_type, PKB_varDecode(pattern1_candidates[i]));
-				for(int k = 0; k < (int)tmp_result.size(); k++){
-					int found_ele = find_ele(current_result, tmp_result[k]);
-					if(found_ele == (int)current_result.size())
-						current_result.push_back(tmp_result[k]);
+				for(int k = 0; k < (int)var_candidates.size(); k++){
+					int pattern1_code = pattern1_candidates[i];
+					int stmt = var_candidates[k];
+					int stmt_left;
+					if(var_type == mQueryTree->getIndex("if"))
+						stmt_left = mPKBObject->condIf(stmt);
+					else stmt_left = mPKBObject->condWhile(stmt);
+					if(pattern1_code == stmt_left){
+						vector<int> tmp;
+						tmp.push_back(mQueryTree->getIndex("integer"));
+						tmp.push_back(stmt);
+						tmp.push_back(mQueryTree->getIndex("varofsimpl"));
+						tmp.push_back(pattern1_code);
+						result.push_back(tmp);
+					}
 				}
 			}
-			result = current_result;
 		}
 	}else 
 		throw new string("QueryEvaluator::evalPattern_PQL, no such variable type!");
@@ -1614,40 +1636,6 @@ void QueryEvaluator::getAffectsStar(int up, vector<int>& result, int para){
 			}
 		}
 	}
-}
-
-void QueryEvaluator::getPattern_PQLAssign(vector<int>& result, string patternLeft, string patternRight){
-	vector<int> tmp;
-	for(int i = 0; i < (int)result.size(); i++){
-		bool has_pattern = mPKBObject->patternAssign(result[i], patternLeft, patternRight);
-		if(has_pattern)
-			tmp.push_back(result[i]);
-	}
-	result.clear();
-	result.insert(result.end(), tmp.begin(), tmp.end());
-}
-
-void QueryEvaluator::getPattern_PQLCond(vector<int>& result, int type, string patternCond){
-	if(patternCond.compare("_") == 0)
-		return;
-
-	vector<int> tmp;
-	for(int i = 0; i < (int)result.size(); i++){
-		if(type == mQueryTree->getIndex("if")){
-			int p1 = mPKBObject->condIf(result[i]);
-			int p2 = PKB_varEncode(patternCond);
-			if(p1 == p2)
-				tmp.push_back(result[i]);
-		}else if(type == mQueryTree->getIndex("while")){
-			int p1 = mPKBObject->condWhile(result[i]);
-			int p2 = PKB_varEncode(patternCond);
-			if(p1 == p2)
-				tmp.push_back(result[i]);
-		}else
-			throw new string("QueryEvaluator::getPattern_PQLCond, no such type!");
-	}
-	result.clear();
-	result.insert(result.end(), tmp.begin(), tmp.end());
 }
 
 

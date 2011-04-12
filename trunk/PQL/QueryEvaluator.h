@@ -81,8 +81,8 @@ private:
 	//remove unpaired tuple in relation result when the relation of same parameter, like ***(a, a), is evaluated
 	void removeInequal(vector<vector<int> >& tuple);
 	
-	//The result_tuple is passed down for optimisation purpose, result is initially empty
-	void evalPattern_PQL(vector<vector<int> >& result_tuple, vector<int>& result, int var, int var_type, int pattern1_type, int pattern1, int pattern2);
+	//result is initially empty, it always result returns tuple with the code of the first variable code;
+	void evalPattern_PQL(vector<vector<int> >& result, int var, int var_type, int pattern1_type, int pattern1, int pattern2);
 
 	//read such that clause, deal with _ specifically
 	void underScore(int rel, vector<int> clause, int& para1, int& para1_type, int& para2, int& para2_type, int& varCodeEnding);
@@ -111,11 +111,6 @@ private:
 	//If up == UP, means search from down to up
 	void getAffectsStar(int up, std::vector<int>& result, int para);
 	void getAffects(int up, std::vector<int>& result, int para);
-
-	//For evaluating pattern
-	//result passed in is initially filled with all candidates ///////////////IMPORTANT
-	void getPattern_PQLAssign(std::vector<int>& result, string patternLeft, string patternRight);
-	void getPattern_PQLCond(std::vector<int>& result, int type, string patternCond);
 
 	//For evaluation other iteration 1 relations
 	void evalFollows(int star, std::vector<std::vector<int> >& result, const std::vector<int>& para1, const std::vector<int>& para2);
