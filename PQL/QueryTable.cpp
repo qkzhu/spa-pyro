@@ -145,6 +145,11 @@ void QueryTable::addClause(int type, vector<int> content){
 		
 		suchThatClause.push_back(SuchThatTemp);
 
+		if(SuchThatTemp.argumentNoCorrect)
+		{
+		
+		}
+
 		//for Optimizer **************** add to the queryNodeList
 		queryNodeList.push_back(queryNode);
 
@@ -1251,6 +1256,8 @@ bool QueryTable::myCompareRelation(QueryNode node1, QueryNode node2){
 }
 
 void QueryTable::findPartition(){
+
+	filterSameRelation();
 	
 	// find all the related nodes and put them into the related group
 	findPartitionOne();
@@ -1282,6 +1289,7 @@ void QueryTable::findPartition(){
 
 	//cout<<endl<<endl;
 	
+	
 
 	displayAll();
 	
@@ -1289,7 +1297,7 @@ void QueryTable::findPartition(){
 	//displayNodeList();
 
 	//display the partition
-	displayPartitions();
+	//displayPartitions();
 
 }
 
@@ -1525,10 +1533,55 @@ void QueryTable::addToRelatedTable(){
 }
 
 void QueryTable::filterSameRelation(){
-	for(int i=0;i<int();i++)
-	{
 	
+	/*
+	cout<<"QueryNodeList: "<<endl;
+	for(int i =0;i<int(queryNodeList.size());i++)
+	{
+		cout<<queryNodeList.at(i).type<<" "<<queryNodeList.at(i).prefix1<<" "<<queryNodeList.at(i).argument1<<" "<<queryNodeList.at(i).prefix2<<" "<<queryNodeList.at(i).argument2<<endl;
 	}
+	*/
+	vector<int> samePosition;
+	
+	for(int i =0;i<int(queryNodeList.size());i++)
+	{
+		for(int j = i+1;j<int(queryNodeList.size());j++)
+		{
+			if(queryNodeList.at(i).type != WITH && queryNodeList.at(i).type != PATTERN)
+			{
+				if(queryNodeList.at(i).type == queryNodeList.at(j).type)
+				{
+					if(queryNodeList.at(i).prefix1 == queryNodeList.at(j).prefix1 && queryNodeList.at(i).prefix2 == queryNodeList.at(j).prefix2 )
+					{
+					   if(queryNodeList.at(i).argument1 == queryNodeList.at(j).argument1 && queryNodeList.at(i).argument2 == queryNodeList.at(j).argument2) 
+					   {
+						
+						   samePosition.push_back(i);
+					   }					
+					}
+				}
+			}
+		}
+	}
+	
+	for(int i =0;i<int(samePosition.size());i++)
+	{
+		queryNodeList.erase(queryNodeList.begin()+samePosition.at(i));
+		for(int k=i+1;k<int(samePosition.size());k++)
+		{
+			samePosition.at(k)--;
+
+		}
+	}
+	
+	/*
+	cout<<"flitered QueryNodeList: "<<endl;
+
+	for(int i =0;i<int(queryNodeList.size());i++)
+	{
+		cout<<queryNodeList.at(i).type<<" "<<queryNodeList.at(i).prefix1<<" "<<queryNodeList.at(i).argument1<<" "<<queryNodeList.at(i).prefix2<<" "<<queryNodeList.at(i).argument2<<endl;
+	}
+	*/
 
 }
 /////////////////////////////// OPTIMIZER END ///////////////////////////////
