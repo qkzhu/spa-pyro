@@ -3,7 +3,8 @@
 
 QueryTable::QueryTable(){
 	withCounter = 0;
-	patternCounter = 0;	
+	patternCounter = 0;
+	suchThatCounter = 0;
 	affectsStarCounter = 0;
 	affectsCounter = 0;
 }
@@ -68,6 +69,9 @@ void QueryTable::addClause(int type, vector<int> content){
 		SuchThat SuchThatTemp;
 		SuchThat validTemp;
 		QueryNode queryNode;
+		int id;
+		suchThatCounter = suchThatCounter + 1;
+		id = suchThatCounter + SUCHTHATCOUNTER;
 
 
 		SuchThatTemp.relCond = content;
@@ -83,7 +87,7 @@ void QueryTable::addClause(int type, vector<int> content){
 			queryNode.argument1 = SuchThatTemp.relCond.at(2);
 			queryNode.prefix2 = SuchThatTemp.relCond.at(3);
 			queryNode.argument2 = SuchThatTemp.relCond.at(4);
-			queryNode.id = -1;
+			queryNode.id = id;
 			queryNode.ranking = 0;
 
 		}
@@ -100,7 +104,7 @@ void QueryTable::addClause(int type, vector<int> content){
 				queryNode.argument1 = SuchThatTemp.relCond.at(1);
 				queryNode.prefix2 = SuchThatTemp.relCond.at(2);
 				queryNode.argument2 = SuchThatTemp.relCond.at(3);
-				queryNode.id = -1;
+				queryNode.id = id;
 				queryNode.ranking = 0;
 			}
 			if((SuchThatTemp.relCond[1] != UNDERSCORE && SuchThatTemp.relCond[3] == UNDERSCORE) )
@@ -113,7 +117,7 @@ void QueryTable::addClause(int type, vector<int> content){
 				queryNode.argument1 = SuchThatTemp.relCond.at(2);
 				queryNode.prefix2 = SuchThatTemp.relCond.at(3);
 				queryNode.argument2 = SuchThatTemp.relCond.at(3);
-				queryNode.id = -1;
+				queryNode.id = id;
 				queryNode.ranking = 0;
 			}
 		}
@@ -129,7 +133,7 @@ void QueryTable::addClause(int type, vector<int> content){
 				queryNode.argument1 = SuchThatTemp.relCond.at(1);
 				queryNode.prefix2 = SuchThatTemp.relCond.at(2);
 				queryNode.argument2 = SuchThatTemp.relCond.at(2);
-				queryNode.id = -1;
+				queryNode.id = id;
 				queryNode.ranking = 0;
 			}
 		}
@@ -973,6 +977,9 @@ void QueryTable::sortRelations(vector<QueryNode> &queryNodes){
 	
 	vector<QueryNode> tempWithNodeList;
 	vector<QueryNode> tempPatternNodeList;
+
+
+	
 	//vector<QueryNode> tempSuchThatNodeList;
 	//vector<QueryNode> tempDiretRelatedToWith;
 
@@ -985,6 +992,7 @@ void QueryTable::sortRelations(vector<QueryNode> &queryNodes){
 			if(queryNodes.at(i).prefix2 == INT || queryNodes.at(i).prefix2 == PROCOFSIMPLE || queryNodes.at(i).prefix2 == VAROFSIMPLE )
 			{
 				queryNodes.at(i).ranking = 20;
+
 			}
 			// the rightside is not constant
 			else
@@ -1095,6 +1103,7 @@ void QueryTable::sortRelations(vector<QueryNode> &queryNodes){
 	
 	}// end for loop
 
+	/*
 	//check any agrgument related to the with  and pattern type relation 
 	for(int i=0;i<int(queryNodes.size());i++)
 	{
@@ -1229,14 +1238,15 @@ void QueryTable::sortRelations(vector<QueryNode> &queryNodes){
 			}		
 		} 
 	}
-	/*
+	*/
+	
 	for(int i=0;i<int(queryNodes.size());i++)
 	{
 		cout<<"/////////////////////////////////////////////////////////////////////////"<<endl;
 		cout<<queryNodes.at(i).type<<" "<<queryNodes.at(i).prefix1<<" "<<queryNodes.at(i).argument1<<" "<<queryNodes.at(i).prefix2<<" "<<queryNodes.at(i).argument2<<endl;
 		cout<<"Ranking is "<<queryNodes.at(i).ranking<<endl;
 	}
-	*/
+	
 	sort(queryNodes.begin(),queryNodes.end(),myCompareRelation);
 }
 
@@ -1289,9 +1299,9 @@ void QueryTable::findPartition(){
 	
 	
 	//display the node list
-	displayNodeList();
+	//displayNodeList();
 
-	//displayAll();
+	displayAll();
 	//display the partition
 	//displayPartitions();
 
