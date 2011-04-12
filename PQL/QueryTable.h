@@ -50,48 +50,41 @@ public:
 	vector < With > getWithClause();
 	vector < Pattern_PQL > getPattern_PQLClause();
 
-	void showTable();
+	void showTable(); // show the query 
 
-	void displayAll();
-	//*************** For Optimizer Start ****************//
 	
+	//*************** For Optimizer Start ****************//	
+	void displayAll();	// display all the tables
+	void displayNodeList(); // display all the node
+	void displayPartitions(); // display all the partitions
+
 	void findPartition(); // a function that calls all function needed to work out the partition
-	
-	void displayNodeList();
-	void findPartitionOne();
-
+	void findPartitionOne(); // find all the directed related nodes
 	void findPartitionTwo(); // find all related partitions
-	
 	void findPartitionFour(); // find all unrelated partitions
 
+	void calculatedPartitionMarks(); // calculate the partition mark according to certain criteria
 
+	void calculatePartitionMark(const vector<vector<QueryNode>> &nodeList, vector<Partitions> &group);
 
-	void calculatedPartitionMarks();
-	void putIntoPartitionGroups();
+	void putIntoPartitionGroups();	// put the partitions with total mark into the groups 
 
-	static bool myComparePartition(Partitions par1, Partitions par2);
-	static bool myCompareRelation(QueryNode node1, QueryNode node2);
-	void sortPartitions(vector<Partitions> &partition);
+	static bool myComparePartition(Partitions par1, Partitions par2); // compare function used to sort partitions in partition group
+	static bool myCompareRelation(QueryNode node1, QueryNode node2); // compare function used to sort relations within a partition
 
-	void displayPartitions();
-
-
-	void sortRelationWithinPartition(vector<Partitions> &partition);
-	void sortRelations(vector<QueryNode> &queryNodes);
+	void sortPartitions(vector<Partitions> &partition); // sort partition in partition group
+	void sortRelations(vector<QueryNode> &queryNodes); // sort relations for a single partition 
+	void sortRelationsPartitions(vector<Partitions> &partition); // sort relations for all partition
+	
 	// recursive function to find all the related nodes
     //	sourceExistNode is the set of Nodes for comparision
 	void findPartitionThree(set<int> &sourceExistNode, vector<QueryNode> &sourceQueryNode, vector<QueryNode> &nodeListContainer);
-	
-	
-	void addToUnrelatedTable();
-	void addToRelatedTable();
+
+	void addToTable(vector<Partitions> &group,vector<vector<int>> &withTable, vector<vector<int>> &patternTable, vector<vector<int>> &suchThatTable);	
+
+	void addToUnrelatedTable(); // add sorted unrelated nodes to the unrelated table
+	void addToRelatedTable(); // add sorted related nodes to the related table
 	//*************** For Optimizer End ****************//
-
-
-	void tryHashMap();
-
-
-
 
 
 private:
@@ -114,9 +107,6 @@ private:
 	//"pattern-clause"
 	vector < Pattern_PQL > patternClause;
 	vector <int> patternVector;
-
-	//"related Nodes"
-	vector<vector<int>> relatedRelations;
 
 	//"related With"
 	vector<vector<int>> relatedWith;
@@ -143,31 +133,28 @@ private:
 	int affectsCounter;
 
 	//*************** For Optimizer Start ****************//
+	// store queryNode
 	vector<QueryNode> queryNodeList;
+	// store selectNode
 	vector<SelectNode> selectNodeList;
-
+	// store related query Node
 	vector<vector<QueryNode>> relatedNodes;
-
+	// store unrealted query Node
 	vector<vector<QueryNode>> unrelatedNodes;
-
+	// store unrelated partitions
 	vector<Partitions> unrelatedGroup;
-
-
-	set<int> existNodeValue; //contains all the nodes that have alread find it. it is used to compare the exist value to the value in queryNodeList.
-	
-
+	// store related partitions
+	vector<Partitions> relatedGroup;
+	// contains all the nodes that have alread find it. it is used to compare the exist value to the value in queryNodeList.
+	set<int> existNodeValue; 	
+	// define the pair for hash_map
 	typedef pair<int, vector<int>> keyContentPair;
-
+	// hash_map stores with relation
 	hash_map<int, vector<int>> withRelationMap;
+	// hash_map stores pattern relation
 	hash_map<int, vector<int>> patternRelationMap;
 
 	//*************** For Optimizer End ****************//
 
-	/*
-	//"declaration - clause"
-	vector<Declaration> declarationClause;
-	vector <int> declarationVector;
-	*/
-	
 };
 #endif //QUERYTABLE_H
