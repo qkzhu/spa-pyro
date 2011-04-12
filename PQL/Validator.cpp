@@ -366,8 +366,6 @@ void Validator::checkWith(QueryTable &table){
 		}
 		
 		with =  table.getWithClause().at(i).attrCond;
-		//cout<<"with[0] is "<<with[0]<<endl;
-
 
 		//check the whether there are invalid procOfSimple or varOfSimple
 		for(int j=0;j<int(with.size());j++)
@@ -421,7 +419,13 @@ void Validator::checkWith(QueryTable &table){
 				{
 					noError = true;
 				}
-			
+				
+				if(with[5]>=51 &&with[5]<=60)
+				{
+					noError = false;
+				}
+				
+
 			}
 
 			if(with.size() == 9)

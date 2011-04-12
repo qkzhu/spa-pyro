@@ -4,27 +4,9 @@
 PqlPreprocessor::PqlPreprocessor(string query){
 	PqlParser::parser(query, &qt);
 	qt.showTable();
-
+	validator.checkResults(qt);
 	qt.findPartition();
 	
-	
-
-	//cout<<"+++++++++++++++++++++++++++++++++++++++++++++++++++++++++"<<endl;
-	//qt.tryHashMap();
-	//qt.displayNodeList();
-	//qt.findPartitionOne();
-	//qt.findPartitionTwo();
-	//qt.findPartitionFour();
-	//cout<<endl<<endl;
-	//qt.displayNodeList();
-	
-
-	vector<vector<int>> tables;
-	validator.checkResults(qt);
-
-	//validator.getValidTable(USES,tables);
-	//validator.displayTable(tables);
-
 	
 }
 

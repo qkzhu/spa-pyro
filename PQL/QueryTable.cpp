@@ -198,10 +198,23 @@ void QueryTable::addClause(int type, vector<int> content){
 			withTemp.argumentNoCorrect = false;
 		}
 		
+
 		withClause.push_back(withTemp);
+		if(content.size() == 9)
+		{
+			//cout<<"content.at(0) "<<content.at(0)<<" content.at(5) "<<content.at(5)<<" content.at(1) "<<content.at(1)<<" content.at(6) "<<content.at(6)<<endl;
 		
-		//for Optimizer *******************
-		queryNodeList.push_back(queryNode);
+			if(content.at(1) != content.at(6))
+			{
+				queryNodeList.push_back(queryNode);
+			}
+		}
+		else
+		{
+		
+			queryNodeList.push_back(queryNode);
+		}
+		
 		
 		//add the content to the withVector for display
 		if(withVector.empty() == true)
@@ -233,17 +246,18 @@ void QueryTable::addClause(int type, vector<int> content){
 		}
 		else if(content.at(0) == ASSIGN) // assign pattern
 		{
+		
 			if(int(content.size()) == 5)
 			{
 				patternTemp.argumentNoCorrect = true;
 				
 				queryNode.prefix1 = content.at(0);
 				queryNode.argument1 = content.at(1);
-				queryNode.prefix2 = id;
+				queryNode.prefix2 = content.at(2);
 				queryNode.argument2 = id;
 				queryNode.id = id;
 				queryNode.type = PATTERN;
-				queryNode.ranking = -10;
+				queryNode.ranking = 0;
 				patternRelationMap.insert(keyContentPair(queryNode.id,content));
 			}
 			else if(int(content.size()) == 6)
@@ -251,18 +265,17 @@ void QueryTable::addClause(int type, vector<int> content){
 				patternTemp.argumentNoCorrect = true;				
 				queryNode.prefix1 = content.at(0);
 				queryNode.argument1 = content.at(1);
+				queryNode.prefix2 = content.at(2);
 				queryNode.id = id;
 				queryNode.type = PATTERN;
-				queryNode.ranking = -10;
+				queryNode.ranking = 0;
 
 				if(content.at(2)!=UNDERSCORE)
-				{
-					queryNode.prefix2 = content.at(2);
+				{	
 					queryNode.argument2 = content.at(3);		
 				}
 				else
 				{
-					queryNode.prefix2 = id;
 					queryNode.argument2 = id;	
 				}
 
@@ -279,7 +292,7 @@ void QueryTable::addClause(int type, vector<int> content){
 				queryNode.argument2 = content.at(2);
 				queryNode.id = id;
 				queryNode.type = PATTERN;
-				queryNode.ranking = -10;
+				queryNode.ranking = 0;
 				patternRelationMap.insert(keyContentPair(queryNode.id,content));
 			}
 			else
@@ -298,11 +311,25 @@ void QueryTable::addClause(int type, vector<int> content){
 				patternTemp.argumentNoCorrect = true;
 				queryNode.prefix1 = content.at(0);
 				queryNode.argument1 = content.at(1);
-				queryNode.prefix2 = id;
-				queryNode.argument2 = id;
+				queryNode.prefix2 = content.at(2);
 				queryNode.id = id;
 				queryNode.type = PATTERN;
-				queryNode.ranking = -10;
+				queryNode.ranking = 0;
+
+
+				if(queryNode.prefix2 == VARIABLE)
+				{
+					queryNode.argument2 = content.at(3);
+
+				}
+				else
+				{
+				
+					queryNode.argument2 = id;
+				}
+
+
+
 				patternRelationMap.insert(keyContentPair(queryNode.id,content));
 
 			}	
@@ -319,11 +346,22 @@ void QueryTable::addClause(int type, vector<int> content){
 				patternTemp.argumentNoCorrect = true;
 				queryNode.prefix1 = content.at(0);
 				queryNode.argument1 = content.at(1);
-				queryNode.prefix2 = id;
-				queryNode.argument2 = id;
+				queryNode.prefix2 = content.at(2);
 				queryNode.id = id;
 				queryNode.type = PATTERN;
-				queryNode.ranking = -10;
+				queryNode.ranking = 0;
+				
+				if(queryNode.prefix2 == VARIABLE)
+				{
+					queryNode.argument2 = content.at(3);
+
+				}
+				else
+				{
+				
+					queryNode.argument2 = id;
+				}
+
 				patternRelationMap.insert(keyContentPair(queryNode.id,content));
 			}	
 		
@@ -740,7 +778,6 @@ void QueryTable::findPartitionOne(){
 
 void QueryTable::findPartitionTwo(){
 
-	
 	for(int i=0; i<int(relatedNodes.size());i++)
 	{
 		findPartitionThree(existNodeValue,queryNodeList,relatedNodes.at(i));
@@ -757,6 +794,7 @@ void QueryTable::findPartitionThree(set<int> &sourceExistNode, vector<QueryNode>
 		set<int>::iterator itArgument2;
 
 		vector<int> removePosition;
+
 		itArgument1 = sourceExistNode.find(sourceQueryNode.at(i).argument1);
 		itArgument2 = sourceExistNode.find(sourceQueryNode.at(i).argument2);
 
@@ -934,131 +972,263 @@ void QueryTable::sortRelationsPartitions(vector<Partitions> &partition){
 void QueryTable::sortRelations(vector<QueryNode> &queryNodes){
 	
 	vector<QueryNode> tempWithNodeList;
-	
-	
-	for(int i=0;i<int(queryNodes.size());i++)
-	{
-		queryNodes.at(i).ranking = 0;
-	}
-
-	
+	vector<QueryNode> tempPatternNodeList;
+	//vector<QueryNode> tempSuchThatNodeList;
+	//vector<QueryNode> tempDiretRelatedToWith;
 
 	for(int i=0;i<int(queryNodes.size());i++)
 	{
-		//first argument is constant
-		if(queryNodes.at(i).prefix1 == INT || queryNodes.at(i).prefix1 == PROCOFSIMPLE || queryNodes.at(i).prefix1 == VAROFSIMPLE)
+		//with Type relations
+		if(queryNodes.at(i).type == WITH)
 		{
-			if(queryNodes.at(i).prefix2 == INT || queryNodes.at(i).prefix2 == PROCOFSIMPLE || queryNodes.at(i).prefix2 == VAROFSIMPLE)
+			// the rightside is constant
+			if(queryNodes.at(i).prefix2 == INT || queryNodes.at(i).prefix2 == PROCOFSIMPLE || queryNodes.at(i).prefix2 == VAROFSIMPLE )
 			{
-				queryNodes.at(i).ranking = 6; // both of the argument are constants.
-			
+				queryNodes.at(i).ranking = 20;
 			}
+			// the rightside is not constant
 			else
 			{
-				//only first argument is constant
-				queryNodes.at(i).ranking = 3;
+				queryNodes.at(i).ranking = 19;
 			}
+
+			tempWithNodeList.push_back(queryNodes.at(i));
+
 		}
-		//second argument is constant
-		else if(queryNodes.at(i).prefix2 == INT || queryNodes.at(i).prefix2 == PROCOFSIMPLE || queryNodes.at(i).prefix2 == VAROFSIMPLE)
+		//pattern Type relations
+		else if(queryNodes.at(i).type == PATTERN)
 		{
-			if(queryNodes.at(i).type == WITH)
+			// eg. pattern a("x",_);
+			if(queryNodes.at(i).prefix2 == PROCOFSIMPLE || queryNodes.at(i).prefix2 == VAROFSIMPLE)
 			{
-				// WITH type of relation and its right side is constant. it has highest ranking
-				queryNodes.at(i).ranking = 10;
-				tempWithNodeList.push_back(queryNodes.at(i));			
+				queryNodes.at(i).ranking = 18;
 			}
-			else
+			//eg. pattern a(v,_);
+			else if(queryNodes.at(i).prefix2 == VARIABLE)
 			{
-				// only second argument is constant and it is not WITH type
-				queryNodes.at(i).ranking = 3;
+				queryNodes.at(i).ranking = 17;
 			}
-		
+			//eg. pattern a(_,_);
+			else if(queryNodes.at(i).prefix2 == UNDERSCORE)
+			{
+				queryNodes.at(i).ranking = 16;
+			}
+
+			tempPatternNodeList.push_back(queryNodes.at(i));
 		}
-		// both arguments are not constant
+		//such that relations
 		else 
 		{
-			if(queryNodes.at(i).type == WITH)
+			// first argument is constant
+			if(queryNodes.at(i).prefix1 == INT || queryNodes.at(i).prefix1 == PROCOFSIMPLE || queryNodes.at(i).prefix1 == VAROFSIMPLE)
 			{
-				// WITH type of relation and its left and right side are not constant, it has second highest ranking 
-				queryNodes.at(i).ranking = 9;
-				tempWithNodeList.push_back(queryNodes.at(i));
+				// eg. follows(10,16);
+				if(queryNodes.at(i).prefix2 == INT || queryNodes.at(i).prefix2 == PROCOFSIMPLE || queryNodes.at(i).prefix2 == VAROFSIMPLE)
+				{
+					queryNodes.at(i).ranking = 21; 
+				}
+				// eg. follows(10,_);
+				else if(queryNodes.at(i).prefix2 == UNDERSCORE)
+				{
+					queryNodes.at(i).ranking = 14;
+				
+				}
+				// eg. follows(10,x);
+				else
+				{
+					queryNodes.at(i).ranking = 15;
+				
+				}
+		
 			}
+			// second argument is constant
+			else if(queryNodes.at(i).prefix2 == INT || queryNodes.at(i).prefix2 == PROCOFSIMPLE || queryNodes.at(i).prefix2 == VAROFSIMPLE)
+			{
+				// eg. follows(_,10);
+				if(queryNodes.at(i).prefix1 == UNDERSCORE)
+				{
+					queryNodes.at(i).ranking = 14;
+				
+				}
+				// eg. follows(x,10);
+				else
+				{
+					queryNodes.at(i).ranking = 15;
+				
+				}
+		
+			}
+			// both arguments are variables and not related to with and pattern
 			else
 			{
-				//relations that has both argument are constant
-				queryNodes.at(i).ranking = 1;
-			}
+				if(queryNodes.at(i).prefix1  == UNDERSCORE )
+				{
+					if(queryNodes.at(i).prefix2 != UNDERSCORE )
+					{
+						queryNodes.at(i).ranking = 1;
+					}
+					else
+					{
+						queryNodes.at(i).ranking = 0;
+					}
+				
+				}
+				else if(queryNodes.at(i).prefix2 == UNDERSCORE)
+				{
+					if(queryNodes.at(i).prefix1 != UNDERSCORE )
+					{
+						queryNodes.at(i).ranking = 1;
+					}
+					else
+					{
+						queryNodes.at(i).ranking = 0;
+					}
+				}
+				else
+				{
+					queryNodes.at(i).ranking = 2;
+				}
 		
-		}
-	}
+			} // end both arguments are variables and not related to with and pattern
+			
+		}//tempSuchThatNodeList.push_back(queryNodes.at(i));
 	
-	
+	}// end for loop
+
+	//check any agrgument related to the with  and pattern type relation 
 	for(int i=0;i<int(queryNodes.size());i++)
 	{
-		if(queryNodes.at(i).type != WITH && queryNodes.at(i).ranking != 6)
-		{
+		if(queryNodes.at(i).type != WITH)
+		{		
 			//check any agrgument related to the with type relation 	
 			for(int j=0; j<int(tempWithNodeList.size());j++)
 			{
-				if(tempWithNodeList.at(j).ranking == 10)
+				if(tempWithNodeList.at(j).ranking == 20) // with type of relation and its right side is constant
+				{	
+					if(queryNodes.at(i).argument1 == tempWithNodeList.at(j).argument1 || queryNodes.at(i).argument1 == tempWithNodeList.at(j).argument2)
+					{	
+						if(queryNodes.at(i).ranking == 15) // eg. follows(x,10);
+						{
+							queryNodes.at(i).ranking = 13;	
+						}
+						else if(queryNodes.at(i).ranking == 14) // eg. follows(10,_);
+						{
+							queryNodes.at(i).ranking = 12;
+						}
+						else if(queryNodes.at(i).ranking == 2) // eg. follows(x,y);
+						{
+							queryNodes.at(i).ranking = 11;
+						}
+						else if(queryNodes.at(i).ranking == 1) // eg.follows(x,_);
+						{
+							queryNodes.at(i).ranking = 10;
+						}
+						else if(queryNodes.at(i).ranking == 0) // eg. follows(_,_);
+						{
+							queryNodes.at(i).ranking = 9;
+						} //is equal to the first argument
+					}
+					else if(queryNodes.at(i).argument2 == tempWithNodeList.at(j).argument1 || queryNodes.at(i).argument2 == tempWithNodeList.at(j).argument2)
+					{
+						if(queryNodes.at(i).ranking == 15) // eg. follows(x,10);
+						{
+							queryNodes.at(i).ranking = 13;	
+						}
+						else if(queryNodes.at(i).ranking == 14) // eg. follows(10,_);
+						{
+							queryNodes.at(i).ranking = 12;
+						}
+						else if(queryNodes.at(i).ranking == 2) // eg. follows(x,y);
+						{
+							queryNodes.at(i).ranking = 11;
+						}
+						else if(queryNodes.at(i).ranking == 1) // eg.follows(x,_);
+						{
+							queryNodes.at(i).ranking = 10;
+						}
+						else if(queryNodes.at(i).ranking == 0) // eg. follows(_,_);
+						{
+							queryNodes.at(i).ranking = 9;
+						}
+					}//  end if argument is equal to the second argument
+				} // end if ranking = 20
+				else if(tempWithNodeList.at(j).ranking == 19)
 				{
 					if(queryNodes.at(i).argument1 == tempWithNodeList.at(j).argument1 || queryNodes.at(i).argument1 == tempWithNodeList.at(j).argument2)
 					{
-						if(queryNodes.at(i).ranking == 3) // single argument is constant
+						if(queryNodes.at(i).ranking == 15) // eg. follows(x,10);
 						{
-							queryNodes.at(i).ranking = 5;	
+							queryNodes.at(i).ranking = 8;	
 						}
-						else //both arguments are not constant
+						else if(queryNodes.at(i).ranking == 14) // eg. follows(10,_);
+						{
+							queryNodes.at(i).ranking = 7;
+						}
+						else if(queryNodes.at(i).ranking == 2) // eg. follows(x,y);
+						{
+							queryNodes.at(i).ranking = 6;
+						}
+						else if(queryNodes.at(i).ranking == 1) // eg.follows(x,_);
+						{
+							queryNodes.at(i).ranking = 5;
+						}
+						else if(queryNodes.at(i).ranking == 0) // eg. follows(_,_);
 						{
 							queryNodes.at(i).ranking = 4;
 						}
 					}
 					else if(queryNodes.at(i).argument2 == tempWithNodeList.at(j).argument1 || queryNodes.at(i).argument2 == tempWithNodeList.at(j).argument2)
 					{
-						if(queryNodes.at(i).ranking == 3) // single argument is constant
+						if(queryNodes.at(i).ranking == 15) // eg. follows(x,10);
 						{
-							queryNodes.at(i).ranking = 5;	
+							queryNodes.at(i).ranking = 8;	
 						}
-						else //both arguments are not constant
+						else if(queryNodes.at(i).ranking == 14) // eg. follows(10,_);
+						{
+							queryNodes.at(i).ranking = 7;
+						}
+						else if(queryNodes.at(i).ranking == 2) // eg. follows(x,y);
+						{
+							queryNodes.at(i).ranking = 6;
+						}
+						else if(queryNodes.at(i).ranking == 1) // eg.follows(x,_);
+						{
+							queryNodes.at(i).ranking = 5;
+						}
+						else if(queryNodes.at(i).ranking == 0) // eg. follows(_,_);
 						{
 							queryNodes.at(i).ranking = 4;
 						}
+					}
+				} // end if ranking = 19
 
-					}
-				}
-				else if(tempWithNodeList.at(j).ranking == 9)
-				{
-					if(queryNodes.at(i).argument1 == tempWithNodeList.at(j).argument1 || queryNodes.at(i).argument1 == tempWithNodeList.at(j).argument2)
-					{
-						if(queryNodes.at(i).ranking == 3) // single argument is constant
-						{
-							queryNodes.at(i).ranking = 5;	
-						}
-						else //both arguments are not constant
-						{
-							queryNodes.at(i).ranking = 4;
-						}
-					}
-					else if(queryNodes.at(i).argument2 == tempWithNodeList.at(j).argument1 || queryNodes.at(i).argument2 == tempWithNodeList.at(j).argument2)
-					{
-						if(queryNodes.at(i).ranking == 3) // single argument is constant
-						{
-							queryNodes.at(i).ranking = 5;	
-						}
-						else //both arguments are not constant
-						{
-							queryNodes.at(i).ranking = 4;
-						}					
-					
-					}
-				}
-			}
-	
+			} // end for(int j=0; j<int(tempWithNodeList.size());j++)
+			
 		}
 	
+	} // end for(int i=0;i<int(queryNodes.size());i++)
+	
+	// rank those such taht relation that does not have any relation to with or pattern attributes
+	for(int i=0;i<int(queryNodes.size());i++)
+	{	
+		//rank relaiton according to their type
+		if(queryNodes.at(i).ranking == 2 || queryNodes.at(i).ranking == 1 || queryNodes.at(i).ranking == 0)
+		{
+			
+			if(queryNodes.at(i).type == AFFECTS_T)
+			{
+				queryNodes.at(i).ranking = -3;
+			}
+			else if(queryNodes.at(i).type == AFFECTS)
+			{
+				queryNodes.at(i).ranking = -2;
+			}
+			else if(queryNodes.at(i).type == NEXT_T || queryNodes.at(i).type == PARENT_T || queryNodes.at(i).type == FOLLOWS_T || queryNodes.at(i).type == CALLS_T)
+			{
+				queryNodes.at(i).ranking = -1;
+			}		
+		} 
 	}
-
 	/*
 	for(int i=0;i<int(queryNodes.size());i++)
 	{
@@ -1067,8 +1237,6 @@ void QueryTable::sortRelations(vector<QueryNode> &queryNodes){
 		cout<<"Ranking is "<<queryNodes.at(i).ranking<<endl;
 	}
 	*/
-	//TODO 
-	
 	sort(queryNodes.begin(),queryNodes.end(),myCompareRelation);
 }
 
@@ -1105,8 +1273,8 @@ void QueryTable::findPartition(){
 
 	//add to the unrelated table
 	//addToUnrelatedTable();
-	addToTable(unrelatedGroup, unRelatedWith, unRelatedPattern, unRelatedSuchThat);
-	addToTable(relatedGroup, relatedWith, relatedPattern, relatedSuchThat);
+	addToTable(unrelatedGroup, unRelatedWith, unRelatedPattern, unRelatedSuchThat,UNREALTEDTYPE);
+	addToTable(relatedGroup, relatedWith, relatedPattern, relatedSuchThat, RELATEDTYPE);
 
 
 	//add to teh related table
@@ -1125,149 +1293,7 @@ void QueryTable::findPartition(){
 
 }
 
-void QueryTable::addToUnrelatedTable(){
-
-	vector<int> tempRelations;
-	vector<int> partitionDivider;
-	vector<int> emptyIndicator;
-	
-	partitionDivider.push_back(-1);
-	emptyIndicator.push_back(-2);
-
-	for(int i = 0; i<int(unrelatedGroup.size());i++)
-	{
-		bool hasWith  = false;
-		bool hasPattern = false;
-		bool hasSuchThat = false;
-		hash_map<int, vector<int>>::iterator it;
-
-
-		for(int j=0;j<int(unrelatedGroup.at(i).partition.size());j++)
-		{
-			/*
-			cout<<"unrelatedGroup.at(i).partition.at(j).type: "<<unrelatedGroup.at(i).partition.at(j).type<<endl;
-			cout<<"unrelatedGroup.at(i).partition.at(j).prefix1 " <<unrelatedGroup.at(i).partition.at(j).prefix1<<endl;
-			cout<<"unrelatedGroup.at(i).partition.at(j).argument1 " <<unrelatedGroup.at(i).partition.at(j).argument1<<endl;
-			cout<<"unrelatedGroup.at(i).partition.at(j).prefix2 " <<unrelatedGroup.at(i).partition.at(j).prefix2<<endl;
-			cout<<"unrelatedGroup.at(i).partition.at(j).argument2 " <<unrelatedGroup.at(i).partition.at(j).argument2<<endl;*/
-			
-			//the relation is with type
-			if(unrelatedGroup.at(i).partition.at(j).type == WITH)
-			{
-				hasWith = true;
-				//get it from with hash Map
-				
-
-				it = withRelationMap.find(unrelatedGroup.at(i).partition.at(j).id);
-
-				tempRelations = it->second;		
-				unRelatedWith.push_back(tempRelations);
-				
-			}
-			//the relation is pattern 
-			else if(unrelatedGroup.at(i).partition.at(j).type == PATTERN)
-			{
-				hasPattern = true;
-
-				//hash_map<int, vector<int>>::iterator it
-
-				it = patternRelationMap.find(unrelatedGroup.at(i).partition.at(j).id);
-
-				tempRelations = it->second;		
-				unRelatedPattern.push_back(tempRelations);
-			}
-			//the relation is such that relation
-			else if(unrelatedGroup.at(i).partition.at(j).type >=5 && unrelatedGroup.at(i).partition.at(j).type <=16)
-			{
-				hasSuchThat = true;
-				//first argument is UNDERSCORE and the second is not UNDERSCORE
-				if( unrelatedGroup.at(i).partition.at(j).prefix1 == UNDERSCORE && unrelatedGroup.at(i).partition.at(j).prefix2 != UNDERSCORE)
-				{
-					tempRelations.push_back( unrelatedGroup.at(i).partition.at(j).type);
-					tempRelations.push_back( unrelatedGroup.at(i).partition.at(j).argument1);
-					tempRelations.push_back( unrelatedGroup.at(i).partition.at(j).prefix2);
-					tempRelations.push_back( unrelatedGroup.at(i).partition.at(j).argument2);
-
-					unRelatedSuchThat.push_back(tempRelations);
-					
-				}
-				//first argument is not UNDERSCORE and the second is UNDERSCORE
-				else if( unrelatedGroup.at(i).partition.at(j).prefix1 != UNDERSCORE && unrelatedGroup.at(i).partition.at(j).prefix2 == UNDERSCORE)
-				{
-					tempRelations.push_back( unrelatedGroup.at(i).partition.at(j).type);
-					tempRelations.push_back( unrelatedGroup.at(i).partition.at(j).prefix1);
-					tempRelations.push_back( unrelatedGroup.at(i).partition.at(j).argument1);
-					tempRelations.push_back( unrelatedGroup.at(i).partition.at(j).argument2);
-					unRelatedSuchThat.push_back(tempRelations);
-					
-				}
-				// both arguments are not UNDRESCORE
-				else if(unrelatedGroup.at(i).partition.at(j).prefix1 != UNDERSCORE && unrelatedGroup.at(i).partition.at(j).prefix2 != UNDERSCORE)
-				{
-					tempRelations.push_back( unrelatedGroup.at(i).partition.at(j).type);
-					tempRelations.push_back( unrelatedGroup.at(i).partition.at(j).prefix1);
-					tempRelations.push_back( unrelatedGroup.at(i).partition.at(j).argument1);
-					tempRelations.push_back( unrelatedGroup.at(i).partition.at(j).prefix2);
-					tempRelations.push_back( unrelatedGroup.at(i).partition.at(j).argument2);
-					unRelatedSuchThat.push_back(tempRelations);
-					
-				}
-				else
-				{
-				
-					throw new string("no such type can be added into the unRelatedSuchThat Table --  throw by QueryTable::addToUnrelatedTable!");
-				}
-				
-			
-			}
-			else
-			{
-				throw new string("The type is undefined in unRelatedGroup -- throw by QueryTable::addToUnrelatedTable!");
-			
-			}
-			tempRelations.clear();
-		}
-		
-		if(hasWith)
-		{
-			// add partitionDivider to unRelatedWith
-			unRelatedWith.push_back(partitionDivider);
-		}
-		else
-		{
-			//add emptyIndicator to unRelatedWith
-			unRelatedWith.push_back(partitionDivider);
-			unRelatedWith.push_back(emptyIndicator);
-		}
-
-		if(hasPattern)
-		{
-			// add partitionDivider to unRelatedWith
-			unRelatedPattern.push_back(partitionDivider);
-		}
-		else
-		{
-			//add emptyIndicator to unRelatedWith
-			unRelatedPattern.push_back(partitionDivider);
-			unRelatedPattern.push_back(emptyIndicator);
-		}
-
-		if(hasSuchThat)
-		{
-			// add partitionDivider to unRelatedWith
-			unRelatedSuchThat.push_back(partitionDivider);
-		}
-		else
-		{
-			//add emptyIndicator to unRelatedWith
-			unRelatedSuchThat.push_back(partitionDivider);
-			unRelatedSuchThat.push_back(emptyIndicator);
-		}
-
-	}
-
-}
-void  QueryTable::addToTable(vector<Partitions> &group,vector<vector<int>> &withTable, vector<vector<int>> &patternTable, vector<vector<int>> &suchThatTable){
+void  QueryTable::addToTable(vector<Partitions> &group,vector<vector<int>> &withTable, vector<vector<int>> &patternTable, vector<vector<int>> &suchThatTable, int type){
 
 	vector<int> tempRelations;
 	vector<int> partitionDivider;
@@ -1371,42 +1397,45 @@ void  QueryTable::addToTable(vector<Partitions> &group,vector<vector<int>> &with
 			tempRelations.clear();
 		}
 		
-		if(hasWith)
+		if( type == UNREALTEDTYPE ) // unrelated type 
 		{
-			// add partitionDivider to withTable
-			withTable.push_back(partitionDivider);
-		}
-		else
-		{
-			//add emptyIndicator to withTable
-			withTable.push_back(partitionDivider);
-			withTable.push_back(emptyIndicator);
-		}
+			if(hasWith)
+			{
+				// add partitionDivider to withTable
+				withTable.push_back(partitionDivider);
+			}
+			else
+			{
+				//add emptyIndicator to withTable
+				withTable.push_back(partitionDivider);
+				withTable.push_back(emptyIndicator);
+			}
 
-		if(hasPattern)
-		{
-			// add partitionDivider to patternTable
-			patternTable.push_back(partitionDivider);
-		}
-		else
-		{
-			//add emptyIndicator to patternTable
-			patternTable.push_back(partitionDivider);
-			patternTable.push_back(emptyIndicator);
-		}
+			if(hasPattern)
+			{
+				// add partitionDivider to patternTable
+				patternTable.push_back(partitionDivider);
+			}
+			else
+			{
+				//add emptyIndicator to patternTable
+				patternTable.push_back(partitionDivider);
+				patternTable.push_back(emptyIndicator);
+			}
 
-		if(hasSuchThat)
-		{
-			// add partitionDivider to suchThatTable
-			suchThatTable.push_back(partitionDivider);
-		}
-		else
-		{
-			//add emptyIndicator to suchThatTable
-			suchThatTable.push_back(partitionDivider);
-			suchThatTable.push_back(emptyIndicator);
-		}
-
+			if(hasSuchThat)
+			{
+				// add partitionDivider to suchThatTable
+				suchThatTable.push_back(partitionDivider);
+			}
+			else
+			{
+				//add emptyIndicator to suchThatTable
+				suchThatTable.push_back(partitionDivider);
+				suchThatTable.push_back(emptyIndicator);
+			}
+	
+		}// end if unrelated type
 	}
 
 }
