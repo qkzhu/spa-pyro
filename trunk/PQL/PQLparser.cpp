@@ -10,7 +10,8 @@ void PqlParser::parser(string s,QueryTable *table){
 	userdefine=PqlParser::USERDEFINED;
 	selectBool=true;	
 	qu=new TokenList(s);
-	//qu->showTokenList();
+//	//qu->showTokenList();
+	qu->showTokenList();
 
 	Convertor::update();
   
@@ -43,11 +44,11 @@ void PqlParser::parser(string s,QueryTable *table){
 				{
 					case SELECT:
 					
-
+						
 					type=SELECT;
 			
 					pch=selectParser(type,qu,table);
-				  
+				 
 
 					break;
 					
@@ -65,7 +66,7 @@ void PqlParser::parser(string s,QueryTable *table){
 					type=PATTERN;
 					
 					pch=PqlParser::patternParser(type,qu,table);
-
+				
 
 					break;
 
@@ -90,8 +91,7 @@ void PqlParser::parser(string s,QueryTable *table){
 		}//end of if
 
 	}//end of while loop
-	//if (semi==false) throw new string("missing S_COLON in the end \n");
-	if(selectBool==true) throw new string("missing select clause\n");
+if(selectBool==true) throw new string("missing select clause\n");
 
 
 	return;
@@ -286,8 +286,10 @@ string PqlParser::patternParser(int type,TokenList *quPointer,QueryTable *tableP
 					index=Convertor::getIndex(pch);
 					
 					if(index!=L_QUOT) throw new string("miss L_QUOT in the Pattern clause");
+					
 					switch (patterntype)
 					{
+						
 					case WHILE: case ASSIGN:
 						 pch=qu->getNextToken();
 					     index=Convertor::getIndex(pch);
@@ -365,7 +367,6 @@ string PqlParser::patternParser(int type,TokenList *quPointer,QueryTable *tableP
 				    pch=qu->getNextToken();
 					index=Convertor::getIndex(pch);
 					table->addClause(type,content);
-					
 				    content.clear();
 					if(index!=0)
 				       break;
@@ -527,7 +528,12 @@ string PqlParser::withParser(int type,TokenList *quPointer,QueryTable *tablePoin
 						 }
 						 pch=qu->getNextToken();
 						 index=Convertor::getIndex(pch);
-					 }//end of if
+					 }
+					 else
+					 {
+						 throw new string("the symbol before equal must follow bu DOT");
+					 }
+					 //end of if
 					 if(index!=EQUAL)
 					 {
 						 throw new string("missing EQUAL after " +pch+" \n");
@@ -546,36 +552,45 @@ string PqlParser::withParser(int type,TokenList *quPointer,QueryTable *tablePoin
 						 }
 							 prefix=PqlParser::prefix(pch);
 
-
-						 if(index!=-1||prefix==INT)
+						 if(index!=-1&&(prefix==INT||prefix==VAROFSIMPLE||prefix==PROCOFSIMPLE))
 						 {
 						     if(prefix!=0)
-						 content.push_back(prefix);
-                         content.push_back(index);//push first token after equal;
-						 pch=qu->getNextToken();
-						 index=Convertor::getIndex(pch);
+							content.push_back(prefix);
+							content.push_back(index);//push first token after equal;
+							pch=qu->getNextToken();
+							index=Convertor::getIndex(pch);
 						 }
-						 else
+						 else if(index!=-1)
 						 {
-							 throw new string("undefined symbol2 after "+pch+" \n");
-						 }
-						 if(index==DOT)
-					     {
-						 content.push_back(index);
-						 pch=qu->getNextToken();
-						 index=Convertor::getIndex(pch);
-						 if (index!=-1)
-						 {
-                         content.push_back(index);
-						 pch=qu->getNextToken();
-						 index=Convertor::getIndex(pch);
-						 }
-						 else
-						 {
-							 throw new string("undefined symbol after DOT in Withclause\n");
-						 }
-						 }
-					 }//end of if
+							if(prefix!=0)
+							content.push_back(prefix);
+							content.push_back(index);//push first token after equal;
+							pch=qu->getNextToken();
+							index=Convertor::getIndex(pch);
+							if(index!=DOT) throw new string("the symbol in with after equal Must follow by DOT");
+						  
+						
+					     
+							content.push_back(index);
+							pch=qu->getNextToken();
+							index=Convertor::getIndex(pch);
+							if (index!=-1)
+							{
+							content.push_back(index);
+							pch=qu->getNextToken();
+							index=Convertor::getIndex(pch);
+							}
+							else
+							{
+								 throw new string("undefined symbol after DOT in Withclause\n");
+							 }
+						
+						}//end of if
+					 else
+					 {
+						 throw new string("first symbol after equal is undefined");
+					 }
+			     }
 				     table->addClause(type,content);
 				     content.clear();
 					 if(index!=0)
