@@ -1059,14 +1059,14 @@ void QueryTable::sortRelations(vector<QueryNode> &queryNodes){
 	
 	}
 
-	
+	/*
 	for(int i=0;i<int(queryNodes.size());i++)
 	{
 		cout<<"/////////////////////////////////////////////////////////////////////////"<<endl;
 		cout<<queryNodes.at(i).type<<" "<<queryNodes.at(i).prefix1<<" "<<queryNodes.at(i).argument1<<" "<<queryNodes.at(i).prefix2<<" "<<queryNodes.at(i).argument2<<endl;
 		cout<<"Ranking is "<<queryNodes.at(i).ranking<<endl;
 	}
-	
+	*/
 	//TODO 
 	
 	sort(queryNodes.begin(),queryNodes.end(),myCompareRelation);
