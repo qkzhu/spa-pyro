@@ -189,20 +189,28 @@ void QueryEvaluator::evaluateWith(bool& unrelated_finish, int& last_point, int t
 
 		int part2_size = (int) part2.size();
 
+		bool isCallWithProc1 = false;
 		int p1_type = part1.at(0);
 		int p1_name = part1.at(1);
+		bool isCallWithProc2 = false;
 		int p2_type ;
 		int p2_name ;
+		if(p1_type == mQueryTree->getIndex("call"))
+			if(part1[3] == mQueryTree->getIndex("procName"))
+				isCallWithProc1 = true;
 		if(part2_size == 2) { 
 			p2_type = part2.at(0);
 			p2_name = varCodeEnding++;
 		}else if((int)part1.size() == part2_size){ //For the case when a.stmt# = b.stmt#
 			p2_type = part2.at(0);
 			p2_name = part2.at(1);
+			if(p2_type == mQueryTree->getIndex("call"))
+				if(part2[3] == mQueryTree->getIndex("procName"))
+					isCallWithProc2 = true;
 		}	
 		vector<vector<int> > with_result;
 		vector<int> tmp;
-		getAllType(tmp, p1_type);
+		checkCandidates(p1_name, p1_type, tmp);
 		
 		vector<int> tmp2;
 		if(p2_type == mQueryTree->getIndex("integer")) tmp2.push_back(part2.at(1));
@@ -224,9 +232,7 @@ void QueryEvaluator::evaluateWith(bool& unrelated_finish, int& last_point, int t
 				return;
 			}
 			tmp2.push_back(tmp_code);
-		}else if(p2_type == mQueryTree->getIndex("integer")||p2_type == mQueryTree->getIndex("procOfSimpl") || p2_type == mQueryTree->getIndex("varOfSimpl"))
-			throw new string("QueryEvaluator, getAllType function can not take constant type!");
-		else getAllType(tmp2, p2_type);
+		}else checkCandidates(p2_name, p2_type, tmp2);
 		
 		int entry_type;
 		if(p1_type == mQueryTree->getIndex("stmt")|| p1_type==mQueryTree->getIndex("assign")|| p1_type==mQueryTree->getIndex("while")|| p1_type==mQueryTree->getIndex("if")||p1_type==mQueryTree->getIndex("call") ||p1_type==mQueryTree->getIndex("constant") || p1_type==mQueryTree->getIndex("prog_line"))
@@ -239,7 +245,15 @@ void QueryEvaluator::evaluateWith(bool& unrelated_finish, int& last_point, int t
 
 		for(vector<int>::iterator count_t=tmp.begin(); count_t< tmp.end(); count_t++)
 			for(vector<int>::iterator k = tmp2.begin(); k<tmp2.end(); k++){
-				if(*count_t == *k) {
+				int check1;
+				int check2;
+				if(isCallWithProc1)
+					check1 = mPKBObject->ast_getCallProcIndex(*count_t);
+				else check1 = *count_t;
+				if(isCallWithProc2)
+					check2 = mPKBObject->ast_getCallProcIndex(*k);
+				else check2 = *k;
+				if(check1 == check2){
 					vector<int> entry;
 					int entry_array [] = {entry_type, *count_t, entry_type, *k};
 					entry.insert(entry.end(), entry_array, entry_array+4);
@@ -682,13 +696,10 @@ void QueryEvaluator::transform(vector<vector<int> >& pre_tuple, vector<vector<in
 					tmp.push_back(candidates[0][i]);
 					tmp_result.push_back(tmp);
 				}
-			}else
-			{
+			}else{
 				vector<vector<int> > medium_value;
-				for(int j = 0; j < (int)tmp_result.size(); j++)
-				{
-					for(int i = 0; i < (int)candidates[k].size(); i++)
-					{
+				for(int j = 0; j < (int)tmp_result.size(); j++){
+					for(int i = 0; i < (int)candidates[k].size(); i++){
 						vector<int> join_entry = tmp_result[j];
 						join_entry.push_back(candidates[k][i]);
 						medium_value.push_back(join_entry);
@@ -698,16 +709,11 @@ void QueryEvaluator::transform(vector<vector<int> >& pre_tuple, vector<vector<in
 			}
 		}
 		pre_tuple = tmp_result;
-	}
-	else
-	{	
-		for(int j = 0; j < (int)candidates.size(); j++)
-		{
+	}else{	
+		for(int j = 0; j < (int)candidates.size(); j++){
 			int insert_place = non_evaled_selects[j];
-			for(int i = 0; i< (int)pre_tuple.size(); i++)
-			{
-				for(int k = 0; k< (int)candidates[j].size(); k++)
-				{
+			for(int i = 0; i< (int)pre_tuple.size(); i++){
+				for(int k = 0; k< (int)candidates[j].size(); k++){
 					vector<int> join_entry;
 					join_entry = pre_tuple[i];
 					int insert_element = candidates[j][k];
@@ -761,10 +767,8 @@ void QueryEvaluator::generateResult(){
 	int pattern_size = mQueryTree->patternSize();
 	int suchthat_size = mQueryTree->suchThatSize();
 
-	if(isBoolSelected) //If the select is boolean
-	{  
-		if(with_size == 0 && suchthat_size == 0 && pattern_size == 0)
-		{
+	if(isBoolSelected){  //If the select is boolean
+		if(with_size == 0 && suchthat_size == 0 && pattern_size == 0){
 			mResult.setBoolValue(true);
 			return;
 		}
@@ -783,23 +787,24 @@ void QueryEvaluator::generateResult(){
 	vector<vector<int> > suchthat_result;
 	vector<int> non_evaled_selects;
 	vector<int> select_index;
-	for(int i = 0; i < mQueryTree->selectSize(); i++)
-	{
+	for(int i = 0; i < mQueryTree->selectSize(); i++){
 			vector<int> tmp_selected;
 			mQueryTree->selectAt(tmp_selected, i);
 			vector<int> tmp;
 			int select_type = tmp_selected[0];
 			int selected = tmp_selected[1];
 			select_index.push_back(selected);
+			if(select_type == mQueryTree->getIndex("call") && (int)tmp_selected.size() == 4)
+				if(tmp_selected[3] == mQueryTree->getIndex("procname")){
+					mResult.addCallWithProcIndex(i);
+				}
+
 
 			bool selected_in_st = false;
 
-			for(int index = 0; index < (int)mgTupleIndexing.size(); index++)
-			{
-				if(selected == mgTupleIndexing[index])
-				{
-					for(int eva_ind = 0; eva_ind < (int)evalTuple.size(); eva_ind++)
-					{
+			for(int index = 0; index < (int)mgTupleIndexing.size(); index++){
+				if(selected == mgTupleIndexing[index]){
+					for(int eva_ind = 0; eva_ind < (int)evalTuple.size(); eva_ind++){
 						tmp.push_back(evalTuple[eva_ind][index*2+1]);
 					}
 					selected_in_st = true;
@@ -1052,9 +1057,12 @@ void QueryEvaluator::printResult(){
 			int select_size = mQueryTree->selectSize();
 			for(int j = 0; j < select_size; j++){
 				int type = resultTupleType.at(j);
-				if(type == mQueryTree->getIndex("integer"))
-					cout << resultTuple[i][j] << " ";
-				else if(type == mQueryTree->getIndex("varOfSimpl")) 
+				if(type == mQueryTree->getIndex("integer")){
+					if(mResult.isElementCallWithProc(j)){
+						int procIndex = mPKBObject->ast_getCallProcIndex(resultTuple[i][j]);
+						cout << PKB_procDecode(procIndex) << endl;
+					}else cout << resultTuple[i][j] << " ";
+				}else if(type == mQueryTree->getIndex("varOfSimpl")) 
 					cout << PKB_varDecode(resultTuple[i][j]) << " ";	
 				else if(type == mQueryTree->getIndex("procOfSimpl")) 
 					cout << PKB_procDecode(resultTuple[i][j]) << " ";
