@@ -263,8 +263,8 @@ void QueryEvaluator::evaluateWith(bool& unrelated_finish, int& last_point, int t
 		//Merging different evaluation tuples
 		vector<int>::iterator it;
 		it = find(mgTupleIndexing.begin(), mgTupleIndexing.end(), p1_name);
-		int same1Tuple1 = 0;
-		int same2Tuple1 = 0;
+		int same1Tuple1 = -1;
+		int same2Tuple1 = -1;
 		int numOfCommonElement = 0;
 		if(it == mgTupleIndexing.end()){
 			mgTupleIndexing.push_back(p1_name);
@@ -365,8 +365,8 @@ void QueryEvaluator::evaluatePattern(bool& unrelated_finish, int& last_point, in
 		}
 
 		int it;
-		int same1Tuple1 = 0;
-		int same2Tuple1 = 0;
+		int same1Tuple1 = -1;
+		int same2Tuple1 = -1;
 		int numOfCommonElement = 0;
 		if(!mgTupleIndexing.empty()){
 			it = find_ele(mgTupleIndexing, var);
@@ -379,7 +379,7 @@ void QueryEvaluator::evaluatePattern(bool& unrelated_finish, int& last_point, in
 			}
 			it = find_ele(mgTupleIndexing, pattern1);
 			if(it == (int)mgTupleIndexing.size()){
-				if(pattern1_type == mQueryTree->getIndex("_") || pattern1 == mQueryTree->getIndex("varOfSimpl") || pattern1 == mQueryTree->getIndex("patternofsimpl")){
+				if(pattern1_type != mQueryTree->getIndex("variable")){
 					pattern1 = varCodeEnding;
 					mgTupleIndexing.push_back(varCodeEnding++);
 				}else mgTupleIndexing.push_back(pattern1);
@@ -392,7 +392,7 @@ void QueryEvaluator::evaluatePattern(bool& unrelated_finish, int& last_point, in
 		}else{
 			numOfCommonElement = 0;
 			mgTupleIndexing.push_back(var);
-			if(pattern1_type == mQueryTree->getIndex("_") || pattern1 == mQueryTree->getIndex("varOfSimpl") || pattern1 == mQueryTree->getIndex("patternofsimpl")){
+			if(pattern1_type != mQueryTree->getIndex("variable")){
 				pattern1 = varCodeEnding;
 				mgTupleIndexing.push_back(varCodeEnding++);
 			}else mgTupleIndexing.push_back(pattern1);
@@ -536,8 +536,8 @@ void QueryEvaluator::evaluateSuchThat(bool& unrelated_finish, int& last_point, i
 
 		//Manipulation of indexing issue, adjust the mgTupleIndexing and find common index to pass
 		int it;
-		int same1Tuple1 = 0;
-		int same2Tuple1 = 0;
+		int same1Tuple1 = -1;
+		int same2Tuple1 = -1;
 		int numOfCommonElement = 0;
 		if(!mgTupleIndexing.empty()){
 			it = find_ele(mgTupleIndexing, para1);
@@ -1032,9 +1032,10 @@ void QueryEvaluator::evalPattern_PQL(vector<vector<int> >& result, int var, int 
 		throw new string("QueryEvaluator::evalPattern_PQL, no such variable type!");
 }
 
+//same1_tuple1 means the equal index in tuple1, from 0 to tuple1 size; same for same2_tuple1
 void QueryEvaluator::joinTuples(vector<vector<int> >& evalTuple, vector<vector<int> >& pre_tuple, int common_num, int same1_tuple1, int same2_tuple1, int first_time){
 		if(common_num == 2){
-			if(same1_tuple1 != 0)
+			if(same1_tuple1 != -1)
 				evalTuple = TupleOperations::tupleJoinOneC(same1_tuple1, 0, evalTuple, pre_tuple);
 			else evalTuple = TupleOperations::tupleJoinOneC(same2_tuple1, 1, evalTuple, pre_tuple);
 		}else if(common_num == 4){
