@@ -88,7 +88,8 @@ void Convertor::getAllIndex(vector<int> &indexlist)
 
 
  bool Convertor::isQuated(string s)
- {      if(s.size()<2)
+ {      
+	 if(s.size()<2)
            return false;
      string a="\"";
 	
@@ -107,10 +108,12 @@ void Convertor::getAllIndex(vector<int> &indexlist)
 	 string a="_\"";
 	 string b="\"_";
 
-
 	 if (isQuated(s))
+		{
+			
 		 return true;
-	 if(s.size()>=4)
+		}
+		 if(s.size()>=4)
 	 {
         if(s.substr(0,2)==a||s.substr(s.size()-2,2)==b)
 		   return true;
