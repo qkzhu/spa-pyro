@@ -273,7 +273,7 @@ void QueryEvaluator::evaluateWith(bool& unrelated_finish, int& last_point, int t
 			}
 			numOfCommonElement = numOfCommonElement+2;
 		}
-
+		
 		if(with_result.empty()){
 			if(isBoolSelected)
 				mResult.setBoolValue(false);
