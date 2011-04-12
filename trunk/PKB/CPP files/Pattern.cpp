@@ -19,6 +19,17 @@ int Pattern::getPriority(char c)
 	}
 }
 
+int Pattern::getNodePriority(Node::NodeType type)
+{
+	if (type == Node::PLUS || type == Node::MINUS)
+		return 1;
+	
+	if (type == Node::TIMES)
+		return 2;
+
+	return 3;
+}
+
 bool Pattern::isConstant(string tok) 
 {
 	static regex exp("-?\\d+");
@@ -209,13 +220,150 @@ bool Pattern::patternAssign(int stmtNum, string patternLeft, string patternRight
 	//building a tree to test whether patternRight is correct.
 	Node* node = generateNode(patternRight, ast, varTable);
 
-	string input = nodeToPrefix(node, ast, varTable);
-	string existing = nodeToPrefix(bottomNodes[1], ast, varTable);
+	string input = patternRight;
+	string existing = nodeToInfix(bottomNodes[1], ast, varTable);
 
-	return match(input, existing, matchFront, matchEnd);
+	return matchInfix(input, existing, matchFront, matchEnd);
+
+	//return matchUsingNode(node, bottomNodes[1], matchFront, matchEnd);
+
+	//string input = nodeToPrefix(node, ast, varTable);
+	//string existing = nodeToPrefix(bottomNodes[1], ast, varTable);
+
+	//return match(input, existing, matchFront, matchEnd);
 }
 
+bool Pattern::matchInfix(const string& input, const string& existing, bool matchFront, bool matchEnd)
+{
+	if (matchFront && matchEnd)
+		return input == existing;
 
+	if (matchFront)
+	{
+		char lastOp = ' ';
+		int i = 0;
+
+		for (; i < (int)input.size() && i < (int)existing.size(); i++)
+		{
+			if (input[i] != existing[i])
+				return false;
+
+			if (isOperator(input[i]))
+				lastOp = input[i];
+		}
+
+		if (i < (int)input.size())
+			return false;
+
+		if (lastOp == ' ')
+			return true;
+
+		int currPriority = getPriority(lastOp);
+
+		for (; i < (int)existing.size(); i++)
+			if (isOperator(existing[i]) && getPriority(existing[i]) > currPriority)
+				return false;
+
+		return true;
+	} //end matchFront
+
+	else if (matchEnd)
+	{
+		if (input.size() > existing.size())
+			return false;
+
+		char lastOp = ' ';
+		int i = input.size()-1;
+		int j = existing.size() - 1;
+
+		for (; i >= 0 && j >= 0; i--, j--)
+		{
+			if (input[i] != existing[j])
+				return false;
+
+			if (isOperator(input[i]))
+				lastOp = input[i];
+		}
+
+		if (i >= 0)
+			return false;
+
+		if (lastOp == ' ')
+			return true;
+
+		int currPriority = getPriority(lastOp);
+
+		for (; j >= 0; j--)
+		{
+			if (isOperator(existing[j]))
+			{
+			   if (getPriority(existing[j]) > currPriority)
+				 return false;
+			   else
+				   break;
+			}
+		}
+
+		return true;
+	} //end matchEnd
+
+	//match neither
+	else
+	{
+		 int position = existing.find(input);
+
+		 if (position == string::npos)
+			 return false;
+
+		 //checks the operator that comes before the matching expression
+		 char firstOperator = ' ';
+
+		 for (int i = 0; i < (int)input.size(); i++)
+			 if (isOperator(input[i]))
+			 {
+				 firstOperator = input[i];
+				 break;
+			 }
+
+		if (firstOperator != ' ')
+		{
+			int currPriority = getPriority(firstOperator);
+			for (int j = position; j >= 0; j--)
+				if (isOperator(existing[j]))
+				{
+					if (getPriority(existing[j]) > currPriority)
+						return false;
+					else
+						break;
+				}
+		}
+
+		//checks the operator that comes after the expression
+		char lastOperator = ' ';
+
+		 for (int i = (int)input.size() - 1; i >= 0; i--)
+			 if (isOperator(input[i]))
+			 {
+				 lastOperator = input[i];
+				 break;
+			 }
+
+		if (lastOperator != ' ')
+		{
+			int currPriority = getPriority(lastOperator);
+			for (int j = position + input.size(); j < (int)existing.size(); j++)
+				if (isOperator(existing[j]))
+				{
+					if (getPriority(existing[j]) > currPriority)
+						return false;
+					else
+						break;
+				}
+		}
+
+		 return true;
+	}
+}
 
 //matches input and existing string using postfix.
 bool Pattern::match(const string& input, const string& existing, bool matchFront, bool matchEnd)
@@ -253,51 +401,51 @@ bool Pattern::match(const string& input, const string& existing, bool matchFront
 
 	//input must be a substring of existing
 	else
-		return existing.find(input) != string::npos;;
+		return existing.find(input) != string::npos;
 
 	//won't reach here.
 }
 
-//bool Pattern::match(Node* input, Node* existing, bool matchFront, bool matchEnd)
-//{
-//	//either trees are null, return false
-//	if (input == NULL || existing == NULL)
-//		return false;
-//
-//	//if both expression trees match, no questions asked.
-//	if (matchTree(input, existing))
-//		return true;
-//
-//	if (matchFront)
-//	{
-//		//match front and left tree matches input
-//		if (existing->bottomNodeList.size() == 1 && 
-//			matchTree(input, existing->bottomNodeList[0]))
-//			return true;
-//
-//		//match front and right tree matches input
-//		if (existing->bottomNodeList.size() == 2 && 
-//			matchTree(input, existing->bottomNodeList[1]))
-//			return false;
-//	}
-//
-//	if (matchEnd)
-//	{
-//		//match end and right tree matches input
-//		if (existing->bottomNodeList.size() == 2 && 
-//				matchTree(input, existing->bottomNodeList[1]))
-//				return true;
-//
-//		//match end and left tree matches input
-//		if (existing->bottomNodeList.size() >= 1 &&
-//			matchTree(input, existing->bottomNodeList[0]))
-//				return false;
-//	}
-//
-//	//match the subtrees recursively
-//	return (existing->bottomNodeList.size() > 0 && match(input, existing->bottomNodeList[0], matchFront, matchEnd)) ||
-//		(existing->bottomNodeList.size() > 1 && match(input, existing->bottomNodeList[1], matchFront, matchEnd));
-//}
+bool Pattern::matchUsingNode(Node* input, Node* existing, bool matchFront, bool matchEnd)
+{
+	//either trees are null, return false
+	if (input == NULL || existing == NULL)
+		return false;
+
+	//if both expression trees match, no questions asked.
+	if (matchTree(input, existing))
+		return true;
+
+	if (matchFront)
+	{
+		//match front and left tree matches input
+		if (existing->bottomNodeList.size() == 1 && 
+			matchTree(input, existing->bottomNodeList[0]))
+			return true;
+
+		//match front and right tree matches input
+		if (existing->bottomNodeList.size() == 2 && 
+			matchTree(input, existing->bottomNodeList[1]))
+			return false;
+	}
+
+	if (matchEnd)
+	{
+		//match end and right tree matches input
+		if (existing->bottomNodeList.size() == 2 && 
+				matchTree(input, existing->bottomNodeList[1]))
+				return true;
+
+		//match end and left tree matches input
+		if (existing->bottomNodeList.size() >= 1 &&
+			matchTree(input, existing->bottomNodeList[0]))
+				return false;
+	}
+
+	//match the subtrees recursively
+	return (existing->bottomNodeList.size() > 0 && matchUsingNode(input, existing->bottomNodeList[0], matchFront, matchEnd)) ||
+		(existing->bottomNodeList.size() > 1 && matchUsingNode(input, existing->bottomNodeList[1], matchFront, matchEnd));
+}
 
 //matches input and existing string using prefix.
 bool Pattern::matchUsingPrefix(const string& input, const string& existing, bool matchFront, bool matchEnd)
@@ -538,10 +686,19 @@ string Pattern::nodeToInfix(Node *node, AST& ast, VarTable& varTable)
 	//a given node in an expression tree has either two children or none
 	if (children.size() == 2)
 	{
+		int currPriority = getNodePriority(node->type);
+
 		//adds the left child
-		result = result + nodeToInfix(children[0], ast, varTable);
+		if (getNodePriority(children[0]->type) < currPriority)
+			result = "(" + nodeToInfix(children[0], ast, varTable) + ")" + result;
+		else
+			result = nodeToInfix(children[0], ast, varTable) + result;
+
 		//adds the right child
-		result += nodeToInfix(children[1], ast, varTable);
+		if (getNodePriority(children[1]->type) <= currPriority)
+			result += "(" + nodeToInfix(children[1], ast, varTable) + ")";
+		else
+			result += nodeToInfix(children[1], ast, varTable);
 	}
 
 	return result;
