@@ -163,7 +163,11 @@ Node *Pattern::generateNode(string input, AST& ast, VarTable& varTable)
 }
 
 bool Pattern::patternAssign(int stmtNum, string patternLeft, string patternRight, AST& ast, VarTable& varTable)
-{
+{    
+	static regex rx("[\\s\"]");
+	patternRight = regex_replace(patternRight, rx, string(""));
+	patternLeft = regex_replace(patternLeft, rx, string(""));
+
 	if (stmtNum <= 0 || stmtNum > ast.getMaxStmtNum())
 		throw new string("Pattern: Invalid statement number.");
 
