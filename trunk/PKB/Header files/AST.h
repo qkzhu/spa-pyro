@@ -51,6 +51,8 @@ public:
 	bool isAssign(int stmt);
 	bool isCall(int stmt);
 
+	int getCallProcIndex(int stmt);
+
 	//for CFG
 	vector<Node*> getAllProc();
 	vector<Node*> getAllDown(Node* n);

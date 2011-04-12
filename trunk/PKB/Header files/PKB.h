@@ -52,6 +52,7 @@ public:
 	bool		ast_IsCall(int stmt);							// For Query Evaluator
 	bool		ast_IsInsideIf(int ifStmt, int target);			// For Query Evaluator
 	bool		ast_IsInsideWhile(int whileStmt, int target);	// For Query Evaluator
+	int			ast_getCallProcIndex(int stmt);					// For Query Evaluator
 	
 	vector<Node*> ast_GetAllProc(); //For CFG
 	vector<Node*> ast_GetDown(Node* n); //For CFG

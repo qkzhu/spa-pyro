@@ -148,6 +148,10 @@ bool PKB::ast_IsInsideWhile(int whileStmt, int target){
 	return ast_IsInside(whileStmt, target);
 }
 
+int PKB::ast_getCallProcIndex(int stmt){
+	return ast->getCallProcIndex(stmt);
+}
+
 /**
  * VarTable Part
  */
