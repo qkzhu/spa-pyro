@@ -214,6 +214,16 @@ bool Pattern::patternAssign(int stmtNum, string patternLeft, string patternRight
 		matchEnd = false;
 	}
 
+	//remove quotes
+	if (patternRight.size() > 0)
+	{
+		if (patternRight[0] == '"')
+			patternRight = patternRight.substr(1,  patternRight.size()-1);
+
+		if (patternRight[patternRight.size()-1] == '"')
+			patternRight = patternRight.substr(0, patternRight.size()-1);
+	}
+
 	if(patternRight.size() == 0)
 		throw new string("Pattern: Empty expression passed.");
 
