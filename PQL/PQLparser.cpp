@@ -90,7 +90,7 @@ void PqlParser::parser(string s,QueryTable *table){
 		}//end of if
 
 	}//end of while loop
-	if (semi==false) throw new string("missing S_COLON in the end \n");
+	//if (semi==false) throw new string("missing S_COLON in the end \n");
 	if(selectBool==true) throw new string("missing select clause\n");
 
 
