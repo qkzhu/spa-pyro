@@ -39,7 +39,7 @@ void PqlParser::parser(string s,QueryTable *table){
 			{
 				
 				index=Convertor::getIndex(pch);
-			
+		        cout<<"---"<<pch<<index<<"---"<<endl;	
 				switch(index)
 				{
 					case SELECT:
@@ -81,7 +81,7 @@ void PqlParser::parser(string s,QueryTable *table){
 					}
 					break;
 				default:
-					throw new string("there are unpredicted format error in the query body "+pch+" \n");
+					throw new string(" there are unpredicted format error in the query body "+pch+"->\n");
 					break;
 
 
@@ -461,7 +461,8 @@ string PqlParser::suchThatParser(int type,TokenList *quPointer,QueryTable *table
 					         prefix=PqlParser::prefix(pch);
 					   	     if(prefix!=0)
 							 content.push_back(prefix);
-						   	 content.push_back(index);
+						   	 if(index==-1) throw new string("undefined symbol at the second para in "+suchthatclause);
+							 content.push_back(index);
 							 
 							 pch=qu->getNextToken();
 							 index=Convertor::getIndex(pch);
