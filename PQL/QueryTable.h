@@ -84,6 +84,7 @@ public:
 
 	void addToTable(vector<Partitions> &group,vector<vector<int>> &withTable, vector<vector<int>> &patternTable, vector<vector<int>> &suchThatTable, int type);	
 	void addToRelatedTable(); // add sorted related nodes to the related table
+	//void filterSameRelation(vector<QueryNode>&, vector<QueryNode>::iterator&, vector<QueryNode>&); // filter out the same relations in such that clause
 	void filterSameRelation(); // filter out the same relations in such that clause
 
 	//*************** For Optimizer End ****************//
