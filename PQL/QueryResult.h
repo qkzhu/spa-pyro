@@ -12,6 +12,7 @@ private:
 	std::vector<std::vector<int> > mTupleResult;
 	std::vector<int> mTupleType;
 	bool nullResult;
+	std::vector<int> callWithProc;
 
 public:
 	QueryResult();
@@ -27,6 +28,9 @@ public:
 	int getTypeAt(int indx);
 
 	void setBoolValue(bool);   //set bool value
+
+	void addCallWithProcIndex(int index);
+	bool isElementCallWithProc(int index);
 
 	void addInType(int);
 	void addInTuple(std::vector<int>);  //add a value at index indx in tuple, and check the duplication

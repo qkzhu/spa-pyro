@@ -65,6 +65,15 @@ bool QueryResult::isTupleInserted(vector<int> v){
 	return false;
 }
 
+void QueryResult::addCallWithProcIndex(int index){
+	callWithProc.push_back(index);
+}
+
+bool QueryResult::isElementCallWithProc(int index){
+	vector<int>::iterator found = find(callWithProc.begin(), callWithProc.end(), index);
+	return (found != callWithProc.end());
+}
+
 void QueryResult::addInType(int type)
 {
 	if(type == -1)
