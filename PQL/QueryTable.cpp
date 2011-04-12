@@ -145,11 +145,6 @@ void QueryTable::addClause(int type, vector<int> content){
 		
 		suchThatClause.push_back(SuchThatTemp);
 
-		if(SuchThatTemp.argumentNoCorrect)
-		{
-		
-		}
-
 		//for Optimizer **************** add to the queryNodeList
 		queryNodeList.push_back(queryNode);
 
@@ -1257,7 +1252,7 @@ bool QueryTable::myCompareRelation(QueryNode node1, QueryNode node2){
 
 void QueryTable::findPartition(){
 
-	filterSameRelation();
+	//filterSameRelation();
 	
 	// find all the related nodes and put them into the related group
 	findPartitionOne();
