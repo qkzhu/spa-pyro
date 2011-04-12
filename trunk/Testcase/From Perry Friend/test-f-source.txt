@@ -1,0 +1,17 @@
+procedure p {
+  x = 1;
+  if x then {
+    y = 3 + x;
+    a = 4 * x;
+    z = 5 - x;
+  }
+  else {
+    call q;
+  }
+  b = 7 + a;
+}
+procedure q {
+  z = 8 - y;
+  y = 9 * z;
+  x = 10 + y - z;
+}

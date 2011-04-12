@@ -1,0 +1,1 @@
+procedure p {  x = 1;  while x {    y = x + 1;    if y then {      z = x;    }    else {      x = x + 2;    }  }  z = y + t;}procedure q {  x = x + y + z + t;  if y then {    while y {      t = 3 + x + y;      call p;      y = t + 2 + z;    }  }  else {    z = 2;  }}procedure r {  y = 2;  j = x;  call q;  x = j + y;}

@@ -1,0 +1,161 @@
+procedure Alpha {
+  x = 1;
+  y = 10;
+  z = 0;
+  a = 10;
+  i = 5;
+  while i {
+    if x then {
+      y = (y + x);
+      z = (y - (z * x));
+      call Beta;
+      if z then {
+        z = (z - x);
+      }
+      else {
+        z = (x + 4);
+      }
+    }
+    else {
+      y = (y - 3);
+      z = ((z * y) - (x * y));
+      call Charlie;
+      if a then {
+        b = ((a - b) - x);
+        c = (a + (b * x));
+        d = ((c * b) + z);
+        call Delta;
+        x = 0;
+        while z {
+          x = (x + 1);
+          y = (z + x);
+          z = (z - 1);
+          while x {
+            c = (g + h);
+            if b then {
+              b = (d - 30);
+            }
+            else {
+              e = (d - 10);
+              f = (e + c);
+              while f {
+                g = (g + b);
+                h = (h - b);
+                if g then {
+                  if h then {
+                    h = (h - 5);
+                    g = (g - h);
+                    x = (g * h);
+                  }
+                  else {
+                    i = (i + 1);
+                    h = (h + 3);
+                    g = (g - h);
+                    y = (g * h);
+                  }
+                }
+                else {
+                  if h then {
+                    h = (h - 5);
+                    g = (g + h);
+                    y = (g * h);
+                  }
+                  else {
+                    i = (i + 1);
+                    h = (h + 3);
+                    g = (g + h);
+                    z = (g * h);
+                  }
+                }
+                f = (f - 1);
+              }
+              if h then {
+                b = (b + h);
+              }
+              else {
+                b = (b + 5);
+              }
+              b = (b + 2);
+            }
+            x = (x - 1);
+          }
+        }
+        c = ((a * b) - c);
+      }
+      else {
+        c = ((a * b) + 5);
+        b = (b - a);
+        y = ((b + c) - (5 * a));
+        call Echo;
+      }
+    }
+    i = (i - 1);
+  }
+}
+
+procedure Beta {
+  j = (x + (y * z));
+  k = (((j * z) + (13 * z)) - 33);
+  if k then {
+    a = 3;
+  }
+  else {
+    a = 5;
+  }
+  m = 5;
+  call m;
+}
+
+procedure Charlie {
+  a = 0;
+  k = ((k + (2 * 87)) - (2 * b));
+  j = ((j + (k * 5)) + b);
+  call Fox;
+}
+
+procedure Delta {
+  if a then {
+    call Echo;
+  }
+  else {
+    call Fox;
+  }
+}
+
+procedure Echo {
+  g = 0;
+  h = (y - x);
+  if h then {
+    y = x;
+    x = (y - h);
+    h = 62;
+  }
+  else {
+    h = 98;
+  }
+}
+
+procedure Fox {
+  g = (y - x);
+  h = 0;
+  if g then {
+    y = x;
+    x = (y - g);
+    g = 49;
+  }
+  else {
+    g = 36;
+  }
+  m = 7;
+  call m;
+}
+
+procedure m {
+  x = 0;
+  y = 0;
+  n = 1;
+  while m {
+    n = (n * m);
+    m = (m - 1);
+  }
+}

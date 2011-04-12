@@ -1,0 +1,23 @@
+5
+Cat: All category
+1
+stmt s1; assign a1; variable v1, v2; 
+Select <a1,s1> such that Modifies(s1,v1) and Uses(a1,v2) and Affects*(a1,s1) with v1.varName="z" and v2.varName="x"	
+12 6,19 225000
+2
+stmt s1; while w1; variable v1; 
+Select <w1,s1,v1> such that Parent*(w1, s1) pattern w1(v1,_) such that Modifies(s1, v1)	
+5 7 x,5 8 x,20 22 z5000
+3
+stmt s1, s2; 
+Select <s1,s2> such that Follows*(s1,s2) and Affects*(s1,s2)	
+4 125000
+4
+stmt s1, s2; if i1; 
+Select <s1,s2> such that Affects(s1,s2) and Parent*(i1, s2)	
+4 10,11 10,4 11,13 19,15 18,13 18,22 21,19 21,22 22,19 225000
+5
+stmt s1, s2; while w1; variable v1; 
+Select <s1,s2> such that Uses(w1,v1) and Parent*(w1,s1) and Affects(s1,s2) with v1.varName="x"	
+4 10,4 11,12 6,12 7,12 12,10 12,11 4,11 10
+5000

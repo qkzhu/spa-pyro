@@ -1,0 +1,52 @@
+12
+Cat: All category
+1
+stmt s1,s2; 
+Select <s1,s2> such that Affects(s1,s2)	
+1 3,1 5,1 6,6 3,6 5,6 6,3 7,8 11,11 13,13 11,16 185000
+2
+stmt s1,s2; 
+Select <s1,s2> such that Affects* (s1,s2)	
+1 3,1 5,1 6,1 7,6 3,6 5,6 6,6 7,3 7,8 11,11 13,13 11,8 13,16 18,11 11,13 135000
+3
+stmt s1,s2,s3; 
+Select <s1,s2,s3> such that Affects(s1,s2) and Affects* (s2,s3)	
+1 6 3,1 6 5,1 6 6,1 6 7,6 6 3,6 6 5,6 6 6,6 6 7,8 11 13,13 11 13,11 13 11,1 3 7,6 3 7,11 13 13,8 11 11,13 11 115000
+4
+stmt s1,s2,s3,s4; 
+Select <s1,s2,s4> such that Affects(s1,s2) and Affects* (s3,s4) with s2.stmt# = s3.stmt#	
+1 6 3,1 6 5,1 6 6,1 6 7,6 6 3,6 6 5,6 6 6,6 6 7,8 11 13,13 11 13,11 13 11,1 3 7,6 3 7,11 13 13,8 11 11,13 11 115000
+5
+stmt s1,s2,s3,s4; 
+Select <s1,s2,s3,s4> such that Affects(s1,s2) and Affects* (s3,s4) with s1.stmt# = s4.stmt#	
+6 3 6 6,6 3 1 6,6 5 6 6,6 5 1 6,6 6 6 6,6 6 1 6,3 7 1 3,3 7 6 3,11 13 8 11,11 13 13 11,13 11 11 13,13 11 8 13,11 13 11 11,13 11 13 13
+5000
+6stmt s1,s2,s3,s4; 
+Select <s2,s4> such that Affects(s1,s2) and Affects* (s3,s4) with s1.stmt# = s4.stmt#	
+3 6,5 6,6 6,7 3,13 11,11 13
+5000
+7
+if f; assign a; variable v; 
+Select <f, a, v> pattern f(v,_,_) such that Parent(f,a) pattern a(v,_)	
+11 12 z,11 13 z,29 30 b,29 57 b,45 46 h,45 50 h,37 38 h,37 42 h,81 84 h,81 85 h,88 91 g,88 92 g5000
+8
+variable v; assign a; while w; constant c; 
+Select <  w, a,c,  v > pattern w(v,_) with w.stmt# = c.value such that Parent*(w,a) and Uses(a,v)	
+98 100 98 m,33 53 33 f5000
+9
+variable v; assign a; procedure p; 
+Select <v, a, p> with v.varName = p.procName pattern a(_, "m"_) such that Modifies (a,v)	
+m 100 m5000
+10
+variable v; assign a; while w; if f; 
+Select <f,w,a,v> pattern w(v,_) such that Parent*(f,w) and Parent*(w,a) pattern a(v,_) with v.varName = "x" pattern f(v,_,_)
+7 27 58 x,7 27 40 x5000
+11
+variable v; assign a, a2; 
+Select <a,v,a2> pattern a(v,_"y -   x"_) such that Uses(a2,v) and Modifies (a2,v)	
+80 h 35,80 h 38,80 h 42,80 h 46,80 h 50,86 g 34,86 g 39,86 g 43,86 g 47,86 g 515000
+12
+stmt s1, s2; assign a; while w; 
+Select Boolean such that Next*(s1,s2) and Parent*(w,a)	
+True
+5000

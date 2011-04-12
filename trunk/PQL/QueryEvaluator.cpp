@@ -961,7 +961,8 @@ void QueryEvaluator::evalPattern_PQL(vector<vector<int> >& result, int var, int 
 		}
 		if(pattern1_type == mQueryTree->getIndex("_")){
 			for(int i = 0; i < (int)var_candidates.size(); i++){
-				if(mPKBObject->patternAssign(var_candidates[i], "_", mQueryTree->getContent(pattern2))){
+				bool isAss = mPKBObject->patternAssign(var_candidates[i], "_", mQueryTree->getContent(pattern2));
+				if(isAss){
 					vector<int> tmp;
 					tmp.push_back(mQueryTree->getIndex("integer"));
 					tmp.push_back(var_candidates[i]);
@@ -973,11 +974,12 @@ void QueryEvaluator::evalPattern_PQL(vector<vector<int> >& result, int var, int 
 		}else{ 
 			vector<vector<int> > tmp_result;
 			for(int i = 0; i < (int)pattern1_candidates.size(); i++){
-				for(int k = 0; k < (int)result.size(); k++){
-					int stmt = result[k][0];
+				for(int k = 0; k < (int)var_candidates.size(); k++){
+					int stmt = var_candidates[k];
 					string pattern1_s = PKB_varDecode(pattern1_candidates[i]);
 					string pattern2_s = mQueryTree->getContent(pattern2);
-					if(mPKBObject->patternAssign(stmt, pattern1_s, pattern2_s)){
+					bool isAss = mPKBObject->patternAssign(stmt, pattern1_s, pattern2_s);
+					if(isAss){
 						vector<int> tmp;
 						tmp.push_back(mQueryTree->getIndex("integer"));
 						tmp.push_back(stmt);
