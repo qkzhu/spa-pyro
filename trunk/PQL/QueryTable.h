@@ -43,6 +43,7 @@ public:
 	int affectsStarSize(); //return the number of affects* clauses in the whole query
 	int affectsSize(); //return the number of affects clauses in the whole query
 	
+
 	// for internal usage
 	vector<int> getQuery();
 	vector < Select > getSelectClause();
@@ -83,7 +84,8 @@ public:
 
 	void addToTable(vector<Partitions> &group,vector<vector<int>> &withTable, vector<vector<int>> &patternTable, vector<vector<int>> &suchThatTable, int type);	
 	void addToRelatedTable(); // add sorted related nodes to the related table
-	
+	void filterSameRelation(); // filter out the same relations in such that clause
+
 	//*************** For Optimizer End ****************//
 
 

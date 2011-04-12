@@ -1523,6 +1523,14 @@ void QueryTable::addToRelatedTable(){
 		}	
 	}
 }
+
+void QueryTable::filterSameRelation(){
+	for(int i=0;i<int();i++)
+	{
+	
+	}
+
+}
 /////////////////////////////// OPTIMIZER END ///////////////////////////////
 
 
