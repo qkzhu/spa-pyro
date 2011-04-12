@@ -8,8 +8,8 @@ vector<vector<int> > TupleOperations::tupleJoinOneC(int same1Tuple1, int sameAtT
 
 	for(vector<vector<int> >::iterator i= tuple1.begin(); i<tuple1.end(); i++)
 	{
-		int common1Type = (*i).at(2*same1Tuple1-2);
-		int common1 = (*i).at(2*same1Tuple1-1);
+		int common1Type = (*i).at(2*same1Tuple1);
+		int common1 = (*i).at(2*same1Tuple1+1);
 		for(vector<vector<int> >::iterator k = tuple2.begin(); k< tuple2.end(); k++)
 		{
 			int common2Type = (*k).at(sameAtTuple2*2);
