@@ -553,23 +553,30 @@ void QueryEvaluator::evaluateSuchThat(bool& unrelated_finish, int& last_point, i
 				}
 				numOfCommonElement = numOfCommonElement+2;
 			}
+
+
+			if(para1 == para2){
+				removeInequal(relResult);
+				if(numOfCommonElement == 4)
+					numOfCommonElement = 2;
+				else{
+					if(mgTupleIndexing.empty())
+						mgTupleIndexing.push_back(para1);
+					else
+						mgTupleIndexing.pop_back();
+				}
+			}
 		}else{
 			numOfCommonElement = 0;
-			mgTupleIndexing.push_back(para1);
-			mgTupleIndexing.push_back(para2);
-		}
-
-		if(para1 == para2){
-			removeInequal(relResult);
-			if(numOfCommonElement == 2)
-				numOfCommonElement = 1;
-			else{
-				if(mgTupleIndexing.empty())
-					mgTupleIndexing.push_back(para1);
-				else
-					mgTupleIndexing.pop_back();
+			if(para1 == para2){
+				 removeInequal(relResult);
+				mgTupleIndexing.push_back(para1);
+			}else{
+				mgTupleIndexing.push_back(para1);
+				mgTupleIndexing.push_back(para2);
 			}
 		}
+		
 		
 		if(relResult.empty()){
 			if(isBoolSelected)
@@ -612,9 +619,9 @@ void QueryEvaluator::removeInequal(vector<vector<int> >& tuple){
 		if(value1 != value2)
 			tuple.erase(tuple.begin() + i);
 		else{
-			tuple[i].clear();
-			tuple[i].push_back(value1_type);
-			tuple[i].push_back(value1);
+			//tuple[i].clear();
+			//tuple[i].push_back(value1_type);
+			//tuple[i].push_back(value1);
 			i++;
 		}
 	}
@@ -712,6 +719,10 @@ void QueryEvaluator::transform(vector<vector<int> >& pre_tuple, vector<vector<in
 			tmp_result.clear();
 		}
 	}//tuple joining done
+
+	for(){
+
+	}
 }
 
 void QueryEvaluator::generateResult(){
