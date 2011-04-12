@@ -90,7 +90,7 @@ private:
 	void joinTuples(vector<vector<int> >& result, vector<vector<int> >& pre_tuple, int commonNum, int same1Tuple1, int same2Tuple1, int first_time);
 	
 	//Deal with no selected elements in the result_tuple and patial case
-	void transform(vector<vector<int> >& pre_tuple, vector<vector<int> >& candidates, vector<int> non_evaled_selects);
+	void transform(vector<vector<int> >& pre_tuple, vector<vector<int> >& candidates, vector<int>& select_index, vector<int> non_evaled_selects);
 	
 	//load candidates for relation evaluation. candidates needs no type.
 	void checkCandidates(int var, int var_type, vector<int>& candidates);

@@ -670,7 +670,7 @@ void QueryEvaluator::removeDuplicates(vector<int>& v){
 }
 
 
-void QueryEvaluator::transform(vector<vector<int> >& pre_tuple, vector<vector<int> >& candidates, vector<int> non_evaled_selects){
+void QueryEvaluator::transform(vector<vector<int> >& pre_tuple, vector<vector<int> >& candidates, vector<int>& select_index, vector<int> non_evaled_selects){
 	int size = candidates.size();
 	vector<vector<int> > tmp_result;
 	if(candidates.empty()) return;
@@ -685,7 +685,7 @@ void QueryEvaluator::transform(vector<vector<int> >& pre_tuple, vector<vector<in
 			}else
 			{
 				vector<vector<int> > medium_value;
-				for(int j = 1; j < (int)tmp_result.size(); j++)
+				for(int j = 0; j < (int)tmp_result.size(); j++)
 				{
 					for(int i = 0; i < (int)candidates[k].size(); i++)
 					{
@@ -720,8 +720,37 @@ void QueryEvaluator::transform(vector<vector<int> >& pre_tuple, vector<vector<in
 		}
 	}//tuple joining done
 
-	for(){
 
+	vector<int> select_remain;
+	for(int i = 0; i < (int)select_index.size(); i++){
+		select_remain.push_back(i);
+	}
+	while(!select_index.empty()){
+		vector<int> equalities;
+		int equals = select_index[0];
+		equalities.push_back(select_remain[0]);
+		select_remain.erase(select_remain.begin());
+		select_index.erase(select_index.begin());
+		for(int i = 0; i < (int)select_index.size();){
+			if(equals == select_index[i]){
+				equalities.push_back(select_remain[i]);
+				select_index.erase(select_index.begin()+i);
+				select_remain.erase(select_remain.begin()+i);
+			}else i++;
+		}
+
+		if((int)equalities.size() > 1){
+			for(int j = 0; j < (int)pre_tuple.size(); j++){
+				int value = pre_tuple[j][equalities[0]];
+				for(int k = 1; k < (int)equalities.size(); k++){
+					if(value != pre_tuple[j][equalities[k]]){
+						pre_tuple.erase(pre_tuple.begin() + j);
+						j--;
+						break;
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -753,6 +782,7 @@ void QueryEvaluator::generateResult(){
 	vector<vector<int> > selection_candidates;
 	vector<vector<int> > suchthat_result;
 	vector<int> non_evaled_selects;
+	vector<int> select_index;
 	for(int i = 0; i < mQueryTree->selectSize(); i++)
 	{
 			vector<int> tmp_selected;
@@ -760,6 +790,7 @@ void QueryEvaluator::generateResult(){
 			vector<int> tmp;
 			int select_type = tmp_selected[0];
 			int selected = tmp_selected[1];
+			select_index.push_back(selected);
 
 			bool selected_in_st = false;
 
@@ -803,7 +834,7 @@ void QueryEvaluator::generateResult(){
 	}
 
 	//both tuple should have their type removed
-	transform(final_result, selection_candidates, non_evaled_selects);
+	transform(final_result, selection_candidates, select_index, non_evaled_selects);
 
 	for(int i = 0; i < (int)final_result.size(); i++){
 		vector<int> new_tuple_tmp;
