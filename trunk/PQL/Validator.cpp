@@ -6,8 +6,6 @@
 Validator::Validator(){
 	validTable.populateAllTables();
 }
-
-
 ///////////////////////////////////////////// Constructor End ///////////////////////////////////////////////////////////
 
 
@@ -39,8 +37,8 @@ void Validator::checkSelect(QueryTable &table){
 			{
 				throw new string ("short of DOT ! -- throw by Validator::checkSelect -- size = 4");
 			}
-			//stmt, call, assign, while, if -- attrName: stmt#?
-			if (table.getSelectClause().at(i).tuple.at(0) == STMT || table.getSelectClause().at(i).tuple.at(0) == ASSIGN || table.getSelectClause().at(i).tuple.at(0) == WHILE || table.getSelectClause().at(i).tuple.at(0) == IF || table.getSelectClause().at(i).tuple.at(0) == CALL)
+			//stmt, assign, while, if -- attrName: stmt#
+			if (table.getSelectClause().at(i).tuple.at(0) == STMT || table.getSelectClause().at(i).tuple.at(0) == ASSIGN || table.getSelectClause().at(i).tuple.at(0) == WHILE || table.getSelectClause().at(i).tuple.at(0) == IF )
 			{
 				if(table.getSelectClause().at(i).tuple.at(3)!= STMT_NUM)
 				{
@@ -48,7 +46,16 @@ void Validator::checkSelect(QueryTable &table){
 				}	
 
 			}
-			// constant c -- attrName: value?
+			//call -- attrName: stmt# and procName
+			else if(table.getSelectClause().at(i).tuple.at(0) == CALL )
+			{
+				if(table.getSelectClause().at(i).tuple.at(3)!= STMT_NUM || table.getSelectClause().at(i).tuple.at(3)!= PROCNAME)
+				{
+					throw new string ("attribute error in select clause - call  -- throw by Validator::checkSelect -- size = 4");
+				}	
+			
+			}
+			// constant c -- attrName: value
 			else if(table.getSelectClause().at(i).tuple.at(0) == CONSTANT)
 			{
 				if(table.getSelectClause().at(i).tuple.at(3) != VALUE)
@@ -56,7 +63,7 @@ void Validator::checkSelect(QueryTable &table){
 					throw new string ("attribute error in select clause - constant !  -- throw by Validator::checkSelect  -- size = 4");
 				}
 			}
-			//prog_line
+			//prog_line -- attrName: prog_line#
 			else if(table.getSelectClause().at(i).tuple.at(0) == PROG_L)
 			{
 				if(table.getSelectClause().at(i).tuple.at(3) != PROG_LINE_NUM)
@@ -64,7 +71,7 @@ void Validator::checkSelect(QueryTable &table){
 					throw new string ("attribute error in select clause - prog_line ! -- throw by Validator::checkSelect  -- size = 4");
 				}
 			}
-			//variable  -- attrName: varName?
+			//variable  -- attrName: varName
 			else if (table.getSelectClause().at(i).tuple.at(0) == VARIABLE)
 			{
 				if(table.getSelectClause().at(i).tuple.at(3)!= VARNAME)
@@ -78,10 +85,9 @@ void Validator::checkSelect(QueryTable &table){
 			{
 				if(table.getSelectClause().at(i).tuple.at(3)!=PROCNAME)
 				{
-					throw new string ("attribute error in select clause - procedure ! -- throw by Validator::checkSelect");
+					throw new string ("attribute error in select clause - procedure ! -- throw by Validator::checkSelect  -- size = 4");
 				}
 			}
-			
 			else
 			{
 				throw new string ("first prefix undefined in select clause! -- throw by Validator::checkSelect  -- size = 4");

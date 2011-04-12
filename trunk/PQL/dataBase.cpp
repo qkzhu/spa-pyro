@@ -353,12 +353,20 @@ void dataBase::populateWithTables(){
 	table.push_back(PROCEDURE);	table.push_back(PROCNAME);		table.push_back(VAROFSIMPLE);	table.push_back(-1);			withTable.push_back(table); table.clear();
 	table.push_back(PROCEDURE);	table.push_back(PROCNAME);		table.push_back(PROCOFSIMPLE);	table.push_back(-1);			withTable.push_back(table); table.clear();
 	table.push_back(PROCEDURE);	table.push_back(PROCNAME);		table.push_back(PROCEDURE);		table.push_back(PROCNAME);		withTable.push_back(table); table.clear();
+	table.push_back(PROCEDURE);	table.push_back(PROCNAME);		table.push_back(CALL);			table.push_back(PROCNAME);		withTable.push_back(table); table.clear();
 	table.push_back(PROCEDURE);	table.push_back(PROCNAME);		table.push_back(VARIABLE);		table.push_back(VARNAME);		withTable.push_back(table); table.clear();
 	
 	table.push_back(VARIABLE);	table.push_back(VARNAME);		table.push_back(VAROFSIMPLE);	table.push_back(-1);			withTable.push_back(table); table.clear();
 	table.push_back(VARIABLE);	table.push_back(VARNAME);		table.push_back(PROCOFSIMPLE);	table.push_back(-1);			withTable.push_back(table); table.clear();
 	table.push_back(VARIABLE);	table.push_back(VARNAME);		table.push_back(PROCEDURE);		table.push_back(PROCNAME);		withTable.push_back(table); table.clear();
+	table.push_back(VARIABLE);	table.push_back(VARNAME);		table.push_back(CALL);			table.push_back(PROCNAME);		withTable.push_back(table); table.clear();
 	table.push_back(VARIABLE);	table.push_back(VARNAME);		table.push_back(VARIABLE);		table.push_back(VARNAME);		withTable.push_back(table); table.clear();
+
+	table.push_back(CALL);		table.push_back(PROCNAME);		table.push_back(VAROFSIMPLE);	table.push_back(-1);			withTable.push_back(table); table.clear();
+	table.push_back(CALL);		table.push_back(PROCNAME);		table.push_back(PROCOFSIMPLE);	table.push_back(-1);			withTable.push_back(table); table.clear();
+	table.push_back(CALL);		table.push_back(PROCNAME);		table.push_back(PROCEDURE);		table.push_back(PROCNAME);		withTable.push_back(table); table.clear();
+	table.push_back(CALL);		table.push_back(PROCNAME);		table.push_back(CALL);			table.push_back(PROCNAME);		withTable.push_back(table); table.clear();
+	table.push_back(CALL);		table.push_back(PROCNAME);		table.push_back(VARIABLE);		table.push_back(VARNAME);		withTable.push_back(table); table.clear();
 
 }
 

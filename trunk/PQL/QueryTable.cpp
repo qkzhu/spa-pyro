@@ -49,9 +49,6 @@ void QueryTable::addClause(int type, vector<int> content){
 			selectNode.argument = content.at(1);
 			selectNodeList.push_back(selectNode);
 
-		    //cout<<content.at(0)<<" "<<content.at(1)<<endl;
-
-
 			//for display -- debugging******
 			if(selectVector.size()>1)
 			{
@@ -149,8 +146,6 @@ void QueryTable::addClause(int type, vector<int> content){
 
 		//for Optimizer **************** add to the queryNodeList
 		queryNodeList.push_back(queryNode);
- 		
-
 
 		//add the content to the withVector for display
 		if(suchThatVector.empty() == true)
@@ -177,7 +172,7 @@ void QueryTable::addClause(int type, vector<int> content){
 		withCounter = withCounter + 1;
 		id = withCounter+ WITHCOUNTER;
 
-		cout<<"counter: "<<withCounter<<endl;
+		//cout<<"counter: "<<withCounter<<endl;
 
 		if((int) withTemp.attrCond.size() == 7 || (int) withTemp.attrCond.size() == 9)
 		{
@@ -361,8 +356,6 @@ void QueryTable::addClause(int type, vector<int> content){
 			patternVector.push_back(*it);
 		}
 		
-
-	
 	}
 	else // other value
 	{
@@ -909,6 +902,61 @@ void QueryTable::calculatedPartitionMarks(){
 	}
 
 }
+void QueryTable::calculatePartitionMark(const  vector<vector<QueryNode>> &nodeList, vector<Partitions> &group){
+	
+	for(int i=0;i<int(nodeList.size());i++)
+	{
+		Partitions tempPartition;
+
+		tempPartition.noOfConstants = 0;
+		tempPartition.noOfRelations = int(nodeList.at(i).size());
+		tempPartition.noOfStars = 0;
+		tempPartition.noOfUnderscores = 0;
+		tempPartition.noOfPatterns = 0;
+		tempPartition.totalMarks = 0;
+		tempPartition.partition = nodeList.at(i);
+
+		for(int j=0; j< int(nodeList.at(i).size());j++)
+		{
+			//see if there is any constants
+			if(nodeList.at(i).at(j).prefix1 == INT || nodeList.at(i).at(j).prefix1 == PROCOFSIMPLE || nodeList.at(i).at(j).prefix1 == VAROFSIMPLE)
+			{
+				tempPartition.noOfConstants++;
+			}
+			if(nodeList.at(i).at(j).prefix2 == INT || nodeList.at(i).at(j).prefix2 == PROCOFSIMPLE || nodeList.at(i).at(j).prefix2 == VAROFSIMPLE)
+			{
+				tempPartition.noOfConstants++;
+				
+			}
+			//see if there is any underscore
+			if(nodeList.at(i).at(j).prefix1 == UNDERSCORE)
+			{
+				tempPartition.noOfUnderscores++;
+			}
+			if(nodeList.at(i).at(j).prefix2 == UNDERSCORE)
+			{
+				tempPartition.noOfUnderscores++;
+			}
+			//see if there is any star relations
+			if(nodeList.at(i).at(j).type == AFFECTS_T || nodeList.at(i).at(j).type == NEXT_T || nodeList.at(i).at(j).type == PARENT_T || nodeList.at(i).at(j).type == FOLLOWS_T || nodeList.at(i).at(j).type == CALLS_T)
+			{
+				tempPartition.noOfStars++;
+			
+			}
+			//see if there is any pattern
+			if(nodeList.at(i).at(j).type  == PATTERN)
+			{
+				tempPartition.noOfPatterns++;
+			}
+			
+		}
+		//calculate total markes;
+		tempPartition.totalMarks = tempPartition.noOfConstants*(5) + tempPartition.noOfUnderscores*(1) + tempPartition.noOfStars*(-3) + tempPartition.noOfRelations*(-1)+ tempPartition.noOfPatterns*(4);
+		group.push_back(tempPartition);
+	}
+
+}
+
 void QueryTable::sortPartitions(vector<Partitions> &partition){ 
 
 	sort(partition.begin(),partition.end(),myComparePartition);
@@ -926,7 +974,7 @@ bool QueryTable::myComparePartition(Partitions par1, Partitions par2){
 	return false;
 }
 
-void QueryTable::sortRelationWithinPartition(vector<Partitions> &partition){
+void QueryTable::sortRelationsPartitions(vector<Partitions> &partition){
 
 	for(int i = 0; i<int(partition.size());i++)
 	{
@@ -1096,19 +1144,26 @@ void QueryTable::findPartition(){
 	findPartitionFour();
 
 	// calculated the mark for each partition.
-	calculatedPartitionMarks();
-	
+	//calculatedPartitionMarks();
+	calculatePartitionMark(unrelatedNodes,unrelatedGroup);
+	calculatePartitionMark(relatedNodes,relatedGroup);
+
 	// sort the partitions according to the total marks.
 	sortPartitions(unrelatedGroup);
+	sortPartitions(relatedGroup);
 	
-	// sort relation Within the Partition
-	sortRelationWithinPartition(unrelatedGroup);
+	// sort unrelated relation Within the Partition
+	sortRelationsPartitions(unrelatedGroup);
+	sortRelationsPartitions(relatedGroup);
 
 	//add to the unrelated table
-	addToUnrelatedTable();
-	
+	//addToUnrelatedTable();
+	addToTable(unrelatedGroup, unRelatedWith, unRelatedPattern, unRelatedSuchThat);
+	addToTable(relatedGroup, relatedWith, relatedPattern, relatedSuchThat);
+
+
 	//add to teh related table
-	addToRelatedTable();
+	//addToRelatedTable();
 
 	//cout<<endl<<endl;
 	
@@ -1122,28 +1177,6 @@ void QueryTable::findPartition(){
 	displayPartitions();
 
 }
-
-void QueryTable::tryHashMap(){
-	/*
-	vector<int> tempHolder;
-	int key = 10;
-	tempHolder.push_back(11);
-	tempHolder.push_back(22);
-	typedef pair<int, vector<int>> withKey;
-	
-	//withKey x;
-	//x.first = key;
-	//x.second = tempHolder;
-	
-	withRelationMap.insert(withKey(key,tempHolder));
-	*/
-	hash_map<int, vector<int>>::iterator it;
-	it = withRelationMap.find(0);
-
-	cout<<it->second.at(1)<<endl;
-
-}
-
 
 void QueryTable::addToUnrelatedTable(){
 
@@ -1282,6 +1315,149 @@ void QueryTable::addToUnrelatedTable(){
 			//add emptyIndicator to unRelatedWith
 			unRelatedSuchThat.push_back(partitionDivider);
 			unRelatedSuchThat.push_back(emptyIndicator);
+		}
+
+	}
+
+}
+void  QueryTable::addToTable(vector<Partitions> &group,vector<vector<int>> &withTable, vector<vector<int>> &patternTable, vector<vector<int>> &suchThatTable){
+
+	vector<int> tempRelations;
+	vector<int> partitionDivider;
+	vector<int> emptyIndicator;
+	
+	partitionDivider.push_back(-1);
+	emptyIndicator.push_back(-2);
+
+	for(int i = 0; i<int(group.size());i++)
+	{
+		bool hasWith  = false;
+		bool hasPattern = false;
+		bool hasSuchThat = false;
+		hash_map<int, vector<int>>::iterator it;
+
+
+		for(int j=0;j<int(group.at(i).partition.size());j++)
+		{
+			/*
+			cout<<"group.at(i).partition.at(j).type: "<<group.at(i).partition.at(j).type<<endl;
+			cout<<"group.at(i).partition.at(j).prefix1 " <<group.at(i).partition.at(j).prefix1<<endl;
+			cout<<"group.at(i).partition.at(j).argument1 " <<group.at(i).partition.at(j).argument1<<endl;
+			cout<<"group.at(i).partition.at(j).prefix2 " <<group.at(i).partition.at(j).prefix2<<endl;
+			cout<<"group.at(i).partition.at(j).argument2 " <<group.at(i).partition.at(j).argument2<<endl;
+			*/
+			
+			//the relation is with type
+			if(group.at(i).partition.at(j).type == WITH)
+			{
+				hasWith = true;
+				//get it from with hash Map
+				
+
+				it = withRelationMap.find(group.at(i).partition.at(j).id);
+
+				tempRelations = it->second;		
+				withTable.push_back(tempRelations);
+				
+			}
+			//the relation is pattern 
+			else if(group.at(i).partition.at(j).type == PATTERN)
+			{
+				hasPattern = true;
+
+				//hash_map<int, vector<int>>::iterator it
+
+				it = patternRelationMap.find(group.at(i).partition.at(j).id);
+
+				tempRelations = it->second;		
+				patternTable.push_back(tempRelations);
+			}
+			//the relation is such that relation
+			else if(group.at(i).partition.at(j).type >=5 && group.at(i).partition.at(j).type <=16)
+			{
+				hasSuchThat = true;
+				//first argument is UNDERSCORE and the second is not UNDERSCORE
+				if( group.at(i).partition.at(j).prefix1 == UNDERSCORE && group.at(i).partition.at(j).prefix2 != UNDERSCORE)
+				{
+					tempRelations.push_back( group.at(i).partition.at(j).type);
+					tempRelations.push_back( group.at(i).partition.at(j).argument1);
+					tempRelations.push_back( group.at(i).partition.at(j).prefix2);
+					tempRelations.push_back( group.at(i).partition.at(j).argument2);
+
+					suchThatTable.push_back(tempRelations);
+					
+				}
+				//first argument is not UNDERSCORE and the second is UNDERSCORE
+				else if( group.at(i).partition.at(j).prefix1 != UNDERSCORE && group.at(i).partition.at(j).prefix2 == UNDERSCORE)
+				{
+					tempRelations.push_back( group.at(i).partition.at(j).type);
+					tempRelations.push_back( group.at(i).partition.at(j).prefix1);
+					tempRelations.push_back( group.at(i).partition.at(j).argument1);
+					tempRelations.push_back( group.at(i).partition.at(j).argument2);
+					suchThatTable.push_back(tempRelations);
+					
+				}
+				// both arguments are not UNDRESCORE
+				else if(group.at(i).partition.at(j).prefix1 != UNDERSCORE && group.at(i).partition.at(j).prefix2 != UNDERSCORE)
+				{
+					tempRelations.push_back( group.at(i).partition.at(j).type);
+					tempRelations.push_back( group.at(i).partition.at(j).prefix1);
+					tempRelations.push_back( group.at(i).partition.at(j).argument1);
+					tempRelations.push_back( group.at(i).partition.at(j).prefix2);
+					tempRelations.push_back( group.at(i).partition.at(j).argument2);
+					suchThatTable.push_back(tempRelations);
+					
+				}
+				else
+				{
+				
+					throw new string("no such type can be added into the suchThatTable Table --  throw by QueryTable::addToUnrelatedTable!");
+				}
+				
+			
+			}
+			else
+			{
+				throw new string("The type is undefined in group -- throw by QueryTable::addToUnrelatedTable!");
+			
+			}
+			tempRelations.clear();
+		}
+		
+		if(hasWith)
+		{
+			// add partitionDivider to withTable
+			withTable.push_back(partitionDivider);
+		}
+		else
+		{
+			//add emptyIndicator to withTable
+			withTable.push_back(partitionDivider);
+			withTable.push_back(emptyIndicator);
+		}
+
+		if(hasPattern)
+		{
+			// add partitionDivider to patternTable
+			patternTable.push_back(partitionDivider);
+		}
+		else
+		{
+			//add emptyIndicator to patternTable
+			patternTable.push_back(partitionDivider);
+			patternTable.push_back(emptyIndicator);
+		}
+
+		if(hasSuchThat)
+		{
+			// add partitionDivider to suchThatTable
+			suchThatTable.push_back(partitionDivider);
+		}
+		else
+		{
+			//add emptyIndicator to suchThatTable
+			suchThatTable.push_back(partitionDivider);
+			suchThatTable.push_back(emptyIndicator);
 		}
 
 	}
