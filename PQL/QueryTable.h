@@ -131,6 +131,7 @@ private:
 	//counters
 	int withCounter;
 	int patternCounter;
+	int suchThatCounter;
 	int affectsStarCounter;
 	int affectsCounter;
 
