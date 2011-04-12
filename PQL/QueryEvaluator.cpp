@@ -28,6 +28,17 @@ void QueryEvaluator::evaluate(){
 	
 	if(select[0] == mQueryTree->getIndex("BOOLEAN")) isBoolSelected = true;
 
+	cout << "Selection element check" << endl;
+	for(int i = 0; i < mQueryTree->selectSize(); i++){
+		vector<int> tmp_select;
+		mQueryTree->selectAt(tmp_select, i);
+		for(int k =0; k < (int)tmp_select.size(); k++){
+			cout << tmp_select[k] << " ";
+		}
+		cout << endl;
+	}
+	cout << "Selection check FINISH" << endl;
+
 	/*//////////////////////////////////////////////////////////////////////////////////////////////////////////FOR DEBUGGING
 	cout<< "PQL parser checking"<< endl;
 	cout << "Pattern_PQL clauses: " << endl;
@@ -329,8 +340,6 @@ void QueryEvaluator::evaluatePattern(bool& unrelated_finish, int& last_point, in
 
 		if(var_type == mQueryTree->getIndex("if"))
 			if(clause[++next] != mQueryTree->getIndex("_")){
-				cout << clause[next] << endl;
-				cout << mQueryTree->getIndex("_") << endl;
 				throw new string("QueryEvaluator::evaluate, pattern format error, if third parameter!");
 			}
 		//pattern clause read-in finish//
@@ -659,28 +668,50 @@ void QueryEvaluator::transform(vector<vector<int> >& pre_tuple, vector<vector<in
 	vector<vector<int> > tmp_result;
 	if(candidates.empty()) return;
 	if(pre_tuple.empty()){
-		for(int k = 0; k < (int)candidates[0].size(); k++){
-			vector<int> join_entry;
-			for(int i = 0; i < (int)candidates.size(); i++){
-				join_entry.push_back(candidates[i][k]);
-			}
-			tmp_result.push_back(join_entry);
-		}
-	}else{	
-		for(int i = 0; i< (int)pre_tuple.size(); i++){
-			for(int j = 0; j < (int)candidates[0].size(); j++){
-				vector<int> join_entry;
-				join_entry.insert(join_entry.end(), pre_tuple[i].begin(), pre_tuple[i].end());
-				for(int k = 0; k< (int)candidates.size(); k++){
-					int insert_element = candidates[k][j];
-					int insert_place = non_evaled_selects[k];
-					join_entry.insert(join_entry.begin()+insert_place, insert_element);
+		for(int k = 0; k < (int)candidates.size(); k++){
+			if(tmp_result.empty()){
+				for(int i = 0; i < (int)candidates[0].size(); i++){
+					vector<int> tmp;
+					tmp.push_back(candidates[0][i]);
+					tmp_result.push_back(tmp);
 				}
-				tmp_result.push_back(join_entry);
+			}else
+			{
+				vector<vector<int> > medium_value;
+				for(int j = 1; j < (int)tmp_result.size(); j++)
+				{
+					for(int i = 0; i < (int)candidates[k].size(); i++)
+					{
+						vector<int> join_entry = tmp_result[j];
+						join_entry.push_back(candidates[k][i]);
+						medium_value.push_back(join_entry);
+					}	
+				}
+				tmp_result = medium_value;
 			}
 		}
+		pre_tuple = tmp_result;
 	}
-	pre_tuple = tmp_result;
+	else
+	{	
+		for(int j = 0; j < (int)candidates.size(); j++)
+		{
+			int insert_place = non_evaled_selects[j];
+			for(int i = 0; i< (int)pre_tuple.size(); i++)
+			{
+				for(int k = 0; k< (int)candidates[j].size(); k++)
+				{
+					vector<int> join_entry;
+					join_entry = pre_tuple[i];
+					int insert_element = candidates[j][k];
+					join_entry.insert(join_entry.begin()+insert_place, insert_element);
+					tmp_result.push_back(join_entry);
+				}
+			}
+			pre_tuple = tmp_result;
+			tmp_result.clear();
+		}
+	}//tuple joining done
 }
 
 void QueryEvaluator::generateResult(){
@@ -690,8 +721,10 @@ void QueryEvaluator::generateResult(){
 	int pattern_size = mQueryTree->patternSize();
 	int suchthat_size = mQueryTree->suchThatSize();
 
-	if(isBoolSelected){  //If the select is boolean
-		if(with_size == 0 && suchthat_size == 0 && pattern_size == 0){
+	if(isBoolSelected) //If the select is boolean
+	{  
+		if(with_size == 0 && suchthat_size == 0 && pattern_size == 0)
+		{
 			mResult.setBoolValue(true);
 			return;
 		}
@@ -709,7 +742,8 @@ void QueryEvaluator::generateResult(){
 	vector<vector<int> > selection_candidates;
 	vector<vector<int> > suchthat_result;
 	vector<int> non_evaled_selects;
-	for(int i = 0; i < mQueryTree->selectSize(); i++){
+	for(int i = 0; i < mQueryTree->selectSize(); i++)
+	{
 			vector<int> tmp_selected;
 			mQueryTree->selectAt(tmp_selected, i);
 			vector<int> tmp;
@@ -718,9 +752,12 @@ void QueryEvaluator::generateResult(){
 
 			bool selected_in_st = false;
 
-			for(int index = 0; index < (int)mgTupleIndexing.size(); index++){
-				if(selected == mgTupleIndexing[index]){
-					for(int eva_ind = 0; eva_ind < (int)evalTuple.size(); eva_ind++){
+			for(int index = 0; index < (int)mgTupleIndexing.size(); index++)
+			{
+				if(selected == mgTupleIndexing[index])
+				{
+					for(int eva_ind = 0; eva_ind < (int)evalTuple.size(); eva_ind++)
+					{
 						tmp.push_back(evalTuple[eva_ind][index*2+1]);
 					}
 					selected_in_st = true;
@@ -887,6 +924,8 @@ void QueryEvaluator::evalPattern_PQL(vector<vector<int> >& result_tuple, vector<
 			vector<int> current_result;
 			for(int i = 0; i < (int)pattern1_candidates.size(); i++){
 				vector<int> tmp_result = result;
+				//cout << PKB_varDecode(pattern1_candidates[i]) << endl;
+				//cout << mQueryTree->getContent(pattern2) << endl;
 				getPattern_PQLAssign(tmp_result, PKB_varDecode(pattern1_candidates[i]), mQueryTree->getContent(pattern2));
 				for(int k = 0; k < (int)tmp_result.size(); k++){
 					int found_ele = find_ele(current_result, tmp_result[k]);
@@ -1530,7 +1569,8 @@ void QueryEvaluator::getAffectsStar(int up, vector<int>& result, int para){
 void QueryEvaluator::getPattern_PQLAssign(vector<int>& result, string patternLeft, string patternRight){
 	vector<int> tmp;
 	for(int i = 0; i < (int)result.size(); i++){
-		if(mPKBObject->patternAssign(result[i], patternLeft, patternRight))
+		bool has_pattern = mPKBObject->patternAssign(result[i], patternLeft, patternRight);
+		if(has_pattern)
 			tmp.push_back(result[i]);
 	}
 	result.clear();
