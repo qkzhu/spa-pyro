@@ -253,6 +253,6 @@ bool AST::isCall(int stmt){
 
 int AST::getCallProcIndex(int stmt){
 	//Check if the given stmt number is a call statement
-	if(stmt <= 0 || getNodeByStatementNum(stmt)->type != Node::CALL) return -1;
+	if(stmt <= 0 || stmt >	 getMaxStmtNum() || getNodeByStatementNum(stmt)->type != Node::CALL) return -1;
 	else return getNodeByStatementNum(stmt)->id;
 }
