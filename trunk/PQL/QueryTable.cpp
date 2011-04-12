@@ -1252,7 +1252,7 @@ bool QueryTable::myCompareRelation(QueryNode node1, QueryNode node2){
 
 void QueryTable::findPartition(){
 
-	//filterSameRelation();
+	filterSameRelation();
 	
 	// find all the related nodes and put them into the related group
 	findPartitionOne();
@@ -1535,8 +1535,8 @@ void QueryTable::addToRelatedTable(){
 	}
 }
 
+
 void QueryTable::filterSameRelation(){
-	
 	/*
 	cout<<"QueryNodeList: "<<endl;
 	for(int i =0;i<int(queryNodeList.size());i++)
@@ -1544,51 +1544,23 @@ void QueryTable::filterSameRelation(){
 		cout<<queryNodeList.at(i).type<<" "<<queryNodeList.at(i).prefix1<<" "<<queryNodeList.at(i).argument1<<" "<<queryNodeList.at(i).prefix2<<" "<<queryNodeList.at(i).argument2<<endl;
 	}
 	*/
-	vector<int> samePosition;
-	
+
+	vector<QueryNode> result = queryNodeList;
 	for(int i =0;i<int(queryNodeList.size());i++)
 	{
-		for(int j = i+1;j<int(queryNodeList.size());j++)
+		for(int j = i+1;j<int(result.size());)
 		{
-			if(queryNodeList.at(i).type != WITH && queryNodeList.at(i).type != PATTERN)
+			if((queryNodeList.at(i).type != WITH && queryNodeList.at(i).type != PATTERN)
+				&& (queryNodeList.at(i).type == result.at(j).type)
+				&& (queryNodeList.at(i).prefix1 == result.at(j).prefix1 && queryNodeList.at(i).prefix2 == result.at(j).prefix2 )
+				&& (queryNodeList.at(i).argument1 == result.at(j).argument1 && queryNodeList.at(i).argument2 == result.at(j).argument2))
 			{
-				if(queryNodeList.at(i).type == queryNodeList.at(j).type)
-				{
-					if(queryNodeList.at(i).prefix1 == queryNodeList.at(j).prefix1 && queryNodeList.at(i).prefix2 == queryNodeList.at(j).prefix2 )
-					{
-					   if(queryNodeList.at(i).argument1 == queryNodeList.at(j).argument1 && queryNodeList.at(i).argument2 == queryNodeList.at(j).argument2) 
-					   {
-						
-						   samePosition.push_back(i);
-					   }					
-					}
-				}
-			}
+				
+				result.erase(result.begin()+j);
+			}else j++;
 		}
 	}
-
-
-	for(int i =0;i<int(samePosition.size());i++)
-	{
-		//queryNodeList.erase(queryNodeList.begin()+samePosition.at(i));
-		cout<<samePosition.at(i)<<" ";
-
-	}
-	cout<<endl;
-
-	for(int i =0;i<int(samePosition.size());i++)
-	{
-		//queryNodeList.erase(queryNodeList.begin()+samePosition.at(i));
-		
-		
-		for(int k=0;k<int(samePosition.size());k++)
-		{
-			samePosition.at(k)--;
-
-		}
-		cout<<samePosition.at(i)<<" ";
-	}
-	
+	queryNodeList = result;
 	/*
 	cout<<"flitered QueryNodeList: "<<endl;
 
@@ -1599,6 +1571,9 @@ void QueryTable::filterSameRelation(){
 	*/
 
 }
+
+
+
 /////////////////////////////// OPTIMIZER END ///////////////////////////////
 
 
