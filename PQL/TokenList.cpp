@@ -23,8 +23,8 @@ int TokenList::tokenList(string s)
 	
 	fullVector.clear();
 
-    string a[]={";",",","(",")",".","=","<",">"};
-	for(int j=0;j<8;j++)
+    string a[]={"\t",";",",","(",")",".","=","<",">"};
+	for(int j=0;j<9;j++)
 	{
 		for(int i=0;i<(int)temp1.size();i++)
 		{
@@ -48,9 +48,9 @@ vector<string> TokenList::tokenBy(string s,string deliminator)
 	
 	tokenizer.set(s,deliminator);
 	pch=tokenizer.next();
-	if(deliminator==" "||s.substr(s.size()-1,1)==deliminator)
+	if(deliminator==" "||deliminator=="\t"||s.substr(s.size()-1,1)==deliminator)
 		indicatorT=true;
-	if(deliminator!=" "&&s.substr(0,1)==deliminator)
+	if(deliminator!=" "&&deliminator!="\t"&&s.substr(0,1)==deliminator)
 		indicatorH=true;
 	if(indicatorH)
 		temp.push_back(deliminator);
@@ -58,7 +58,7 @@ vector<string> TokenList::tokenBy(string s,string deliminator)
 	while(pch!="")
 	{
 	  temp.push_back(pch);
-	if(deliminator!=" ")
+	if(deliminator!=" "&&deliminator!="\t")
       temp.push_back(deliminator);
 	
        pch=tokenizer.next();
@@ -69,7 +69,7 @@ vector<string> TokenList::tokenBy(string s,string deliminator)
 
 	int length=TokenListLength(temp);
 	//cout<<"after token "<<length<<"compare with "<<s.length()<<endl;
-	if(length<(int)s.length()&&deliminator!=" ")
+	if(length<(int)s.length()&&deliminator!=" "&&deliminator!="\t")
 	{   // cout<<"duplicate"<<deliminator<<endl;
 		throw new string("duplicate "+deliminator+"are not valide \n");
 	}
