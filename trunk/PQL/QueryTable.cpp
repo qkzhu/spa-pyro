@@ -1286,11 +1286,12 @@ void QueryTable::findPartition(){
 	
 	
 
-	displayAll();
+	
 	
 	//display the node list
-	//displayNodeList();
+	displayNodeList();
 
+	//displayAll();
 	//display the partition
 	//displayPartitions();
 
@@ -1358,6 +1359,8 @@ void  QueryTable::addToTable(vector<Partitions> &group,vector<vector<int>> &with
 					tempRelations.push_back( group.at(i).partition.at(j).type);
 					tempRelations.push_back( UNDERSCORE);
 					tempRelations.push_back( UNDERSCORE);
+					
+					suchThatTable.push_back(tempRelations);
 				
 				}
 				//first argument is UNDERSCORE and the second is not UNDERSCORE
