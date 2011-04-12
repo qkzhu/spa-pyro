@@ -773,6 +773,12 @@ void Validator::fillAssignVector(const string &str, vector<int> &expression, vec
 
 	bool flag = false;
 	vector<int> tempHolder;
+	
+
+	if(str.empty())
+	{
+		throw new string("nothing inside the doube quote -- throw by Validator::fillAssignVector");
+	}
 
 
 	if(int(str.front()) == 42 || int(str.front()) == 43 || int(str.front()) == 45 || int(str.back()) == 42 || int(str.back()) == 43 || int(str.back()) == 45)
