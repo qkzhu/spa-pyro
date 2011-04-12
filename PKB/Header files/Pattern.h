@@ -18,6 +18,8 @@ public:
 	bool patternAssign(int stmtNum, string patternLeft, string patternRight, AST& ast, VarTable& varTable);
 
 	bool match(const string& input, const string& existing, bool matchFront, bool matchEnd);
+	bool matchUsingNode(Node* input, Node* existing, bool matchFront, bool matchEnd);
+	bool matchInfix(const string& input, const string& existing, bool matchFront, bool matchEnd);
 
 	//bool match(Node* input, Node* existing, bool matchFront, bool matchEnd);
 	bool matchUsingPrefix(const string& input, const string& existing, bool matchFront, bool matchEnd);
@@ -49,6 +51,7 @@ private:
 	bool isValidName(string var_name);
 	string removeSpacesAndQuotes(string s);
 	int getPriority(char c);
+	int getNodePriority(Node::NodeType type);
 	void addOperator(vector<Node*> &tree, char op, AST& ast, VarTable& varTable);
 };
 #endif
