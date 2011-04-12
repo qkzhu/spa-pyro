@@ -41,6 +41,7 @@ void QueryTable::addClause(int type, vector<int> content){
 		}
 		else  //content is tuple
 		{   
+		
 			selectTemp.tuple = content;
 			selectClause.push_back(selectTemp);
 			
@@ -847,61 +848,7 @@ void QueryTable::findPartitionFour(){
 
 }
 
-void QueryTable::calculatedPartitionMarks(){
 
-	//unrelated partitions
-	for(int i=0;i<int(unrelatedNodes.size());i++)
-	{
-		Partitions tempPartition;
-
-		tempPartition.noOfConstants = 0;
-		tempPartition.noOfRelations = int(unrelatedNodes.at(i).size());
-		tempPartition.noOfStars = 0;
-		tempPartition.noOfUnderscores = 0;
-		tempPartition.noOfPatterns = 0;
-		tempPartition.totalMarks = 0;
-		tempPartition.partition = unrelatedNodes.at(i);
-
-		for(int j=0; j< int(unrelatedNodes.at(i).size());j++)
-		{
-			//see if there is any constants
-			if(unrelatedNodes.at(i).at(j).prefix1 == INT || unrelatedNodes.at(i).at(j).prefix1 == PROCOFSIMPLE || unrelatedNodes.at(i).at(j).prefix1 == VAROFSIMPLE)
-			{
-				tempPartition.noOfConstants++;
-			}
-			if(unrelatedNodes.at(i).at(j).prefix2 == INT || unrelatedNodes.at(i).at(j).prefix2 == PROCOFSIMPLE || unrelatedNodes.at(i).at(j).prefix2 == VAROFSIMPLE)
-			{
-				tempPartition.noOfConstants++;
-				
-			}
-			//see if there is any underscore
-			if(unrelatedNodes.at(i).at(j).prefix1 == UNDERSCORE)
-			{
-				tempPartition.noOfUnderscores++;
-			}
-			if(unrelatedNodes.at(i).at(j).prefix2 == UNDERSCORE)
-			{
-				tempPartition.noOfUnderscores++;
-			}
-			//see if there is any star relations
-			if(unrelatedNodes.at(i).at(j).type == AFFECTS_T || unrelatedNodes.at(i).at(j).type == NEXT_T || unrelatedNodes.at(i).at(j).type == PARENT_T || unrelatedNodes.at(i).at(j).type == FOLLOWS_T || unrelatedNodes.at(i).at(j).type == CALLS_T)
-			{
-				tempPartition.noOfStars++;
-			
-			}
-			//see if there is any pattern
-			if(unrelatedNodes.at(i).at(j).type  == PATTERN)
-			{
-				tempPartition.noOfPatterns++;
-			}
-			
-		}
-		//calculate total markes;
-		tempPartition.totalMarks = tempPartition.noOfConstants*(5) + tempPartition.noOfUnderscores*(1) + tempPartition.noOfStars*(-3) + tempPartition.noOfRelations*(-1)+ tempPartition.noOfPatterns*(4);
-		unrelatedGroup.push_back(tempPartition);
-	}
-
-}
 void QueryTable::calculatePartitionMark(const  vector<vector<QueryNode>> &nodeList, vector<Partitions> &group){
 	
 	for(int i=0;i<int(nodeList.size());i++)
@@ -1112,14 +1059,14 @@ void QueryTable::sortRelations(vector<QueryNode> &queryNodes){
 	
 	}
 
-	/*
+	
 	for(int i=0;i<int(queryNodes.size());i++)
 	{
 		cout<<"/////////////////////////////////////////////////////////////////////////"<<endl;
 		cout<<queryNodes.at(i).type<<" "<<queryNodes.at(i).prefix1<<" "<<queryNodes.at(i).argument1<<" "<<queryNodes.at(i).prefix2<<" "<<queryNodes.at(i).argument2<<endl;
 		cout<<"Ranking is "<<queryNodes.at(i).ranking<<endl;
 	}
-	*/
+	
 	//TODO 
 	
 	sort(queryNodes.begin(),queryNodes.end(),myCompareRelation);
