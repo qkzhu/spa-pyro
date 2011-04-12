@@ -33,8 +33,8 @@ vector<vector<int> >  TupleOperations::tupleJoinTwoC(int same1Tuple1,int same2Tu
 
 	for(vector<vector<int> >::iterator i= tuple1.begin(); i<tuple1.end(); i++)
 	{
-		int common1 = (*i).at(same1Tuple1*2-1);
-		int common2 = (*i).at(same2Tuple1*2-1);
+		int common1 = (*i).at(same1Tuple1*2+1);
+		int common2 = (*i).at(same2Tuple1*2+1);
 		for(vector<vector<int> >::iterator k = tuple2.begin(); k< tuple2.end(); k++)
 		{
 			int common1_tuple2 = (*k).at(1);
