@@ -45,7 +45,7 @@ void QueryEvaluator::evaluate(){
 	for(int i=0; i< mQueryTree->patternSize(); i++){
 		vector<int> tmp_pattern;
 		mQueryTree->patternAt(tmp_pattern, i);
-		for(int k = 0; k < (int)tmp_pattern.size(); k++){
+		for(int k = 0; k < (int)tmp_pattern.size(); k++4){
 			cout << tmp_pattern.at(k) << " ";
 		}
 		cout << endl;
@@ -109,6 +109,12 @@ void QueryEvaluator::evaluate(){
 		//}
 	}
 
+	if(isBoolSelected){
+		mResult.setBoolValue(true);
+		return;
+	}
+
+
 	initialize();
 
 	with_size = mQueryTree->withSize();
@@ -154,6 +160,7 @@ void QueryEvaluator::evaluate(){
 
 void QueryEvaluator::evaluateWith(bool& unrelated_finish, int& last_point, int threshold){
 	//Start evaluating With clauses 
+	int start = 0;
 	for(; last_point < threshold; last_point++){
 		vector<int> clause;
 		if(!unrelated_finish)
@@ -293,7 +300,8 @@ void QueryEvaluator::evaluateWith(bool& unrelated_finish, int& last_point, int t
 			return;
 		}
 
-		joinTuples(evalTuple, with_result, numOfCommonElement, same1Tuple1, same2Tuple1, last_point);
+		joinTuples(evalTuple, with_result, numOfCommonElement, same1Tuple1, same2Tuple1, start);
+		start++;
 
 		if(evalTuple.empty()){
 			if(isBoolSelected)
@@ -1041,8 +1049,8 @@ void QueryEvaluator::joinTuples(vector<vector<int> >& evalTuple, vector<vector<i
 		}else if(common_num == 4){
 			evalTuple = TupleOperations::tupleJoinTwoC(same1_tuple1, same2_tuple1, evalTuple, pre_tuple);
 		}else if((int) evalTuple.size() == 0){
-			if(first_time == 0)
-				evalTuple = pre_tuple;
+			//(first_time == 0)
+			evalTuple = pre_tuple;
 		}else{
 			vector<vector<int> > tmp_store;
 			for(vector<vector<int> >::iterator i = evalTuple.begin(); i<evalTuple.end(); i++)

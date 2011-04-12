@@ -1,0 +1,81 @@
+procedure proc1 {
+	while i {
+		i=i+1;
+	}
+	x = 23;
+	x1 = 0;
+	x2 = 1;
+	spa = x1 + x2;
+	while x {
+		x1 = x2;
+		x2 = spa;
+		spa = x1 + x2;
+	}
+	if spa then 
+	{
+		call proc2;
+	}
+	else 
+	{
+		z = spa * ( x + 1);
+		if z then {
+			while spa {
+				if z1 then {
+					while z {
+						z = z - x + (x1 * x2);
+					}
+				}
+				else {
+					while x {
+						if y then {
+							z = spa * (13 + z2)+ yx*d;
+							x=x+1;
+						}
+						else {
+							call proc2;
+						}
+					}
+				}
+			}
+		}
+		else {
+			if i then {
+				i = i+1;
+				k = k-k*i;
+			}
+			else {
+				j = j1 - j2 * (8+ 12);
+			}
+		}
+	}
+}
+
+procedure proc2 {
+	tok = 3;
+	pre = 11;
+	pre = tok + pre;
+	call proc3;
+	while query {
+		eva = qtree * ( pre + pkb);
+		result = eva + format;
+		if empty then {
+			results = none;
+		}
+		else {
+			while result {
+				results = 1 + result + 1;
+			}
+		}
+	}
+}
+
+procedure proc3 {
+	a = a-22;
+	if a then {
+		b = (a1 - a2) * s;
+	}
+	else { 
+		c = b* ab;
+	}
+	c=c+13;
+}        

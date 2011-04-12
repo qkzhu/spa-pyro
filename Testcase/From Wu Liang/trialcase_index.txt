@@ -1,4 +1,4 @@
-procedure p {
+procedure proc1 {
 1       y = 0;
 2       a = g;
 3       j = j;
@@ -11,7 +11,7 @@ procedure p {
 procedure q {
 8       c = 555;
 9       if c then {
-10              g = a*b;
+10              g = abc*b;
 11              b = 3*4+5;
         }  else {
 12              u = g;
@@ -33,5 +33,4 @@ procedure r {
                         }
                 }
         }
-23      call p;
 }

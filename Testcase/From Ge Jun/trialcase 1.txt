@@ -1,0 +1,7 @@
+1
+cat: All
+1
+prog_line s1,s2,s3,s4,s5; while w1,w2; if ifs; variable v; call c;assign a1;
+Select s5 such that Parent(s3,s2) and Parent*(s4,s3) and Parent*(s4,s5) and Next*(s1,s2) and Follows*(s1,s2) and Next*(s2,s2) pattern ifs(v,_,_) such that Parent*(ifs,w1) and Uses(s1,v) and Parent*(w2,s1) pattern w1(v,_) with v.varName="spa" and w1.stmt#=w2.stmt# and s5.prog_line#=c.stmt# and a1.stmt#=s1.prog_line# pattern a1("z",_"yx*d"_)
+12, 23
+5000
