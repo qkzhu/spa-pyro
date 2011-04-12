@@ -1352,8 +1352,16 @@ void  QueryTable::addToTable(vector<Partitions> &group,vector<vector<int>> &with
 			else if(group.at(i).partition.at(j).type >=5 && group.at(i).partition.at(j).type <=16)
 			{
 				hasSuchThat = true;
+				//both arguments are UNDERSCORE
+				if(group.at(i).partition.at(j).prefix1 == UNDERSCORE && group.at(i).partition.at(j).prefix2 == UNDERSCORE)
+				{
+					tempRelations.push_back( group.at(i).partition.at(j).type);
+					tempRelations.push_back( UNDERSCORE);
+					tempRelations.push_back( UNDERSCORE);
+				
+				}
 				//first argument is UNDERSCORE and the second is not UNDERSCORE
-				if( group.at(i).partition.at(j).prefix1 == UNDERSCORE && group.at(i).partition.at(j).prefix2 != UNDERSCORE)
+				else if( group.at(i).partition.at(j).prefix1 == UNDERSCORE && group.at(i).partition.at(j).prefix2 != UNDERSCORE)
 				{
 					tempRelations.push_back( group.at(i).partition.at(j).type);
 					tempRelations.push_back( group.at(i).partition.at(j).argument1);
@@ -1387,14 +1395,14 @@ void  QueryTable::addToTable(vector<Partitions> &group,vector<vector<int>> &with
 				else
 				{
 				
-					throw new string("no such type can be added into the suchThatTable Table --  throw by QueryTable::addToUnrelatedTable!");
+					throw new string("no such type can be added into the suchThatTable Table --  throw by QueryTable::addToTable!");
 				}
 				
 			
 			}
 			else
 			{
-				throw new string("The type is undefined in group -- throw by QueryTable::addToUnrelatedTable!");
+				throw new string("The type is undefined in group -- throw by QueryTable::addToTable!");
 			
 			}
 			tempRelations.clear();
@@ -1558,15 +1566,27 @@ void QueryTable::filterSameRelation(){
 			}
 		}
 	}
-	
+
+
 	for(int i =0;i<int(samePosition.size());i++)
 	{
-		queryNodeList.erase(queryNodeList.begin()+samePosition.at(i));
-		for(int k=i+1;k<int(samePosition.size());k++)
+		//queryNodeList.erase(queryNodeList.begin()+samePosition.at(i));
+		cout<<samePosition.at(i)<<" ";
+
+	}
+	cout<<endl;
+
+	for(int i =0;i<int(samePosition.size());i++)
+	{
+		//queryNodeList.erase(queryNodeList.begin()+samePosition.at(i));
+		
+		
+		for(int k=0;k<int(samePosition.size());k++)
 		{
 			samePosition.at(k)--;
 
 		}
+		cout<<samePosition.at(i)<<" ";
 	}
 	
 	/*
