@@ -1,4 +1,4 @@
-1000
+17
 cat: follows
 1
 stmt s;
@@ -46,7 +46,7 @@ Select a pattern a(_, _"u*v"_) pattern a(_, "u * v"_) pattern a(_, _"u*v");
 6
 5000
 10
-assign a;
+stmt a;
 select a such that affects*(a, 22);
 20
 5000
@@ -83,5 +83,5 @@ select <s, p1, v> with s.stmt# = 1 with p1.procName = "r" with v.varName = "y";
 17
 call c; procedure p, r;
 select c with c.procName = "r";
-none
+15
 5000
