@@ -30,10 +30,6 @@ void Validator::checkSelect(QueryTable &table){
 
 	for(int i =0; i<size;i++)
 	{		
-		//cout<<"table.getSelectClause().at(i).tuple.at(1)" <<table.getSelectClause().at(i).tuple.at(1)<<endl;
-		//cout<<"table.getSelectClause().at(i).tuple.at(2)" <<table.getSelectClause().at(i).tuple.at(2)<<endl;
-		//cout<<"table.getSelectClause().at(i).tuple.at(3)" <<table.getSelectClause().at(i).tuple.at(3)<<endl;
-
 
 		if(int(table.getSelectClause().at(i).tuple.size()) == 4)
 		{
@@ -274,13 +270,10 @@ void Validator::checkSuchThat(QueryTable &table){
 			} // end if(suchThat.at(j) == VAROFSIMPLE ||suchThat.at(j) == PROCOFSIMPLE)
 		
 		} //end for(int j=0;j<int(suchThat.size());j++)
-		
-		//fill up the validation according to the relation type
+	
 		vector<vector<int>> validationTables;
 		getValidTable(suchThat[0],validationTables);
-		//cout<<"validationTable size "<<validationTables.size()<<endl;
-		//cout<<"suchThat size "<<suchThat.size()<<endl;
-		
+
 		for(int k = 0;k<int(validationTables.size());k++)
 		{
 			if(suchThat.size() == 5)
@@ -295,7 +288,7 @@ void Validator::checkSuchThat(QueryTable &table){
 			}
 			else if(suchThat.size() == 4)
 			{
-				if(  (suchThat.at(1) == validationTables[k][0] && (suchThat.at(2) == validationTables[k][1])) || (suchThat.at(1) == validationTables[k][0]) && (suchThat.at(3) == validationTables[k][1]) ) 
+				if( (suchThat.at(1) == validationTables[k][0] && (suchThat.at(2) == validationTables[k][1])) || (suchThat.at(1) == validationTables[k][0]) && (suchThat.at(3) == validationTables[k][1]) ) 
 				{
 					
 					noError = true;
@@ -411,8 +404,6 @@ void Validator::checkWith(QueryTable &table){
 				{
 					noError = false;
 				}
-				
-
 			}
 			else if(with.size() == 9)
 			{
