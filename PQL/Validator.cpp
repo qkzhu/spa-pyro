@@ -100,30 +100,27 @@ void Validator::checkSelect(QueryTable &table){
 			
 			}
 
-		}
+		} // end if the select tuple size is 4
 		else if(int(table.getSelectClause().at(i).tuple.size()) == 2)
 		{
 			if( !(table.getSelectClause().at(i).tuple.at(0) >=51 && table.getSelectClause().at(i).tuple.at(0) <=60))
 			{
 				throw new string ("first prefix undefined in select clause! -- throw by Validator::checkSelect -- size = 2");
 			}
-		}
+		} // end if the select tuple size is 2
 		else if(int(table.getSelectClause().at(i).tuple.size()) == 1)
 		{
 			if( table.getSelectClause().at(i).tuple.at(0) != BOOLEAN)
 			{
 				throw new string ("the prefix has to be BOOLEAN in select clause! -- throw by Validator::checkSelect -- size = 1");
 			}
-		}
+		}// end if the select tuple size is 1
 		else
 		{
 		
 			throw new string ("size error in select clause! -- throw by Validator::checkSelect ");
 		}
-	}
-
-
-	
+	} // end for loop : for(int i =0; i<size;i++)	
 }
 ///////////////////////////////////////////// Check Select End////////////////////////////////////////////////////
 
@@ -131,9 +128,7 @@ void Validator::checkSelect(QueryTable &table){
 
 ///////////////////////////////////////////// Check Such That Start////////////////////////////////////////////////////
 
-/********    New Method       *********/
 void  Validator::getValidTable(int relationType, vector<vector<int>> &validationTable){
-
 	switch (relationType){
 
 	case PARENT:
@@ -225,13 +220,8 @@ void Validator::checkSuchThat(QueryTable &table){
 	{
 		//to check against table, if it has a entry, it will not throw error
 		bool noError = false;
-
 		vector<int> suchThat;
-		//vector<int> index;
-		suchThat = table.getSuchThatClause().at(i).relCond;	
-		
-		//cout<<"suchThat[0] "<<suchThat[0]<<endl;
-
+		suchThat = table.getSuchThatClause().at(i).relCond;
 		string relationType;
 		getKeyWord(suchThat[0], relationType);
 		string functionName = " -- throw by Validator::checkSuchThat";
@@ -245,8 +235,6 @@ void Validator::checkSuchThat(QueryTable &table){
 		//check for empty string for varOfSimple and procOfSimple
 		for(int j=0;j<int(suchThat.size());j++)
 		{
-			
-
 			if(suchThat.at(j) == VAROFSIMPLE ||suchThat.at(j) == PROCOFSIMPLE)
 			{
 				if((j+1)<int(suchThat.size()))
@@ -277,18 +265,16 @@ void Validator::checkSuchThat(QueryTable &table){
 						}
 					}
 					
-				}
+				} // end if (j+1) is not out of range
 				else
 				{
 					throw new string("no parameter after prefix in relation "+ relationType + functionName);
 				}
 			
-			}
+			} // end if(suchThat.at(j) == VAROFSIMPLE ||suchThat.at(j) == PROCOFSIMPLE)
 		
-		}
+		} //end for(int j=0;j<int(suchThat.size());j++)
 		
-		
-
 		//fill up the validation according to the relation type
 		vector<vector<int>> validationTables;
 		getValidTable(suchThat[0],validationTables);
@@ -330,13 +316,13 @@ void Validator::checkSuchThat(QueryTable &table){
 				}
 			}
 		
-		}
+		} // end for loop: for(int k = 0;k<int(validationTables.size());k++)
 		//cout<<"relationType: " <<relationType<<endl;
 		if(!noError)
 		{
 			throw new string("Error Occurs at relation: "+ relationType + functionName);
 		}
-	}
+	} // end outer for loop : for(int i=0; i<size; i++)
 }
 ///////////////////////////////////////////// Check Such That End////////////////////////////////////////////////////
 
@@ -407,7 +393,7 @@ void Validator::checkWith(QueryTable &table){
 			
 			}
 		
-		}
+		} // end innter for loop: for(int j=0;j<int(with.size());j++)
 		
 		//Check against Table
 		for(int k=0; k<int(validationTables.size());k++)
@@ -420,15 +406,15 @@ void Validator::checkWith(QueryTable &table){
 					noError = true;
 				}
 				
-				if(with[5]>=51 &&with[5]<=60)
+				// to check if any other type is in this size
+				if(with[5]>=51 && with[5]<=60)
 				{
 					noError = false;
 				}
 				
 
 			}
-
-			if(with.size() == 9)
+			else if(with.size() == 9)
 			{
 				if((with[0] == validationTables[k][0]) && (with[3] == validationTables[k][1]) && (with[5] == validationTables[k][2]) && (with[8] == validationTables[k][3]))
 				{
@@ -437,7 +423,7 @@ void Validator::checkWith(QueryTable &table){
 							
 			}
 		
-		}
+		} // end innter for loop :for(int k=0; k<int(validationTables.size());k++)
 
 		//cout<<tempNoError<<" inside checkWith "<<endl;
 		if (!noError)
@@ -445,7 +431,7 @@ void Validator::checkWith(QueryTable &table){
 			throw new string("format error in with condition No. "+ number + functionName);
 		}
 		
-	}
+	} // end outer for loop : for(int i=0; i<size;i++)
 
 }
 ///////////////////////////////////////////// Check With Start////////////////////////////////////////////////////
@@ -497,7 +483,7 @@ void Validator::checkPattern_PQL(QueryTable &table){
 					throw new string("argument error inside pattern clause! -- throw by Validator::checkPattern_PQL - pattern size 6");
 				}
 					
-			}
+			} // end if(int(pattern.size()) == 6) 
 			else if(int(pattern.size()) == 7) // assign("x", "x+y") ->  ASSIGN 301 PATTERNOFSIMPLE(or VARIABLE) 301 COMMA PATTERNOFSIMPLE 302
 			{
 				//cout<<pattern.at(2)<<endl;
@@ -510,7 +496,7 @@ void Validator::checkPattern_PQL(QueryTable &table){
 			{
 				throw new string("pattern size error -- throw by Validator::checkPattern_PQL - pattern size 5");
 			}
-		}
+		}// end if(pattern.at(0) == ASSIGN)
 		else if(pattern.at(0) == WHILE)
 		{
 
@@ -528,7 +514,7 @@ void Validator::checkPattern_PQL(QueryTable &table){
 			{
 				throw new string("size error! -- throw by Validator::checkPattern_PQL -  WHILE ");
 			}
-		}
+		} // end if(pattern.at(0) == WHILE)
 		else if(pattern.at(0) == IF)
 		{
 			if(pattern.at(2) == UNDERSCORE)
@@ -545,16 +531,10 @@ void Validator::checkPattern_PQL(QueryTable &table){
 			{
 				throw new string("size error -- throw by Validator::checkPattern_PQL -  IF ");
 			}
-		}
-		/*
-		for(int i=0;i<int(pattern.size());i++)
-		{
-			cout<<pattern.at(i)<<" ";
-		}
-		cout<<endl;
-		*/
+		}// end if(pattern.at(0) == IF)
+
 		checkPattern_PQLThree(pattern);
-	}
+	} // end outer for loop: for(int i=0; i<size;i++)
 }
 void Validator::checkPattern_PQLOne(const string &str)
 {
@@ -563,10 +543,7 @@ void Validator::checkPattern_PQLOne(const string &str)
 	vector<vector<int>> varOfSimple;
 	
 	fillAssignVector(str, expression, separatorPostion, varOfSimple);
-	//validation
-	//cout<<int(varOfSimple.size())<<endl;
-	//cout<<varOfSimple.size()<<endl;
-	
+
 	for(int i = 0; i< int(varOfSimple.size());i++)
 	{
 		
@@ -575,8 +552,7 @@ void Validator::checkPattern_PQLOne(const string &str)
 		//check all other possibilities
 		for(int j = 0; j<int(varOfSimple.at(i).size());j++)
 		{
-			//cout<<varOfSimple.at(i).at(j)<<endl;
-			//cout<<varOfSimple.at(i).at(j)<<" ";
+
 			if( !( (varOfSimple.at(i).at(j) >= 65 && varOfSimple.at(i).at(j) <= 97) || (varOfSimple.at(i).at(j) >= 97 && varOfSimple.at(i).at(j) <= 122) || (varOfSimple.at(i).at(j) >= 48 && varOfSimple.at(i).at(j) <= 57) || (varOfSimple.at(i).at(j) == 32) ) )
 			{
 				throw new string("invalid symbol at pattern expression -- throw by Validator::checkPattern_PQLOne");			
@@ -592,8 +568,6 @@ void Validator::checkPattern_PQLTwo(const string &str){
 	int quoteEnd = 0;
 	int underscoreNo = 0;
 	string tempString;
-	//cout<<"string is "<<str<<endl;
-	//cout <<Convertor::getKeyword(401)<<endl;
 
 	if(str.empty())
 	{
@@ -629,6 +603,7 @@ void Validator::checkPattern_PQLTwo(const string &str){
 	{
 		throw new string("quotation Number is wrong-- throw by Validator::checkPattern_PQLTwo");
 	}
+
 	if(underscoreNo == 0) // no underscore involved
 	{
 		//cout<<str.at(str.length()-1)<<endl;
@@ -639,8 +614,7 @@ void Validator::checkPattern_PQLTwo(const string &str){
 		{
 			throw new string("quotation position is wrong -- throw by Validator::checkPattern_PQLTwo");
 		}
-	}
-	
+	}// end if(underscoreNo == 0)
 	else if(underscoreNo == 1)
 	{
 		//cout<<int(str.at(str.length()-2))<<endl;
@@ -666,7 +640,7 @@ void Validator::checkPattern_PQLTwo(const string &str){
 			throw new string("underscore error, underscoreNo == 1 -- throw by Validator::checkPattern_PQLTwo");
 			
 		}
-	}
+	}//end if(underscoreNo == 1)
 	else if(underscoreNo == 2) // _" "_
 	{
 
@@ -676,7 +650,7 @@ void Validator::checkPattern_PQLTwo(const string &str){
 			throw new string("undersocore and quotation wrong, underscoreNo == 2  -- throw by Validator::checkPattern_PQLTwo");
 		}
 	
-	}
+	}// else if(underscoreNo == 2)
 	else
 	{
 		throw new string("undersocreNo is wrong -- throw by Validator::checkPattern_PQLTwo");
@@ -684,21 +658,16 @@ void Validator::checkPattern_PQLTwo(const string &str){
 	
 	tempString = str.substr(quoteStart+1, (quoteEnd-quoteStart-1));
 
-	//cout<<tempString<<endl;
 	checkPattern_PQLOne(tempString);
 }
 
 
 void Validator::checkPattern_PQLThree(vector<int> &patternExpression){
 
-	//cout<<patternExpression.at(0)<<endl;
-	//cout<<patternExpression.size()<<endl;
-	
-	//cout<<"patternExpression.at(2)  "<<patternExpression.at(2)<<endl;
 	if(patternExpression.at(2) == PATTERNOFSIMPLE)
 	{
 		string tempString = Convertor::getKeyword(patternExpression.at(3));
-		//cout<<"tempString "<<tempString<<endl;
+
 		if(int(tempString.size())<2)
 		{
 			throw new string("first argument size is wrong -- throw by Validator::checkPattern_PQLThree");
@@ -714,7 +683,7 @@ void Validator::checkPattern_PQLThree(vector<int> &patternExpression){
 				throw new string("format error in first argument -- throw by Validator::checkPattern_PQLThree");
 			}
 		}
-	}
+	} // end if if(patternExpression.at(2) == PATTERNOFSIMPLE)
 	
 	for(int i=0; i < int(patternExpression.size());i++)
 	{
