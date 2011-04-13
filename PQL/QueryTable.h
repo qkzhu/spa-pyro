@@ -50,7 +50,6 @@ public:
 	vector < SuchThat > getSuchThatClause();
 	vector < With > getWithClause();
 	vector < Pattern_PQL > getPattern_PQLClause();
-
 	void showTable(); // show the query 
 
 	
@@ -65,14 +64,12 @@ public:
 	void findPartitionTwo(); // find all related partitions
 	void findPartitionFour(); // find all unrelated partitions
 
-	 
 	void calculatePartitionMark(const vector<vector<QueryNode>> &nodeList, vector<Partitions> &group);// calculate the partition mark according to certain criteria
 	void putIntoPartitionGroups();	// put the partitions with total mark into the groups 
 
 	static bool myComparePartition(Partitions par1, Partitions par2); // compare function used to sort partitions in partition group
 	static bool myCompareRelation(QueryNode node1, QueryNode node2); // compare function used to sort relations within a partition
 
-	
 	void sortPartitions(vector<Partitions> &partition); // sort partition in partition group
 	void initialRelationRanking(vector<QueryNode> &queryNodes); // initial rank the relation
 	void sortRelations(vector<QueryNode> &queryNodes); // sort relations for a single partition 
@@ -156,7 +153,6 @@ private:
 	hash_map<int, vector<int>> withRelationMap;
 	// hash_map stores pattern relation
 	hash_map<int, vector<int>> patternRelationMap;
-
 	//*************** For Optimizer End ****************//
 
 };

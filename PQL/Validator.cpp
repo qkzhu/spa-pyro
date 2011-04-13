@@ -686,21 +686,14 @@ void Validator::checkPattern_PQLThree(vector<int> &patternExpression){
 	} // end if if(patternExpression.at(2) == PATTERNOFSIMPLE)
 	
 	for(int i=0; i < int(patternExpression.size());i++)
-	{
-		//cout<<patternExpression.at(i)<< " "; 
-		
+	{	
 		if(patternExpression.at(i) == PATTERNOFSIMPLE)
 		{		
 			if((i+1) > int(patternExpression.size()))
 			{
 				throw new string("index out of range -- throw by Validator::checkPattern_PQLThree");
 			}
-			
-			//cout<<getString(patternExpression.at(i+1))<<"----------------------get string----------------- "<<endl;
-			
-			//cout<<"haha"<<endl;
-			//cout<<"get keyword: "<<Convertor::getKeyword(patternExpression.at(i+1))<<endl;
-			
+				
 			if(Convertor::getKeyword(patternExpression.at(i+1)) == "\"\"")
 			{
 				throw new string("nothing inside the double quotes -- throw by Validator::checkPattern_PQLThree");
@@ -710,10 +703,9 @@ void Validator::checkPattern_PQLThree(vector<int> &patternExpression){
 				checkPattern_PQLTwo(Convertor::getKeyword(patternExpression.at(i+1)));
 			}
 			
-		}
+		} // end if if(patternExpression.at(i) == PATTERNOFSIMPLE)
 		
-	}
-	//cout<<endl;
+	}// end for loop: for(int i=0; i < int(patternExpression.size());i++)
 	
 }
 
@@ -731,18 +723,15 @@ void Validator::checkFisrstCharacter(const vector<vector<int>> &varOfSimple, int
 				{
 					throw new string("invalid symbol at pattern expression,  first character can only be letter -- throw by Validator::checkFirstCharacter");
 				}
-			}
-		}
+			} // end for loop
+		}// end if first letter is digit
 	}
 }
-
-
 
 void Validator::fillAssignVector(const string &str, vector<int> &expression, vector<int> &separatorPostion, vector<vector<int>> &varOfSimple){
 
 	bool flag = false;
 	vector<int> tempHolder;
-	
 
 	if(str.empty())
 	{
@@ -778,7 +767,7 @@ void Validator::fillAssignVector(const string &str, vector<int> &expression, vec
 			flag = false;
 		}
 		
-	}
+	} // end for loop : for(int i=0;i<int(str.length());i++)
 
 	//add last varOfSimple to varOfSimple vector
 	if(int(tempHolder.size())!=0)
@@ -791,7 +780,6 @@ void Validator::fillAssignVector(const string &str, vector<int> &expression, vec
 
 ///////////////////////////////////////////// Check ALL Start////////////////////////////////////////////////////
 void Validator::checkResults(QueryTable &table){
-	
 	checkSelect(table);
 	checkSuchThat(table);
 	checkWith(table);
@@ -802,33 +790,16 @@ void Validator::checkResults(QueryTable &table){
 /******************************************** FOR DEGUGGING START ********************************************/
 void Validator::displayTable(vector<vector<int>> table){
 
-	cout<<"No of Rows "<< table.size()<<endl;
+	//cout<<"No of Rows "<< table.size()<<endl;
 
-	/* //////////////////testing getIndex()/////////////////
-	vector<int> index;
-	index = getIndex(table, 10);
-
-	for(int j = 0;j<index.size();j++)
-	{
-		cout << index[j]<<" ";
-		
-	}
-	cout<<endl;
-	*/
 	for(int i=0;i<((int) table.size());i++)
 	{
 		for(int j=0;j<(int) table[i].size();j++)
 		{
 			cout<<table[i][j]<<" ";
 		}
-		
-		//cout<<table[i][0];
 		cout<<endl;
 	}
-
-	
-	//cout<<table.size()<<endl;
-	//cout<<table[0].size()<<endl;
 
 }
 

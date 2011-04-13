@@ -29,23 +29,12 @@ public:
 	void checkPattern_PQLTwo(const string &str); // pre_check the expression.Check only outside " ". eg, _"x+y"_.
 	void checkPattern_PQLThree(vector<int> &patternExpression); // check assign string pattern [One Shot]
 	void checkFisrstCharacter(const vector<vector<int>> &varOfSimple, int i); //The first character of varibale must be letter
-	//used to convert pattern assign string to its ASCii value
-	void fillAssignVector(const string &str, vector<int> &expression, vector<int> &separatorPostion, vector<vector<int>> &varOfSimple);
-	
 
-	//get validation table
-	void getValidTable(int relationType, vector<vector<int>> &validationTable);
-	//get key word
-	void getKeyWord(int type, string &relationType);
+	void fillAssignVector(const string &str, vector<int> &expression, vector<int> &separatorPostion, vector<vector<int>> &varOfSimple); //used to convert pattern assign string to its ASCii value
+	void getValidTable(int relationType, vector<vector<int>> &validationTable);//get validation table
+	void getKeyWord(int type, string &relationType);//get key word
 
-
-
-
-	
-	//QueryTable preValidate(QueryTable table); // used to preprocess the table to make table driven more efficient
-
-	/******* For Testing ******/
-	string getString(int index);
+	string getString(int index); // for testing
 
 private:
 	dataBase validTable;
