@@ -217,7 +217,6 @@ void QueryTable::addClause(int type, vector<int> content){
 			queryNodeList.push_back(queryNode);
 		}
 		
-		
 		//add the content to the withVector for display
 		if(withVector.empty() == true)
 		{
@@ -495,7 +494,6 @@ void QueryTable::selectAt(vector<int> &tupleTemp, int index){
 
 void QueryTable::suchThatAt(vector<int> &relCondTemp, int index){
 
-	
 	if(index >= int(relatedSuchThat.size()))
 	{
 		throw  new string("Index Out of Range inside the Such That Clause! -- throw by QueryTable::suchThatAt()");
@@ -660,8 +658,8 @@ void QueryTable::findPartitionOne(){
 				}
 			
 			}  // end  if the first argument is not constant(include INT, PROCOFSIMPLE and VAROFSIMPLE)
+			
 			// the second argument is not constant(include INT, PROCOFSIMPLE and VAROFSIMPLE)
-
 			if(queryNodeList.at(j).prefix2 != INT && queryNodeList.at(j).prefix2 != PROCOFSIMPLE && queryNodeList.at(j).prefix2 != VAROFSIMPLE)
 			{
 
@@ -1220,7 +1218,7 @@ void QueryTable::findPartition(){
 	//displayNodeList();
 	//display all the tables
 	
-	displayAll();
+	//displayAll();
 	
 	//display the partition
 
