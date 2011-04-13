@@ -180,14 +180,6 @@ bool PKB::vTable_IsVarIndexExist(int varIndex){
 }
 
 int PKB::vTable_GetAllVar(){
-	/*vector<string> tmp = convertSetToVector(varTable->getAllVar());
-	vector<int> result;
-	int index;
-	for(index = 0; index < (int)tmp.size(); index++)
-		result.push_back(vTable_GetVarIndex(tmp[index]));
-	if(result.size() == 0) result.push_back(-1);
-
-	return result;*/
 	return varTable->getAllVar();
 }
 /**
@@ -218,14 +210,6 @@ bool PKB::pTable_isProcIndexExist(int procIndex){
 }
 
 int PKB::pTable_GetAllProc(){
-	/*vector<string> tmp = convertSetToVector(procTable->getAllProc());
-	vector<int> result;
-	int index;
-	for(index = 0; index < (int)tmp.size(); index++)
-		result.push_back(pTable_GetProcIndex(tmp[index]));
-
-	if(result.size() == 0) result.push_back(-1);
-	return result;*/
 	return procTable->getAllProc();
 }
 
