@@ -147,7 +147,7 @@ void CFG::addNext(int firstStmt, int nextStmt)
 	if(firstStmt <= 0 || nextStmt <= 0) throw new string("CFG::addNext - Invalid parameter.");
 
 	//Check if the stmtNum already had 2 next stmts
-	//if(forwardMap[firstStmt].size() == 2) throw new string("CFG::addNext - Given Stmt already had two next stmt.");
+	if(forwardMap[firstStmt].size() == 2) throw new string("CFG::addNext - Given Stmt already had two next stmt.");
 
 	forwardMap[firstStmt].insert(nextStmt);
 	reverseMap[nextStmt].insert(firstStmt);
