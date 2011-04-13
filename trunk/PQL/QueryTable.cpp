@@ -523,8 +523,6 @@ void QueryTable::suchThatUnrelatedAt(vector<int> &relCondTemp, int index){
 
 void QueryTable::withAt(vector<int> &attrCondTemp,int index){
 
-	cout<<"withAT size "<<relatedWith.size()<<endl;
-	cout<<"index "<<index<<endl;
 	if(index >= int(relatedWith.size()))
 	{
 		throw new string ("Index Out of Range inside the With Clause! --  throw by QueryTable::withAt");
