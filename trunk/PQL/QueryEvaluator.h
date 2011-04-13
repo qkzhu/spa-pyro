@@ -33,34 +33,27 @@ typedef struct{
 class QueryEvaluator{
 	
 private:
-	PKB *mPKBObject;  //Connect to PKB side
-	PqlPreprocessor *mQueryTree;   //Connect to PQL parser side
-	QueryResult mResult;  //The final result in QueryResult.
-	std::vector<int> mgTupleIndexing; //The global indexing for tuple evaluation, corresponding to the current tuple result
-	int varCodeEnding;  //use it when meet '_' or constant in relation to create new variable
-	vector<vector<int> > evalTuple; //evaluation tuple, this is the final and medium evaluation tuple
+	PKB *mPKBObject; 
+	PqlPreprocessor *mQueryTree;  
+
+	//The final result in QueryResult
+	QueryResult mResult;  
+
+	//The global indexing for tuple evaluation, corresponding to the current tuple result
+	std::vector<int> mgTupleIndexing; 
+
+	//use it when meet '_' or constant in relation to create new variable
+	int varCodeEnding;  
+
+	//evaluation tuple, this is the final and medium evaluation tuple
+	vector<vector<int> > evalTuple; 
+
 	bool isBoolSelected;
 
-	//for use when in with clause, there is sth like v.varName = p.varName
-	//it contains only the pair of variable codes, prefixed with the variable type
-	//vector<int> equal_vars; 
-	//this method is not good, can not use
-
-	//maps the variable to the value assigned in With clause, attr 1 is the variable string in its code
-	//the value must have the constant type indicated
-	//map<int, vector<int> > varValueTable;
-
-	//maps the variable and the pattern evaluated candidates.
-	//the value must have the constant type indicated in the beginning of the vector
-	//map<int, vector<int> > patternVarCandidates;
-
-
-	//////////////////////////affects initialization related////////////////
 	affectsTableStructure affectsTable;
 
 	//check affects in the whole query and build affects table dependently
 	void initialAffectsTable();
-	////////////////////////////////////////////////////////////////////////
 
 	//Evaluating query functions
 	void initialize();

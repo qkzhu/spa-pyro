@@ -28,49 +28,6 @@ void QueryEvaluator::evaluate(){
 	
 	if(select[0] == mQueryTree->getIndex("BOOLEAN")) isBoolSelected = true;
 
-	cout << "Selection element check" << endl;
-	for(int i = 0; i < mQueryTree->selectSize(); i++){
-		vector<int> tmp_select;
-		mQueryTree->selectAt(tmp_select, i);
-		for(int k =0; k < (int)tmp_select.size(); k++){
-			cout << tmp_select[k] << " ";
-		}
-		cout << endl;
-	}
-	cout << "Selection check FINISH" << endl;
-
-	/*//////////////////////////////////////////////////////////////////////////////////////////////////////////FOR DEBUGGING
-	cout<< "PQL parser checking"<< endl;
-	cout << "Pattern_PQL clauses: " << endl;
-	for(int i=0; i< mQueryTree->patternSize(); i++){
-		vector<int> tmp_pattern;
-		mQueryTree->patternAt(tmp_pattern, i);
-		for(int k = 0; k < (int)tmp_pattern.size(); k++4){
-			cout << tmp_pattern.at(k) << " ";
-		}
-		cout << endl;
-	}
-	cout << "With clauses: " << endl;
-	for(int i=0; i< mQueryTree->withSize(); i++){
-		vector<int> tmp_with;
-		mQueryTree->withAt(tmp_with, i);
-		for(int k = 0; k < (int)tmp_with.size(); k++){
-			cout << tmp_with.at(k) << " ";
-		}
-		cout << endl;
-	}
-	cout << "Such that clauses: " << endl;
-	for(int i=0; i< mQueryTree->suchThatSize(); i++){
-		vector<int> tmp_suchthat;
-		mQueryTree->suchThatAt(tmp_suchthat, i);
-		for(int k = 0; k < (int)tmp_suchthat.size(); k++){
-			cout << tmp_suchthat.at(k) << " ";
-		}
-		cout << endl;
-	}
-	cout << "PQL PARSER checking FINISH." << endl;
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
-
 	//QE evaluate the With clause, then pattern clause, and in the end Such That clause.
 	bool unrelated_finish = false;
 	int with_size = mQueryTree->withUnrelatedSize();
@@ -160,7 +117,6 @@ void QueryEvaluator::evaluate(){
 
 void QueryEvaluator::evaluateWith(bool& unrelated_finish, int& last_point, int threshold){
 	//Start evaluating With clauses 
-	int start = 0;
 	for(; last_point < threshold; last_point++){
 		vector<int> clause;
 		if(!unrelated_finish)
@@ -300,8 +256,7 @@ void QueryEvaluator::evaluateWith(bool& unrelated_finish, int& last_point, int t
 			return;
 		}
 
-		joinTuples(evalTuple, with_result, numOfCommonElement, same1Tuple1, same2Tuple1, start);
-		start++;
+		joinTuples(evalTuple, with_result, numOfCommonElement, same1Tuple1, same2Tuple1, last_point);
 
 		if(evalTuple.empty()){
 			if(isBoolSelected)
@@ -444,16 +399,6 @@ void QueryEvaluator::evaluateSuchThat(bool& unrelated_finish, int& last_point, i
 		
 		underScore(rel, clause, para1, para1_type, para2, para2_type, varCodeEnding);
 
-		/*
-		///////////////////////////////////////////TESTING//////////////////////////////////////////////////
-		cout << "underScore check:" << endl;
-		cout << para1 << endl;
-		cout << para1_type << endl;
-		cout << para2 << endl;
-		cout << para2_type << endl;
-		cout << "underScore check finish" << endl;
-		/////////////////////////////////////////////////////////////////////////////////////////////////////
-		*/
 
 		//Convert all "a", "b", "c" 's code from PQL code to PKB code
 		if(para1_type == mQueryTree->getIndex("varOfSimpl")) para1 = PKB_varEncode(PQL_varDecode(para1));
@@ -606,14 +551,6 @@ void QueryEvaluator::evaluateSuchThat(bool& unrelated_finish, int& last_point, i
 			else mResult.addInType(-1);
 			return;
 		}
-		/*cout << "evalTuple = " << endl;
-		for(int p = 0; p < (int)evalTuple.size(); p++){
-			vector<int> tmp_store = evalTuple[p];
-			for(int j = 0; j < (int)tmp_store.size(); j++){
-				cout << tmp_store.at(j) << " ";
-			}
-			cout << endl;
-		}*/
 
 	}//while: such that evaluation END
 }
@@ -633,9 +570,6 @@ void QueryEvaluator::removeInequal(vector<vector<int> >& tuple){
 		if(value1 != value2)
 			tuple.erase(tuple.begin() + i);
 		else{
-			//tuple[i].clear();
-			//tuple[i].push_back(value1_type);
-			//tuple[i].push_back(value1);
 			i++;
 		}
 	}
@@ -773,16 +707,10 @@ void QueryEvaluator::generateResult(){
 			return;
 		}
 
-		//if(mgTupleIndexing.empty()) mResult.setBoolValue(false); //this case should be filtered by previous evaluation already
 		mResult.setBoolValue(true);
 		return;
 	}
 
-
-	//find which of the selected elements are inside the evaluated result tuple
-	//1. no select element is in the result tuple, the non_evaluted element may happend to be inside with or pattern
-	//2. partial select elements are in the result tuple, the non_evaluted element may happend to be inside with or pattern
-	//3.. all select elements are in the result tuple
 	vector<vector<int> > selection_candidates;
 	vector<vector<int> > suchthat_result;
 	vector<int> non_evaled_selects;
@@ -960,7 +888,8 @@ void QueryEvaluator::evalPattern_PQL(vector<vector<int> >& result, int var, int 
 	if(pattern1_type == mQueryTree->getIndex("variable")){
 		checkCandidates(pattern1, pattern1_type, pattern1_candidates);
 	}else if(pattern1_type != mQueryTree->getIndex("_")){
-		pattern1_candidates.push_back(PKB_varEncode(PQL_varDecode(pattern1)));
+		string s = PQL_varDecode(pattern1);
+		pattern1_candidates.push_back(PKB_varEncode(s));
 	}
 
 	if(var_type == mQueryTree->getIndex("assign")){
@@ -1443,7 +1372,6 @@ void QueryEvaluator::evalNext(int star, vector<vector<int> >& result, const vect
 	}
 }
 
-//Take care of next loop
 void QueryEvaluator::getNextStar(int up, vector<int>& result, int para){
 	getNextPure(up, result, para);
 	if(result[0] != -1){
