@@ -196,8 +196,7 @@ select v such that uses("q4",v) and modifies("q4",v);
 b,c,x,z,i,a
 500
 40
-call ca; procedure p,p1,p2; while w;
-select <p1.prog_line#,ca.procName> such that calls(p,p1) with p.value="Example" such that parent(w,ca);
+call ca; procedure p,p1,p2; while w; select <p1.procName,ca.procName> such that calls(p,p1) with p.procName="Example"
 p Example,q1 Example,q2 Exmaple,p p, q1 p,q2 p
 500
 41
