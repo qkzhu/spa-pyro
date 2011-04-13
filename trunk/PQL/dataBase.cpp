@@ -32,9 +32,6 @@ void dataBase::populateModifiesTables(){
 	table.push_back(ASSIGN);		table.push_back(UNDERSCORE); modifyTable.push_back(table); table.clear();
 	table.push_back(CALL);			table.push_back(UNDERSCORE); modifyTable.push_back(table); table.clear();
 	table.push_back(PROG_L);		table.push_back(UNDERSCORE); modifyTable.push_back(table); table.clear();
-		
-
-
 
 }
 void dataBase::populateCallsTables(){
