@@ -92,7 +92,7 @@ void CFG::processStatement(Node *inputNode, Node *parentNode, Node* followingNod
 			Node* firstElseNode = elseDownNodes[0];
 			addNext(mAst->getStatementNumByNode(currNode), mAst->getStatementNumByNode(firstElseNode));
 
-			//sends the current IF node as parent to a recursive call
+			//sends the current IF node as parent to a recursive call~
 			if (nextNode != NULL)
 			{
 				processStatement(thenList, NULL, nextNode);
