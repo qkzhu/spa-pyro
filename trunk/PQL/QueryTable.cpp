@@ -661,7 +661,8 @@ void QueryTable::findPartitionOne(){
 			
 			}  // end  if the first argument is not constant(include INT, PROCOFSIMPLE and VAROFSIMPLE)
 			// the second argument is not constant(include INT, PROCOFSIMPLE and VAROFSIMPLE)
-			else if(queryNodeList.at(j).prefix2 != INT && queryNodeList.at(j).prefix2 != PROCOFSIMPLE && queryNodeList.at(j).prefix2 != VAROFSIMPLE)
+
+			if(queryNodeList.at(j).prefix2 != INT && queryNodeList.at(j).prefix2 != PROCOFSIMPLE && queryNodeList.at(j).prefix2 != VAROFSIMPLE)
 			{
 
 				//cout<<"queryNodeList.at(j).argument2: " <<queryNodeList.at(j).argument2<<endl;
@@ -1214,13 +1215,15 @@ void QueryTable::findPartition(){
 	addToTable(relatedGroup, relatedWith, relatedPattern, relatedSuchThat, RELATEDTYPE);
 	
 	//display the node list
+	//displayPartitions();
+	
 	//displayNodeList();
-
 	//display all the tables
-	//displayAll();
+	
+	displayAll();
 	
 	//display the partition
-	//displayPartitions();
+
 
 }
 
