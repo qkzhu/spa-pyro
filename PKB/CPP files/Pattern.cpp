@@ -256,10 +256,16 @@ bool Pattern::matchInfix(const string& input, const string& existing, bool match
 	{
 		char lastOp = ' ';
 		int i = 0;
+		int j = 0;
+
+		//skip opening brackets inside existing code
+		for (; j < (int)existing.size(); j++)
+			if (existing[j] != '(')
+				break;
 
 		for (; i < (int)input.size() && i < (int)existing.size(); i++)
 		{
-			if (input[i] != existing[i])
+			if (input[i] != existing[i+j])
 				return false;
 
 			if (isOperator(input[i]))
@@ -268,14 +274,24 @@ bool Pattern::matchInfix(const string& input, const string& existing, bool match
 
 		if (i < (int)input.size())
 			return false;
-
+		
 		if (lastOp == ' ')
 			return true;
 
 		int currPriority = getPriority(lastOp);
 
+		int k = j;
+		//skips corresponding closing brackets
 		for (; i < (int)existing.size(); i++)
-			if (isOperator(existing[i]) && getPriority(existing[i]) > currPriority)
+		{
+			if (existing[i+j] == ')' && --k == 0)
+				return true;
+			else
+				break;
+		}
+
+		for (; i < (int)existing.size(); i++)
+			if (isOperator(existing[i+j]) && getPriority(existing[i+j]) > currPriority)
 				return false;
 
 		return true;
@@ -289,10 +305,16 @@ bool Pattern::matchInfix(const string& input, const string& existing, bool match
 		char lastOp = ' ';
 		int i = input.size()-1;
 		int j = existing.size() - 1;
+		int offset = 0;
+		//skip closing brackets inside existing code
+		for (; offset < (int)existing.size(); offset++)
+			if (existing[j-offset] != ')')
+				break;
+
 
 		for (; i >= 0 && j >= 0; i--, j--)
 		{
-			if (input[i] != existing[j])
+			if (input[i] != existing[j-offset])
 				return false;
 
 			if (isOperator(input[i]))
@@ -307,11 +329,20 @@ bool Pattern::matchInfix(const string& input, const string& existing, bool match
 
 		int currPriority = getPriority(lastOp);
 
-		for (; j >= 0; j--)
+		int k = offset;
+		for (; j>=0; j--)
 		{
-			if (isOperator(existing[j]))
+			if (existing[j-offset] == '(' && --k == 0)
+				return true;
+			else
+				break;
+		}
+
+		for (; j >= 0 && offset > 0; j--)
+		{
+			if (isOperator(existing[j-offset]))
 			{
-			   if (getPriority(existing[j]) > currPriority)
+			   if (getPriority(existing[j-offset]) > currPriority)
 				 return false;
 			   else
 				   break;
@@ -328,6 +359,10 @@ bool Pattern::matchInfix(const string& input, const string& existing, bool match
 
 		 if (position == string::npos)
 			 return false;
+
+		 //checks that matching expression is enclosed in brackets, then returns true
+		 if (position > 0 && existing[position-1] == '(' && position < (int)existing.size()-1 && existing[position+input.size()] == ')')
+			 return true;
 
 		 //checks the operator that comes before the matching expression
 		 char firstOperator = ' ';
