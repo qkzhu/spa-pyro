@@ -63,7 +63,7 @@ Select a such that Affects*(11, a);
 13
 assign a;
 Select a pattern a("z", _"x+i");
-none
+21,9
 5000
 14
 assign a;
@@ -689,5 +689,4 @@ true
 assign a; variable v;
 select a pattern a(v, _) with v.varName = "i";
 3, 11, 17
-50
-
+5000
