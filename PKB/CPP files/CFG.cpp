@@ -63,7 +63,7 @@ void CFG::processStatement(Node *inputNode, Node *parentNode, Node* followingNod
 
 
 			//sends the current WHILE node as parent to a recursive call
-			processStatement(stmtList, currNode, NULL);
+			processStatement(stmtList, currNode, (nextNode != NULL) ? nextNode : followingNode);
 		}
 
 		else if (currNode->type == Node::IF)
@@ -93,8 +93,16 @@ void CFG::processStatement(Node *inputNode, Node *parentNode, Node* followingNod
 			addNext(mAst->getStatementNumByNode(currNode), mAst->getStatementNumByNode(firstElseNode));
 
 			//sends the current IF node as parent to a recursive call
-			processStatement(thenList, NULL, (nextNode != NULL) ? nextNode : followingNode);
-			processStatement(elseList, NULL, (nextNode != NULL) ? nextNode : followingNode);
+			if (nextNode != NULL)
+			{
+				processStatement(thenList, NULL, nextNode);
+				processStatement(elseList, NULL, nextNode);
+			}
+			else
+			{
+				processStatement(thenList, parentNode, followingNode);
+				processStatement(elseList, parentNode, followingNode);
+			}
 		}
 
 		currNode = nextNode;
@@ -139,7 +147,7 @@ void CFG::addNext(int firstStmt, int nextStmt)
 	if(firstStmt <= 0 || nextStmt <= 0) throw new string("CFG::addNext - Invalid parameter.");
 
 	//Check if the stmtNum already had 2 next stmts
-	if(forwardMap[firstStmt].size() == 2) throw new string("CFG::addNext - Given Stmt already had two next stmt.");
+	//if(forwardMap[firstStmt].size() == 2) throw new string("CFG::addNext - Given Stmt already had two next stmt.");
 
 	forwardMap[firstStmt].insert(nextStmt);
 	reverseMap[nextStmt].insert(firstStmt);
