@@ -11,7 +11,7 @@ void PqlParser::parser(string s,QueryTable *table){
 	selectBool=true;	
 	qu=new TokenList(s);
 //	//qu->showTokenList();
-	qu->showTokenList();
+	//qu->showTokenList();
 
 	Convertor::update();
   
@@ -77,7 +77,7 @@ void PqlParser::parser(string s,QueryTable *table){
 					else
 					{
 						semi=true;
-						cout<<"PqlParsing Finished"<<endl;
+						//cout<<"PqlParsing Finished"<<endl;
 					}
 					break;
 				default:
