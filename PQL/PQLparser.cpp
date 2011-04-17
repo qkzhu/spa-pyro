@@ -461,7 +461,7 @@ string PqlParser::suchThatParser(int type,TokenList *quPointer,QueryTable *table
 					         prefix=PqlParser::prefix(pch);
 					   	     if(prefix!=0)
 							 content.push_back(prefix);
-						   	 if(index==-1) throw new string("undefined symbol at the second para in "+suchthatclause);
+						   	 //if(index==-1) throw new string("undefined symbol at the second para in "+suchthatclause);
 							 content.push_back(index);
 							 
 							 pch=qu->getNextToken();
