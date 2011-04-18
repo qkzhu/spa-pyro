@@ -1657,7 +1657,7 @@ bool QueryEvaluator::nonModPath(int s, int mod, int dest, int start, vector<int>
 	int next = s;
 
 	if(!init){
-		if(s == start)
+		if(s == start){
 			if(mPKBObject->ast_IsAssign(next)){
 				vector<int> uses;
 				mPKBObject->uTable_getUsedVar(uses, next);
@@ -1667,6 +1667,7 @@ bool QueryEvaluator::nonModPath(int s, int mod, int dest, int start, vector<int>
 					affect_result.push_back(next);
 			}
 			return false;
+		}
 	}
 
 	if(s <= 0)
