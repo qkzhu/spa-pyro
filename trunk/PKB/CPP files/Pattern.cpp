@@ -234,16 +234,18 @@ bool Pattern::patternAssign(int stmtNum, string patternLeft, string patternRight
 	//building a tree to test whether patternRight is correct.
 	Node* node = generateNode(patternRight, ast, varTable);
 
-	string input = patternRight;
-	string existing = nodeToInfix(bottomNodes[1], ast, varTable);
+	return matchUsingNode(node, bottomNodes[1], matchFront, matchEnd);
 
-	bool infix = matchInfix(input, existing, matchFront, matchEnd);
-	bool nodeMatch = matchUsingNode(node, bottomNodes[1], matchFront, matchEnd);
+	//string input = patternRight;
+	//string existing = nodeToInfix(bottomNodes[1], ast, varTable);
 
-	if (!matchFront && !matchEnd)
-		return nodeMatch;
+	//bool infix = matchInfix(input, existing, matchFront, matchEnd);
+	//bool nodeMatch = matchUsingNode(node, bottomNodes[1], matchFront, matchEnd);
 
-	return nodeMatch && infix;
+	//if (!matchFront && !matchEnd)
+	//	return nodeMatch;
+
+	//return nodeMatch && infix;
 
 	//return matchInfix(input, existing, matchFront, matchEnd);
 
@@ -476,27 +478,33 @@ bool Pattern::matchUsingNode(Node* input, Node* existing, bool matchFront, bool 
 	if (matchFront)
 	{
 		//match front and left tree matches input
-		if (existing->bottomNodeList.size() == 1 && 
-			matchTree(input, existing->bottomNodeList[0]))
-			return true;
+		return existing->bottomNodeList.size() >= 1 && 
+			matchTree(input, existing->bottomNodeList[0]);
 
-		//match front and right tree matches input
-		if (existing->bottomNodeList.size() == 2 && 
-			matchTree(input, existing->bottomNodeList[1]))
-			return false;
+		////match front and left tree matches input
+		//if (existing->bottomNodeList.size() == 1 && 
+		//	matchTree(input, existing->bottomNodeList[0]))
+		//	return true;
+
+		////match front and right tree matches input
+		//if (existing->bottomNodeList.size() == 2 && 
+		//	matchTree(input, existing->bottomNodeList[1]))
+		//	return false;
 	}
 
 	if (matchEnd)
 	{
-		//match end and right tree matches input
-		if (existing->bottomNodeList.size() == 2 && 
-				matchTree(input, existing->bottomNodeList[1]))
-				return true;
+		return existing->bottomNodeList.size() == 2 && 
+				matchTree(input, existing->bottomNodeList[1]);
+		////match end and right tree matches input
+		//if (existing->bottomNodeList.size() == 2 && 
+		//		matchTree(input, existing->bottomNodeList[1]))
+		//		return true;
 
-		//match end and left tree matches input
-		if (existing->bottomNodeList.size() >= 1 &&
-			matchTree(input, existing->bottomNodeList[0]))
-				return false;
+		////match end and left tree matches input
+		//if (existing->bottomNodeList.size() >= 1 &&
+		//	matchTree(input, existing->bottomNodeList[0]))
+		//		return false;
 	}
 
 	//match the subtrees recursively
