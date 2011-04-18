@@ -1395,8 +1395,7 @@ void QueryTable::filterSameRelation(){
 				&& (queryNodeList.at(i).type == result.at(j).type)
 				&& (queryNodeList.at(i).prefix1 == result.at(j).prefix1 && queryNodeList.at(i).prefix2 == result.at(j).prefix2 )
 				&& (queryNodeList.at(i).argument1 == result.at(j).argument1 && queryNodeList.at(i).argument2 == result.at(j).argument2))
-			{
-				
+			{	
 				result.erase(result.begin()+j);
 			}else j++;
 		}

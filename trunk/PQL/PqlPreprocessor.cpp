@@ -3,7 +3,7 @@
 
 PqlPreprocessor::PqlPreprocessor(string query){
 	PqlParser::parser(query, &qt);
-	//qt.showTable();
+	qt.showTable();
 	validator.checkResults(qt);
 	qt.findPartition();
 	
