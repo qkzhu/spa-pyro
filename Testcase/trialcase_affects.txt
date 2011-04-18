@@ -1,0 +1,412 @@
+1000
+cat: affects
+1
+stmt s;
+select s such that affects(1,s)
+none
+500
+2
+stmt s;
+select s such that affects(2,s)
+6,10,36,66
+500
+3
+stmt s;
+select s such that affects(3,s)
+8,10,36,38
+500
+4
+stmt s;
+select s such that affects(4,s)
+none
+500
+5
+stmt s;
+select s such that affects(5,s)
+none
+500
+6
+stmt s;
+select s such that affects(6,s)
+7,17,27,32,33,37,38,41,53,71,73
+500
+7
+stmt s;
+select s such that affects(7,s)
+71
+500
+8
+stmt s;
+select s such that affects(8,s)
+9,24,28,42,80
+500
+9
+stmt s;
+select s such that affects(9,s)
+28,42,52,53,79
+500
+10
+stmt s;
+select s such that affects(10,s)
+16
+500
+11
+stmt s;
+select s such that affects(11,s)
+none
+500
+12
+stmt s;
+select s such that affects(12,s)
+17,18
+500
+13
+stmt s;
+select s such that affects(13,s)
+none
+500
+14
+stmt s;
+select s such that affects(14,s)
+none
+500
+15
+stmt s;
+select s such that affects(15,s)
+none
+500
+16
+stmt s;
+select s such that affects(16,s)
+25,40,63
+500
+17
+stmt s;
+select s such that affects(17,s)
+63
+500
+18
+stmt s;
+select s such that affects(18,s)
+17,18,31,56
+500
+19
+stmt s;
+select s such that affects(19,s)
+27,38,41,60,71
+500
+20
+stmt s;
+select s such that affects(20,s)
+none
+500
+21
+stmt s;
+select s such that affects(21,s)
+24,28,42,80
+500
+22
+stmt s;
+select s such that affects(22,s)
+28,42,52,53,79
+500
+23
+stmt s;
+select s such that affects(23,s)
+none
+500
+24
+stmt s;
+select s such that affects(24,s)
+24, 28,42,80
+500
+25
+stmt s;
+select s such that affects(25,s)
+28,42,52,53,79
+500
+26
+stmt s;
+select s such that affects(26,s)
+none
+500
+27
+stmt s;
+select s such that affects(27,s)
+6,10,29,36,66
+500
+28
+stmt s;
+select s such that affects(28,s)
+8,10,29,36,38
+500
+29
+stmt s;
+select s such that affects(29,s)
+16
+500
+30
+stmt s;
+select s such that affects(30,s)
+none
+500
+31
+stmt s;
+select s such that affects(31,s)
+32,63
+500
+32
+stmt s;
+select s such that affects(32,s)
+47,60
+500
+33
+stmt s;
+select s such that affects(33,s)
+17,18,56
+500
+34
+stmt s;
+select s such that affects(34,s)
+none
+500
+35
+stmt s;
+select s such that affects(35,s)
+12,19,35,52,54,59,66,79
+500
+36
+stmt s;
+select s such that affects(36,s)
+49
+500
+37
+stmt s;
+select s such that affects(37,s)
+none
+500
+38
+stmt s;
+select s such that affects(38,s)
+37
+500
+39
+stmt s;
+select s such that affects(39,s)
+none
+500
+40
+stmt s;
+select s such that affects(40,s)
+40,42,48,63
+500
+41
+stmt s;
+select s such that affects(41,s)
+6,10,36,66
+500
+42
+stmt s;
+select s such that affects(42,s)
+44
+500
+43
+stmt s;
+select s such that affects(43,s)
+none
+500
+44
+stmt s;
+select s such that affects(44,s)
+37
+500
+45
+stmt s;
+select s such that affects(45,s)
+37
+500
+46
+stmt s;
+select s such that affects(46,s)
+none
+500
+47
+stmt s;
+select s such that affects(47,s)
+49
+500
+48
+stmt s;
+select s such that affects(48,s)
+47
+500
+49
+stmt s;
+select s such that affects(49,s)
+80
+500
+50
+stmt s;
+select s such that affects(50,s)
+none
+500
+51
+stmt s;
+select s such that affects(51,s)
+40,52,63
+500
+52
+stmt s;
+select s such that affects(52,s)
+8,10,36,38
+500
+53
+stmt s;
+select s such that affects(53,s)
+47,57
+500
+54
+stmt s;
+select s such that affects(54,s)
+6, 7, 8, 9, 27, 28, 31, 33, 80
+500
+55
+stmt s;
+select s such that affects(55,s)
+none
+500
+56
+stmt s;
+select s such that affects(56,s)
+17, 27, 32, 33, 37, 38, 41, 53, 60, 63, 71, 73
+500
+57
+stmt s;
+select s such that affects(57,s)
+none
+500
+58
+stmt s;
+select s such that affects(58,s)
+none
+500
+59
+stmt s;
+select s such that affects(59,s)
+60,64
+500
+60
+stmt s;
+select s such that affects(60,s)
+none
+500
+61
+stmt s;
+select s such that affects(61,s)
+none
+500
+62
+stmt s;
+select s such that affects(62,s)
+12, 19,62,66
+500
+63
+stmt s;
+select s such that affects(63,s)
+60,71
+500
+64
+stmt s;
+select s such that affects(64,s)
+12, 19, 35, 52, 54, 59, 66, 79
+500
+65
+stmt s;
+select s such that affects(65,s)
+none
+500
+66
+stmt s;
+select s such that affects(66,s)
+8,56
+500
+67
+stmt s;
+select s such that affects(67,s)
+8,56
+500
+68
+stmt s;
+select s such that affects(68,s)
+none
+500
+69
+stmt s;
+select s such that affects(69,s)
+none
+500
+70
+stmt s;
+select s such that affects(70,s)
+none
+500
+71
+stmt s;
+select s such that affects(71,s)
+6, 10, 36, 66, 73
+500
+72
+stmt s;
+select s such that affects(72,s)
+none
+500
+73
+stmt s;
+select s such that affects(73,s)
+6, 10, 36, 66, 73
+500
+74
+stmt s;
+select s such that affects(74,s)
+none
+500
+75
+stmt s;
+select s such that affects(75,s)
+none
+500
+76
+stmt s;
+select s such that affects(76,s)
+8,10,36,38
+500
+77
+stmt s;
+select s such that affects(77,s)
+none
+500
+78
+stmt s;
+select s such that affects(78,s)
+79
+500
+79
+stmt s;
+select s such that affects(79,s)
+8,10,36,38
+500
+80
+stmt s;
+select s such that affects(80,s)
+none
+500
+81
+stmt s;
+select s such that affects(81,s)
+none
+500
+82
+stmt s;
+select s such that affects(82,s)
+none
+500
