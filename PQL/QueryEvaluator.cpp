@@ -1048,6 +1048,8 @@ void QueryEvaluator::printResult(){
 void QueryEvaluator::evalParent(int star, vector<std::vector<int> >& result, const vector<int>& para1, const vector<int>& para2){
 	if(para1.empty() || para2.empty())
 		return;
+	if(para1[0] == -1 || para2[0] == -1)
+		return;
 	if(para1.size() < para2.size()){
 		for(int l = 0; l < (int)para1.size(); l++){
 			int in1 = para1[l];
@@ -1118,6 +1120,8 @@ void QueryEvaluator::getChildStar(int up, vector<int>& result, int stmtN){
 void QueryEvaluator::evalFollows(int star, vector<std::vector<int> >& result, const vector<int>& para1, const vector<int>& para2){
 	if(para1.empty() || para2.empty())
 		return;
+	if(para1[0] == -1 || para2[0] == -1)
+		return;
 	if(para1.size() < para2.size()){
 		for(int l = 0; l < (int)para1.size(); l++){
 			int in1 = para1[l];
@@ -1182,7 +1186,8 @@ void QueryEvaluator::getFollowsStar(int up, vector<int>& result, int stmtN){
 void QueryEvaluator::evalCalls(int star, vector<std::vector<int> >& result, const vector<int>& para1, const vector<int>& para2){
 	if(para1.empty() || para2.empty())
 		return;
-
+	if(para1[0] == -1 || para2[0] == -1)
+		return;
 	if(para1.size() < para2.size()){
 		for(int l = 0; l < (int)para1.size(); l++){
 			int in1 = para1[l];
@@ -1253,7 +1258,10 @@ void QueryEvaluator::getCallsStar(int up, vector<int>& result, int procNameCode)
 	}else throw new string("QueryEvaluator::getCallsStar, no such up type.");
 }
 
-void QueryEvaluator::evalMU(int modOrUse, vector<vector<int> >& result, int type1, const vector<int>& para1, const vector<int>& para2){	if(para1.empty() || para2.empty())
+void QueryEvaluator::evalMU(int modOrUse, vector<vector<int> >& result, int type1, const vector<int>& para1, const vector<int>& para2){
+	if(para1.empty() || para2.empty())
+		return;
+	if(para1[0] == -1 || para2[0] == -1)
 		return;
 
 	if(para1.size() <= para2.size()){
@@ -1339,6 +1347,9 @@ void QueryEvaluator::evalNext(int star, vector<vector<int> >& result, const vect
 	if(para1.empty() || para2.empty())
 		return;
 
+	if(para1[0] == -1 || para2[0] == -1)
+		return;
+
 	if(para1.size() <= para2.size()){
 		for(int l = 0; l < (int)para1.size(); l++){
 			int stmtN = para1[l];
@@ -1422,6 +1433,8 @@ void QueryEvaluator::getNextPure(int up, vector<int>& result, int para){
 void QueryEvaluator::evalAffects(vector<vector<int> >& result, const vector<int>& para1, const vector<int>&  para2){
 	if(para1.empty() || para2.empty())
 		return;
+	if(para1[0] == -1 || para2[0] == -1)
+		return;
 
 	if(affectsTable.is_affects_table_built){
 		if(para1.size() <= para2.size()){
@@ -1501,6 +1514,9 @@ void QueryEvaluator::evalAffects(vector<vector<int> >& result, const vector<int>
 void QueryEvaluator::evalAffectsStar(vector<vector<int> >& result, const vector<int>& para1, const vector<int>& para2){
 	if(para1.empty() || para2.empty())
 		return;
+	if(para1[0] == -1 || para2[0] == -1)
+		return;
+
 	if(!affectsTable.is_affects_table_built) throw new string("QueryEvaluator::evalAffectsStar, shit! How can table not built yet!");
 	if(para1.size() <= para2.size()){
 		for(int i = 0; i < (int)para1.size(); i++){
@@ -1770,6 +1786,7 @@ void QueryEvaluator::getAllType(vector<int>& result, int type){
 	else if(type == mQueryTree->getIndex("procedure")) getAllProc(result);
 	else if(type == mQueryTree->getIndex("constant")) mPKBObject->cTable_GetAllConstants(result);
 	else throw new string("QueryEvaluator::getAllType, type not exist!");
+	//cout << endl;
 }
 
 void QueryEvaluator::getAllProc(vector<int>& result){
