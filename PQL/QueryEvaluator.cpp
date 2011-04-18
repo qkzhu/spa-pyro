@@ -1752,23 +1752,34 @@ int QueryEvaluator::nextOfIf(int first){
 		if(next == -1) {end = follows; break; }
 		follows = next;
 	}
-	vector<int> nexts;
-	getNextPure(DOWN, nexts, end);
-	if(mPKBObject->ast_IsWhile(end)){
-		int outer = nexts[0];
-		int inner = nexts[1];
-		vector<int> child;
-		mPKBObject->ast_GetChild(child, end);
-		int found = find_ele(child, outer);
-		if(found != (int)child.size()){
-			int tmp_s = outer;
-			outer = inner;
-			inner = tmp_s;
-		}
-		return outer;
-	}else if(mPKBObject->ast_IsIf(end)){
-		return nextOfIf(end);
-	}else return nexts[0];	
+	if(mPKBObject->ast_IsIf(end)){
+		vector<int> nexts;
+		getNextPure(DOWN, nexts, end);
+		return nextOfIf(nexts[0]);
+	}else if(mPKBObject->ast_IsWhile(end)){
+		vector<int> nexts;
+		getNextPure(DOWN, nexts, end);
+		if((int)nexts.size() == 2){
+			int outer = nexts[0];
+			int inner = nexts[1];
+			vector<int> child;
+			mPKBObject->ast_GetChild(child, end);
+			int found = find_ele(child, outer);
+			if(found != (int)child.size()){
+				int tmp_s = outer;
+				outer = inner;
+				inner = tmp_s;
+			}
+			return outer;
+		}else return -1;
+	}else{
+		vector<int> nexts;
+		getNextPure(DOWN, nexts, end);
+		return nexts[0];
+	}
+
+
+	
 }
 
 void QueryEvaluator::getAllType(vector<int>& result, int type){
