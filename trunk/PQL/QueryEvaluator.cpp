@@ -169,6 +169,15 @@ void QueryEvaluator::evaluateWith(bool& unrelated_finish, int& last_point, int t
 			if(p2_type == mQueryTree->getIndex("call"))
 				if(part2[3] == mQueryTree->getIndex("procName"))
 					isCallWithProc2 = true;
+
+
+			if((part1[3] == mQueryTree->getIndex("varname") && part2[3] == mQueryTree->getIndex("procname")) ||
+			(part1[3] == mQueryTree->getIndex("procname") && part2[3] == mQueryTree->getIndex("varname"))){
+				if(isBoolSelected)
+					mResult.setBoolValue(false);
+				else mResult.addInType(-1);
+				return;
+			}
 		}	
 		vector<vector<int> > with_result;
 		vector<int> tmp;
@@ -1372,6 +1381,7 @@ void QueryEvaluator::evalNext(int star, vector<vector<int> >& result, const vect
 	}
 }
 
+
 void QueryEvaluator::getNextStar(int up, vector<int>& result, int para){
 	getNextPure(up, result, para);
 	if(result[0] != -1){
@@ -1400,12 +1410,10 @@ void QueryEvaluator::getNextPure(int up, vector<int>& result, int para){
 		}
 	}else if(up == UP){
 		mPKBObject->cfg_getNextUp(result, para);
-		if((int)result.size() == 3){
-			int next1 = result[0];
-			int next2 = result[2];
-			result.clear();
-			result.push_back(next1);
-			result.push_back(next2);
+		for(int i = 0; i < (int)result.size();){
+			if(result[i] == -1)
+				result.erase(result.begin()+i);
+			else i++;
 		}
 	}else throw new string("QueryEvaluator::getNextStar, no such up type");
 }
@@ -1643,6 +1651,7 @@ bool QueryEvaluator::nonModPath(int s, int mod, int dest, vector<int>& affect_re
 			return true;
 		}
 	}
+
 	bool is_if = mPKBObject->ast_IsIf(next);
 	bool is_while = mPKBObject->ast_IsWhile(next);
 	if(is_if){
