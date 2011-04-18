@@ -1658,6 +1658,14 @@ bool QueryEvaluator::nonModPath(int s, int mod, int dest, int start, vector<int>
 
 	if(!init){
 		if(s == start)
+			if(mPKBObject->ast_IsAssign(next)){
+				vector<int> uses;
+				mPKBObject->uTable_getUsedVar(uses, next);
+				int found_uses = find_ele(uses, mod);
+				if(found_uses != (int)uses.size())
+				if(mPKBObject->ast_IsAssign(next))
+					affect_result.push_back(next);
+			}
 			return false;
 	}
 
