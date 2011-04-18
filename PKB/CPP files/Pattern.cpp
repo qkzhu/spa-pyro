@@ -234,6 +234,9 @@ bool Pattern::patternAssign(int stmtNum, string patternLeft, string patternRight
 	//building a tree to test whether patternRight is correct.
 	Node* node = generateNode(patternRight, ast, varTable);
 
+	if (matchFront && matchEnd)
+		return matchTree(node, bottomNodes[1]);
+
 	return matchUsingNode(node, bottomNodes[1], matchFront, matchEnd);
 
 	//string input = patternRight;
@@ -479,7 +482,7 @@ bool Pattern::matchUsingNode(Node* input, Node* existing, bool matchFront, bool 
 	{
 		//match front and left tree matches input
 		return existing->bottomNodeList.size() >= 1 && 
-			matchTree(input, existing->bottomNodeList[0]);
+			matchUsingNode(input, existing->bottomNodeList[0], matchFront, matchEnd);
 
 		////match front and left tree matches input
 		//if (existing->bottomNodeList.size() == 1 && 
@@ -495,7 +498,7 @@ bool Pattern::matchUsingNode(Node* input, Node* existing, bool matchFront, bool 
 	if (matchEnd)
 	{
 		return existing->bottomNodeList.size() == 2 && 
-				matchTree(input, existing->bottomNodeList[1]);
+				matchUsingNode(input, existing->bottomNodeList[1], matchFront, matchEnd);
 		////match end and right tree matches input
 		//if (existing->bottomNodeList.size() == 2 && 
 		//		matchTree(input, existing->bottomNodeList[1]))
