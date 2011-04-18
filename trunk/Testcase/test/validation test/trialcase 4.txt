@@ -1,0 +1,47 @@
+9
+cat: all category
+1
+assign a; 
+Select a;
+1,2,4,6,7,9
+5000
+2
+if f;
+Select f
+3
+5000
+3
+while w;
+Select w
+5
+5000
+4
+call c;
+Select c
+8
+5000
+5
+constant c;
+Select c
+1,2,3,5,7,8,9
+5000
+6
+procedure p;
+Select p
+First,p
+5000
+7
+variable v;
+Select v
+x,y,z,i
+5000
+8
+prog_line pl;
+Select pl
+1,2,3,4,5,6,7,8,9
+5000
+9
+stmt s;
+Select s
+1,2,3,4,5,6,7,8,9
+5000

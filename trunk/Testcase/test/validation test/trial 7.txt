@@ -1,0 +1,1 @@
+procedure p {  if x then {    y = 2;    z = 3;    while y {      if z then {        a = 6;      }      else {        a = 7;      }    }  }  else {    call q;  }}procedure q {  x = 9;  y = 10 + z;}

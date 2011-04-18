@@ -1,0 +1,52 @@
+10
+cat: All category
+1
+assign a; 
+Select a such that Affects(1, a)
+none
+5000
+2
+assign a; 
+Select a such that Affects(2,a)
+4
+5000
+3
+assign a; 
+Select a such that Affects(a, 10)
+8
+5000
+4
+assign a; 
+Select a such that Affects(_, a)
+4,10,13,14,16
+5000
+5
+assign a; 
+Select a such that Affects*(a,_)
+2,8,11,14,15
+5000
+6
+assign a; 
+Select a such that Affects*( 2, a)
+4
+5000
+7
+assign a; 
+Select a such that Affects*(a,a)
+14
+5000
+8
+assign a, a1; 
+Select <a,a1> such that Affects( 11 ,a)and Affects(_,a1) and Affects*(a1,_)
+13 14,14 14
+5000
+9
+assign a,a1,a2; 
+Select <a,a1> such that Affects(a,a1) and Affects*(a1,a2)
+14 14,11 14
+5000
+10
+assign a; while w; variable v; 
+Select <a,v,w>pattern a(v, _"x"_) such that Affects*(a,_) and Uses( a, v) and Parent(w,a)
+14 x 12
+5000
