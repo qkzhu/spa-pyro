@@ -233,6 +233,7 @@ void Validator::checkSuchThat(QueryTable &table){
 		{
 			if(suchThat.at(j) == VAROFSIMPLE ||suchThat.at(j) == PROCOFSIMPLE)
 			{
+
 				if((j+1)<int(suchThat.size()))
 				{
 					string tempString = Convertor::getKeyword(suchThat.at(j+1));
@@ -264,7 +265,10 @@ void Validator::checkSuchThat(QueryTable &table){
 				} // end if (j+1) is not out of range
 				else
 				{
-					throw new string("no parameter after prefix in relation "+ relationType + functionName);
+					if(suchThat.at(j-1) != INT)
+					{
+						throw new string("no parameter after prefix in relation "+ relationType + functionName);
+					}
 				}
 			
 			} // end if(suchThat.at(j) == VAROFSIMPLE ||suchThat.at(j) == PROCOFSIMPLE)
@@ -585,10 +589,6 @@ void Validator::checkPattern_PQLTwo(const string &str){
 		}
 	
 	}
-	
-
-	//cout<<"underscoreNo = "<<underscoreNo<<" qouteNo = "<<qouteNo<<" quoteStart = "<<quoteStart<<" quoteEnd = "<<quoteEnd<<endl;
-
 	
 	if(qouteNo!=2)
 	{

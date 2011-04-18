@@ -248,6 +248,7 @@ void dataBase::populateNextTables(){
 	
 }
 void dataBase::populateAffectsTables(){
+
 	vector<int> table;
 	table.push_back(STMT);			table.push_back(STMT); affectsTable.push_back(table); table.clear();
 	table.push_back(ASSIGN);		table.push_back(STMT); affectsTable.push_back(table); table.clear();
