@@ -234,12 +234,20 @@ bool Pattern::patternAssign(int stmtNum, string patternLeft, string patternRight
 	//building a tree to test whether patternRight is correct.
 	Node* node = generateNode(patternRight, ast, varTable);
 
-	//string input = patternRight;
-	//string existing = nodeToInfix(bottomNodes[1], ast, varTable);
+	string input = patternRight;
+	string existing = nodeToInfix(bottomNodes[1], ast, varTable);
+
+	bool infix = matchInfix(input, existing, matchFront, matchEnd);
+	bool nodeMatch = matchUsingNode(node, bottomNodes[1], matchFront, matchEnd);
+
+	if (matchFront && !matchEnd)
+		return infix && nodeMatch;
+
+	return nodeMatch;
 
 	//return matchInfix(input, existing, matchFront, matchEnd);
 
-	return matchUsingNode(node, bottomNodes[1], matchFront, matchEnd);
+	//return matchUsingNode(node, bottomNodes[1], matchFront, matchEnd);
 
 	//string input = nodeToPrefix(node, ast, varTable);
 	//string existing = nodeToPrefix(bottomNodes[1], ast, varTable);
