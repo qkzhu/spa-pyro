@@ -1389,7 +1389,7 @@ void QueryEvaluator::getNextStar(int up, vector<int>& result, int para){
 			int ele = result[i];
 			vector<int> mid_result;
 			getNextPure(up, mid_result, ele);
-			for(int j = 0; j < (int)mid_result.size(); j++){
+ 			for(int j = 0; j < (int)mid_result.size(); j++){
 				int found = find_ele(result, mid_result[j]);
 				if(found == result.size())
 					result.push_back(mid_result[j]);
