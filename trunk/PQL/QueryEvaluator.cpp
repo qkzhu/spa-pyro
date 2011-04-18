@@ -1669,8 +1669,6 @@ bool QueryEvaluator::nonModPath(int s, int mod, int dest, int start, vector<int>
 			return true;
 		}
 	}
-	cout << s << endl;
-	int akdlfal = nextOfIf(9);
 
 	bool is_if = mPKBObject->ast_IsIf(next);
 	bool is_while = mPKBObject->ast_IsWhile(next);
