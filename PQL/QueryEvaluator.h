@@ -138,7 +138,7 @@ private:
 	int nextOfIf(int first);
 
 	//get all the affected stmts from s
-	bool nonModPath(int s, int mod, int dest, vector<int>& affect_result, vector<int>& old_path, vector<bool>& path_result, bool init); 
+	bool nonModPath(int s, int mod, int dest, int start, vector<int>& affect_result,bool init); 
 
 
 public:
