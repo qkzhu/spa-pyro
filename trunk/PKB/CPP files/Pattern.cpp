@@ -240,10 +240,10 @@ bool Pattern::patternAssign(int stmtNum, string patternLeft, string patternRight
 	bool infix = matchInfix(input, existing, matchFront, matchEnd);
 	bool nodeMatch = matchUsingNode(node, bottomNodes[1], matchFront, matchEnd);
 
-	if (matchFront && !matchEnd)
-		return infix && nodeMatch;
+	if (!matchFront && !matchEnd)
+		return nodeMatch;
 
-	return nodeMatch;
+	return nodeMatch && infix;
 
 	//return matchInfix(input, existing, matchFront, matchEnd);
 
