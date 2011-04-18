@@ -1,0 +1,22 @@
+procedure p1 {
+  x = 5;
+  call p2;
+}
+procedure p2 {
+  if x then{
+    call p4;
+  }
+  else{
+    call p3;
+  }
+}
+procedure p3 {
+  x = x - 1;
+  i = x;
+}
+procedure p4 {
+ while x{
+   z = 9 * i;
+   call p3;
+ }
+}

@@ -1,0 +1,1 @@
+procedure p {  a = 5;  b = 7;  c = ((a * b) + 3);  while a {    b = (c - (a * 2));    c = ((b + 2) + a);    if c then {      x = 7;      y = 16;      call q;    }    else {      x = 10;      y = 5;      call r;    }  }  z = (a + (b * c));}procedure q {  z = 15;  b = (x + (y * z));  a = (b + c);}procedure r {  z = 16;  c = ((x * y) + z);  a = (b * c);}

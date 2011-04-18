@@ -1,0 +1,87 @@
+17
+cat: All category
+1
+assign a; 
+Select a.stmt# pattern a("x",_)
+1,9
+5000
+2
+assign a; 
+Select a pattern a(_,_)
+1,2,3,4,8,9,11
+5000
+3
+assign a; 
+Select a pattern a(_,_"w-y"_)
+none
+5000
+4
+assign a; 
+Select a pattern a(_,_"y*9"_)
+9
+5000
+5
+assign aaa; 
+Select aaa pattern aaa(_,"ii"_)
+11
+5000
+6
+assign a; 
+Select a pattern a(_,_"i+1")
+none
+5000
+7
+assign a; 
+Select a pattern a("  y  ", "  y *  x+   4*z")
+4
+5000
+8
+assign a; 
+Select a pattern a(_,_"y"_) and a(_,_"x"_)
+4
+5000
+9
+while w; 
+Select w pattern w("ww",_) pattern w("ii",_)
+none
+5000
+10
+while w; 
+Select w pattern w(_,_) pattern w("ii",_)
+10
+5000
+11
+if f; 
+Select f pattern f("yy",_,_) and f("xx",_,_)
+none
+5000
+12
+if f; 
+Select f pattern f("yy",_,_) and f(_,_,_)
+5
+5000
+13
+assign a; if f; 
+Select <a,f> pattern a("x",_) and f("f",_,_)
+none
+5000
+14
+while w; if f; 
+Select <w,f> pattern f("yy",_,_) pattern w(_,_)
+7 5,10 5
+5000
+15
+assign a; assign b; variable v; 
+Select <a, b, v> such that follows*(a,b) pattern a(v, _) such that uses(b,v)
+1 2 x,1 3 x,1 4 x,2 4 y,3 4 z
+5000
+16
+assign a; if f; variable v; 
+Select <f,a,v> with v.varName = "w" such That Parent*(f,a) pattern a(v, _) pattern a(_, _"y"_)
+5 9 x,6 9 x
+5000
+17
+while w; assign a; variable v; 
+Select <w,a,v> such that parent(w,a) pattern a(v, _) and w(v,_)
+10 11 ii
+5000

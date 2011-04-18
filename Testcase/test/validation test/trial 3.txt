@@ -1,0 +1,36 @@
+procedure Example {
+	x = 1;
+	y = x;
+	z = y;
+	call q1;
+	i = ( x* 7) - 4 * 7 + (x + 3);
+	x = x+1 - 7 - 4 + 2 * 3 - 4 + (f + g - 2 * (f * g) * 8 - f*g*2);
+	call q2;
+	x = z+f+g;
+	while i {
+	x = x - 1;
+	if x then {
+	x = x+1; }
+else {
+	y = z+x; }
+	z = z + x + i;
+	call q1;
+	i = i - 1; }
+	call p; }
+
+procedure p {
+	while j {
+	x = z*3 + 2*y;
+	call q2;
+	i = i - 1; }
+	z = z + x + i; }
+
+procedure q1 {
+	z = x + 1;
+	x = 1*(f+g); }
+
+procedure q2 {
+	if i then {
+	z = x + 1; }
+else {
+	x = z + x; } }
